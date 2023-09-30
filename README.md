@@ -7,7 +7,7 @@ multiplayer with up to 4 players.
 
 PNEngine Documentation is hosted at [schwungus.software/docs](https://schwungus.software/docs/#/pnengine/summary).
 
-Currently a work-in-progress, but user contributions are [welcome](https://github.com/Schwungus-Software/schwungus.software/tree/main/docs/pnengine)!
+It's a work-in-progress, but user contributions are [welcome](https://github.com/Schwungus-Software/schwungus.software/tree/main/docs/pnengine)!
 
 ## Credits
 
