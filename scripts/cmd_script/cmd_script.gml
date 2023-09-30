@@ -1,0 +1,1 @@
+function cmd_script(_args) {}

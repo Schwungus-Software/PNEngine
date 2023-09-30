@@ -1,0 +1,58 @@
+{
+    "language": "English",
+    "locale": "en-US",
+	
+    "text": {
+		"loading": "Loading",
+		
+		"save": {
+			"code": {
+				"SAVE_UNKNOWN": "Unknown error",
+				"SAVE_INVALID": "Invalid or corrupted file",
+				"SAVE_VERSION": "Version mismatch",
+				"SAVE_MODS": "Mod mismatch",
+			},
+		},
+		
+		"netgame": {
+			"no_connection": "Network connection not found",
+			"hosting": "Hosting on port %s",
+			"connecting": "Connecting to %s...",
+			"lost_connection": "Connection lost",
+			"connected": "Connected",
+			"disconnected": "Disconnected",
+			"player_joined": "%s joined as Player %s!",
+			"player_left": "%s left!",
+			
+			"code": {
+				"NET_UNKNOWN": "Unknown error",
+				"NET_TIMEOUT": "Timed out",
+				"NET_FULL": "Server is full",
+				"NET_VERSION": "Version mismatch",
+				"NET_MODS": "Mod mismatch",
+				"NET_KICK": "Kicked",
+				"NET_ACTIVE": "Game in progress",
+				"NET_CLOSE": "Server closed",
+			}
+		},
+		
+		"hud": {
+			"back": "[%s] BACK",
+			"cancel": "[%s] CANCEL",
+			"player": "PLAYER %s",
+		},
+		
+		"value": {
+			"off": "OFF",
+			"on": "ON",
+			"no": "NO",
+			"yes": "YES",
+			"none": "NONE",
+			"linear": "LINEAR",
+			"press_any_key": "PRESS ANY KEY",
+			"not_ready": "NOT READY",
+			"disconnected": "DISCONNECTED",
+			"ready": "READY",
+		},
+    },
+}
