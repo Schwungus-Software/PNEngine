@@ -1299,10 +1299,6 @@ function __catspeak_function__() {
             callTime = -1;
         }
     }
-    var i = 0;
-    repeat (array_length(locals)) {
-        locals[@ i++] = undefined;
-    }
     return value;
 }
 
