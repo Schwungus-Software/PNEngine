@@ -53,7 +53,7 @@ add_net_variable("player", NetVarFlags.CREATE, function (_value) {
 	return global.last_player
 })
 
-add_net_variable("playcam_yaw", false, function (_value) {
+add_net_variable("playcam_yaw", 0, function (_value) {
 	if instance_exists(camera) {
 		camera.yaw = _value
 	}
@@ -61,7 +61,7 @@ add_net_variable("playcam_yaw", false, function (_value) {
 	return instance_exists(camera) ? camera.yaw : 0
 })
 
-add_net_variable("playcam_pitch", false, function (_value) {
+add_net_variable("playcam_pitch", 0, function (_value) {
 	if instance_exists(camera) {
 		camera.pitch = _value
 	}
