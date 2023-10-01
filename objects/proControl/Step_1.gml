@@ -852,20 +852,8 @@ if global.freeze_step {
 						}
 					} else {
 						if _game_status == GameStatus.NETGAME {
-							// Remote players use the input queue
-							if ds_queue_size(input_queue) {
-								input[PlayerInputs.UP_DOWN] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.LEFT_RIGHT] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.JUMP] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INTERACT] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.ATTACK] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INVENTORY_UP] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INVENTORY_LEFT] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INVENTORY_DOWN] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INVENTORY_RIGHT] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.AIM] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.AIM_UP_DOWN] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.AIM_LEFT_RIGHT] = ds_queue_dequeue(input_queue)
+							if input_tick {
+								input_tick = false
 							} else {
 								input[PlayerInputs.UP_DOWN] = 0
 								input[PlayerInputs.LEFT_RIGHT] = 0

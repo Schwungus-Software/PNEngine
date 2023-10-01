@@ -371,13 +371,10 @@ if async_load[? "type"] == network_type_data {
 					
 					print($"Getting info from Player {-~_slot}")
 					
-					var _other = add_player(_slot, _slot > 0 ? "127.0.0.1" : _ip, _slot ? 0 : _port)
+					var _other = add_player(_slot, _slot ? "127.0.0.1" : _ip, _slot ? 0 : _port)
 					
 					with _other {
-						if buffer_read(_buffer, buffer_u8) == PlayerStatus.ACTIVE {
-							player.status = PlayerStatus.ACTIVE
-						}
-						
+						player.status = buffer_read(_buffer, buffer_u8)
 						name = buffer_read(_buffer, buffer_string)
 					}
 				}
@@ -509,20 +506,21 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				var _input_queue = _net_player.player.input_queue
-				
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_s8))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_s8))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_bool))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_bool))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_bool))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_bool))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_bool))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_bool))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_bool))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_bool))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_s8))
-				ds_queue_enqueue(_input_queue, buffer_read(_buffer, buffer_s8))
+				with _net_player.player {
+					input[PlayerInputs.UP_DOWN] = buffer_read(_buffer, buffer_s8)
+					input[PlayerInputs.LEFT_RIGHT] = buffer_read(_buffer, buffer_s8)
+					input[PlayerInputs.JUMP] = buffer_read(_buffer, buffer_bool)
+					input[PlayerInputs.INTERACT] = buffer_read(_buffer, buffer_bool)
+					input[PlayerInputs.ATTACK] = buffer_read(_buffer, buffer_bool)
+					input[PlayerInputs.INVENTORY_UP] = buffer_read(_buffer, buffer_bool)
+					input[PlayerInputs.INVENTORY_LEFT] = buffer_read(_buffer, buffer_bool)
+					input[PlayerInputs.INVENTORY_DOWN] = buffer_read(_buffer, buffer_bool)
+					input[PlayerInputs.INVENTORY_RIGHT] = buffer_read(_buffer, buffer_bool)
+					input[PlayerInputs.AIM] = buffer_read(_buffer, buffer_bool)
+					input[PlayerInputs.AIM_UP_DOWN] = buffer_read(_buffer, buffer_s8)
+					input[PlayerInputs.AIM_LEFT_RIGHT] = buffer_read(_buffer, buffer_s8)
+					input_tick = true
+				}
 			break
 			
 			case NetHeaders.HOST_LEVEL:
@@ -542,9 +540,9 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				var _player = global.players[buffer_read(_buffer, buffer_u8)]
-				
-				_player.__force_area(buffer_read(_buffer, buffer_u8))
+				with global.players[buffer_read(_buffer, buffer_u8)] {
+					__force_area(buffer_read(_buffer, buffer_u8))
+				}
 			break
 			
 			case NetHeaders.HOST_THING:
@@ -736,7 +734,10 @@ if async_load[? "type"] == network_type_data {
 				}
 				
 				with global.players[buffer_read(_buffer, buffer_u8)] {
-					state[? buffer_read(_buffer, buffer_string)] = buffer_read_dynamic(_buffer)
+					var _key = buffer_read(_buffer, buffer_string)
+					var _value = buffer_read_dynamic(_buffer)
+					
+					states[? _key] = _value
 				}
 			break
 			
@@ -746,7 +747,10 @@ if async_load[? "type"] == network_type_data {
 				}
 				
 				with global.flags[buffer_read(_buffer, buffer_u8)] {
-					state[? buffer_read(_buffer, buffer_string)] = buffer_read_dynamic(_buffer)
+					var _key = buffer_read(_buffer, buffer_string)
+					var _value = buffer_read_dynamic(_buffer)
+					
+					flags[? _key] = _value
 				}
 			break
 			
