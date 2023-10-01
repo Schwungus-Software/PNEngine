@@ -37,8 +37,9 @@
 		},
 		
 		"hud": {
-			"back": "[%s] BACK",
-			"cancel": "[%s] CANCEL",
+			"back": "BACK",
+			"confirm": "CONFIRM",
+			"cancel": "CANCEL",
 			"player": "PLAYER %s",
 		},
 		
