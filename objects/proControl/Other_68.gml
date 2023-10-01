@@ -247,7 +247,7 @@ if async_load[? "type"] == network_type_data {
 		} else {
 			if master {
 				print($"proControl: Redirecting packet from player {-~_from} to player {-~_to}")
-				send(_to, _buffer, undefined, false, false)
+				send(_to, _buffer, undefined, true, false)
 			}
 			
 			exit
