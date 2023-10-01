@@ -187,13 +187,12 @@ if async_load[? "type"] == network_type_data {
 						exit
 					}
 					
-					var b
+					var b = net_buffer_create(true, NetHeaders.PLAYER_LEFT)
 					
 					with _other {
-						destroy()
-						show_caption($"[c_red]{lexicon_text("netgame.player_left", name)}")
-						b = net_buffer_create(true, NetHeaders.PLAYER_LEFT)
 						buffer_write(b, buffer_u8, slot)
+						show_caption($"[c_red]{lexicon_text("netgame.player_left", name)}")
+						destroy()
 					}
 					
 					send(SEND_OTHERS, b)
@@ -231,7 +230,7 @@ if async_load[? "type"] == network_type_data {
 				var _net_player = players[| _from]
 				
 				if _net_player == undefined or _reliable <= _net_player.reliable_received {
-					print($"! proControl: Got invalid or outdated ROM from player {-~_to} (index {_reliable})")
+					print($"! proControl: Got invalid or outdated ROM from player {-~_from} (index {_reliable})")
 					
 					exit
 				}

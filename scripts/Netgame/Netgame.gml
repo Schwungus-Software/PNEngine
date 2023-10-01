@@ -159,13 +159,15 @@ function Netgame() constructor {
 				}
 				
 				if _overwrite {
+					var _pos = buffer_tell(_buffer)
+					
 					buffer_seek(_buffer, buffer_seek_start, 0)
 					
 					var _reliable = buffer_read(_buffer, buffer_u32)
 					
 					buffer_write(_buffer, buffer_u8, local_slot)
 					buffer_write(_buffer, buffer_u8, _to)
-					buffer_seek(_buffer, buffer_seek_start, _size)
+					buffer_seek(_buffer, buffer_seek_start, _pos)
 					
 					if _reliable {
 						with _player {
