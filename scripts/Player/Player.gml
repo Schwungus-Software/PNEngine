@@ -17,6 +17,7 @@ function Player() constructor {
 	// Input
 	input = array_create(PlayerInputs.__SIZE)
 	input_previous = array_create(PlayerInputs.__SIZE)
+	input_queue = ds_queue_create()
 	__show_reconnect_caption = true
 	
 	static activate = function () {
@@ -60,6 +61,7 @@ function Player() constructor {
 				show_caption($"[c_red]Player {-~slot} unreadied!")
 			}
 			
+			ds_queue_clear(input_queue)
 			status = PlayerStatus.INACTIVE
 			
 			if _in_area {

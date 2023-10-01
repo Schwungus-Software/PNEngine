@@ -503,18 +503,18 @@ if async_load[? "type"] == network_type_data {
 				}
 				
 				with _net_player.player {
-					input[PlayerInputs.UP_DOWN] = buffer_read(_buffer, buffer_s8)
-					input[PlayerInputs.LEFT_RIGHT] = buffer_read(_buffer, buffer_s8)
-					input[PlayerInputs.JUMP] = buffer_read(_buffer, buffer_bool)
-					input[PlayerInputs.INTERACT] = buffer_read(_buffer, buffer_bool)
-					input[PlayerInputs.ATTACK] = buffer_read(_buffer, buffer_bool)
-					input[PlayerInputs.INVENTORY_UP] = buffer_read(_buffer, buffer_bool)
-					input[PlayerInputs.INVENTORY_LEFT] = buffer_read(_buffer, buffer_bool)
-					input[PlayerInputs.INVENTORY_DOWN] = buffer_read(_buffer, buffer_bool)
-					input[PlayerInputs.INVENTORY_RIGHT] = buffer_read(_buffer, buffer_bool)
-					input[PlayerInputs.AIM] = buffer_read(_buffer, buffer_bool)
-					input[PlayerInputs.AIM_UP_DOWN] = buffer_read(_buffer, buffer_s8)
-					input[PlayerInputs.AIM_LEFT_RIGHT] = buffer_read(_buffer, buffer_s8)
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s8))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s8))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s8))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s8))
 				}
 			break
 			

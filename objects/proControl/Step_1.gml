@@ -848,6 +848,23 @@ if global.freeze_step {
 							buffer_write(b, buffer_s8, _input_aim_left_right)
 							_netgame.send(SEND_OTHERS, b)
 						}
+					} else {
+						if _game_status == GameStatus.NETGAME {
+							while ds_queue_size(input_queue) {
+								input[PlayerInputs.UP_DOWN] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.LEFT_RIGHT] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.JUMP] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.INTERACT] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.ATTACK] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.INVENTORY_UP] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.INVENTORY_LEFT] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.INVENTORY_DOWN] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.INVENTORY_RIGHT] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.AIM] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.AIM_UP_DOWN] = ds_queue_dequeue(input_queue)
+								input[PlayerInputs.AIM_LEFT_RIGHT] = ds_queue_dequeue(input_queue)
+							}
+						}
 					}
 #endregion
 
