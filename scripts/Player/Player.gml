@@ -17,7 +17,6 @@ function Player() constructor {
 	// Input
 	input = array_create(PlayerInputs.__SIZE)
 	input_previous = array_create(PlayerInputs.__SIZE)
-	input_tick = 0
 	__show_reconnect_caption = true
 	
 	static activate = function () {
@@ -55,7 +54,6 @@ function Player() constructor {
 				}
 				
 				_in_area = true
-				input_tick = 0
 				show_caption($"[c_red]Player {-~slot} disconnected!")
 			} else {
 				--global.players_ready;

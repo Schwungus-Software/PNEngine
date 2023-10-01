@@ -830,42 +830,23 @@ if global.freeze_step {
 						input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
 						input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
 						
-						if _game_status == GameStatus.NETGAME {
-							if _input_up_down != 0 or _input_left_right != 0 or _input_jump or _input_interact or _input_attack or _input_inventory_up or _input_inventory_left or _input_inventory_down or _input_inventory_right or _input_aim or _input_aim_up_down != 0 or _input_aim_left_right != 0 {
-								// Send input data to the server
-								var b = net_buffer_create(false, NetHeaders.INPUT)
-								
-								buffer_write(b, buffer_s8, _input_up_down)
-								buffer_write(b, buffer_s8, _input_left_right)
-								buffer_write(b, buffer_bool, _input_jump)
-								buffer_write(b, buffer_bool, _input_interact)
-								buffer_write(b, buffer_bool, _input_attack)
-								buffer_write(b, buffer_bool, _input_inventory_up)
-								buffer_write(b, buffer_bool, _input_inventory_left)
-								buffer_write(b, buffer_bool, _input_inventory_down)
-								buffer_write(b, buffer_bool, _input_inventory_right)
-								buffer_write(b, buffer_bool, _input_aim)
-								buffer_write(b, buffer_s8, _input_aim_up_down)
-								buffer_write(b, buffer_s8, _input_aim_left_right)
-								_netgame.send(SEND_OTHERS, b)
-							}
-						}
-					} else {
-						if _game_status == GameStatus.NETGAME and input_tick {
-							if not --input_tick {
-								input[PlayerInputs.UP_DOWN] = 0
-								input[PlayerInputs.LEFT_RIGHT] = 0
-								input[PlayerInputs.JUMP] = false
-								input[PlayerInputs.INTERACT] = false
-								input[PlayerInputs.ATTACK] = false
-								input[PlayerInputs.INVENTORY_UP] = false
-								input[PlayerInputs.INVENTORY_LEFT] = false
-								input[PlayerInputs.INVENTORY_DOWN] = false
-								input[PlayerInputs.INVENTORY_RIGHT] = false
-								input[PlayerInputs.AIM] = false
-								input[PlayerInputs.AIM_UP_DOWN] = 0
-								input[PlayerInputs.AIM_LEFT_RIGHT] = 0
-							}
+						if _game_status == GameStatus.NETGAME and not array_equals(input, input_previous) {
+							// Send input data to the server
+							var b = net_buffer_create(false, NetHeaders.INPUT)
+							
+							buffer_write(b, buffer_s8, _input_up_down)
+							buffer_write(b, buffer_s8, _input_left_right)
+							buffer_write(b, buffer_bool, _input_jump)
+							buffer_write(b, buffer_bool, _input_interact)
+							buffer_write(b, buffer_bool, _input_attack)
+							buffer_write(b, buffer_bool, _input_inventory_up)
+							buffer_write(b, buffer_bool, _input_inventory_left)
+							buffer_write(b, buffer_bool, _input_inventory_down)
+							buffer_write(b, buffer_bool, _input_inventory_right)
+							buffer_write(b, buffer_bool, _input_aim)
+							buffer_write(b, buffer_s8, _input_aim_up_down)
+							buffer_write(b, buffer_s8, _input_aim_left_right)
+							_netgame.send(SEND_OTHERS, b)
 						}
 					}
 #endregion

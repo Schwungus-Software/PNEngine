@@ -514,8 +514,7 @@ if async_load[? "type"] == network_type_data {
 					input[PlayerInputs.INVENTORY_RIGHT] = buffer_read(_buffer, buffer_bool)
 					input[PlayerInputs.AIM] = buffer_read(_buffer, buffer_bool)
 					input[PlayerInputs.AIM_UP_DOWN] = buffer_read(_buffer, buffer_s8)
-					input[PlayerInputs.AIM_LEFT_RIGHT] = buffer_read(_buffer, buffer_s8);
-					input_tick += input_tick ? 1 : 2
+					input[PlayerInputs.AIM_LEFT_RIGHT] = buffer_read(_buffer, buffer_s8)
 				}
 			break
 			
