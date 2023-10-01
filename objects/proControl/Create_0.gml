@@ -90,6 +90,10 @@
 			    )
 			#endregion
 			
+			#region Date and Time
+				addFunction("date_datetime_string", date_datetime_string)
+			#endregion
+			
 			#region Color
 				addConstant(
 			        "AQUA", c_aqua,
