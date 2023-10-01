@@ -86,7 +86,11 @@ function Netgame() constructor {
 		var i = ds_list_size(players)
 		
 		repeat i {
-			players[| --i].destroy()
+			var _player = players[| --i]
+			
+			if _player != undefined {
+				_player.destroy()
+			}
 		}
 		
 		network_destroy(socket)
@@ -111,14 +115,14 @@ function Netgame() constructor {
 		
 		switch _to {
 			case SEND_HOST:
-				send(0, _buffer, _size, false)
+				send(0, _buffer, _size, false, _overwrite)
 			break
 			
 			case SEND_ALL:
 				var i = 0
 				
 				repeat ds_list_size(players) {
-					send(i++, _buffer, _size, false)
+					send(i++, _buffer, _size, false, _overwrite)
 				}
 			break
 			
@@ -129,7 +133,7 @@ function Netgame() constructor {
 					var _player = players[| i]
 					
 					if _player != undefined and not _player.local {
-						send(i, _buffer, _size, false)
+						send(i, _buffer, _size, false, _overwrite)
 					}
 					
 					++i
@@ -150,12 +154,9 @@ function Netgame() constructor {
 					_port = port
 				}
 				
-				if _port <= 0 {
-					if not master {
-						send(SEND_HOST, _buffer, _size, false, false)
-					}
-					
-					break
+				if _port <= 0 and not master {
+					_ip = ip
+					_port = port
 				}
 				
 				if _overwrite {

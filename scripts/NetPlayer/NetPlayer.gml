@@ -49,7 +49,10 @@ function NetPlayer() constructor {
 			}
 			
 			--session.player_count
-			ds_map_delete(session.clients, ip + ":" + string(port))
+			
+			if session.master {
+				ds_map_delete(session.clients, key)
+			}
 		}
 		
 		if player != undefined {

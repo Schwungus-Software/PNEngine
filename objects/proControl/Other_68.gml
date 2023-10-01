@@ -245,7 +245,6 @@ if async_load[? "type"] == network_type_data {
 			}
 		} else {
 			if master {
-				print($"proControl: Redirecting packet from player {-~_from} to player {-~_to}")
 				send(_to, _buffer, undefined, true, false)
 			}
 			
@@ -457,12 +456,10 @@ if async_load[? "type"] == network_type_data {
 				var _other = players[| _slot]
 				
 				if _other != undefined {
-					break
-				}
-				
-				with _other {
-					destroy()
-					show_caption($"[c_red]{lexicon_text("netgame.player_left", name)}")
+					with _other {
+						destroy()
+						show_caption($"[c_red]{lexicon_text("netgame.player_left", name)}")
+					}
 				}
 			break
 			
@@ -517,8 +514,8 @@ if async_load[? "type"] == network_type_data {
 					input[PlayerInputs.INVENTORY_RIGHT] = buffer_read(_buffer, buffer_bool)
 					input[PlayerInputs.AIM] = buffer_read(_buffer, buffer_bool)
 					input[PlayerInputs.AIM_UP_DOWN] = buffer_read(_buffer, buffer_s8)
-					input[PlayerInputs.AIM_LEFT_RIGHT] = buffer_read(_buffer, buffer_s8)
-					input_tick = true
+					input[PlayerInputs.AIM_LEFT_RIGHT] = buffer_read(_buffer, buffer_s8);
+					input_tick += input_tick ? 1 : 2
 				}
 			break
 			

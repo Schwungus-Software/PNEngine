@@ -851,10 +851,8 @@ if global.freeze_step {
 							}
 						}
 					} else {
-						if _game_status == GameStatus.NETGAME {
-							if input_tick {
-								input_tick = false
-							} else {
+						if _game_status == GameStatus.NETGAME and input_tick {
+							if not --input_tick {
 								input[PlayerInputs.UP_DOWN] = 0
 								input[PlayerInputs.LEFT_RIGHT] = 0
 								input[PlayerInputs.JUMP] = false
