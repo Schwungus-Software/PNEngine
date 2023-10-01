@@ -14,7 +14,7 @@ if not f_sync {
 	add_net_variable("x_speed")
 	add_net_variable("y_speed")
 	add_net_variable("z_speed")
-	add_net_variable("tag", true)
+	add_net_variable("tag", NetVarFlags.CREATE)
 }
 
 if f_unique {

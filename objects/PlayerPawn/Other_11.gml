@@ -26,7 +26,7 @@ if instance_exists(camera) {
 
 add_net_variable("face_angle")
 
-add_net_variable("player", true, function (_value) {
+add_net_variable("player", NetVarFlags.CREATE, function (_value) {
 	var _player = global.players[_value]
 	
 	player = _player
