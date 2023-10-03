@@ -27,7 +27,7 @@ function Player() constructor {
 			var _device = input_player_get_gamepad_type(slot)
 			
 			if _device == "unknown" {
-				_device = "keyboard"
+				_device = "no controller"
 			}
 			
 			++global.players_ready;

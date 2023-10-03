@@ -5,7 +5,7 @@ if load_state != LoadStates.NONE {
 		break
 		
 		case LoadStates.UNLOAD:
-		{
+#region Unload Previous Level
 			array_foreach(global.canvases, function (_element, _index) {
 				_element.Flush()
 			})
@@ -37,14 +37,12 @@ if load_state != LoadStates.NONE {
 			global.music.clear()
 			global.scripts.clear()
 			
-			//if global.rng_init {
-				var _indices = RNG.indices
-				var i = 0
+			var _indices = RNG.indices
+			var i = 0
 			
-				repeat array_length(_indices) {
-					_indices[i++] = 0
-				}
-			//}
+			repeat array_length(_indices) {
+				_indices[i++] = 0
+			}
 			
 			if load_level == undefined {
 				game_end()
@@ -56,11 +54,11 @@ if load_state != LoadStates.NONE {
 			global.level = new Level()
 			gc_collect()
 			load_state = LoadStates.LOAD
-		}
+#endregion
 		break
 		
 		case LoadStates.LOAD:
-		{
+#region Load New Level
 			print($"\n========== {load_level} ({lexicon_text("level." + load_level)}) ==========")
 			print($"(Entering area {load_area} from {load_tag})")
 			
@@ -429,11 +427,11 @@ if load_state != LoadStates.NONE {
 			}
 			
 			load_state = LoadStates.FINISH
-		}
+#endregion
 		break
 		
 		case LoadStates.FINISH:
-		{
+#region Finish Loading
 			var _level = global.level
 			
 			np_setpresence("", _level.rp_name, _level.rp_icon, "")
@@ -490,19 +488,17 @@ if load_state != LoadStates.NONE {
 			}
 			
 			load_state = LoadStates.NONE
-		}
+#endregion
 		break
 		
 		case LoadStates.NETGAME_START: break
 		
 		case LoadStates.NETGAME_FINISH:
-		{
 			load_state = LoadStates.NONE
-		}
 		break
 		
 		case LoadStates.NETGAME_LEVEL:
-		{
+#region Wait For Players
 			// During this state, the host will wait until every player has
 			// received a level change packet then change the level.
 			var _netgame = global.netgame
@@ -536,7 +532,7 @@ if load_state != LoadStates.NONE {
 			if _ready {
 				load_state = LoadStates.START
 			}
-		}
+#endregion
 		break
 	}
 	
@@ -547,48 +543,50 @@ if load_state != LoadStates.NONE {
 if global.freeze_step {
 	// Don't tick for this frame
 	global.freeze_step = false
-} else {
-	var _tick = global.tick
-	var _tick_inc = (delta_time * TICKRATE_DELTA) * global.tick_scale
 	
-	global.delta = _tick_inc
-	_tick += _tick_inc
+	exit
+}
+
+var _tick = global.tick
+var _tick_inc = (delta_time * TICKRATE_DELTA) * global.tick_scale
+
+global.delta = _tick_inc
+_tick += _tick_inc
+
+var _console = global.console
+
+if _console {
+	input_string_tick()
+}
+
+if _tick >= 1 {
+	__input_system_tick()
 	
-	var _console = global.console
-	
-	if _console {
-		input_string_tick()
-	}
-	
-	if _tick >= 1 {
-		__input_system_tick()
-		
 #region New Players
-		with input_players_get_status() {
-			if any_changed {
-				var _players = global.players
-				var i = 0
-				
-				repeat array_length(new_connections) {
-					with _players[new_connections[i++]] {
-						if not activate() {
-							if __show_reconnect_caption {
-								var _device = input_player_get_gamepad_type(slot)
-								
-								if _device == "unknown" {
-									_device = "no controller"
-								}
-								
-								show_caption($"[c_lime]Player {-~slot} reconnected! ({_device})")
-							} else {
-								__show_reconnect_caption = true
+	with input_players_get_status() {
+		if any_changed {
+			var _players = global.players
+			var i = 0
+		
+			repeat array_length(new_connections) {
+				with _players[new_connections[i++]] {
+					if not activate() {
+						if __show_reconnect_caption {
+							var _device = input_player_get_gamepad_type(slot)
+						
+							if _device == "unknown" {
+								_device = "no controller"
 							}
+						
+							show_caption($"[c_lime]Player {-~slot} reconnected! ({_device})")
+						} else {
+							__show_reconnect_caption = true
 						}
 					}
 				}
-				
+			
 				i = 0
-				
+			
 				repeat array_length(new_disconnections) {
 					with _players[new_disconnections[i++]] {
 						if not deactivate() {
@@ -598,501 +596,131 @@ if global.freeze_step {
 				}
 			}
 		}
+	}
 #endregion
 		
 #region Debug
-		if input_check_pressed("debug_overlay") {
-			global.debug_overlay = not global.debug_overlay
-			show_debug_overlay(global.debug_overlay)
-		}
-		
-		if _console {
-			if input_check_pressed("debug_console_previous") {
-				input_string_set(global.console_input_previous)
-			}
-			
-			if input_check_pressed("debug_console_submit") {
-				var _input = input_string_get()
-				
-				global.console_input_previous = _input
-				print($"> {_input}")
-				
-				array_foreach(string_split(_input, ";", true), function (_element, _index) {
-					var _input = string_trim(_element)
-					
-					if _input != "" {
-						var _cmd = _input
-						var _args = ""
-						var _args_pos = string_pos(" ", _cmd)
-						
-						if _args_pos > 0 {
-							_cmd = string_copy(_cmd, 1, _args_pos - 1)
-							_args = string_delete(_input, 1, _args_pos)
-						}
-						
-						var _cmd_function = variable_global_get($"cmd_{_cmd}")
-						
-						if is_method(_cmd_function) {
-							_cmd_function(_args)
-						} else {
-							print($"Unknown command '{_cmd}'")
-						}
-					}
-				})
-				
-				input_string_set("")
-			}
-			
-			if input_check_pressed("pause") {
-				if global.netgame == undefined {
-					input_source_mode_set(INPUT_SOURCE_MODE.JOIN)
-				}
-				
-				global.console = false
-			}
-			
-			if global.game_status == GameStatus.NETGAME {
-				// Gross hack, will clean up later
-				input_verb_consume("up")
-				input_verb_consume("left")
-				input_verb_consume("down")
-				input_verb_consume("right")
-				input_verb_consume("jump")
-				input_verb_consume("interact")
-				input_verb_consume("attack")
-				input_verb_consume("inventory_up")
-				input_verb_consume("inventory_left")
-				input_verb_consume("inventory_down")
-				input_verb_consume("inventory_right")
-				input_verb_consume("aim")
-				input_verb_consume("aim_up")
-				input_verb_consume("aim_left")
-				input_verb_consume("aim_down")
-				input_verb_consume("aim_right")
-			} else {
-				_tick = 0
-				
-				exit
-			}
-		} else {
-			if input_check_pressed("debug_console") {
-				input_source_mode_set(INPUT_SOURCE_MODE.FIXED)
-				global.console = true
-			}
-		}
-#endregion
-		
-#region Start Interpolation
-		var _interps = global.interps
-		var i = ds_list_size(_interps)
-		var _gc = false
-		
-		repeat i {
-			var _scope = _interps[| --i]
-			
-			if _scope == undefined {
-				continue
-			}
-			
-			var _ref
-			
-			if is_numeric(_scope) {
-				if instance_exists(_scope) {
-					_ref = _scope
-				} else {
-					_gc = true
-					_interps[| i] = undefined
-					
-					continue
-				}
-			} else {
-				if weak_ref_alive(_scope) {
-					_ref = _scope.ref
-				} else {
-					_gc = true
-					_interps[| i] = undefined
-					
-					continue
-				}
-			}
-			
-			with _ref {
-				array_foreach(__interp, function (_element, _index) {
-					_element[InterpData.PREVIOUS_VALUE] = struct_get_from_hash(self, _element[InterpData.IN_HASH])
-				})
-			}
-		}
-		
-		/* GROSS HACKS: There are memory leaks because structs are never being
-						dereferenced for some reason. Not sure if this is
-						related to Catspeak or the interpolator in general.
-						Whenever a dead instance or struct is removed from the
-						interpolator, call the GC just in case. */
-		if _gc {
-			gc_collect()
-		}
-#endregion
-	
-#region Game Loop
-		while _tick >= 1 {
-#region Transition
-			var _skip_tick = false
-			
-			with proTransition {
-				event_user(ThingEvents.TICK)
-				
-				// Freeze the world while the screen is fading in
-				switch state {
-					case 1:
-						with proControl {
-							load_level = other.to_level
-							load_area = other.to_area
-							load_tag = other.to_tag
-							load_state = LoadStates.START
-						}
-						
-						state = 2
-						
-					case 0:
-					case 2:
-						_skip_tick = true
-				}
-			}
-			
-			if _skip_tick {
-				input_clear_momentary(true);
-				--_tick
-				
-				continue
-			}
-#endregion
-
-#region Players
-			var _players = global.players
-			var _config = global.config
-			var _game_status = global.game_status
-			var _netgame = global.netgame
-			var _syncables = global.level.syncables
-			var i = 0
-			
-			repeat INPUT_MAX_PLAYERS {
-				with _players[i] {
-					if status != PlayerStatus.ACTIVE {
-						break
-					}
-					
-#region Input
-					array_copy(input_previous, 0, input, 0, PlayerInputs.__SIZE)
-					
-					var _get_input = false
-					var _index = i
-					
-					if _game_status == GameStatus.NORMAL {
-						_get_input = true
-					} else {
-						if _game_status == GameStatus.NETGAME and _netgame.local_slot == i {
-							_get_input = true
-							_index = 0
-						}
-					}
-					
-					if _get_input {
-						// Main
-						var _move_range = input_check("walk", _index) ? 64 : 127
-						var _input_up_down = floor(input_check_opposing("up", "down", _index, true) * _move_range)
-						var _input_left_right = floor(input_check_opposing("left", "right", _index, true) * _move_range)
-						var _input_jump = input_check("jump", _index)
-						var _input_interact = input_check("interact", _index)
-						var _input_attack = input_check("attack", _index)
-						
-						// Inventory
-						var _input_inventory_up = input_check("inventory_up", _index)
-						var _input_inventory_left = input_check("inventory_left", _index)
-						var _input_inventory_down = input_check("inventory_down", _index)
-						var _input_inventory_right = input_check("inventory_right", _index)
-						
-						// Camera
-						var _input_aim = input_check("aim", _index)
-						var _input_aim_up_down = round((input_check_opposing("aim_up", "aim_down", _index, true) * (_config.in_invert_y ? -1 : 1)) * 127)
-						var _input_aim_left_right = round((input_check_opposing("aim_left", "aim_right", _index, true) * _config.in_sensitivity_x * (_config.in_invert_x ? -1 : 1)) * 127)
-						
-						// Write to input array
-						input[PlayerInputs.UP_DOWN] = _input_up_down
-						input[PlayerInputs.LEFT_RIGHT] = _input_left_right
-						input[PlayerInputs.JUMP] = _input_jump
-						input[PlayerInputs.INTERACT] = _input_interact
-						input[PlayerInputs.ATTACK] = _input_attack
-						input[PlayerInputs.INVENTORY_UP] = _input_inventory_up
-						input[PlayerInputs.INVENTORY_LEFT] = _input_inventory_left
-						input[PlayerInputs.INVENTORY_DOWN] = _input_inventory_down
-						input[PlayerInputs.INVENTORY_RIGHT] = _input_inventory_right
-						input[PlayerInputs.AIM] = _input_aim
-						input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
-						input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
-						
-						if _game_status == GameStatus.NETGAME and not array_equals(input, input_previous) {
-							// Send input data to the server
-							var b = net_buffer_create(false, NetHeaders.INPUT)
-							
-							buffer_write(b, buffer_s8, _input_up_down)
-							buffer_write(b, buffer_s8, _input_left_right)
-							buffer_write(b, buffer_bool, _input_jump)
-							buffer_write(b, buffer_bool, _input_interact)
-							buffer_write(b, buffer_bool, _input_attack)
-							buffer_write(b, buffer_bool, _input_inventory_up)
-							buffer_write(b, buffer_bool, _input_inventory_left)
-							buffer_write(b, buffer_bool, _input_inventory_down)
-							buffer_write(b, buffer_bool, _input_inventory_right)
-							buffer_write(b, buffer_bool, _input_aim)
-							buffer_write(b, buffer_s8, _input_aim_up_down)
-							buffer_write(b, buffer_s8, _input_aim_left_right)
-							_netgame.send(SEND_OTHERS, b)
-						}
-					} else {
-						if _game_status == GameStatus.NETGAME {
-							while ds_queue_size(input_queue) {
-								input[PlayerInputs.UP_DOWN] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.LEFT_RIGHT] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.JUMP] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INTERACT] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.ATTACK] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INVENTORY_UP] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INVENTORY_LEFT] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INVENTORY_DOWN] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.INVENTORY_RIGHT] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.AIM] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.AIM_UP_DOWN] = ds_queue_dequeue(input_queue)
-								input[PlayerInputs.AIM_LEFT_RIGHT] = ds_queue_dequeue(input_queue)
-							}
-						}
-					}
-#endregion
-
-#region Area
-					if area != undefined {
-						with area {
-							if master != other {
-								break
-							}
-							
-							var _players_in_area = players
-							var j = ds_list_size(active_things)
-							
-							repeat j {
-								with active_things[| --j] {
-									var _can_tick = true
-									
-									if cull_tick != -1 {
-										_can_tick = false
-										
-										var _ox = x
-										var _oy = y
-										var _od = cull_tick
-										var k = ds_list_size(_players_in_area)
-										
-										repeat k {
-											with _players_in_area[| --k] {
-												if instance_exists(thing) {
-													with thing {
-														if point_distance(x, y, _ox, _oy) < _od {
-															_can_tick = true
-														}
-													}
-												}
-												
-												if _can_tick {
-													break
-												}
-											}
-											
-											if _can_tick {
-												break
-											}
-										}
-									}
-									
-									if _can_tick {
-										if not f_frozen {
-											event_user(ThingEvents.TICK)
-										}
-									} else {
-										if f_cull_destroy {
-											destroy(false)
-											
-											break
-										}
-									}
-									
-#region Thing Syncing
-									if _game_status != GameStatus.NETGAME or not f_sync or not _netgame.master {
-										break
-									}
-									
-									++_syncables[# sync_id, 1]
-									
-									if _syncables[# sync_id, 1] >= SYNC_INTERVAL {
-										var b = net_buffer_create(false, NetHeaders.HOST_THING)
-										
-										buffer_write(b, buffer_u16, sync_id)
-										buffer_write(b, buffer_u32, area.slot)
-										buffer_write(b, buffer_string, thing_script != undefined ? thing_script.name : object_get_name(object_index))
-										
-										var _n_pos = buffer_tell(b)
-										
-										buffer_write(b, buffer_u8, 0)
-										
-										var n = ds_list_size(net_variables)
-										
-										if n {
-											var k = 0
-											var l = 0
-											
-											repeat n {
-												var _netvar = net_variables[| k]
-												
-												with _netvar {
-													if flags & NetVarFlags.CREATE {
-														break
-													}
-													
-													var _value
-													
-													if write != undefined {
-														if is_catspeak(write) {
-															write.setSelf(scope)
-														}
-														
-														_value = write()
-													} else {
-														_value = struct_get_from_hash(scope, hash)
-													}
-													
-													if flags & NetVarFlags.DELTA {
-														if value == _value {
-															break
-														}
-														
-														buffer_poke(b, 0, buffer_u32, true)
-													}
-													
-													value = _value
-													buffer_write(b, buffer_u8, k)
-													buffer_write_dynamic(b, _value);
-													++l
-												}
-												
-												++k
-											}
-											
-											buffer_poke(b, _n_pos, buffer_u8, l)
-										}
-										
-										_netgame.send(SEND_OTHERS, b)
-									}
-#endregion
-								}
-							}
-						}
-					}
-#endregion
-				}
-				
-				++i
-			}
-				
-			input_clear_momentary(true);
-			--_tick
-		}
-#endregion
+	if input_check_pressed("debug_overlay") {
+		global.debug_overlay = not global.debug_overlay
+		show_debug_overlay(global.debug_overlay)
 	}
 	
-	global.tick = _tick
+	if _console {
+		if input_check_pressed("debug_console_previous") {
+			input_string_set(global.console_input_previous)
+		}
+		
+		if input_check_pressed("debug_console_submit") {
+			var _input = input_string_get()
+			
+			global.console_input_previous = _input
+			print($"> {_input}")
+				
+			array_foreach(string_split(_input, ";", true), function (_element, _index) {
+				var _input = string_trim(_element)
+				
+				if _input != "" {
+					var _cmd = _input
+					var _args = ""
+					var _args_pos = string_pos(" ", _cmd)
+					
+					if _args_pos > 0 {
+						_cmd = string_copy(_cmd, 1, _args_pos - 1)
+						_args = string_delete(_input, 1, _args_pos)
+					}
+					
+					var _cmd_function = variable_global_get($"cmd_{_cmd}")
+					
+					if is_method(_cmd_function) {
+						_cmd_function(_args)
+					} else {
+						print($"Unknown command '{_cmd}'")
+					}
+				}
+			})
+			
+			input_string_set("")
+		}
+		
+		if input_check_pressed("pause") {
+			if global.netgame == undefined {
+				input_source_mode_set(INPUT_SOURCE_MODE.JOIN)
+			}
+			
+			input_verb_consume("pause")
+			global.console = false
+		}
+		
+		if global.game_status == GameStatus.NETGAME {
+			// Gross hack, will clean up later
+			input_verb_consume("up")
+			input_verb_consume("left")
+			input_verb_consume("down")
+			input_verb_consume("right")
+			input_verb_consume("jump")
+			input_verb_consume("interact")
+			input_verb_consume("attack")
+			input_verb_consume("inventory_up")
+			input_verb_consume("inventory_left")
+			input_verb_consume("inventory_down")
+			input_verb_consume("inventory_right")
+			input_verb_consume("aim")
+			input_verb_consume("aim_up")
+			input_verb_consume("aim_left")
+			input_verb_consume("aim_down")
+			input_verb_consume("aim_right")
+		} else {
+			_tick = 0
+			
+			exit
+		}
+	} else {
+		if input_check_pressed("debug_console") {
+			input_source_mode_set(INPUT_SOURCE_MODE.FIXED)
+			global.console = true
+		}
+	}
+#endregion
 	
-#region End Interpolation
-	var _gc = false
+#region Start Interpolation
 	var _interps = global.interps
 	var i = ds_list_size(_interps)
+	var _gc = false
 	
-	if _tick_inc >= 1 {
-#region Interpolation OFF (FPS <= TICKRATE)
-		repeat i {
-			var _scope = _interps[| --i]
-			
-			if _scope == undefined {
-				continue
-			}
-			
-			var _ref
-			
-			if is_numeric(_scope) {
-				if instance_exists(_scope) {
-					_ref = _scope
-				} else {
-					_gc = true
-					_interps[| i] = undefined
-					
-					continue
-				}
-			} else {
-				if weak_ref_alive(_scope) {
-					_ref = _scope.ref
-				} else {
-					_gc = true
-					_interps[| i] = undefined
-					
-					continue
-				}
-			}
-			
-			with _ref {
-				array_foreach(__interp, function (_element, _index) {
-					struct_set_from_hash(self, _element[InterpData.OUT_HASH], struct_get_from_hash(self, _element[InterpData.IN_HASH]))
-				})
-			}
+	repeat i {
+		var _scope = _interps[| --i]
+		
+		if _scope == undefined {
+			continue
 		}
-#endregion
-	} else {
-#region Interpolation ON (FPS > TICKRATE)
-		repeat i {
-			var _scope = _interps[| --i]
-			
-			if _scope == undefined {
-				continue
-			}
-			
-			var _ref
-			
-			if is_numeric(_scope) {
-				if instance_exists(_scope) {
-					_ref = _scope
-				} else {
-					_gc = true
-					_interps[| i] = undefined
-					
-					continue
-				}
+		
+		var _ref
+		
+		if is_numeric(_scope) {
+			if instance_exists(_scope) {
+				_ref = _scope
 			} else {
-				if weak_ref_alive(_scope) {
-					_ref = _scope.ref
-				} else {
-					_gc = true
-					_interps[| i] = undefined
-					
-					continue
-				}
-			}
-			
-			with _ref {
-				var j = 0
+				_gc = true
+				_interps[| i] = undefined
 				
-				repeat array_length(__interp) {
-					var _child = __interp[j++]
-					
-					struct_set_from_hash(_ref, _child[InterpData.OUT_HASH], (_child[InterpData.ANGLE] ? lerp_angle : lerp)(_child[InterpData.PREVIOUS_VALUE], struct_get_from_hash(_ref, _child[InterpData.IN_HASH]), _tick)) // This line is already long enough, but why not make it even longer with this useless comment?
-				}
+				continue
+			}
+		} else {
+			if weak_ref_alive(_scope) {
+				_ref = _scope.ref
+			} else {
+				_gc = true
+				_interps[| i] = undefined
+				
+				continue
 			}
 		}
-#endregion
+		
+		with _ref {
+			array_foreach(__interp, function (_element, _index) {
+				_element[InterpData.PREVIOUS_VALUE] = struct_get_from_hash(self, _element[InterpData.IN_HASH])
+			})
+		}
 	}
 	
 	/* GROSS HACKS: There are memory leaks because structs are never being
@@ -1104,4 +732,374 @@ if global.freeze_step {
 		gc_collect()
 	}
 #endregion
+	
+#region Game Loop
+	while _tick >= 1 {
+#region Transition
+		var _skip_tick = false
+		
+		with proTransition {
+			event_user(ThingEvents.TICK)
+			
+			// Freeze the world while the screen is fading in
+			switch state {
+				case 1:
+					with proControl {
+						load_level = other.to_level
+						load_area = other.to_area
+						load_tag = other.to_tag
+						load_state = LoadStates.START
+					}
+					
+					state = 2
+					
+				case 0:
+				case 2:
+					_skip_tick = true
+				break
+			}
+		}
+		
+		if _skip_tick {
+			input_clear_momentary(true);
+			--_tick
+			
+			continue
+		}
+#endregion
+		
+#region Players
+		var _players = global.players
+		var _config = global.config
+		var _game_status = global.game_status
+		var _netgame = global.netgame
+		var _syncables = global.level.syncables
+		var i = 0
+		
+		repeat INPUT_MAX_PLAYERS {
+			with _players[i] {
+				if status != PlayerStatus.ACTIVE {
+					break
+				}
+#region Input
+				array_copy(input_previous, 0, input, 0, PlayerInputs.__SIZE)
+				
+				var _get_input = false
+				var _index = i
+				
+				if _game_status == GameStatus.NORMAL {
+					_get_input = true
+				} else {
+					if _game_status == GameStatus.NETGAME and _netgame.local_slot == i {
+						_get_input = true
+						_index = 0
+					}
+				}
+				
+				if _get_input {
+					// Main
+					var _move_range = input_check("walk", _index) ? 64 : 127
+					var _input_up_down = floor(input_check_opposing("up", "down", _index, true) * _move_range)
+					var _input_left_right = floor(input_check_opposing("left", "right", _index, true) * _move_range)
+					var _input_jump = input_check("jump", _index)
+					var _input_interact = input_check("interact", _index)
+					var _input_attack = input_check("attack", _index)
+					
+					// Inventory
+					var _input_inventory_up = input_check("inventory_up", _index)
+					var _input_inventory_left = input_check("inventory_left", _index)
+					var _input_inventory_down = input_check("inventory_down", _index)
+					var _input_inventory_right = input_check("inventory_right", _index)
+					
+					// Camera
+					var _input_aim = input_check("aim", _index)
+					var _input_aim_up_down = round((input_check_opposing("aim_up", "aim_down", _index, true) * (_config.in_invert_y ? -1 : 1)) * 127)
+					var _input_aim_left_right = round((input_check_opposing("aim_left", "aim_right", _index, true) * _config.in_sensitivity_x * (_config.in_invert_x ? -1 : 1)) * 127)
+					
+					// Write to input array
+					input[PlayerInputs.UP_DOWN] = _input_up_down
+					input[PlayerInputs.LEFT_RIGHT] = _input_left_right
+					input[PlayerInputs.JUMP] = _input_jump
+					input[PlayerInputs.INTERACT] = _input_interact
+					input[PlayerInputs.ATTACK] = _input_attack
+					input[PlayerInputs.INVENTORY_UP] = _input_inventory_up
+					input[PlayerInputs.INVENTORY_LEFT] = _input_inventory_left
+					input[PlayerInputs.INVENTORY_DOWN] = _input_inventory_down
+					input[PlayerInputs.INVENTORY_RIGHT] = _input_inventory_right
+					input[PlayerInputs.AIM] = _input_aim
+					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
+					input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
+					
+					if _game_status == GameStatus.NETGAME and not array_equals(input, input_previous) {
+						// Send input data to the server
+						var b = net_buffer_create(false, NetHeaders.INPUT)
+						
+						buffer_write(b, buffer_s8, _input_up_down)
+						buffer_write(b, buffer_s8, _input_left_right)
+						buffer_write(b, buffer_bool, _input_jump)
+						buffer_write(b, buffer_bool, _input_interact)
+						buffer_write(b, buffer_bool, _input_attack)
+						buffer_write(b, buffer_bool, _input_inventory_up)
+						buffer_write(b, buffer_bool, _input_inventory_left)
+						buffer_write(b, buffer_bool, _input_inventory_down)
+						buffer_write(b, buffer_bool, _input_inventory_right)
+						buffer_write(b, buffer_bool, _input_aim)
+						buffer_write(b, buffer_s8, _input_aim_up_down)
+						buffer_write(b, buffer_s8, _input_aim_left_right)
+						_netgame.send(SEND_OTHERS, b)
+					}
+				} else {
+					if _game_status == GameStatus.NETGAME {
+						while ds_queue_size(input_queue) {
+							input[PlayerInputs.UP_DOWN] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.LEFT_RIGHT] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.JUMP] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.INTERACT] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.ATTACK] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.INVENTORY_UP] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.INVENTORY_LEFT] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.INVENTORY_DOWN] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.INVENTORY_RIGHT] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.AIM] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.AIM_UP_DOWN] = ds_queue_dequeue(input_queue)
+							input[PlayerInputs.AIM_LEFT_RIGHT] = ds_queue_dequeue(input_queue)
+						}
+					}
+				}
+#endregion
+				
+#region Area
+				if area != undefined {
+					with area {
+						if master != other {
+							break
+						}
+						
+						var _players_in_area = players
+						var j = ds_list_size(active_things)
+						
+						repeat j {
+							with active_things[| --j] {
+								var _can_tick = true
+								
+								if cull_tick != -1 {
+									_can_tick = false
+									
+									var _ox = x
+									var _oy = y
+									var _od = cull_tick
+									var k = ds_list_size(_players_in_area)
+									
+									repeat k {
+										with _players_in_area[| --k] {
+											if instance_exists(thing) {
+												with thing {
+													if point_distance(x, y, _ox, _oy) < _od {
+														_can_tick = true
+													}
+												}
+											}
+											
+											if _can_tick {
+												break
+											}
+										}
+										
+										if _can_tick {
+											break
+										}
+									}
+								}
+								
+								if _can_tick {
+									if not f_frozen {
+										event_user(ThingEvents.TICK)
+									}
+								} else {
+									if f_cull_destroy {
+										destroy(false)
+										
+										break
+									}
+								}
+#region Thing Syncing
+								if _game_status != GameStatus.NETGAME or not f_sync or not _netgame.master {
+									break
+								}
+								
+								++_syncables[# sync_id, 1]
+								
+								if _syncables[# sync_id, 1] >= SYNC_INTERVAL {
+									var b = net_buffer_create(false, NetHeaders.HOST_THING)
+									
+									buffer_write(b, buffer_u16, sync_id)
+									buffer_write(b, buffer_u32, area.slot)
+									buffer_write(b, buffer_string, thing_script != undefined ? thing_script.name : object_get_name(object_index))
+									
+									var _n_pos = buffer_tell(b)
+									
+									buffer_write(b, buffer_u8, 0)
+									
+									var n = ds_list_size(net_variables)
+									
+									if n {
+										var k = 0
+										var l = 0
+										
+										repeat n {
+											var _netvar = net_variables[| k]
+											
+											with _netvar {
+												if flags & NetVarFlags.CREATE {
+													break
+												}
+												
+												var _value
+												
+												if write != undefined {
+													if is_catspeak(write) {
+														write.setSelf(scope)
+													}
+													
+													_value = write()
+												} else {
+													_value = struct_get_from_hash(scope, hash)
+												}
+												
+												if flags & NetVarFlags.DELTA {
+													if value == _value {
+														break
+													}
+													
+													buffer_poke(b, 0, buffer_u32, true)
+												}
+												
+												value = _value
+												buffer_write(b, buffer_u8, k)
+												buffer_write_dynamic(b, _value);
+												++l
+											}
+											
+											++k
+										}
+										
+										buffer_poke(b, _n_pos, buffer_u8, l)
+									}
+									
+									_netgame.send(SEND_OTHERS, b)
+								}
+#endregion
+							}
+						}
+					}
+				}
+			}
+			
+			++i
+		}
+#endregion
+		input_clear_momentary(true);
+		--_tick
+	}
+#endregion
+#endregion
 }
+
+global.tick = _tick
+
+#region End Interpolation
+var _gc = false
+var _interps = global.interps
+var i = ds_list_size(_interps)
+
+if _tick_inc >= 1 {
+#region Interpolation OFF (FPS <= TICKRATE)
+	repeat i {
+		var _scope = _interps[| --i]
+		
+		if _scope == undefined {
+			continue
+		}
+		
+		var _ref
+		
+		if is_numeric(_scope) {
+			if instance_exists(_scope) {
+				_ref = _scope
+			} else {
+				_gc = true
+				_interps[| i] = undefined
+				
+				continue
+			}
+		} else {
+			if weak_ref_alive(_scope) {
+				_ref = _scope.ref
+			} else {
+				_gc = true
+				_interps[| i] = undefined
+				
+				continue
+			}
+		}
+		
+		with _ref {
+			array_foreach(__interp, function (_element, _index) {
+				struct_set_from_hash(self, _element[InterpData.OUT_HASH], struct_get_from_hash(self, _element[InterpData.IN_HASH]))
+			})
+		}
+	}
+#endregion
+} else {
+#region Interpolation ON (FPS > TICKRATE)
+	repeat i {
+		var _scope = _interps[| --i]
+		
+		if _scope == undefined {
+			continue
+		}
+		
+		var _ref
+		
+		if is_numeric(_scope) {
+			if instance_exists(_scope) {
+				_ref = _scope
+			} else {
+				_gc = true
+				_interps[| i] = undefined
+				
+				continue
+			}
+		} else {
+			if weak_ref_alive(_scope) {
+				_ref = _scope.ref
+			} else {
+				_gc = true
+				_interps[| i] = undefined
+				
+				continue
+			}
+		}
+		
+		with _ref {
+			var j = 0
+			
+			repeat array_length(__interp) {
+				var _child = __interp[j++]
+				
+				struct_set_from_hash(_ref, _child[InterpData.OUT_HASH], (_child[InterpData.ANGLE] ? lerp_angle : lerp)(_child[InterpData.PREVIOUS_VALUE], struct_get_from_hash(_ref, _child[InterpData.IN_HASH]), _tick)) // This line is already long enough, but why not make it even longer with this useless comment?
+			}
+		}
+	}
+#endregion
+}
+
+/* GROSS HACKS: There are memory leaks because structs are never being
+				dereferenced for some reason. Not sure if this is
+				related to Catspeak or the interpolator in general.
+				Whenever a dead instance or struct is removed from the
+				interpolator, call the GC just in case. */
+if _gc {
+	gc_collect()
+}
+#endregion
