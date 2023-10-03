@@ -22,6 +22,13 @@ function Level() constructor {
 	area_things = ds_list_create()
 	syncables = ds_grid_create(1, 2)
 	
+	level_script = undefined
+	
+	start = undefined
+	area_changed = undefined
+	area_activated = undefined
+	area_deactivated = undefined
+	
 	/// @desc Destroys the contents of the level, allowing it to be removed.
 	static destroy = function () {
 		ds_list_destroy(area_things)

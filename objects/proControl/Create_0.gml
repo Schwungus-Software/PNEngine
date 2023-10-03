@@ -265,15 +265,19 @@
 					"MUSIC", global.music
 				)
 				
-				addFunction("thing_load", thing_load)
-				
-				addFunction("mod_get", function (_name) {
-					return global.mods[? _name]
-				})
-				
-				addFunction("music_get_instance", function (_priority) {
-					return global.music_instances[| _priority]
-				})
+				addFunction(
+					"thing_load", thing_load,
+					
+					"mod_get", function (_name) {
+						return global.mods[? _name]
+					},
+					
+					"MusicInstance", MusicInstance,
+					
+					"music_get_instance", function (_priority) {
+						return global.music_instances[| _priority]
+					}
+				)
 			#endregion
 			
 			#region Players

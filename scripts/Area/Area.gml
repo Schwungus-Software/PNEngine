@@ -161,6 +161,12 @@ function Area() constructor {
 		}
 		
 		active = true
+		
+		with level {
+			if area_activated != undefined {
+				area_activated(other)
+			}
+		}
 	}
 	
 	/// @func add(type, [x], [y], [z], [angle], [tag], [special])
@@ -438,6 +444,12 @@ function Area() constructor {
 		ds_list_clear(particles)
 		sounds.clear()
 		active = false
+		
+		with level {
+			if area_deactivated != undefined {
+				area_deactivated(other)
+			}
+		}
 	}
 	
 	static destroy = function () {

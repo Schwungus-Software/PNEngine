@@ -152,14 +152,22 @@ function Player() constructor {
 			
 			if area != undefined {
 				with area {
-					master ??= other
-					ds_list_add(players, other)
+					var _newcomer = other
+					
+					master ??= _newcomer
+					ds_list_add(players, _newcomer)
 					activate()
 					
 					var i = ds_list_size(active_things)
 					
 					repeat i {
-						active_things[| --i].player_entered(other)
+						active_things[| --i].player_entered(_newcomer)
+					}
+					
+					with level {
+						if area_changed != undefined {
+							area_changed(_newcomer, other)
+						}
 					}
 				}
 			}

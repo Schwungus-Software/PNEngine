@@ -31,6 +31,7 @@ function ScriptMap() : AssetMap() constructor {
 					var _header = string_trim_start(string_trim_end(_line))
 					
 					if string_starts_with(_header, "#thing") {
+#region ThingScript
 						var _index = asset_get_index(_name)
 						
 						if object_exists(_index) and object_is_ancestor(_index, Thing) {
@@ -90,8 +91,39 @@ function ScriptMap() : AssetMap() constructor {
 								thing_load(internal_parent, _special)
 							}
 						}
+#endregion
+					} else if string_starts_with(_header, "#level") {
+#region Level
+						_script = new LevelScript()
+						
+						var _parents = string_split(_header, " ", true)
+						var _parents_n = array_length(_parents)
+						
+						if _parents_n >= 2 {
+							if _parents_n > 2 {
+								throw "Cannot inherit more than one LevelScript"
+							}
+							
+							var _parent = _parents[1]
+							
+							load(_parent)
+							
+							with _script {
+								parent = other.get(_parent)
+								
+								if parent != undefined {
+									main = _parent.main
+									load = _parent.load
+									start = _parent.start
+									area_changed = _parent.area_changed
+									area_activated = _parent.area_activated
+									area_deactivated = _parent.area_deactivated
+								}
+							}
+						}
+#endregion
 					} else {
-						throw "Script has no header"
+						throw "Script has invalid header"
 					}
 					
 					_line = ""
@@ -128,16 +160,21 @@ function ScriptMap() : AssetMap() constructor {
 		
 		with _script {
 			main = _main
-			load = _globals[$ "load"] ?? undefined
+			load = _globals[$ "load"]
 			
 			if is_instanceof(self, ThingScript) {
-				create = _globals[$ "create"] ?? undefined
-				on_destroy = _globals[$ "on_destroy"] ?? undefined
-				clean_up = _globals[$ "clean_up"] ?? undefined
-				tick = _globals[$ "tick"] ?? undefined
-				draw = _globals[$ "draw"] ?? undefined
-				draw_screen = _globals[$ "draw_screen"] ?? undefined
-				draw_gui = _globals[$ "draw_gui"] ?? undefined
+				create = _globals[$ "create"]
+				on_destroy = _globals[$ "on_destroy"]
+				clean_up = _globals[$ "clean_up"]
+				tick = _globals[$ "tick"]
+				draw = _globals[$ "draw"]
+				draw_screen = _globals[$ "draw_screen"]
+				draw_gui = _globals[$ "draw_gui"]
+			} else if is_instanceof(self, LevelScript) {
+				start = _globals[$ "start"]
+				area_changed = _globals[$ "area_changed"]
+				area_activated = _globals[$ "area_activated"]
+				area_deactivated = _globals[$ "area_deactivated"]
 			}
 			
 			if load != undefined {
@@ -147,6 +184,15 @@ function ScriptMap() : AssetMap() constructor {
 		
 		ds_map_add(assets, _name, _script)
 		print("ScriptMap.load: Added '{0}' ({1})", _name, _script)
+	}
+	
+	static flush = function () {
+		var _key = ds_map_find_first(assets)
+		
+		repeat ds_map_size(assets) {
+			assets[? _key].flush()
+			_key = ds_map_find_next(assets, _key)
+		}
 	}
 }
 

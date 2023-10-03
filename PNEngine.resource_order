@@ -625,6 +625,7 @@
     {"name":"CollageConvertPowerTwo","order":1,"path":"scripts/CollageConvertPowerTwo/CollageConvertPowerTwo.yy",},
     {"name":"input_join_params_get","order":3,"path":"scripts/input_join_params_get/input_join_params_get.yy",},
     {"name":"input_verb_consume","order":1,"path":"scripts/input_verb_consume/input_verb_consume.yy",},
+    {"name":"LevelScript","order":2,"path":"scripts/LevelScript/LevelScript.yy",},
     {"name":"CollageImageGetSurface","order":2,"path":"scripts/CollageImageGetSurface/CollageImageGetSurface.yy",},
     {"name":"input_player_active_set","order":1,"path":"scripts/input_player_active_set/input_player_active_set.yy",},
     {"name":"__input_class_gamepad_mapping","order":7,"path":"scripts/__input_class_gamepad_mapping/__input_class_gamepad_mapping.yy",},

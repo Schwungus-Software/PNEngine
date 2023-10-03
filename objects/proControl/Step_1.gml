@@ -35,7 +35,8 @@ if load_state != LoadStates.NONE {
 			//global.fonts.clear()
 			global.sounds.clear()
 			global.music.clear()
-			global.scripts.clear()
+			global.scripts.flush()
+			//global.scripts.clear()
 			
 			var _indices = RNG.indices
 			var i = 0
@@ -88,6 +89,25 @@ if load_state != LoadStates.NONE {
 					_checkpoint[1] = load_area
 					_checkpoint[2] = load_tag
 					save_game()
+				}
+				
+				var _script = _json[$ "script"]
+				
+				if is_string(_script) {
+					global.scripts.load(_script)
+					
+					with _level {
+						level_script = global.scripts.get(_script)
+						start = level_script.start
+						area_changed = level_script.area_changed
+						area_activated = level_script.area_activated
+						area_deactivated = level_script.area_deactivated
+						
+						if (start != undefined) start.setSelf(_level)
+						if (area_changed != undefined) area_changed.setSelf(_level)
+						if (area_activated != undefined) area_activated.setSelf(_level)
+						if (area_deactivated != undefined) area_deactivated.setSelf(_level)
+					}
 				}
 				
 				var _music_tracks = _json[$ "music"]
@@ -488,6 +508,13 @@ if load_state != LoadStates.NONE {
 			}
 			
 			load_state = LoadStates.NONE
+			
+			with _level {
+				if start != undefined {
+					start.setSelf(_level)
+					start()
+				}
+			}
 #endregion
 		break
 		
