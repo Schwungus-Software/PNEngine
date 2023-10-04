@@ -131,6 +131,10 @@ if menu != undefined and not locked {
 						var _players = global.players
 						var i = 0
 						
+						array_foreach(_players, function (_element, _index) {
+							_element.clear_states()
+						})
+						
 						repeat array_length(states) {
 							var _player = _players[i]
 							var _states = states[i]
@@ -150,6 +154,7 @@ if menu != undefined and not locked {
 						var _global = global.flags[0]
 						var _names = struct_get_names(flags)
 						
+						_global.clear()
 						i = 0
 						
 						repeat struct_names_count(flags) {
