@@ -203,7 +203,7 @@ function Player() constructor {
 		return true
 	}
 	
-	static clear_states = function () {
+	static __force_clear_states = function () {
 		ds_map_clear(states)
 		states[? "hp"] = 8
 		states[? "coins"] = 0
@@ -211,5 +211,26 @@ function Player() constructor {
 		states[? "frozen"] = false
 	}
 	
-	clear_states()
+	static clear_states = function () {
+		var _netgame = global.netgame
+		
+		if _netgame != undefined {
+			with _netgame {
+				if active and master {
+					var b = net_buffer_create(true, NetHeaders.HOST_RESET_PLAYER_STATES)
+					
+					buffer_write(b, buffer_u8, other.slot)
+					send(SEND_OTHERS, b)
+				} else {
+					return false
+				}
+			}
+		}
+		
+		__force_clear_states()
+		
+		return true
+	}
+	
+	__force_clear_states()
 }

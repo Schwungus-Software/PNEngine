@@ -221,6 +221,8 @@ if async_load[? "type"] == network_type_data {
 				case NetHeaders.HOST_DESTROY_THING:
 				case NetHeaders.HOST_PLAYER_STATE:
 				case NetHeaders.HOST_FLAG:
+				case NetHeaders.HOST_RESET_FLAGS:
+				case NetHeaders.HOST_RESET_PLAYER_STATES:
 					exit
 			}
 		}
@@ -747,6 +749,22 @@ if async_load[? "type"] == network_type_data {
 					
 					flags[? _key] = _value
 				}
+			break
+			
+			case NetHeaders.HOST_RESET_PLAYER_STATES:
+				if _ip != ip or _port != port or _from != 0 or _from == _to {
+					break
+				}
+				
+				global.players[buffer_read(_buffer, buffer_u8)].__force_clear_states()
+			break
+			
+			case NetHeaders.HOST_RESET_FLAGS:
+				if _ip != ip or _port != port or _from != 0 or _from == _to {
+					break
+				}
+				
+				global.flags[buffer_read(_buffer, buffer_u8)].__force_clear()
 			break
 			
 			default:

@@ -29,11 +29,32 @@ function Flags(_id) constructor {
 		return true
 	}
 	
-	static clear = function () {
+	static __force_clear = function () {
 		if slot == 0 {
 			ds_map_copy(flags, global.default_flags)
 		} else {
 			ds_map_clear(flags)
 		}
+	}
+	
+	static clear = function () {
+		var _netgame = global.netgame
+		
+		if _netgame != undefined {
+			with _netgame {
+				if active and master {
+					var b = net_buffer_create(true, NetHeaders.HOST_RESET_FLAGS)
+					
+					buffer_write(b, buffer_u8, other.slot)
+					send(SEND_OTHERS, b)
+				} else {
+					return false
+				}
+			}
+		}
+		
+		__force_clear()
+		
+		return true
 	}
 }
