@@ -125,8 +125,6 @@ event_inherited()
 		var _area = area
 		
 		if _area != undefined {
-			var _active_things = _area.active_things
-			
 			output.Start()
 			
 			var _canvases = global.canvases
@@ -178,25 +176,29 @@ event_inherited()
 			gpu_set_tex_filter(_vid_texture_filter)
 			global.batch_camera = id
 			
+			var _active_things
 			var _x = sx
 			var _y = sy
 			var _z = sz
-			var i = ds_list_size(_active_things)
-			
-			repeat i {
-				with _active_things[| --i] {
-					if f_visible and (cull_draw == -1 or point_distance(_x, _y, sx, sy) < cull_draw) {
-						event_user(ThingEvents.DRAW)
-					}
-				}
-			}
 			
 			with _area {
 				if model != undefined {
 					model.draw()
 				}
 				
-				var i = 0
+				_active_things = active_things
+				
+				var i = ds_list_size(_active_things)
+				
+				repeat i {
+					with _active_things[| --i] {
+						if f_visible and (cull_draw == -1 or point_distance(_x, _y, sx, sy) < cull_draw) {
+							event_user(ThingEvents.DRAW)
+						}
+					}
+				}
+				
+				i = 0
 				
 				repeat ds_list_size(particles) {
 					var p = particles[| i++]
