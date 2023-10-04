@@ -1,6 +1,24 @@
 function ScriptMap() : AssetMap() constructor {
 	static load = function (_name, _special = undefined) {
 		if ds_map_exists(assets, _name) {
+			with assets[? _name] {
+				if load != undefined {
+					load(_special)
+				}
+				
+				if parent != undefined {
+					with parent {
+						if load != undefined {
+							load(_special)
+						}
+					}
+				}
+				
+				if is_instanceof(self, ThingScript) {
+					thing_load(internal_parent, _special)
+				}
+			}
+			
 			exit
 		}
 		
