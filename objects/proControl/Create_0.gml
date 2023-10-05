@@ -474,7 +474,12 @@
 					"draw_image_part", CollageDrawImagePart,
 					"draw_image_part_ext", CollageDrawImagePartExt,
 					"draw_image_tiled", CollageDrawImageTiled,
-					"draw_image_tiled_ext", CollageDrawImageTiledExt
+					"draw_image_tiled_ext", CollageDrawImageTiledExt,
+					
+					"batch_billboard", batch_billboard,
+					"batch_floor", batch_floor,
+					"batch_floor_ext", batch_floor_ext,
+					"batch_set_bright", batch_set_bright
 				)
 			#endregion
 			
@@ -490,9 +495,15 @@
 					"TOPT_OPTIONS", TitleOptions.OPTIONS
 				)
 				
-				addFunction("game_status", function () {
-					return global.game_status
-				})
+				addFunction(
+					"game_status", function () {
+						return global.game_status
+					},
+					
+					"delta_ticks", function () {
+						return global.delta
+					}
+				)
 			#endregion
 		#endregion
 	}
