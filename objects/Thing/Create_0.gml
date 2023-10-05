@@ -100,6 +100,7 @@
 	f_visible = true
 	f_lookable = false
 	f_gravity = false
+	f_culled = false
 	f_cull_destroy = false
 	f_garbage = false
 	f_frozen = false

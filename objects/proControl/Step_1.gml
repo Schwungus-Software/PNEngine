@@ -939,10 +939,14 @@ if _tick >= 1 {
 								}
 								
 								if _can_tick {
+									f_culled = false
+									
 									if not f_frozen {
 										event_user(ThingEvents.TICK)
 									}
 								} else {
+									f_culled = true
+									
 									if f_cull_destroy {
 										destroy(false)
 										
