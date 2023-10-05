@@ -3,7 +3,7 @@ function Player() constructor {
 	status = PlayerStatus.INACTIVE
 	
 	// Netgame
-	net_player = undefined
+	net = undefined
 	
 	// Area
 	level = undefined
@@ -230,6 +230,10 @@ function Player() constructor {
 		__force_clear_states()
 		
 		return true
+	}
+	
+	static is_local = function () {
+		return net == undefined or net.local
 	}
 	
 	__force_clear_states()

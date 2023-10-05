@@ -139,14 +139,14 @@ if async_load[? "type"] == network_type_data {
 					
 					repeat MAX_NET_PLAYERS {
 						with _players[j] {
-							if status == PlayerStatus.INACTIVE or net_player == _new_player {
+							if status == PlayerStatus.INACTIVE or net == _new_player {
 								continue
 							}
 							
 							print($"proControl: Sending info from Player {-~j}")
 							buffer_write(b, buffer_u8, j)
 							buffer_write(b, buffer_u8, status)
-							buffer_write(b, buffer_string, net_player.name)
+							buffer_write(b, buffer_string, net.name)
 						}
 						
 						++j
@@ -229,15 +229,15 @@ if async_load[? "type"] == network_type_data {
 		
 		if _to == local_slot {
 			if _reliable > 0 {
-				var _net_player = players[| _from]
+				var _net = players[| _from]
 				
-				if _net_player == undefined or _reliable <= _net_player.reliable_received {
+				if _net == undefined or _reliable <= _net.reliable_received {
 					print($"! proControl: Got invalid or outdated ROM from player {-~_from} (index {_reliable})")
 					
 					exit
 				}
 				
-				_net_player.reliable_received = _reliable
+				_net.reliable_received = _reliable
 				
 				var b = net_buffer_create(false, NetHeaders.ACK)
 				
@@ -255,15 +255,15 @@ if async_load[? "type"] == network_type_data {
 		
 		switch _header {
 			case NetHeaders.ACK:
-				var _net_player = players[| _from]
+				var _net = players[| _from]
 				
-				if _net_player == undefined {
+				if _net == undefined {
 					break
 				}
 				
 				var _index = buffer_read(_buffer, buffer_u32)
 				
-				with _net_player {
+				with _net {
 					if not ds_list_empty(reliable) {
 						var b = reliable[| 0]
 						
@@ -480,15 +480,15 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				var _net_player = players[| _from]
+				var _net = players[| _from]
 				
-				if _net_player == undefined {
+				if _net == undefined {
 					print($"! proControl: Got chat message from invalid player {-~_from} ({_ip}:{_port})")
 					
 					break
 				}
 				
-				show_caption($"{_net_player.name}: {buffer_read(_buffer, buffer_string)}", 8 * TICKRATE)
+				show_caption($"{_net.name}: {buffer_read(_buffer, buffer_string)}", 8 * TICKRATE)
 			break
 			
 			case NetHeaders.INPUT:
@@ -496,15 +496,15 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				var _net_player = players[| _from]
+				var _net = players[| _from]
 				
-				if _net_player == undefined {
+				if _net == undefined {
 					print($"! proControl: Got input from invalid player {-~_from} ({_ip}:{_port})")
 					
 					break
 				}
 				
-				with _net_player.player {
+				with _net.player {
 					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s8))
 					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s8))
 					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))

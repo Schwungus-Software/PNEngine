@@ -57,7 +57,7 @@ function NetPlayer() constructor {
 		
 		if player != undefined {
 			with player {
-				net_player = undefined
+				net = undefined
 				
 				if slot != 0 {
 					deactivate()

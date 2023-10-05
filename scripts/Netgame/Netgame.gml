@@ -291,18 +291,18 @@ function Netgame() constructor {
 			}
 		}
 		
-		var _net_player = players[| _index]
+		var _net = players[| _index]
 		
-		if _net_player != undefined {
+		if _net != undefined {
 			return undefined
 		}
 		
-		_net_player = new NetPlayer()
+		_net = new NetPlayer()
 		
 		var _player = global.players[_index]
 		var _key = _ip + ":" + string(_port)
 		
-		with _net_player {
+		with _net {
 			session = other
 			slot = _index
 			player = _player
@@ -312,11 +312,11 @@ function Netgame() constructor {
 		}
 		
 		with _player {
-			net_player = _net_player
+			net = _net
 			activate()
 		}
 		
-		players[| _index] = _net_player;
+		players[| _index] = _net;
 		
 		// Work around GameMaker quirk where in-between empty indices have a
 		// value of 0
@@ -330,9 +330,9 @@ function Netgame() constructor {
 		++player_count
 		
 		if master {
-			clients[? _key] = _net_player
+			clients[? _key] = _net
 		}
 		
-		return _net_player
+		return _net
 	}
 }
