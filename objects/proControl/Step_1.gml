@@ -453,14 +453,25 @@ if load_state != LoadStates.NONE {
 		case LoadStates.FINISH:
 #region Finish Loading
 			var _level = global.level
-			
-			np_setpresence("", _level.rp_name, _level.rp_icon, "")
-			
 			var _players = global.players
 			var i = 0
 			var _load_area = load_area
 			
 			with _level {
+				var _status = ""
+				var _total = global.players_ready + global.players_active
+				var _game_status = global.game_status
+				
+				if _game_status == GameStatus.NETGAME {
+					_status = _total > 1 ? $"Online, {_total} players" : "Online"
+				} else if _game_status == GameStatus.DEMO {
+					_status = "Demo"
+				} else if _total > 1 {
+					_status = $"{_total} players"
+				}
+				
+				np_setpresence(_status, rp_name, rp_icon, "")
+				
 				repeat array_length(music) {
 					var _track = music[i]
 					var _asset
