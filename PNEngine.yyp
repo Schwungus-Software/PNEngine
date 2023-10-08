@@ -1234,6 +1234,7 @@
     {"id":{"name":"pne_lights","path":"scripts/pne_lights/pne_lights.yy",},},
     {"id":{"name":"__lexicon_trace","path":"scripts/__lexicon_trace/__lexicon_trace.yy",},},
     {"id":{"name":"input_binding_get_verbs","path":"scripts/input_binding_get_verbs/input_binding_get_verbs.yy",},},
+    {"id":{"name":"game_update_status","path":"scripts/game_update_status/game_update_status.yy",},},
     {"id":{"name":"input_players_get_status","path":"scripts/input_players_get_status/input_players_get_status.yy",},},
     {"id":{"name":"__input_config_verbs","path":"scripts/__input_config_verbs/__input_config_verbs.yy",},},
     {"id":{"name":"RNG","path":"scripts/RNG/RNG.yy",},},

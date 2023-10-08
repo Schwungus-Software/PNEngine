@@ -19,6 +19,7 @@ function cmd_disconnect(_args) {
 	global.players[0].activate()
 	show_caption($"[c_red]{lexicon_text("netgame.disconnected")}")
 	global.level.goto("lvlTitle")
+	game_update_status()
 	
 	return true
 }

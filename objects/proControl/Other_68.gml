@@ -163,6 +163,7 @@ if async_load[? "type"] == network_type_data {
 					buffer_write(b, buffer_u8, _slot)
 					buffer_write(b, buffer_string, _name)
 					send(SEND_OTHERS, b)
+					game_update_status()
 					
 					// Debug
 					var _pind = -~_slot
@@ -196,6 +197,7 @@ if async_load[? "type"] == network_type_data {
 					}
 					
 					send(SEND_OTHERS, b)
+					game_update_status()
 					
 					exit
 				
@@ -419,6 +421,8 @@ if async_load[? "type"] == network_type_data {
 					name = buffer_read(_buffer, buffer_string)
 					show_caption($"[c_lime]{lexicon_text("netgame.player_joined", name, -~_slot)}")
 				}
+				
+				game_update_status()
 			break
 			
 			case NetHeaders.HOST_DISCONNECT:
@@ -432,6 +436,8 @@ if async_load[? "type"] == network_type_data {
 				if connect_fail_callback != undefined {
 					connect_fail_callback()
 				}
+				
+				game_update_status()
 			break
 			
 			case NetHeaders.PLAYER_LEFT:
@@ -463,6 +469,8 @@ if async_load[? "type"] == network_type_data {
 						show_caption($"[c_red]{lexicon_text("netgame.player_left", name)}")
 					}
 				}
+				
+				game_update_status()
 			break
 			
 			case NetHeaders.HOST_PING:

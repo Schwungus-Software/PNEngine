@@ -37,6 +37,7 @@ function cmd_host(_args) {
 	input_source_mode_set(INPUT_SOURCE_MODE.FIXED)
 	global.game_status = GameStatus.NETGAME
 	show_caption($"[c_lime]{lexicon_text("netgame.hosting", _port)}")
+	game_update_status()
 	
 	return true
 }

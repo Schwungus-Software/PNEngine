@@ -396,6 +396,7 @@
     {"name":"pne_lights","order":1,"path":"scripts/pne_lights/pne_lights.yy",},
     {"name":"__lexicon_trace","order":13,"path":"scripts/__lexicon_trace/__lexicon_trace.yy",},
     {"name":"input_binding_get_verbs","order":5,"path":"scripts/input_binding_get_verbs/input_binding_get_verbs.yy",},
+    {"name":"game_update_status","order":7,"path":"scripts/game_update_status/game_update_status.yy",},
     {"name":"input_players_get_status","order":12,"path":"scripts/input_players_get_status/input_players_get_status.yy",},
     {"name":"__input_config_verbs","order":14,"path":"scripts/__input_config_verbs/__input_config_verbs.yy",},
     {"name":"RNG","order":1,"path":"scripts/RNG/RNG.yy",},
