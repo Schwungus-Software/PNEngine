@@ -6,20 +6,25 @@ function Netgame() constructor {
 	port = 1337
 	
 	master = true
+	private = false
 	players = ds_list_create()
 	clients = ds_map_create()
 	player_count = 0
 	local_slot = 0
 	
 	code = "NET_UNKNOWN"
+	host_success_callback = undefined
+	host_fail_callback = undefined
 	connect_success_callback = undefined
 	connect_fail_callback = undefined
 	was_connected_before = false
 	
 	/// @desc Hosts a session on the specified port and returns true when listening.
-	static host = function (_port = 1337) {
+	static host = function (_ip, _port = 1337, _private = false, _success_callback = undefined, _fail_callback = undefined) {
 		disconnect()
+		ip = network_resolve(_ip)
 		port = _port
+		private = _private
 		socket = network_create_socket_ext(network_socket_udp, _port)
 		
 		if socket < 0 {
@@ -27,14 +32,13 @@ function Netgame() constructor {
 		}
 		
 		master = true
-		active = true
-		
-		with add_player(0, "127.0.0.1", _port) {
-			name = global.config.name
-			local = true
-		}
-		
-		time_source_start(ping_time_source)
+		private = _private
+		active = false
+		send_direct(_ip, _port, net_buffer_create(false, NetHeaders.HOST_CHECK_IP))
+		code = "NET_TIMEOUT"
+		host_success_callback = _success_callback
+		host_fail_callback = _fail_callback
+		time_source_start(host_time_source)
 		
 		return true
 	}
@@ -42,7 +46,7 @@ function Netgame() constructor {
 	/// @desc Connects to a session on the specified IP and port and returns true when connecting.
 	static connect = function (_ip = "127.0.0.1", _port = 1337, _success_callback = undefined, _fail_callback = undefined) {
 		disconnect()
-		ip = _ip
+		ip = network_resolve(_ip)
 		port = _port
 		socket = network_create_socket(network_socket_udp)
 		
@@ -63,6 +67,7 @@ function Netgame() constructor {
 	
 	/// @desc Disconnects from the current session and returns true if successful.
 	static disconnect = function () {
+		time_source_stop(host_time_source)
 		time_source_stop(ports_time_source)
 		time_source_stop(ping_time_source)
 		time_source_stop(connect_time_source)
@@ -253,6 +258,16 @@ function Netgame() constructor {
 			send(SEND_OTHERS, net_buffer_create(false, NetHeaders.HOST_PING))
 		}
 	}, [], -1)
+	
+	static host_time_source = time_source_create(time_source_global, 10, time_source_units_seconds, function () {
+		with global.netgame {
+			if host_fail_callback != undefined {
+				host_fail_callback()
+			}
+			
+			disconnect()
+		}
+	}, [], 1)
 	
 	static connect_time_source = time_source_create(time_source_global, 10, time_source_units_seconds, function () {
 		with global.netgame {

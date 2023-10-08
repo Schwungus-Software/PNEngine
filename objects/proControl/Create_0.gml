@@ -510,8 +510,6 @@
 #endregion
 
 // CREATE
-var _rpc = ""
-
 #region Mods
 	var _mods = global.mods
 	var _key = ds_map_find_first(_mods)
@@ -543,7 +541,7 @@ var _rpc = ""
 			var _rpc_id = _info[$ "rpc"]
 			
 			if is_string(_rpc_id) {
-				_rpc = _rpc_id
+				global.game_rpc_id = _rpc_id
 			}
 			
 			var _flags = _info[$ "flags"]
@@ -587,6 +585,6 @@ load_tag = noone
 load_state = LoadStates.START
 
 // DISCORD
-if not np_initdiscord(_rpc, true, np_steam_app_id_empty) {
+if not np_initdiscord(global.game_rpc_id, true, np_steam_app_id_empty) {
 	print("! proControl: Could not initialize Discord Rich Presence")
 }

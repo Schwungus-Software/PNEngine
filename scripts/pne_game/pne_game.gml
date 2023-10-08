@@ -30,6 +30,7 @@
 	}
 	
 	global.game_status = GameStatus.NORMAL
+	global.game_rpc_id = ""
 	
 	global.freeze_step = true
 	global.tick = 0

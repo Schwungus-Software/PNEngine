@@ -8,6 +8,7 @@
 
 enum NetHeaders {
 	// Internal
+	HOST_CHECK_IP,
 	ACK,
 	
 	// Handshake

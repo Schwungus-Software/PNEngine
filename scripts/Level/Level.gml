@@ -63,7 +63,7 @@ function Level() constructor {
 		
 		if _netgame != undefined {
 			with _netgame {
-				if not master or _level == undefined {
+				if not active or not master or _level == undefined {
 					exit
 				}
 				

@@ -12,13 +12,13 @@ function cmd_connect(_args) {
 		cmd_disconnect("")
 	} else {
 		if global.game_status == GameStatus.DEMO {
-			print("cmd_connect: Cannot connect from a demo!")
+			print("cmd_connect: Cannot connect from a demo")
 			
 			return false
 		}
 		
 		if (global.players_ready + global.players_active) > 1 {
-			print("cmd_connect: Cannot connect with more than 1 player!")
+			print("cmd_connect: Cannot connect with more than 1 player")
 			
 			return false
 		}

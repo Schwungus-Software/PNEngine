@@ -17,11 +17,12 @@ function game_update_status() {
 	
 	if global.game_status == GameStatus.NETGAME {
 		with global.netgame {
-			if master and _level.name == "lvlTitle" {
-				np_setpresence_secrets("", "", "PNEngine")
+			if active and master and not private and _level.name == "lvlTitle" {
+				print("RPC secrets ready")
+				np_setpresence_secrets("", "", ip + ":" + string(port))
 			}
 			
-			np_setpresence_partyparams(player_count, INPUT_MAX_PLAYERS, ip + ":" + string(port), DISCORD_PARTY_PRIVACY_PRIVATE)
+			np_setpresence_partyparams(player_count, INPUT_MAX_PLAYERS, "PNEngine", DISCORD_PARTY_PRIVACY_PRIVATE)
 		}
 	}
 	

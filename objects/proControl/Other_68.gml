@@ -1,3 +1,32 @@
+var _rpc_type = async_load[? "type"]
+
+if _rpc_type == "DiscordJoinRequest" {
+	print($"proControl: Got RPC join request from '{async_load[? "username"]}'")
+	
+	var _user_id = async_load[? "user_id"]
+	var _reply = DISCORD_REPLY_IGNORE
+	var _netgame = global.netgame
+	
+	if _netgame != undefined {
+		with _netgame {
+			if active and master {
+				_reply = private or global.level.name != "lvlTitle" ? DISCORD_REPLY_NO : DISCORD_REPLY_YES
+			}
+		}
+	}
+	
+	np_respond(_user_id, _reply)
+	
+	exit
+} else if _rpc_type == "DiscordJoinGame" {
+	var _secret = async_load[? "join_secret"]
+	
+	print($"proControl: Joining {_secret} through RPC")
+	cmd_connect(string_replace(_secret, ":", " "))
+	
+	exit
+}
+
 if async_load[? "type"] == network_type_data {
 	switch load_state {
 		default: exit
@@ -22,6 +51,27 @@ if async_load[? "type"] == network_type_data {
 	with global.netgame {
 		if master {
 			switch _header {
+				case NetHeaders.HOST_CHECK_IP:
+					if not active and (_ip == ip or _ip == "127.0.0.1") and _port == port {
+						time_source_stop(host_time_source)
+						active = true
+						
+						with add_player(0, "127.0.0.1", _port) {
+							name = global.config.name
+							local = true
+						}
+						
+						time_source_start(ping_time_source)
+						
+						if host_success_callback != undefined {
+							host_success_callback()
+						}
+						
+						was_connected_before = true
+					}
+					
+					exit
+				
 				case NetHeaders.CLIENT_CONNECT:
 					var _key = _ip + ":" + string(_port)
 					
