@@ -16,8 +16,7 @@
 		
 		"netgame": {
 			"no_connection": "Network connection not found",
-			"hosting": "Hosting on %s...",
-			"hosted": "Hosting on %s",
+			"hosting": "Hosting on port %s",
 			"connecting": "Connecting to %s...",
 			"lost_connection": "Connection lost",
 			"connected": "Connected",
