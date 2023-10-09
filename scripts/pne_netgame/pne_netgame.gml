@@ -4,7 +4,7 @@
 #macro SEND_ALL -2
 #macro SEND_OTHERS -3
 
-#macro SYNC_INTERVAL 8
+#macro SYNC_INTERVAL 10
 
 enum NetHeaders {
 	// Internal
