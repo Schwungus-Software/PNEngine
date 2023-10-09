@@ -1,7 +1,7 @@
 /// @description Create
 // Feather ignore GM2016
 if level.name != "lvlTitle" {
-	destroy(false)
+	instance_destroy(id, false)
 	
 	exit
 }

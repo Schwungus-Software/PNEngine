@@ -569,19 +569,17 @@ if async_load[? "type"] == network_type_data {
 					if instance_exists(_thing) {
 						with _thing {
 							if area.slot != _area_id {
-								destroy(false)
+								instance_destroy(id, false)
 								
 								break
 							}
 							
 							if thing_script != undefined {
 								if thing_script.name != _name {
-									destroy(false)
+									instance_destroy(id, false)
 								}
-							} else {
-								if object_get_name(object_index) != _name {
-									destroy(false)
-								}
+							} else if object_get_name(object_index) != _name {
+								instance_destroy(id, false)
 							}
 						}
 					}
@@ -685,7 +683,7 @@ if async_load[? "type"] == network_type_data {
 						with _area_thing {
 							if thing != _thing {
 								if instance_exists(thing) {
-									thing.destroy(false)
+									instance_destroy(thing, false)
 								}
 								
 								thing = _thing
@@ -726,10 +724,10 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				var _thing = global.level.syncables[| buffer_read(_buffer, buffer_u16)]
+				var _thing = global.level.syncables[# buffer_read(_buffer, buffer_u16), 0]
 				
 				if _thing != undefined {
-					_thing.destroy(false)
+					instance_destroy(_thing, buffer_read(_buffer, buffer_bool))
 				}
 			break
 			

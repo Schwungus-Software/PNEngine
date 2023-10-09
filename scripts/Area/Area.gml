@@ -249,7 +249,7 @@ function Area() constructor {
 				if _netgame != undefined {
 					with _netgame {
 						if not active or not master {
-							other.destroy(false)
+							instance_destroy(other.id, false)
 							
 							return noone
 						}
@@ -432,7 +432,7 @@ function Area() constructor {
 				continue
 			}
 			
-			_thing.destroy(false)
+			instance_destroy(_thing, false)
 		}
 		
 		if _cant_deactivate {
@@ -454,7 +454,7 @@ function Area() constructor {
 	
 	static destroy = function () {
 		repeat ds_list_size(active_things) {
-			active_things[| 0].destroy(false)
+			instance_destroy(active_things[| 0], false)
 		}
 		
 		ds_list_destroy(active_things)

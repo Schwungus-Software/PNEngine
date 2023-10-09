@@ -1,6 +1,6 @@
 /// @description Create
 if level.name != "lvlLogo" {
-	destroy(false)
+	instance_destroy(id, false)
 	
 	exit
 }

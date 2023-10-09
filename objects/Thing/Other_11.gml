@@ -25,7 +25,7 @@ if f_unique {
 	}
 	
 	if area.count(_type) > 1 {
-		destroy(false)
+		instance_destroy(id, false)
 		
 		exit
 	}

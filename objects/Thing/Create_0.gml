@@ -128,7 +128,27 @@
 	}
 	
 	destroy = function (_natural = true) {
+		if f_sync {
+			var _netgame = global.netgame
+			
+			if _netgame != undefined {
+				with _netgame {
+					if not active or not master {
+						return false
+					}
+					
+					var b = net_buffer_create(true, NetHeaders.HOST_DESTROY_THING)
+					
+					buffer_write(b, buffer_u16, other.sync_id)
+					buffer_write(b, buffer_bool, _natural)
+					send(SEND_OTHERS, b)
+				}
+			}
+		}
+		
 		instance_destroy(id, _natural)
+		
+		return true
 	}
 	
 	add_net_variable = function (_name, _flags = NetVarFlags.DEFAULT, _read = undefined, _write = undefined) {
