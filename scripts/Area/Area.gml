@@ -287,7 +287,7 @@ function Area() constructor {
 							var _netvar = net_variables[| i]
 							
 							with _netvar {
-								if not flags & NetVarFlags.CREATE {
+								if not (flags & NetVarFlags.CREATE) {
 									break
 								}
 								

@@ -980,7 +980,7 @@ if _tick >= 1 {
 											var _netvar = net_variables[| k]
 											
 											with _netvar {
-												if not flags & NetVarFlags.TICK {
+												if not (flags & NetVarFlags.TICK) {
 													break
 												}
 												
