@@ -8,12 +8,12 @@ if not f_sync {
 	ds_list_destroy(net_variables)
 	net_variables = undefined
 } else {
-	add_net_variable("x")
-	add_net_variable("y")
-	add_net_variable("z")
-	add_net_variable("x_speed")
-	add_net_variable("y_speed")
-	add_net_variable("z_speed")
+	add_net_variable("x", NetVarFlags.GENERIC)
+	add_net_variable("y", NetVarFlags.GENERIC)
+	add_net_variable("z", NetVarFlags.GENERIC)
+	add_net_variable("x_speed", NetVarFlags.GENERIC)
+	add_net_variable("y_speed", NetVarFlags.GENERIC)
+	add_net_variable("z_speed", NetVarFlags.GENERIC)
 	add_net_variable("tag", NetVarFlags.CREATE)
 }
 

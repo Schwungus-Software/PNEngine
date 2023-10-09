@@ -11,6 +11,6 @@ event_inherited()
 
 update_matrices()
 
-add_net_variable("yaw")
-add_net_variable("pitch")
-add_net_variable("roll")
+add_net_variable("yaw", NetVarFlags.GENERIC)
+add_net_variable("pitch", NetVarFlags.GENERIC)
+add_net_variable("roll", NetVarFlags.GENERIC)

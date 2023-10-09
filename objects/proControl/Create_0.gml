@@ -359,8 +359,10 @@
 					"M_SHADOW_NORMAL", MShadow.NORMAL,
 					"M_SHADOW_BONE", MShadow.BONE,
 					
+					"NVAR_DEFAULT", NetVarFlags.DEFAULT,
 					"NVAR_CREATE", NetVarFlags.CREATE,
-					"NVAR_TICK", NetVarFlags.TICK
+					"NVAR_TICK", NetVarFlags.TICK,
+					"NVAR_GENERIC", NetVarFlags.GENERIC
 				)
 			#endregion
 			

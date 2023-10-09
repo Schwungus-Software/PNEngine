@@ -131,7 +131,7 @@
 		instance_destroy(id, _natural)
 	}
 	
-	add_net_variable = function (_name, _flags = 0, _read = undefined, _write = undefined) {
+	add_net_variable = function (_name, _flags = NetVarFlags.DEFAULT, _read = undefined, _write = undefined) {
 		if net_variables == undefined {
 			return false
 		}
