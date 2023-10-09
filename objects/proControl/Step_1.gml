@@ -996,14 +996,6 @@ if _tick >= 1 {
 													_value = struct_get_from_hash(scope, hash)
 												}
 												
-												if flags & NetVarFlags.DELTA {
-													if value == _value {
-														break
-													}
-													
-													buffer_poke(b, 0, buffer_u32, true)
-												}
-												
 												value = _value
 												buffer_write(b, buffer_u8, k)
 												buffer_write_dynamic(b, _value);

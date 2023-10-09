@@ -360,8 +360,7 @@
 					"M_SHADOW_BONE", MShadow.BONE,
 					
 					"NVAR_CREATE", NetVarFlags.CREATE,
-					"NVAR_TICK", NetVarFlags.TICK,
-					"NVAR_DELTA", NetVarFlags.DELTA
+					"NVAR_TICK", NetVarFlags.TICK
 				)
 			#endregion
 			
