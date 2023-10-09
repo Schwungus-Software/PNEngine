@@ -139,7 +139,7 @@
 		if ds_list_size(net_variables) >= 256 {
 			show_error($"!!! Thing.add_net_variable: '{thing_script == undefined ? object_get_name(object_index) : thing_script.name}' exceeds limit of 256 NetVariables", true)
 			
-			return false
+			return undefined
 		}
 		
 		var _net_variable = new NetVariable(_name, _flags, _read, _write)
@@ -158,7 +158,7 @@
 		
 		ds_list_add(net_variables, _net_variable)
 		
-		return true
+		return _net_variable
 	}
 	
 	play_sound = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
