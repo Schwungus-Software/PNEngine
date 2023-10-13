@@ -33,10 +33,12 @@ function NetVariable(_name, _flags, _read, _write) constructor {
 		with scope {
 			buffer_write(b, buffer_u16, sync_id)
 			buffer_write(b, buffer_u32, area.slot)
-			buffer_write(b, buffer_string, _thing_script != undefined ? _thing_script.name : object_get_name(object_index))
+			buffer_write(b, buffer_string, thing_script != undefined ? thing_script.name : object_get_name(object_index))
 		}
 		
 		buffer_write(b, buffer_u8, 1)
+		
+		var _value
 		
 		if write != undefined {
 			if is_catspeak(write) {
