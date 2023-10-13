@@ -4,8 +4,6 @@ if create != undefined {
 	create()
 }
 
-var _game_status = global.game_status
-
 if not (global.game_status & GameStatus.NETGAME) or not f_sync {
 	ds_list_destroy(net_variables)
 	net_variables = undefined

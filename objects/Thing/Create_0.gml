@@ -153,7 +153,7 @@
 	
 	add_net_variable = function (_name, _flags = NetVarFlags.DEFAULT, _read = undefined, _write = undefined) {
 		if net_variables == undefined {
-			return false
+			return undefined
 		}
 		
 		if ds_list_size(net_variables) >= 256 {
