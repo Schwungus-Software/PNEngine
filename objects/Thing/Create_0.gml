@@ -156,7 +156,9 @@
 			return undefined
 		}
 		
-		if ds_list_size(net_variables) >= 256 {
+		var i = ds_list_size(net_variables)
+		
+		if i >= 256 {
 			show_error($"!!! Thing.add_net_variable: '{thing_script == undefined ? object_get_name(object_index) : thing_script.name}' exceeds limit of 256 NetVariables", true)
 			
 			return undefined
@@ -165,6 +167,7 @@
 		var _net_variable = new NetVariable(_name, _flags, _read, _write)
 		
 		with _net_variable {
+			slot = i
 			scope = other.id
 			
 			if _write != undefined {
