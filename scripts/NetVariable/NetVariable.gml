@@ -15,7 +15,7 @@ function NetVariable(_name, _flags, _read, _write) constructor {
 	read = _read
 	write = _write
 	
-	static update = function (_force = true) {
+	static update = function (_force = false) {
 		var _netgame = global.netgame
 		
 		if _netgame != undefined {
@@ -52,6 +52,20 @@ function NetVariable(_name, _flags, _read, _write) constructor {
 		buffer_write(b, buffer_u8, slot)
 		buffer_write_dynamic(b, _value)
 		_netgame.send(SEND_OTHERS, b)
+		
+		return true
+	}
+	
+	static set = function (_value, _force = false) {
+		var _old = struct_get_from_hash(scope, hash)
+		
+		struct_set_from_hash(scope, hash, _value)
+		
+		if not update(_force) {
+			struct_set_from_hash(scope, hash, _old)
+			
+			return false
+		}
 		
 		return true
 	}
