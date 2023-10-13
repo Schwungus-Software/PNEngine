@@ -438,6 +438,7 @@ if async_load[? "type"] == network_type_data {
 				}
 				
 				game_update_status()
+				cmd_disconnect("")
 			break
 			
 			case NetHeaders.PLAYER_LEFT:
