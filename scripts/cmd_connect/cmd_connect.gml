@@ -11,7 +11,7 @@ function cmd_connect(_args) {
 	if global.game_status == GameStatus.NETGAME {
 		cmd_disconnect("")
 	} else {
-		if global.game_status == GameStatus.DEMO {
+		if global.game_status & GameStatus.DEMO {
 			print("cmd_connect: Cannot connect from a demo")
 			
 			return false
@@ -53,7 +53,7 @@ function cmd_connect(_args) {
 			proControl.load_state = LoadStates.NONE
 		}
 		
-		global.game_status = GameStatus.NORMAL
+		global.game_status = GameStatus.DEFAULT
 		show_caption($"[c_red]{lexicon_text("netgame.lost_connection")} ({lexicon_text("netgame.code." + _netgame.code)})")
 		_netgame.destroy()
 		global.netgame = undefined

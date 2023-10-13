@@ -486,9 +486,9 @@
 			
 			#region Game
 				addConstant(
-					"GAME_NORMAL", GameStatus.NORMAL,
-					"GAME_DEMO", GameStatus.DEMO,
+					"GAME_DEFAULT", GameStatus.DEFAULT,
 					"GAME_NETGAME", GameStatus.NETGAME,
+					"GAME_DEMO", GameStatus.DEMO,
 					
 					"TOPT_NEW_FILE", TitleOptions.NEW_FILE,
 					"TOPT_LOAD_FILE", TitleOptions.LOAD_FILE,

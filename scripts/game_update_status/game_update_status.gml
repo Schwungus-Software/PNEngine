@@ -5,7 +5,7 @@ function game_update_status() {
 	
 	if _game_status == GameStatus.NETGAME {
 		_status = _total > 1 ? $"Online, {_total} players" : "Online"
-	} else if _game_status == GameStatus.DEMO {
+	} else if _game_status & GameStatus.DEMO {
 		_status = "Demo"
 	} else if _total > 1 {
 		_status = $"{_total} players"

@@ -4,9 +4,9 @@
 
 #region Game State
 	enum GameStatus {
-		NORMAL,
-		DEMO,
-		NETGAME,
+		DEFAULT,
+		NETGAME = 1 << 0,
+		DEMO = 1 << 1,
 	}
 	
 	enum LoadStates {
@@ -29,7 +29,7 @@
 		ANGLE,
 	}
 	
-	global.game_status = GameStatus.NORMAL
+	global.game_status = GameStatus.DEFAULT
 	global.game_rpc_id = ""
 	
 	global.freeze_step = true

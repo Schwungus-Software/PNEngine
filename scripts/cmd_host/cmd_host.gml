@@ -5,7 +5,7 @@ function cmd_host(_args) {
 	if global.game_status == GameStatus.NETGAME {
 		cmd_disconnect("")
 	} else {
-		if global.game_status == GameStatus.DEMO {
+		if global.game_status & GameStatus.DEMO {
 			print("! cmd_host: Cannot host from a demo")
 			
 			return false

@@ -9,7 +9,7 @@ function cmd_disconnect(_args) {
 	
 	_netgame.destroy()
 	global.netgame = undefined
-	global.game_status = GameStatus.NORMAL
+	global.game_status = GameStatus.DEFAULT
 	input_join_params_set(1, INPUT_MAX_PLAYERS, "leave", undefined, false)
 	
 	if not global.console {

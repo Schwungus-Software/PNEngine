@@ -911,7 +911,7 @@
   "isEcma": false,
   "LibraryEmitters": [],
   "MetaData": {
-    "IDEVersion": "2023.8.2.106",
+    "IDEVersion": "2023.8.2.108",
   },
   "resources": [
     {"id":{"name":"dq_lerp","path":"scripts/dq_lerp/dq_lerp.yy",},},

@@ -677,7 +677,7 @@ if _tick >= 1 {
 			global.console = false
 		}
 		
-		if global.game_status == GameStatus.NETGAME {
+		if global.game_status & GameStatus.NETGAME {
 			// Gross hack, will clean up later
 			input_verb_consume("up")
 			input_verb_consume("left")
@@ -813,13 +813,13 @@ if _tick >= 1 {
 				var _get_input = false
 				var _index = i
 				
-				if _game_status == GameStatus.NORMAL {
-					_get_input = true
-				} else {
-					if _game_status == GameStatus.NETGAME and _netgame.local_slot == i {
+				if _game_status & GameStatus.NETGAME {
+					if _netgame.local_slot == i {
 						_get_input = true
 						_index = 0
 					}
+				} else {
+					_get_input = true
 				}
 				
 				if _get_input {
@@ -856,7 +856,7 @@ if _tick >= 1 {
 					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
 					input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
 					
-					if _game_status == GameStatus.NETGAME and not array_equals(input, input_previous) {
+					if _game_status & GameStatus.NETGAME and not array_equals(input, input_previous) {
 						// Send input data to the server
 						var b = net_buffer_create(false, NetHeaders.INPUT)
 						
@@ -875,7 +875,7 @@ if _tick >= 1 {
 						_netgame.send(SEND_OTHERS, b)
 					}
 				} else {
-					if _game_status == GameStatus.NETGAME {
+					if _game_status & GameStatus.NETGAME {
 						while ds_queue_size(input_queue) {
 							input[PlayerInputs.UP_DOWN] = ds_queue_dequeue(input_queue)
 							input[PlayerInputs.LEFT_RIGHT] = ds_queue_dequeue(input_queue)
@@ -953,7 +953,7 @@ if _tick >= 1 {
 									}
 								}
 #region Thing Syncing
-								if _game_status != GameStatus.NETGAME or not f_sync or not _netgame.master {
+								if not (_game_status & GameStatus.NETGAME) or not f_sync or not _netgame.master {
 									break
 								}
 								
