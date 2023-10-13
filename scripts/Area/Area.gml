@@ -276,9 +276,11 @@ function Area() constructor {
 					buffer_write(b, buffer_u32, other.slot)
 					buffer_write(b, buffer_string, _thing_script != undefined ? _thing_script.name : object_get_name(object_index))
 					
+					var _n_pos = buffer_tell(b)
 					var n = ds_list_size(net_variables)
+					var j = 0
 					
-					buffer_write(b, buffer_u8, n)
+					buffer_write(b, buffer_u8, 0)
 					
 					if n {
 						var i = 0
@@ -306,12 +308,14 @@ function Area() constructor {
 								value = _value
 								buffer_write(b, buffer_u8, i)
 								buffer_write_dynamic(b, _value)
+								++j
 							}
 							
 							++i
 						}
 					}
 					
+					buffer_poke(b, _n_pos, buffer_u8, j)
 					print($"Area.add: Sent new syncable {sync_id} for processing ({n} variables)")
 					_netgame.send(SEND_OTHERS, b)
 				}
