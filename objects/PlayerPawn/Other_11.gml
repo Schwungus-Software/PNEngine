@@ -2,18 +2,6 @@
 // Feather disable GM2016
 event_inherited()
 
-var _sounds = global.sounds
-
-sndJump = _sounds.get("sndJump")
-sndFootstep = _sounds.get("sndFootstep")
-sndFootstep2 = _sounds.get("sndFootstep2")
-sndFootstep3 = _sounds.get("sndFootstep3")
-sndFootstep4 = _sounds.get("sndFootstep4")
-sndLand = _sounds.get("sndLand")
-sndLand2 = _sounds.get("sndLand2")
-sndLand3 = _sounds.get("sndLand3")
-sndLand4 = _sounds.get("sndLand4")
-
 playcam = [x, y, z]
 playcam_z = z
 playcam_z_to = z
@@ -67,4 +55,16 @@ add_net_variable("playcam_pitch", NetVarFlags.GENERIC, function (_value) {
 	}
 }, function () {
 	return instance_exists(camera) ? camera.pitch : 0
+})
+
+sync_jump = add_net_variable("sync_jump", NetVarFlags.DEFAULT, function (_value) {
+	do_jump()
+}, function () {
+	return undefined
+})
+
+sync_maneuver = add_net_variable("sync_maneuver", NetVarFlags.DEFAULT, function (_value) {
+	do_maneuver()
+}, function () {
+	return undefined
 })

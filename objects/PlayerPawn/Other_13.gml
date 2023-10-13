@@ -94,14 +94,16 @@ if jumped {
 		jumped = false
 	}
 } else {
-	if (_on_ground or coyote-- > 0) and z_speed <= 0 and _can_move and input[PlayerInputs.JUMP] and not input_previous[PlayerInputs.JUMP] {
-		//floor_ray[RaycastData.HIT] = false
-		coyote = 0
-		//z += jump_speed
-		z_speed = jump_speed
-		jumped = true
-		jump_animation = 1
-		play_sound_at(sndJump, x, y, z, 0, 360, 1)
+	if (_on_ground or coyote-- > 0)
+	   and z_speed <= 0 and _can_move
+	   and input[PlayerInputs.JUMP] and not input_previous[PlayerInputs.JUMP] {
+		if is_catspeak(try_jump) {
+			try_jump.setSelf(self)
+		}
+		
+		if try_jump() and (sync_jump == undefined or sync_jump.update()) {
+			do_jump()
+		}
 	}
 }
 

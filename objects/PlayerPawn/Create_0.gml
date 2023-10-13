@@ -27,7 +27,6 @@ event_inherited()
 	can_maneuver = true
 	
 	lock_animation = false
-	jump_animation = 0
 	
 	playcam_x_offset = 0
 	playcam_y_offset = 0
@@ -38,35 +37,19 @@ event_inherited()
 #endregion
 
 #region Functions
-	do_footstep = function (_heavy = false) {
-		var _sound = undefined
+	do_jump = function () {
+		coyote = 0
+		z_speed = jump_speed
+		jumped = true
 		
-		switch floor_ray[RaycastData.SURFACE] {
-			case 1:
-				_sound = _heavy ? sndLand : sndFootstep
-			break
-			
-			case 2:
-				_sound = _heavy ? sndLand2 : sndFootstep2
-			break
-			
-			case 3:
-				_sound = _heavy ? sndLand3 : sndFootstep3
-			break
-			
-			case 4:
-				_sound = _heavy ? sndLand4 : sndFootstep4
-			break
+		if is_catspeak(player_jumped) {
+			player_jumped.setSelf(self)
 		}
 		
-		if _sound != undefined {
-			play_sound_at(_sound, x, y, z, 0, _heavy ? 360 : 240, 1)
-			
-			return true
-		}
-		
-		return false
+		player_jumped()
 	}
+	
+	do_maneuver = function () {}
 	
 	get_state = function (_key) {
 		return states[? _key]
@@ -83,4 +66,16 @@ event_inherited()
 			destroy(false)
 		}
 	}
+	
+	try_jump = function () {
+		return true
+	}
+	
+	player_jumped = function () {}
+	
+	try_maneuver = function () {
+		return true
+	}
+	
+	player_maneuvered = function () {}
 #endregion
