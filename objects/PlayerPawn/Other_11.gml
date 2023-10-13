@@ -57,13 +57,13 @@ add_net_variable("playcam_pitch", NetVarFlags.GENERIC, function (_value) {
 	return instance_exists(camera) ? camera.pitch : 0
 })
 
-sync_jump = add_net_variable("sync_jump", NetVarFlags.DEFAULT, function (_value) {
+sync_jump = add_net_variable("net_jump", NetVarFlags.DEFAULT, function (_value) {
 	do_jump()
 }, function () {
 	return undefined
 })
 
-sync_maneuver = add_net_variable("sync_maneuver", NetVarFlags.DEFAULT, function (_value) {
+sync_maneuver = add_net_variable("net_maneuver", NetVarFlags.DEFAULT, function (_value) {
 	do_maneuver()
 }, function () {
 	return undefined
