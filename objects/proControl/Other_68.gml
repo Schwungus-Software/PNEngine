@@ -233,19 +233,30 @@ if async_load[? "type"] == network_type_data {
 			if _reliable > 0 {
 				var _net = players[| _from]
 				
-				if _net == undefined or _reliable <= _net.reliable_received {
-					print($"! proControl: Got invalid or outdated ROM from player {-~_from} (index {_reliable})")
+				if _net == undefined {
+					print($"! proControl: Got invalid ROM from player {-~_from} (index {_reliable})")
+				} else {
+					var _skip = false
 					
-					exit
+					with _net {
+						if _reliable <= reliable_received {
+							_skip = true
+							print($"! proControl: Got outdated ROM from player {-~_from} (index {_reliable})")
+						} else {
+							reliable_received = _reliable
+							print($"proControl: Got ROM {_reliable} from player {-~_from}")
+						}
+					}
+					
+					var b = net_buffer_create(false, NetHeaders.ACK)
+					
+					buffer_write(b, buffer_u32, _reliable)
+					send(_from, b)
+					
+					if _skip {
+						exit
+					}
 				}
-				
-				_net.reliable_received = _reliable
-				
-				var b = net_buffer_create(false, NetHeaders.ACK)
-				
-				buffer_write(b, buffer_u32, _reliable)
-				send(_from, b)
-				print($"proControl: Got ROM {_reliable} from player {-~_from}")
 			}
 		} else {
 			if master {
@@ -271,13 +282,18 @@ if async_load[? "type"] == network_type_data {
 						
 						buffer_seek(b, buffer_seek_start, 0)
 						
-						if buffer_read(b, buffer_u32) == _index {
+						var _compare = buffer_read(b, buffer_u32)
+						
+						if _compare == _index {
 							if proControl.load_state == LoadStates.NETGAME_LEVEL {
 								// Skip from and to
 								buffer_read(b, buffer_u8)
 								buffer_read(b, buffer_u8)
 								
-								if buffer_read(b, buffer_u8) == NetHeaders.HOST_LEVEL {
+								var _compare_header = buffer_read(b, buffer_u8)
+								
+								if _compare_header == NetHeaders.HOST_LEVEL {
+									print($"proControl: Got ready from player {-~_from}")
 									ready = true
 								}
 							}
@@ -430,15 +446,16 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				disconnect()
+				/*disconnect()
 				code = "NET_CLOSE"
 				
 				if connect_fail_callback != undefined {
 					connect_fail_callback()
 				}
 				
-				game_update_status()
+				game_update_status()*/
 				cmd_disconnect("")
+				show_caption($"[c_red]{lexicon_text("netgame.code.NET_CLOSE")}")
 			break
 			
 			case NetHeaders.PLAYER_LEFT:
