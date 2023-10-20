@@ -1,3 +1,5 @@
+#macro SKY_SCROLL_FACTOR -0.3515625
+
 enum CameraTargetData {
 	RANGE,
 	X_OFFSET,
@@ -233,6 +235,12 @@ event_inherited()
 							sx = _x
 							sy = _y
 							sz = _z
+							
+							var _material = other.material
+							var _scroll = current_time * SKY_SCROLL_FACTOR
+							
+							syaw = _scroll * _material.x_scroll
+							spitch = _scroll * _material.y_scroll
 						}
 						
 						event_user(ThingEvents.DRAW)
