@@ -24,7 +24,6 @@
 #region Rendering
 	enum Canvases {
 		WORLD,
-		SKY,
 		RENDER,
 		BLOOM,
 		__SIZE,
@@ -33,7 +32,6 @@
 	var canvases = array_create(Canvases.__SIZE)
 	
 	canvases[Canvases.WORLD] = new Canvas(480, 270)
-	canvases[Canvases.SKY] = (new Canvas(480, 270)).SetDepthDisabled(true)
 	canvases[Canvases.RENDER] = (new Canvas(480, 270)).SetDepthDisabled(true)
 	canvases[Canvases.BLOOM] = (new Canvas(480, 270)).SetDepthDisabled(true)
 	global.canvases = canvases

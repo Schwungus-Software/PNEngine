@@ -164,14 +164,6 @@ event_inherited()
 				_fog_color = fog_color
 			}
 			
-			with _world_shader {
-				set()
-				set_uniform("u_ambient_color", _ambient_color[0], _ambient_color[1], _ambient_color[2], _ambient_color[3])
-				set_uniform("u_fog_distance", _fog_distance[0], _fog_distance[1])
-				set_uniform("u_fog_color", _fog_color[0], _fog_color[1], _fog_color[2], _fog_color[3])
-				set_uniform("u_light_data", _area.light_data)
-			}
-			
 			var _gpu_tex_filter = gpu_get_tex_filter()
 			var _vid_texture_filter = global.config.vid_texture_filter
 			
@@ -184,6 +176,42 @@ event_inherited()
 			var _z = sz
 			
 			with _area {
+				if instance_exists(sky) and sky.model != undefined {
+					gpu_set_blendenable(false)
+					gpu_set_zwriteenable(false)
+					global.sky_shader.set()
+					
+					with sky {
+						with model {
+							sx = _x
+							sy = _y
+							sz = _z
+							
+							var _material = other.material
+							var _scroll = current_time * SKY_SCROLL_FACTOR
+							
+							syaw = _scroll * _material.x_scroll
+							spitch = _scroll * _material.y_scroll
+						}
+						
+						event_user(ThingEvents.DRAW)
+					}
+					
+					shader_reset()
+					gpu_set_zwriteenable(true)
+					gpu_set_blendenable(true)
+				} else {
+					_world_canvas.Clear(clear_color[4])
+				}
+				
+				with _world_shader {
+					set()
+					set_uniform("u_ambient_color", _ambient_color[0], _ambient_color[1], _ambient_color[2], _ambient_color[3])
+					set_uniform("u_fog_distance", _fog_distance[0], _fog_distance[1])
+					set_uniform("u_fog_color", _fog_color[0], _fog_color[1], _fog_color[2], _fog_color[3])
+					set_uniform("u_light_data", _area.light_data)
+				}
+				
 				if model != undefined {
 					model.draw()
 				}
@@ -213,59 +241,19 @@ event_inherited()
 				gpu_set_tex_filter(_gpu_tex_filter)
 				shader_reset()
 				_world_canvas.Finish()
-				
-				if instance_exists(sky) and sky.model != undefined {
-					var _sky_canvas = _canvases[Canvases.SKY]
-					
-					with _sky_canvas {
-						Resize(_width, _height)
-						Start()
-					}
-					
-					camera_set_view_mat(_render_camera, _view_matrix)
-					camera_set_proj_mat(_render_camera, _projection_matrix)
-					camera_apply(_render_camera)
-					_gpu_tex_filter = gpu_get_tex_filter()
-					gpu_set_tex_filter(_vid_texture_filter)
-					gpu_set_zwriteenable(false)
-					global.sky_shader.set()
-					
-					with sky {
-						with model {
-							sx = _x
-							sy = _y
-							sz = _z
-							
-							var _material = other.material
-							var _scroll = current_time * SKY_SCROLL_FACTOR
-							
-							syaw = _scroll * _material.x_scroll
-							spitch = _scroll * _material.y_scroll
-						}
-						
-						event_user(ThingEvents.DRAW)
-					}
-					
-					shader_reset()
-					gpu_set_zwriteenable(true)
-					gpu_set_tex_filter(_gpu_tex_filter)
-					
-					with _sky_canvas {
-						Finish()
-						Draw(0, 0)
-					}
-				} else {
-					_render_canvas.Clear(clear_color[4], clear_color[3])
-				}
 			}
 			
+			gpu_set_blendenable(false)
 			_world_canvas.Draw(0, 0)
+			gpu_set_blendenable(true)
 			_render_canvas.Finish()
 			
 			if alpha >= 1 {
+				gpu_set_blendenable(false)
 				_render_canvas.Draw(0, 0)
+				gpu_set_blendenable(true)
 			} else {
-				_render_canvas.DrawExt(0, 0, 1, 1, 0, c_white, global.delta * alpha)
+				_render_canvas.DrawExt(0, 0, 1, 1, 0, c_white, clamp(global.delta * alpha, 0, 1))
 			}
 			
 			output.Finish()
