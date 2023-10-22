@@ -244,7 +244,7 @@
 						show_error(_str, true)
 					},
 					
-					"show_caption", show_caption
+					"show_caption", show_caption,
 				)
 			#endregion
 			
@@ -489,6 +489,8 @@
 					"GAME_DEFAULT", GameStatus.DEFAULT,
 					"GAME_NETGAME", GameStatus.NETGAME,
 					"GAME_DEMO", GameStatus.DEMO,
+					
+					"TICKRATE", TICKRATE,
 					
 					"TOPT_NEW_FILE", TitleOptions.NEW_FILE,
 					"TOPT_LOAD_FILE", TitleOptions.LOAD_FILE,
