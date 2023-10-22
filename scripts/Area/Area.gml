@@ -466,4 +466,42 @@ function Area() constructor {
 		ds_list_destroy(players)
 		sounds.destroy()
 	}
+	
+	static find_tag = function (_tag) {
+		static things = []
+		
+		array_resize(things, 0)
+		
+		var i = 0
+		
+		repeat ds_list_size(active_things) {
+			with active_things[| i++] {
+				if tag == _tag {
+					array_push(things, id)
+				}
+			}
+		}
+		
+		return things
+	}
+	
+	static exists = function (_thing) {
+		if is_string(_thing) {
+			var i = 0
+			
+			repeat ds_list_size(active_things) {
+				if active_things[| i++].is_ancestor(_thing) {
+					return true
+				}
+			}
+			
+			return false
+		}
+		
+		if is_real(_thing) {
+			return array_length(find_tag(_thing)) > 0
+		}
+		
+		return instance_exists(_thing)
+	}
 }
