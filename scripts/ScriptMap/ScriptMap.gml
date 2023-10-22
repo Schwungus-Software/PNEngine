@@ -93,17 +93,17 @@ function ScriptMap() : AssetMap() constructor {
 								}
 								
 								if parent != undefined {
-									internal_parent = _parent.internal_parent
-									main = _parent.main
+									internal_parent = parent.internal_parent
+									main = parent.main
 									
-									load = _parent.load
-									create = _parent.create
-									on_destroy = _parent.on_destroy
-									clean_up = _parent.clean_up
-									tick = _parent.tick
-									draw = _parent.draw
-									draw_screen = _parent.draw_screen
-									draw_gui = _parent.draw_gui
+									load = parent.load
+									create = parent.create
+									on_destroy = parent.on_destroy
+									clean_up = parent.clean_up
+									tick = parent.tick
+									draw = parent.draw
+									draw_screen = parent.draw_screen
+									draw_gui = parent.draw_gui
 								}
 								
 								thing_load(internal_parent, _special)
