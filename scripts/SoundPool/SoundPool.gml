@@ -14,6 +14,10 @@ function SoundPool() constructor {
 	ds_list_add(global.sound_pools, self)
 	
 	static play = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
+		if is_array(_sound) {
+			return play(_sound[irandom(array_length(_sound) - 1)], _loop, _offset, _pitch)
+		}
+		
 		var _id, _final_pitch
 		
 		with _sound {
@@ -29,6 +33,10 @@ function SoundPool() constructor {
 	}
 	
 	static play_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1) {
+		if is_array(_sound) {
+			return play_at(_sound[irandom(array_length(_sound) - 1)],  _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, _offset, _pitch)
+		}
+		
 		var _id, _final_pitch
 		
 		with _sound {
@@ -44,6 +52,10 @@ function SoundPool() constructor {
 	}
 	
 	static play_on = function (_emitter, _sound, _loop = false, _offset = 0, _pitch = 1) {
+		if is_array(_sound) {
+			return play_on(_emitter, _sound[irandom(array_length(_sound) - 1)], _loop, _offset, _pitch)
+		}
+		
 		var _id, _final_pitch
 		
 		with _sound {
