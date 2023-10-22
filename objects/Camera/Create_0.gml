@@ -165,7 +165,8 @@ event_inherited()
 			}
 			
 			var _gpu_tex_filter = gpu_get_tex_filter()
-			var _vid_texture_filter = global.config.vid_texture_filter
+			var _config = global.config
+			var _vid_texture_filter = _config.vid_texture_filter
 			
 			gpu_set_tex_filter(_vid_texture_filter)
 			global.batch_camera = id
@@ -261,6 +262,42 @@ event_inherited()
 			if _allow_screen {
 				output.Start()
 				
+				// Bloom
+				if _config.vid_bloom {
+					var _bloom_canvas = _canvases[Canvases.BLOOM]
+					
+					gpu_set_blendenable(false)
+					shader_set(shBloomPass)
+					
+					var _half_width = _width * 0.25
+					var _half_height = _height * 0.25
+					
+					with _bloom_canvas {
+						Resize(_half_width, _half_height)
+						Start()
+					}
+					
+					gpu_set_tex_repeat(false)
+					gpu_set_tex_filter(true)
+					_render_canvas.DrawStretched(0, 0, _half_width, _half_height)
+					_bloom_canvas.Finish()
+					shader_reset()
+					gpu_set_blendenable(true)
+					gpu_set_blendmode(bm_add)
+					
+					with global.bloom_shader {
+						set()
+						set_uniform("u_resolution", _half_width, _half_height)
+					}
+					
+					_bloom_canvas.DrawStretched(0, 0, _width, _height)
+					shader_reset()
+					gpu_set_tex_filter(false)
+					gpu_set_tex_repeat(true)
+					gpu_set_blendmode(bm_normal)
+				}
+				
+				// HUD
 				var _draw_priority = global.draw_priority
 				var i = ds_list_size(_active_things)
 				

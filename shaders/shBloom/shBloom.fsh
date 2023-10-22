@@ -8,8 +8,8 @@ void main() {
 	vec4 sum = vec4(0.);
 	float u = v_texcoord.x;
 	float v = v_texcoord.y;
-	float tu = (1. / u_resolution.x) * 4.;
-	float tv = (1. / u_resolution.y) * 4.;
+	float tu = 1. / u_resolution.x;
+	float tv = 1. / u_resolution.y;
 	
 	// take nine samples, with the distance tu between them
 	sum += texture2D(gm_BaseTexture, vec2(u - 4. * tu, v)) * 0.05;
