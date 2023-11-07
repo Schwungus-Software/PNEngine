@@ -514,6 +514,7 @@
     {"name":"input_combo_get_phase","order":4,"path":"scripts/input_combo_get_phase/input_combo_get_phase.yy",},
     {"name":"__scribble_gen_6_build_lines","order":6,"path":"scripts/__scribble_gen_6_build_lines/__scribble_gen_6_build_lines.yy",},
     {"name":"scribble_anim_rainbow","order":4,"path":"scripts/scribble_anim_rainbow/scribble_anim_rainbow.yy",},
+    {"name":"level_force_goto","order":3,"path":"scripts/level_force_goto/level_force_goto.yy",},
     {"name":"__input_config_cursor","order":1,"path":"scripts/__input_config_cursor/__input_config_cursor.yy",},
     {"name":"input_virtual_create","order":1,"path":"scripts/input_virtual_create/input_virtual_create.yy",},
     {"name":"scribble_anim_cycle","order":1,"path":"scripts/scribble_anim_cycle/scribble_anim_cycle.yy",},

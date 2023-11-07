@@ -83,7 +83,7 @@ function Level() constructor {
 				buffer_write(b, buffer_u32, _area)
 				buffer_write(b, buffer_s32, _tag)
 				send(SEND_OTHERS, b)
-				other.__force_goto(_level, _area, _tag, true)
+				level_force_goto(_level, _area, _tag, true)
 			}
 		} else {
 			with proTransition {
@@ -117,16 +117,7 @@ function Level() constructor {
 				exit
 			}
 			
-			__force_goto(_level, _area, _tag, false)
-		}
-	}
-	
-	static __force_goto = function (_level, _area, _tag, _netgame) {
-		with proControl {
-			load_level = _level
-			load_area = _area
-			load_tag = _tag
-			load_state = _netgame and _level != undefined ? LoadStates.NETGAME_LEVEL : LoadStates.START
+			level_force_goto(_level, _area, _tag, false)
 		}
 	}
 }

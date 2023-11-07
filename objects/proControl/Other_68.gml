@@ -555,7 +555,7 @@ if async_load[? "type"] == network_type_data {
 				var _area = buffer_read(_buffer, buffer_u32)
 				var _tag = buffer_read(_buffer, buffer_s32)
 				
-				global.level.__force_goto(_level, _area, _tag, false)
+				level_force_goto(_level, _area, _tag, false)
 			break
 			
 			case NetHeaders.HOST_AREA:
