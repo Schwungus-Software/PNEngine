@@ -2,6 +2,8 @@ function Material() : Asset() constructor {
 	image = -1
 	frame_speed = 1
 	
+	alpha_test = 0.5
+	
 	bright = 0
 	
 	x_scroll = 0

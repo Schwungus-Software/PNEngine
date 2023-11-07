@@ -480,6 +480,7 @@
 					"batch_billboard", batch_billboard,
 					"batch_floor", batch_floor,
 					"batch_floor_ext", batch_floor_ext,
+					"batch_set_alpha_test", batch_set_alpha_test,
 					"batch_set_bright", batch_set_bright
 				)
 			#endregion

@@ -699,6 +699,7 @@
     {"name":"lexicon_index_fallback_language_set","order":6,"path":"scripts/lexicon_index_fallback_language_set/lexicon_index_fallback_language_set.yy",},
     {"name":"scribble_font_bake_outline","order":4,"path":"scripts/scribble_font_bake_outline/scribble_font_bake_outline.yy",},
     {"name":"input_trigger_effect_get_pause","order":1,"path":"scripts/input_trigger_effect_get_pause/input_trigger_effect_get_pause.yy",},
+    {"name":"batch_set_alpha_test","order":6,"path":"scripts/batch_set_alpha_test/batch_set_alpha_test.yy",},
     {"name":"PlayerPawn","order":1,"path":"objects/PlayerPawn/PlayerPawn.yy",},
     {"name":"input_verb_group_get_verbs","order":4,"path":"scripts/input_verb_group_get_verbs/input_verb_group_get_verbs.yy",},
     {"name":"input_verb_group_is_active","order":5,"path":"scripts/input_verb_group_is_active/input_verb_group_is_active.yy",},

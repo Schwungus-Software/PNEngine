@@ -121,6 +121,7 @@ global.world_shader = new Shader(shWorld, [
 	"u_fog_distance", ShaderUniformTypes.FLOAT,
 	"u_fog_color", ShaderUniformTypes.FLOAT,
 	"u_light_data", ShaderUniformTypes.FLOAT_ARRAY,
+	"u_material_alpha_test", ShaderUniformTypes.FLOAT,
 	"u_material_bright", ShaderUniformTypes.FLOAT,
 	"u_material_color", ShaderUniformTypes.FLOAT,
 	"u_material_scroll", ShaderUniformTypes.FLOAT,

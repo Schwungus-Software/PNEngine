@@ -6,6 +6,7 @@ function MaterialMap() : AssetMap() constructor {
 		
 		var _path = "materials/" + _name
 		var _image = -1
+		var _alpha_test = 0.5
 		var _speed = 0
 		var _bright = 0
 		var _x_scroll = 0
@@ -25,6 +26,7 @@ function MaterialMap() : AssetMap() constructor {
 				global.images.load(_image)
 			}
 			
+			_alpha_test = _json[$ "alpha_test"] ?? 0.5
 			_speed = _json[$ "speed"] ?? 0
 			_bright = _json[$ "bright"] ?? 0
 			
@@ -77,6 +79,7 @@ function MaterialMap() : AssetMap() constructor {
 		with _material {
 			image = _image
 			frame_speed = _speed
+			alpha_test = _alpha_test
 			bright = _bright
 			x_scroll = _x_scroll
 			y_scroll = _y_scroll

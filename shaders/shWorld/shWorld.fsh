@@ -28,10 +28,21 @@ uniform vec4 u_color;
 uniform vec4 u_fog_color;
 
 uniform vec4 u_material_color;
+uniform float u_material_alpha_test;
 
 void main() {
 	vec2 uv = vec2(u_uvs.r + (u_uvs.b * fract(v_texcoord.x)), u_uvs.g + (u_uvs.a * fract(v_texcoord.y)));
-	vec4 starting_color = texture2D(gm_BaseTexture, uv) * u_material_color * v_color * v_lighting;
+	vec4 sample = texture2D(gm_BaseTexture, uv);
+	
+	if (u_material_alpha_test > 0.) {
+		if (sample.a < u_material_alpha_test) {
+			discard;
+		}
+		
+		sample.a = 1.;
+	}
+	
+	vec4 starting_color = sample * u_material_color * v_color * v_lighting;
 	
 	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, v_fog) + pow(v_specular.x, v_specular.y);
 	starting_color.a *= mix(1.0, u_fog_color.a, v_fog);

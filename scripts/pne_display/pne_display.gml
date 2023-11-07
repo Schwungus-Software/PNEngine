@@ -63,6 +63,7 @@
 	global.batch_camera = noone
 	
 	global.batch_texture = undefined
+	global.batch_alpha_test = 0
 	global.batch_bright = 0
 	global.batch_blendmode = bm_normal
 	

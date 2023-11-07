@@ -10,6 +10,7 @@ function batch_submit() {
 	with global.current_shader {
 		set_uniform("u_animated", 0)
 		set_uniform("u_color", 1, 1, 1, 1)
+		set_uniform("u_material_alpha_test", global.batch_alpha_test)
 		set_uniform("u_material_bright", global.batch_bright)
 		set_uniform("u_material_color", 1, 1, 1, 1)
 		set_uniform("u_material_scroll", 0, 0)

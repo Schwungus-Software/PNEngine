@@ -380,6 +380,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 						var _idx = _material.frame_speed * current_time
 						var _uvs = _image.GetUVs(_idx)
 						
+						_current_shader.set_uniform("u_material_alpha_test", _material.alpha_test)
 						_current_shader.set_uniform("u_material_scroll", _material.x_scroll, _material.y_scroll)
 						_current_shader.set_uniform("u_uvs", _uvs.normLeft, _uvs.normTop, _uvs.normRight, _uvs.normBottom)
 						vertex_submit(vbo, pr_trianglelist, _image.GetTexture(_idx))
