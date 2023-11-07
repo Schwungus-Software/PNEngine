@@ -234,6 +234,7 @@ event_inherited()
 				repeat ds_list_size(particles) {
 					var p = particles[| i++]
 					
+					batch_set_alpha_test(p[ParticleData.ALPHA_TEST])
 					batch_set_bright(p[ParticleData.BRIGHT])
 					batch_billboard(p[ParticleData.IMAGE], p[ParticleData.FRAME], p[ParticleData.WIDTH], p[ParticleData.HEIGHT], p[ParticleData.X], p[ParticleData.Y], p[ParticleData.Z], p[ParticleData.ANGLE], p[ParticleData.COLOR], p[ParticleData.ALPHA])
 				}
