@@ -46,9 +46,10 @@ var _players = global.players
 						with _players[i++] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
 								camera.render(_width, _height).DrawStretched(0, _y, 480, 135)
-								_y += 135
 							}
 						}
+						
+						_y += 135
 					}
 				break
 			
