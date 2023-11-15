@@ -5,6 +5,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 	var n = array_length(submodels)
 	var i = 0
 	
+	submodels_amount = n
 	skins = array_create(n)
 	
 	repeat n {
@@ -314,17 +315,17 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		alpha = 1
 		
 		static draw = function () {
+			var _mwp = matrix_get(matrix_world)
+			
 			matrix = matrix_build(sx, sy, sz, sroll, spitch, syaw, sscale * sx_scale, sscale * sy_scale, sscale * sz_scale)
 			matrix_set(matrix_world, matrix)
 			
-			var _current_shader = global.current_shader
-			
-			_current_shader.set_uniform("u_color", color_get_red(color) * COLOR_INVERSE, color_get_green(color) * COLOR_INVERSE, color_get_blue(color) * COLOR_INVERSE, alpha)
+			global.u_color.set(color_get_red(color) * COLOR_INVERSE, color_get_green(color) * COLOR_INVERSE, color_get_blue(color) * COLOR_INVERSE, alpha)
 			
 			if animation == undefined {
-				_current_shader.set_uniform("u_animated", 0)
+				global.u_animated.set(0)
 			} else {
-				_current_shader.set_uniform("u_animated", 1)
+				global.u_animated.set(1)
 				
 				var _frame = sframe
 				var _frames, _loop, _real_frame, _samples
@@ -351,44 +352,65 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					_final_sample = transition_sample2
 				}
 				
-				_current_shader.set_uniform("u_bone_dq", _final_sample)
+				global.u_bone_dq.set(_final_sample)
 			}
 			
-			array_foreach(submodels, function (_element, _index) {
-				var _skin = skins[_index]
+			var _current_shader = global.current_shader
+			var _u_material_bright = global.u_material_bright
+			var _u_material_specular = global.u_material_specular
+			var _u_material_wind = global.u_material_wind
+			var _u_material_color = global.u_material_color
+			var _u_material_alpha_test = global.u_material_alpha_test
+			var _u_material_scroll = global.u_material_scroll
+			var _u_uvs = global.u_uvs
+			var i = 0
+			
+			repeat submodels_amount {
+				var _skin = skins[i]
 				
 				if _skin == -1 {
-					exit
+					++i
+					
+					continue
 				}
 				
-				with _element {
-					var _current_shader = global.current_shader
+				with submodels[i] {
 					var _material = materials[_skin]
 					var _image
 					
 					with _material {
 						_image = image
-						_current_shader.set_uniform("u_material_bright", bright)
-						_current_shader.set_uniform("u_material_specular", specular, specular_exponent)
-						_current_shader.set_uniform("u_material_wind", wind, wind_lock_bottom, wind_speed)
-						_current_shader.set_uniform("u_material_color", color[0], color[1], color[2], color[3])
+						_u_material_bright.set(bright)
+						_u_material_specular.set(specular, specular_exponent)
+						_u_material_wind.set(wind, wind_lock_bottom, wind_speed)
+						_u_material_color.set(color[0], color[1], color[2], color[3])
 					}
 					
 					if _image == -1 {
 						vertex_submit(vbo, pr_trianglelist, -1)
 					} else {
-						var _idx = _material.frame_speed * current_time
+						var _idx
+						
+						with _material {
+							_idx = frame_speed * current_time
+							_u_material_alpha_test.set(alpha_test)
+							_u_material_scroll.set(x_scroll, y_scroll)
+						}
+						
 						var _uvs = _image.GetUVs(_idx)
 						
-						_current_shader.set_uniform("u_material_alpha_test", _material.alpha_test)
-						_current_shader.set_uniform("u_material_scroll", _material.x_scroll, _material.y_scroll)
-						_current_shader.set_uniform("u_uvs", _uvs.normLeft, _uvs.normTop, _uvs.normRight, _uvs.normBottom)
+						with _uvs {
+							_u_uvs.set(normLeft, normTop, normRight, normBottom)
+						}
+						
 						vertex_submit(vbo, pr_trianglelist, _image.GetTexture(_idx))
 					}
 				}
-			})
+				
+				++i
+			}
 			
-			matrix_world_reset()
+			matrix_set(matrix_world, _mwp)
 		}
 	#endregion
 }

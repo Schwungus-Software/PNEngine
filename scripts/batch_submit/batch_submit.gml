@@ -7,17 +7,15 @@ function batch_submit() {
 		return false
 	}
 	
-	with global.current_shader {
-		set_uniform("u_animated", 0)
-		set_uniform("u_color", 1, 1, 1, 1)
-		set_uniform("u_material_alpha_test", global.batch_alpha_test)
-		set_uniform("u_material_bright", global.batch_bright)
-		set_uniform("u_material_color", 1, 1, 1, 1)
-		set_uniform("u_material_scroll", 0, 0)
-		set_uniform("u_material_specular", 0, 1)
-		set_uniform("u_material_wind", 0, 1, 1)
-		set_uniform("u_uvs", 0, 0, 1, 1)
-	}
+	global.u_animated.set(0)
+	global.u_color.set(1, 1, 1, 1)
+	global.u_material_alpha_test.set(global.batch_alpha_test)
+	global.u_material_bright.set(global.batch_bright)
+	global.u_material_color.set(1, 1, 1, 1)
+	global.u_material_scroll.set(0, 0)
+	global.u_material_specular.set(0, 1)
+	global.u_material_wind.set(0, 1, 1)
+	global.u_uvs.set(0, 0, 1, 1)
 	
 	var _matrix = matrix_get(matrix_world)
 	var _blend_mode = gpu_get_blendmode()

@@ -126,7 +126,7 @@ event_inherited()
 		
 		var _area = area
 		
-		if _area != undefined {
+		//if _area != undefined {
 			output.Start()
 			
 			var _canvases = global.canvases
@@ -141,7 +141,7 @@ event_inherited()
 			
 			with _world_canvas {
 				Resize(_width, _height)
-				Clear(c_black, 0)
+				Clear(c_black)
 				Start()
 			}
 			
@@ -205,13 +205,11 @@ event_inherited()
 					_world_canvas.Clear(clear_color[4])
 				}
 				
-				with _world_shader {
-					set()
-					set_uniform("u_ambient_color", _ambient_color[0], _ambient_color[1], _ambient_color[2], _ambient_color[3])
-					set_uniform("u_fog_distance", _fog_distance[0], _fog_distance[1])
-					set_uniform("u_fog_color", _fog_color[0], _fog_color[1], _fog_color[2], _fog_color[3])
-					set_uniform("u_light_data", _area.light_data)
-				}
+				_world_shader.set()
+				global.u_ambient_color.set(_ambient_color[0], _ambient_color[1], _ambient_color[2], _ambient_color[3])
+				global.u_fog_distance.set(_fog_distance[0], _fog_distance[1])
+				global.u_fog_color.set(_fog_color[0], _fog_color[1], _fog_color[2], _fog_color[3])
+				global.u_light_data.set(_area.light_data)
 				
 				if model != undefined {
 					model.draw()
@@ -245,17 +243,23 @@ event_inherited()
 				_world_canvas.Finish()
 			}
 			
-			gpu_set_blendenable(false)
-			_world_canvas.Draw(0, 0)
-			gpu_set_blendenable(true)
-			_render_canvas.Finish()
-			
 			if alpha >= 1 {
 				gpu_set_blendenable(false)
-				_render_canvas.Draw(0, 0)
+				_world_canvas.Draw(0, 0)
 				gpu_set_blendenable(true)
 			} else {
-				_render_canvas.DrawExt(0, 0, 1, 1, 0, c_white, clamp(global.delta * alpha, 0, 1))
+				// Do some weird stuff with blendmodes to ensure that the
+				// motion blur displays correctly both with and without bloom.
+				gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one)
+				_world_canvas.DrawExt(0, 0, 1, 1, 0, c_white, clamp(global.delta * alpha, 0, 1))
+				gpu_set_blendmode(bm_normal)
+			}
+			
+			with _render_canvas {
+				Finish()
+				gpu_set_blendenable(false)
+				Draw(0, 0)
+				gpu_set_blendenable(true)
 			}
 			
 			output.Finish()
@@ -268,7 +272,9 @@ event_inherited()
 					var _bloom_canvas = _canvases[Canvases.BLOOM]
 					
 					gpu_set_blendenable(false)
-					shader_set(shBloomPass)
+					global.bloom_pass_shader.set()
+					global.u_threshold.set(0.885)
+					global.u_intensity.set(0.09)
 					
 					var _half_width = _width * 0.25
 					var _half_height = _height * 0.25
@@ -285,12 +291,8 @@ event_inherited()
 					shader_reset()
 					gpu_set_blendenable(true)
 					gpu_set_blendmode(bm_add)
-					
-					with global.bloom_shader {
-						set()
-						set_uniform("u_resolution", _half_width, _half_height)
-					}
-					
+					global.bloom_shader.set()
+					global.u_resolution.set(_half_width, _half_height)
 					_bloom_canvas.DrawStretched(0, 0, _width, _height)
 					shader_reset()
 					gpu_set_tex_filter(false)
@@ -323,7 +325,7 @@ event_inherited()
 				
 				output.Finish()
 			}
-		}
+		//}
 		
 		return output
 	}

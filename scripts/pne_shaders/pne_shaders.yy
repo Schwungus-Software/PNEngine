@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "Shader",
+  "name": "pne_shaders",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
