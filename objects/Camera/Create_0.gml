@@ -243,7 +243,7 @@ event_inherited()
 				_world_canvas.Finish()
 			}
 			
-			if alpha >= 1 {
+			if not _allow_screen or alpha >= 1 {
 				gpu_set_blendenable(false)
 				_world_canvas.Draw(0, 0)
 				gpu_set_blendenable(true)
