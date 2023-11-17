@@ -268,6 +268,7 @@
 				
 				addFunction(
 					"thing_load", thing_load,
+					"transition_load", transition_load,
 					
 					"mod_get", function (_name) {
 						return global.mods[? _name]

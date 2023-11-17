@@ -92,6 +92,8 @@ function Level() constructor {
 				}
 			}
 			
+			var _script = undefined
+			
 			if is_string(_transition) {
 				if string_starts_with(_transition, "pro") {
 					show_error($"!!! Level.goto: Tried to transition to level using protected Transition '{_transition}'", true)
@@ -100,18 +102,33 @@ function Level() constructor {
 				var _index = asset_get_index(_transition)
 				
 				if not object_exists(_index) or not object_is_ancestor(_index, proTransition) {
-					_index = noone
-					print($"! Level.goto: Transition '{_transition}' not found")
+					_script = global.scripts.get(_transition)
+					
+					if _script != undefined and is_instanceof(_script, TransitionScript) {
+						_index = _script.internal_parent
+					} else {
+						_index = noone
+						print($"! Level.goto: Transition '{_transition}' not found")
+					}
 				}
 				
 				_transition = _index
 			}
 			
-			if object_exists(_transition) and object_is_ancestor(_transition, proTransition) {
+			if object_exists(_transition) and (_transition == proTransition or object_is_ancestor(_transition, proTransition)) {
 				with instance_create_depth(0, 0, 0, _transition) {
+					if _script != undefined {
+						transition_script = _script
+						create = _script.create
+						clean_up = _script.clean_up
+						tick = _script.tick
+						draw_gui = _script.draw_gui
+					}
+					
 					to_level = _level
 					to_area = _area
 					to_tag = _tag
+					event_user(ThingEvents.CREATE)
 				}
 				
 				exit

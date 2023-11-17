@@ -128,6 +128,24 @@ function ScriptMap() : AssetMap() constructor {
 							with _script {
 								parent = other.get(_parent)
 								
+								if parent == undefined {
+									_index = asset_get_index(_parent)
+									
+									if not object_exists(_index) {
+										throw $"Unknown parent Transition '{_parent}'"
+									}
+									
+									if not object_is_ancestor(_index, proTransition) {
+										throw $"Cannot inherit non-Transition '{_parent}'"
+									}
+									
+									if string_starts_with(_parent, "pro") {
+										throw $"Cannot inherit protected Transition '{_parent}'"
+									}
+									
+									internal_parent = _index
+								}
+								
 								if parent != undefined {
 									main = _parent.main
 									load = _parent.load
@@ -135,6 +153,36 @@ function ScriptMap() : AssetMap() constructor {
 									area_changed = _parent.area_changed
 									area_activated = _parent.area_activated
 									area_deactivated = _parent.area_deactivated
+								}
+							}
+						}
+#endregion
+					} else if string_starts_with(_header, "#transition") {
+#region Transition
+						_script = new TransitionScript()
+						
+						var _parents = string_split(_header, " ", true)
+						var _parents_n = array_length(_parents)
+						
+						if _parents_n >= 2 {
+							if _parents_n > 2 {
+								throw "Cannot inherit more than one TransitionScript"
+							}
+							
+							var _parent = _parents[1]
+							
+							load(_parent)
+							
+							with _script {
+								parent = other.get(_parent)
+								
+								if parent != undefined {
+									main = _parent.main
+									load = _parent.load
+									create = _parent.create
+									clean_up = _parent.clean_up
+									tick = _parent.tick
+									draw_gui = _parent.draw_gui
 								}
 							}
 						}
@@ -193,6 +241,11 @@ function ScriptMap() : AssetMap() constructor {
 				area_changed = _globals[$ "area_changed"]
 				area_activated = _globals[$ "area_activated"]
 				area_deactivated = _globals[$ "area_deactivated"]
+			} else if is_instanceof(self, TransitionScript) {
+				create = _globals[$ "create"]
+				clean_up = _globals[$ "clean_up"]
+				tick = _globals[$ "tick"]
+				draw_gui = _globals[$ "draw_gui"]
 			}
 			
 			if load != undefined {
