@@ -21,7 +21,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 	hold_bone = _model.hold_bone
 	
 	#region Animation
-		animation_index = -1
+		animation_name = ""
 		animation = undefined
 		animation_finished = false
 		frame = 0
@@ -35,26 +35,23 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		transition_sample2 = dq_build_identity()
 		interp("transition", "stransition")
 		
-		static set_animation = function (_index, _frame = 0, _time = 0) {
-			var _animations = model.animations
-			
-			if _index < 0 or _index >= array_length(_animations) {
-				//print($"! ModelInstance.set_animation: Animation index out of range ({_index})")
-				animation_index = -1
+		static set_animation = function (_animation, _frame = 0, _time = 0) {
+			if _animation == undefined {
+				animation_name = ""
 				animation = undefined
 				
-				return false
+				return true
 			}
 			
-			animation_index = _index
-			animation = _animations[_index]
+			animation_name = _animation.name
+			animation = _animation
 			
 			if _frame >= 0 {
 				frame = _frame
 				interp_skip("sframe")
 				frame_speed = 1
 				
-				var _copy_sample = animation.samples[_frame % animation.frames]
+				var _copy_sample = _animation.samples[_frame % _animation.frames]
 				
 				array_copy(sample, 0, _copy_sample, 0, array_length(_copy_sample))
 			}
@@ -73,8 +70,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			return true
 		}
-		
-		set_animation(0)
 		
 		static get_bone_dq = function (_index) {
 			static bone_dq = dq_build_identity()

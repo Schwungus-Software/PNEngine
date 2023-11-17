@@ -260,6 +260,7 @@
 					"IMAGES", global.images,
 					"MATERIALS", global.materials,
 					"MODELS", global.models,
+					"ANIMATIONS", global.animations,
 					"FONTS", global.fonts,
 					"SOUNDS", global.sounds,
 					"MUSIC", global.music
