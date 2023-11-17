@@ -12,6 +12,8 @@ function ModelMap() : AssetMap() constructor {
 			if _json != undefined {
 				var _model = new Model()
 				
+				_model.name = _name
+				
 				#region Submodels
 					var _get_submodels = _json[$ "submodels"]
 					
@@ -309,127 +311,10 @@ function ModelMap() : AssetMap() constructor {
 				#endregion
 				
 				#region Animations
-					var _get_animations = _json[$ "animations"]
-					
-					if is_array(_get_animations) {
-						with _model {
-							head_bone = _json[$ "head_bone"] ?? -1
-							torso_bone = _json[$ "torso_bone"] ?? -1
-							hold_bone = _json[$ "hold_bone"] ?? -1
-						}
-						
-						var _animations = _model.animations
-						var i = 0
-						
-						repeat array_length(_get_animations) {
-							var _animation_info = _get_animations[i++]
-							
-							if not is_struct(_animation_info) {
-								show_error($"!!! ModelMap.load: '{_name}' has an invalid animation definition, expected struct", true)
-							}
-							
-							var _animation_name = _animation_info[$ "name"]
-							
-							if not is_string(_animation_name) {
-								show_error($"!!! ModelMap.load: '{_name}' has invalid animation name '{_animation_name}', expected string", true)
-							}
-							
-							var _animation_filename = _folder + _animation_name + ".ani"
-							
-							if not file_exists(_animation_filename) {
-								show_error($"!!! ModelMap.load: '{_name}' animation file '{_animation_filename}' not found", true)
-							}
-							
-							var _animation = new Animation()
-							var _buffer = buffer_load(_animation_filename)
-							var _bones_n = buffer_read(_buffer, buffer_u8)
-							var _keyframes_n = buffer_read(_buffer, buffer_u8)
-							
-							with _animation {
-								type = _animation_info[$ "type"] ?? AnimationTypes.LINEAR
-								frames = _animation_info[$ "frames"] ?? 1
-								frame_speed = _animation_info[$ "speed"] ?? 1
-								
-								var j = 0
-							
-								repeat _bones_n {
-									var _dq = array_create(10)
-								
-									// The first 8 indices store the dual quaternion
-									var k = 0
-								
-									repeat 8 {
-										_dq[@ k] = buffer_read(_buffer, buffer_f32);
-										++k
-									}
-								
-									// The 8th index stores the bone's parent
-									_dq[@ 8] = buffer_read(_buffer, buffer_u8)
-									// The 9th index stores whether or not the bone is attached to its parent
-									_dq[@ 9] = buffer_read(_buffer, buffer_u8)
-									// The 10th index stores the bone's descendants
-									_dq[@ 10] = []
-									bind_pose[@ j] = _dq;
-									++j
-								}
-								
-								bones_amount = _bones_n
-								
-								// Fill bones' descendants arrays
-								j = 0
-								
-								repeat _bones_n {
-									var _ancestor = j
-									var _ancestor_bone = bind_pose[_ancestor]
-									
-									while _ancestor > 0 {
-										_ancestor = _ancestor_bone[8]
-										_ancestor_bone = bind_pose[_ancestor]
-										array_push(_ancestor_bone[10], j)
-									}
-									
-									++j
-								}
-								
-								ds_grid_resize(keyframes, _keyframes_n, -~_bones_n)
-								keyframes_amount = _keyframes_n
-								j = 0
-								
-								repeat _keyframes_n {
-									// Load the time of the frame
-									keyframes[# j, 0] = buffer_read(_buffer, buffer_f32)
-									
-									var k = 0
-									
-									repeat _bones_n {
-										// Load the local delta dual quaternion of the frame
-										_dq = dq_build_identity()
-										
-										var l = 0
-										
-										repeat 8 {
-											_dq[@ l] = buffer_read(_buffer, buffer_f32);
-											++l
-										}
-										
-										keyframes[# j, -~k] = _dq;
-										++k
-									}
-									
-									++j
-								}
-								
-								j = 0
-								
-								repeat frames + (type == AnimationTypes.LINEAR or type == AnimationTypes.QUADRATIC) {
-									array_push(samples, create_sample(j / frames));
-									++j
-								}
-							}
-							
-							buffer_delete(_buffer)
-							array_push(_animations, _animation)
-						}
+					with _model {
+						head_bone = _json[$ "head_bone"] ?? -1
+						torso_bone = _json[$ "torso_bone"] ?? -1
+						hold_bone = _json[$ "hold_bone"] ?? -1
 					}
 				#endregion
 				

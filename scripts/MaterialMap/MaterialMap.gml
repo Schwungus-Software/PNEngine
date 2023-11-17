@@ -77,6 +77,7 @@ function MaterialMap() : AssetMap() constructor {
 		var _material = new Material()
 		
 		with _material {
+			name = _name
 			image = _image
 			frame_speed = _speed
 			alpha_test = _alpha_test

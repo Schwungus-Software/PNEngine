@@ -9,7 +9,7 @@ function MusicMap() : AssetMap() constructor {
 		var _path = "music/" + _name
 		var _ogg_file = mod_find_file(_path + ".ogg")
 		
-		if file_exists(_ogg_file) {
+		if _ogg_file != "" {
 			var _loop_start = undefined
 			var _loop_end = undefined
 			var _cut_in = 0
@@ -56,6 +56,7 @@ function MusicMap() : AssetMap() constructor {
 			var __music = new Music()
 			
 			with __music {
+				name = _name
 				stream = _stream
 				cut_in = _cut_in
 				cut_out = _cut_out

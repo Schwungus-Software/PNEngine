@@ -1,4 +1,6 @@
 function Asset() constructor {
+	name = ""
+	
 	static destroy = function () {}
 	
 	static destroy_array = function (_array) {

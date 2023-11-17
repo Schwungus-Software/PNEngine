@@ -1,7 +1,6 @@
 function Model() : Asset() constructor {
 	submodels = []
 	collider = undefined
-	animations = []
 	
 	head_bone = -1
 	torso_bone = -1
@@ -17,7 +16,5 @@ function Model() : Asset() constructor {
 		if collider != undefined {
 			collider.destroy()
 		}
-		
-		destroy_array(animations)
 	}
 }

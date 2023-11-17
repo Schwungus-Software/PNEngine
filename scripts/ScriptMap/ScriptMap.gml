@@ -57,7 +57,6 @@ function ScriptMap() : AssetMap() constructor {
 						}
 						
 						_script = new ThingScript()
-						_script.name = _name
 						
 						var _parents = string_split(_header, " ", true)
 						var _parents_n = array_length(_parents)
@@ -177,6 +176,7 @@ function ScriptMap() : AssetMap() constructor {
 		_main()
 		
 		with _script {
+			name = _name
 			main = _main
 			load = _globals[$ "load"]
 			

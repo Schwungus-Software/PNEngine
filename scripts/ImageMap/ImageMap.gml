@@ -37,7 +37,7 @@ function ImageMap() : AssetMap() constructor {
 		
 		var _png_file = mod_find_file(_path + ".png")
 		
-		if file_exists(_png_file) {
+		if _png_file != "" {
 			assets.AddFile(_png_file, _name, _frames, false, false, _x_offset, _y_offset).SetTiling(_x_repeat, _y_repeat)
 		} else {
 			print($"! ImageMap.load: '{_name}' not found")

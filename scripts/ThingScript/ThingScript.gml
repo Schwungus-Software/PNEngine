@@ -1,5 +1,4 @@
 function ThingScript() : Script() constructor {
-	name = ""
 	internal_parent = Thing
 	
 	create = undefined

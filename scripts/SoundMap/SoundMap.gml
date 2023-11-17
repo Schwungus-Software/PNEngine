@@ -103,6 +103,7 @@ function SoundMap() : AssetMap() constructor {
 					var _sound = new Sound()
 					
 					with _sound {
+						name = _name
 						buffer = _buffer
 						asset = _sound_id
 						pitch_low = _pitch_low

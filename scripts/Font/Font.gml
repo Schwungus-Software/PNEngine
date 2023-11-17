@@ -1,5 +1,4 @@
 function Font() : Asset() constructor {
-	name = ""
 	sprite = undefined
 	font = undefined
 	
