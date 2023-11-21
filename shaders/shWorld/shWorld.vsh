@@ -75,7 +75,7 @@ float taylor_inv_sqrt(float r) {
 
 vec4 grad4(float j, vec4 ip) {
 	const vec4 ones = vec4(1., 1., 1., -1.);
-	vec4 p,s;
+	vec4 p, s;
 	
 	p.xyz = floor(fract(vec3(j) * ip.xyz) * 7.) * ip.z - 1.;
 	p.w = 1.5 - dot(abs(p.xyz), ones.xyz);
@@ -161,7 +161,7 @@ float snoise(vec4 v) {
 }
 
 void main() {
-	// Get bone indices and bone weights
+	// Get bone indices and weights
 	int bone = int(in_Colour2.r * 510.);
 	int bone2 = int(in_Colour2.g * 510.);
 	int bone3 = int(in_Colour2.b * 510.);
@@ -233,23 +233,21 @@ void main() {
 				
 				total_light += max(dot(world_normal, light_normal), 0.) * light_color;
 				total_specular += max(dot(reflection, light_normal), 0.);
-			} else {
-				if (light_type == 2) { // Point
-					// Get light information
-					vec3 light_position = vec3(u_light_data[i + 2], u_light_data[i + 3], u_light_data[i + 4]);
-					float light_start = u_light_data[i + 5];
-					float light_end = u_light_data[i + 6];
-					vec4 light_color = vec4(u_light_data[i + 8], u_light_data[i + 9], u_light_data[i + 10], u_light_data[i + 11]);
-					
-					// Calculate lighting
-					vec3 light_direction = normalize(object_space_position - light_position);
-					float attenuation = max((light_end - distance(object_space_position, light_position)) / (light_end - light_start), 0.);
-					float angle_difference = max(dot(world_normal, -light_direction), 0.);
+			} else if (light_type == 2) { // Point
+				// Get light information
+				vec3 light_position = vec3(u_light_data[i + 2], u_light_data[i + 3], u_light_data[i + 4]);
+				float light_start = u_light_data[i + 5];
+				float light_end = u_light_data[i + 6];
+				vec4 light_color = vec4(u_light_data[i + 8], u_light_data[i + 9], u_light_data[i + 10], u_light_data[i + 11]);
 				
-					// Add to total lighting
-					total_light += attenuation * light_color * angle_difference;
-					total_specular += attenuation * max(dot(reflection, light_direction), 0.);
-				}
+				// Calculate lighting
+				vec3 light_direction = normalize(object_space_position - light_position);
+				float attenuation = max((light_end - distance(object_space_position, light_position)) / (light_end - light_start), 0.);
+				float angle_difference = max(dot(world_normal, -light_direction), 0.);
+				
+				// Add to total lighting
+				total_light += attenuation * light_color * angle_difference;
+				total_specular += attenuation * max(dot(reflection, light_direction), 0.);
 			}
 		}
 	}

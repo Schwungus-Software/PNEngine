@@ -61,10 +61,11 @@ void main() {
 	vec4 starting_color = sample * u_material_color * vec4(v_color.rgb, v_alpha) * v_lighting;
 	
 	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, v_fog) + pow(v_specular.x, v_specular.y);
-	starting_color.a *= mix(1.0, u_fog_color.a, v_fog);
+	starting_color.a *= mix(1., u_fog_color.a, v_fog);
     gl_FragColor = starting_color * u_color;
 	
-	// Screen-door transparency
+	// Uncomment this section to enable screen-door transparency. May look
+	// uglier, but runs better on some computers.
 	/*mat4 pattern = mat4(
 		vec4(0.0588235294117647, 0.5294117647058824, 0.1764705882352941, 0.6470588235294118),
 		vec4(0.7647058823529412, 0.2941176470588235, 0.8823529411764706, 0.4117647058823529),
