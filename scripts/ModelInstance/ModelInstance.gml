@@ -357,6 +357,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _u_material_color = global.u_material_color
 			var _u_material_alpha_test = global.u_material_alpha_test
 			var _u_material_scroll = global.u_material_scroll
+			var _u_material_can_blend = global.u_material_can_blend
+			var _u_material_blend = global.u_material_blend
+			var _u_material_blend_uvs = global.u_material_blend_uvs
 			var _u_uvs = global.u_uvs
 			var i = 0
 			
@@ -375,6 +378,25 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					
 					with _material {
 						_image = image
+						
+						if image2 != undefined {
+							_u_material_can_blend.set(1)
+							
+							if image2 == -1 {
+								_u_material_blend.set(-1)
+							} else {
+								_u_material_blend.set(image2.GetTexture(0))
+							
+								var _uvs = _image.GetUVs(_idx)
+							
+								with _uvs {
+									_u_material_blend_uvs.set(normLeft, normTop, normRight, normBottom)
+								}
+							}
+						} else {
+							_u_material_can_blend.set(0)
+						}
+						
 						_u_material_bright.set(bright)
 						_u_material_specular.set(specular, specular_exponent)
 						_u_material_wind.set(wind, wind_lock_bottom, wind_speed)

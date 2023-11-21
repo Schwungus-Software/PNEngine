@@ -6,6 +6,7 @@ function MaterialMap() : AssetMap() constructor {
 		
 		var _path = "materials/" + _name
 		var _image = -1
+		var _image2 = undefined
 		var _alpha_test = 0.5
 		var _speed = 0
 		var _bright = 0
@@ -20,10 +21,18 @@ function MaterialMap() : AssetMap() constructor {
 		var _json = json_load(mod_find_file(_path + ".json"))
 		
 		if _json != undefined {
+			var _images = global.images
+			
 			_image = _json[$ "image"] ?? -1
 			
 			if is_string(_image) {
-				global.images.load(_image)
+				_images.load(_image)
+			}
+			
+			_image2 = _json[$ "image2"]
+			
+			if is_string(_image2) {
+				_images.load(_image2)
 			}
 			
 			_alpha_test = _json[$ "alpha_test"] ?? 0.5
@@ -79,6 +88,7 @@ function MaterialMap() : AssetMap() constructor {
 		with _material {
 			name = _name
 			image = _image
+			image2 = _image2
 			frame_speed = _speed
 			alpha_test = _alpha_test
 			bright = _bright

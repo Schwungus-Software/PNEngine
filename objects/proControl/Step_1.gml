@@ -442,6 +442,10 @@ if load_state != LoadStates.NONE {
 					if image != -1 {
 						image = CollageImageGetInfo(image)
 					}
+					
+					if image2 != undefined and image2 != -1 {
+						image2 = CollageImageGetInfo(image2)
+					}
 				}
 				
 				key = ds_map_find_next(_materials_map, key)
