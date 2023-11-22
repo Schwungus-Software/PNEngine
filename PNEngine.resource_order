@@ -454,7 +454,7 @@
     {"name":"dq_get_y","order":6,"path":"scripts/dq_get_y/dq_get_y.yy",},
     {"name":"draw_image_part","order":3,"path":"scripts/draw_image_part/draw_image_part.yy",},
     {"name":"scribble_super_glyph_delete","order":4,"path":"scripts/scribble_super_glyph_delete/scribble_super_glyph_delete.yy",},
-    {"name":"json_load","order":5,"path":"scripts/json_load/json_load.yy",},
+    {"name":"json_load","order":3,"path":"scripts/json_load/json_load.yy",},
     {"name":"input_binding_remove","order":7,"path":"scripts/input_binding_remove/input_binding_remove.yy",},
     {"name":"scr_catspeak_environment","order":5,"path":"scripts/scr_catspeak_environment/scr_catspeak_environment.yy",},
     {"name":"__shd_scribble_msdf","order":5,"path":"shaders/__shd_scribble_msdf/__shd_scribble_msdf.yy",},

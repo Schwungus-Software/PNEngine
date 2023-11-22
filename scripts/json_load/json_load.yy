@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Assets",
-    "path": "folders/Scripts/PNEngine/Assets.yy",
+    "name": "File Handling",
+    "path": "folders/Scripts/PNEngine/Assets/File Handling.yy",
   },
 }

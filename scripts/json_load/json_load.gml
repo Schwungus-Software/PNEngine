@@ -7,9 +7,9 @@ function json_load(_filename) {
 	}
 	
 	var _buffer = buffer_load(_filename)
-	var _json = json_parse(buffer_read(_buffer, buffer_text))
+	var _text = buffer_read(_buffer, buffer_text)
 	
 	buffer_delete(_buffer)
 	
-	return _json
+	return json_parse(_text)
 }
