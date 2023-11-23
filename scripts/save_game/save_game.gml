@@ -85,7 +85,7 @@ function save_game() {
 	// Output
 	var _filename = global.save_name + ".sav"
 	
-	buffer_save(_buffer, "saves/" + _filename)
+	buffer_save(_buffer, SAVES_PATH + _filename)
 	buffer_delete(_buffer)
 	print($"save_game: Game saved as '{_filename}'")
 	

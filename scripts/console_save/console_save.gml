@@ -118,7 +118,7 @@ function console_save(_prefix, _context = "") {
 			buffer_write(_log, buffer_text, _console_log[| i++] + "\n")
 		}
 	
-		buffer_save(_log, "logs/" + _filename)
+		buffer_save(_log, LOGS_PATH + _filename)
 		buffer_delete(_log)
 	#endregion
 	

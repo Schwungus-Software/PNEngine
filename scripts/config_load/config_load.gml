@@ -2,7 +2,7 @@ function config_load() {
 	config_reset()
 	
 	var _config = global.config
-	var _json = json_load("config.json")
+	var _json = json_load(CONFIG_PATH)
 	
 	if _json != undefined {
 		var _cvars = variable_struct_get_names(_json)
@@ -23,7 +23,7 @@ function config_load() {
 		}
 	}
 	
-	_json = json_load("controls.json")
+	_json = json_load(CONTROLS_PATH)
 	
 	if _json != undefined {
 		input_player_import(_json)

@@ -14,7 +14,7 @@ function Save(_filename) constructor {
 	tag = noone
 	
 #region Valid Check
-	var _buffer = buffer_load("saves/" + filename)
+	var _buffer = buffer_load(SAVES_PATH + filename)
 	
 	try {
 #region Header

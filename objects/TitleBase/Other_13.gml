@@ -88,7 +88,7 @@ if menu != undefined and not locked {
 							
 							var _save = save_data[_curopt]
 							
-							file_delete("saves/" + _save.name + ".sav")
+							file_delete(SAVES_PATH + _save.name + ".sav")
 							array_delete(save_data, _curopt, 1)
 							_title_delete_state = 0
 							
