@@ -10,7 +10,7 @@ var _saves = global.saves
 
 ds_list_clear(_saves)
 
-var _name = file_find_first("saves/*.sav", fa_none)
+var _name = file_find_first(SAVES_PATH + "*.sav", fa_none)
 
 while _name != "" {
 	print($"TitleBase: Found '{_name}'")

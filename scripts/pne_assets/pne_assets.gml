@@ -1,6 +1,6 @@
 global.mods = ds_map_create()
 
-var _disabled_mods = json_load("data/disabled.json")
+var _disabled_mods = json_load(DATA_PATH + "disabled.json")
 
 if not is_array(_disabled_mods) {
 	_disabled_mods = []
@@ -8,10 +8,10 @@ if not is_array(_disabled_mods) {
 
 var n = array_length(_disabled_mods)
 var _load_mods = []
-var _mod = file_find_first("data/*", fa_directory)
+var _mod = file_find_first(DATA_PATH + "*", fa_directory)
 
 while _mod != "" {
-	if directory_exists("data/" + _mod) {
+	if directory_exists(DATA_PATH + _mod) {
 		var _enabled = true
 		var i = 0
 		

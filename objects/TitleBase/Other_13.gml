@@ -65,7 +65,7 @@ if menu != undefined and not locked {
 					
 					var i = 1
 					
-					while file_exists($"saves/File {i}.sav") {
+					while file_exists(SAVES_PATH + $"File {i}.sav") {
 						++i
 					}
 					

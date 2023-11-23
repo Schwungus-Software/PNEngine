@@ -1,7 +1,7 @@
 function Mod(_name) constructor {
 	name = _name
 	version = ""
-	path = "data/" + _name + "/"
+	path = DATA_PATH + _name + "/"
 	
 	if not directory_exists(path) {
 		show_error($"!!! Mod: '{_name}' not found", true)
