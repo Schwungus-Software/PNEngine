@@ -68,10 +68,11 @@ function Uniform(_name, _type) constructor {
 		var i = 0
 		
 		repeat argument_count {
-			_args[-~i] = argument[i]
+			_args[-~i] = argument[i];
 			++i
 		}
 		
-		script_execute_ext(func, _args, 0, -~argument_count)
+		// GROSS HACK: Can't use "-~argument_count" on YYC...
+		script_execute_ext(func, _args, 0, argument_count + 1)
 	}
 }
