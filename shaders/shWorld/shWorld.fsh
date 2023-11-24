@@ -44,7 +44,7 @@ void main() {
 	if (u_material_can_blend == 1) {
 		vec2 blend_uv = vec2(u_material_blend_uvs.r + (u_material_blend_uvs.b * u), u_material_blend_uvs.g + (u_material_blend_uvs.a * v));
 		
-		sample = mix(sample, texture2D(u_material_blend, blend_uv), v_color.a);
+		sample = mix(texture2D(u_material_blend, blend_uv), sample, v_color.a);
 		v_alpha = 1.;
 	} else {
 		v_alpha = v_color.a;
