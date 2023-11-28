@@ -1589,6 +1589,7 @@
     {"id":{"name":"net_typeof","path":"scripts/net_typeof/net_typeof.yy",},},
     {"id":{"name":"CollageGet","path":"scripts/CollageGet/CollageGet.yy",},},
     {"id":{"name":"Flags","path":"scripts/Flags/Flags.yy",},},
+    {"id":{"name":"player_force_area","path":"scripts/player_force_area/player_force_area.yy",},},
     {"id":{"name":"input_combo_get_phase","path":"scripts/input_combo_get_phase/input_combo_get_phase.yy",},},
     {"id":{"name":"__scribble_gen_6_build_lines","path":"scripts/__scribble_gen_6_build_lines/__scribble_gen_6_build_lines.yy",},},
     {"id":{"name":"scribble_anim_rainbow","path":"scripts/scribble_anim_rainbow/scribble_anim_rainbow.yy",},},

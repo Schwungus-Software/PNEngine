@@ -489,7 +489,9 @@ if load_state != LoadStates.NONE {
 			i = 0
 			
 			repeat INPUT_MAX_PLAYERS {
-				with _players[i++] {
+				var _player = _players[i++]
+				
+				with _player {
 					level = _level
 					
 					// Bring new players in-game
@@ -500,7 +502,7 @@ if load_state != LoadStates.NONE {
 					}
 					
 					if status == PlayerStatus.ACTIVE {
-						__force_area(_load_area)
+						player_force_area(_player, _load_area)
 					}
 				}
 			}

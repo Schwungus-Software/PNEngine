@@ -563,9 +563,7 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				with global.players[buffer_read(_buffer, buffer_u8)] {
-					__force_area(buffer_read(_buffer, buffer_u8))
-				}
+				player_force_area(global.players[buffer_read(_buffer, buffer_u8)], buffer_read(_buffer, buffer_u8))
 			break
 			
 			case NetHeaders.HOST_THING:

@@ -512,6 +512,7 @@
     {"name":"net_typeof","order":3,"path":"scripts/net_typeof/net_typeof.yy",},
     {"name":"CollageGet","order":4,"path":"scripts/CollageGet/CollageGet.yy",},
     {"name":"Flags","order":4,"path":"scripts/Flags/Flags.yy",},
+    {"name":"player_force_area","order":2,"path":"scripts/player_force_area/player_force_area.yy",},
     {"name":"input_combo_get_phase","order":4,"path":"scripts/input_combo_get_phase/input_combo_get_phase.yy",},
     {"name":"__scribble_gen_6_build_lines","order":6,"path":"scripts/__scribble_gen_6_build_lines/__scribble_gen_6_build_lines.yy",},
     {"name":"scribble_anim_rainbow","order":4,"path":"scripts/scribble_anim_rainbow/scribble_anim_rainbow.yy",},
