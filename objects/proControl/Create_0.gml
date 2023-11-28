@@ -244,7 +244,7 @@
 						show_error(_str, true)
 					},
 					
-					"show_caption", show_caption,
+					"show_caption", show_caption
 				)
 			#endregion
 			
@@ -520,7 +520,7 @@
 						return global.game_status
 					},
 					
-					"delta_ticks", function () {
+					"delta_time", function () {
 						return global.delta
 					}
 				)
