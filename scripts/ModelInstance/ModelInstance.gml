@@ -40,7 +40,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				animation_name = ""
 				animation = undefined
 				
-				return true
+				exit
 			}
 			
 			animation_name = _animation.name
@@ -67,8 +67,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				
 				array_copy(transition_sample, 0, _final_sample, 0, array_length(_final_sample))
 			}
-			
-			return true
 		}
 		
 		static get_bone_dq = function (_index) {
