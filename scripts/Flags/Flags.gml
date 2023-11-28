@@ -29,14 +29,6 @@ function Flags(_id) constructor {
 		return true
 	}
 	
-	static __force_clear = function () {
-		if slot == 0 {
-			ds_map_copy(flags, global.default_flags)
-		} else {
-			ds_map_clear(flags)
-		}
-	}
-	
 	static clear = function () {
 		var _netgame = global.netgame
 		
@@ -53,7 +45,7 @@ function Flags(_id) constructor {
 			}
 		}
 		
-		__force_clear()
+		flags_force_clear(self)
 		
 		return true
 	}

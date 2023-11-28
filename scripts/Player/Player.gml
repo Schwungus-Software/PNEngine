@@ -123,14 +123,6 @@ function Player() constructor {
 		return true
 	}
 	
-	static __force_clear_states = function () {
-		ds_map_clear(states)
-		states[? "hp"] = 8
-		states[? "coins"] = 0
-		states[? "invincible"] = false
-		states[? "frozen"] = false
-	}
-	
 	static clear_states = function () {
 		var _netgame = global.netgame
 		
@@ -147,14 +139,16 @@ function Player() constructor {
 			}
 		}
 		
-		__force_clear_states()
+		player_force_clear_states(self)
 		
 		return true
 	}
 	
 	static is_local = function () {
+		gml_pragma("forceinline")
+		
 		return net == undefined or net.local
 	}
 	
-	__force_clear_states()
+	player_force_clear_states(self)
 }

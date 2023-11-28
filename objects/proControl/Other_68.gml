@@ -778,7 +778,7 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				global.players[buffer_read(_buffer, buffer_u8)].__force_clear_states()
+				player_force_clear_states(global.players[buffer_read(_buffer, buffer_u8)])
 			break
 			
 			case NetHeaders.HOST_RESET_FLAGS:
@@ -786,7 +786,7 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				global.flags[buffer_read(_buffer, buffer_u8)].__force_clear()
+				flags_force_clear(global.flags[buffer_read(_buffer, buffer_u8)])
 			break
 			
 			default:
