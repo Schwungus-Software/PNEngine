@@ -1,6 +1,10 @@
 /// @desc Resets the user config to its default values.
 function config_reset() {
 	global.config = {
+		// DEBUG
+		data_path: "data/",
+		
+		// USER
 		language: "English",
 		name: "Player",
 		
