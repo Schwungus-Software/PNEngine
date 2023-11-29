@@ -121,6 +121,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Shaders","folderPath":"folders/Scripts/PNEngine/Display/Shaders.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Game","folderPath":"folders/Scripts/PNEngine/Game.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Collision","folderPath":"folders/Scripts/PNEngine/Game/Collision.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Flags","folderPath":"folders/Scripts/PNEngine/Game/Flags.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Levels","folderPath":"folders/Scripts/PNEngine/Game/Levels.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Players","folderPath":"folders/Scripts/PNEngine/Game/Players.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Math","folderPath":"folders/Scripts/PNEngine/Math.yy",},
@@ -129,7 +130,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Netgame","folderPath":"folders/Scripts/PNEngine/Netgame.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Buffers","folderPath":"folders/Scripts/PNEngine/Netgame/Buffers.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Shaders","folderPath":"folders/Shaders.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Flags","folderPath":"folders/Scripts/PNEngine/Game/Flags.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"controllerblacklist.csv","CopyToMask":-1,"filePath":"datafiles",},
@@ -1740,6 +1740,7 @@
     {"id":{"name":"scribble_markdown_set_styles","path":"scripts/scribble_markdown_set_styles/scribble_markdown_set_styles.yy",},},
     {"id":{"name":"__input_config_combos","path":"scripts/__input_config_combos/__input_config_combos.yy",},},
     {"id":{"name":"__scribble_gen_9_write_vbuffs","path":"scripts/__scribble_gen_9_write_vbuffs/__scribble_gen_9_write_vbuffs.yy",},},
+    {"id":{"name":"shDepth","path":"shaders/shDepth/shDepth.yy",},},
     {"id":{"name":"__input_config_external_data","path":"scripts/__input_config_external_data/__input_config_external_data.yy",},},
     {"id":{"name":"input_binding_scan_time_remaining","path":"scripts/input_binding_scan_time_remaining/input_binding_scan_time_remaining.yy",},},
     {"id":{"name":"__input_key_is_ignored","path":"scripts/__input_key_is_ignored/__input_key_is_ignored.yy",},},
