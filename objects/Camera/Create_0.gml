@@ -117,9 +117,9 @@ event_inherited()
 		return _pos
 	}
 	
-	render = function (_width, _height, _allow_screen = true, _world_shader = global.world_shader) {
+	render = function (_width, _height, _allow_sky = true, _allow_screen = true, _world_shader = global.world_shader) {
 		if instance_exists(child) {
-			return child.render(_width, _height, _allow_screen)
+			return child.render(_width, _height, _allow_sky, _allow_screen)
 		}
 		
 		output.Resize(_width, _height)
@@ -177,32 +177,36 @@ event_inherited()
 			var _z = sz
 			
 			with _area {
-				if instance_exists(sky) and sky.model != undefined {
-					gpu_set_blendenable(false)
-					gpu_set_zwriteenable(false)
-					global.sky_shader.set()
+				if _allow_sky {
+					if instance_exists(sky) and sky.model != undefined {
+						gpu_set_blendenable(false)
+						gpu_set_zwriteenable(false)
+						global.sky_shader.set()
 					
-					with sky {
-						with model {
-							sx = _x
-							sy = _y
-							sz = _z
+						with sky {
+							with model {
+								sx = _x
+								sy = _y
+								sz = _z
 							
-							var _material = other.material
-							var _scroll = current_time * SKY_SCROLL_FACTOR
+								var _material = other.material
+								var _scroll = current_time * SKY_SCROLL_FACTOR
 							
-							syaw = _scroll * _material.x_scroll
-							spitch = _scroll * _material.y_scroll
-						}
+								syaw = _scroll * _material.x_scroll
+								spitch = _scroll * _material.y_scroll
+							}
 						
-						event_user(ThingEvents.DRAW)
-					}
+							event_user(ThingEvents.DRAW)
+						}
 					
-					shader_reset()
-					gpu_set_zwriteenable(true)
-					gpu_set_blendenable(true)
+						shader_reset()
+						gpu_set_zwriteenable(true)
+						gpu_set_blendenable(true)
+					} else {
+						_world_canvas.Clear(clear_color[4])
+					}
 				} else {
-					_world_canvas.Clear(clear_color[4])
+					_world_canvas.Clear(c_black)
 				}
 				
 				_world_shader.set()
