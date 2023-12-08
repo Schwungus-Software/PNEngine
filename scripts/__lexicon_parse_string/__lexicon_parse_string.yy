@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "__lexicon_handle_cache",
+  "name": "__lexicon_parse_string",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Cache",
-    "path": "folders/Scripts/Libraries/Lexicon/Internal/Cache.yy",
+    "name": "Internal",
+    "path": "folders/Scripts/Libraries/Lexicon/Internal.yy",
   },
 }
