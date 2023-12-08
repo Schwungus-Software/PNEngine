@@ -619,7 +619,7 @@ if _tick >= 1 {
 				}
 			
 				i = 0
-			
+				
 				repeat array_length(new_disconnections) {
 					with _players[new_disconnections[i++]] {
 						if not deactivate() {

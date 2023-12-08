@@ -87,7 +87,7 @@ var _players = global.players
 #region Update Particles & Draw GUI
 	var _dead_particles = global.dead_particles
 	var _particle_step = not global.freeze_step
-	var d = (delta_time * TICKRATE_DELTA) * global.tick_scale
+	var d = global.delta
 	var _drawn_areas = 0
 	var i = 0
 
@@ -187,7 +187,7 @@ with proTransition {
 
 if caption_time > 0 {
 	caption.draw(240, 240)
-	caption_time -= global.delta
+	caption_time -= d
 }
 
 if global.console {
