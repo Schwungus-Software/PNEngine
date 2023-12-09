@@ -156,14 +156,18 @@ event_inherited()
 			camera_set_proj_mat(_render_camera, _projection_matrix)
 			camera_apply(_render_camera)
 			
-			var _ambient_color, _fog_distance, _fog_color
+			var _ambient_color, _fog_distance, _fog_color, _wind_strength, _wind_direction, _light_data
 			
 			with _area {
 				_ambient_color = ambient_color
 				_fog_distance = fog_distance
 				_fog_color = fog_color
+				_wind_strength = wind_strength
+				_wind_direction = wind_direction
+				_light_data = light_data
 			}
 			
+			var _time = current_time
 			var _gpu_tex_filter = gpu_get_tex_filter()
 			var _config = global.config
 			var _vid_texture_filter = _config.vid_texture_filter
@@ -190,7 +194,7 @@ event_inherited()
 								sz = _z
 							
 								var _material = other.material
-								var _scroll = current_time * SKY_SCROLL_FACTOR
+								var _scroll = _time * SKY_SCROLL_FACTOR
 							
 								syaw = _scroll * _material.x_scroll
 								spitch = _scroll * _material.y_scroll
@@ -213,7 +217,9 @@ event_inherited()
 				global.u_ambient_color.set(_ambient_color[0], _ambient_color[1], _ambient_color[2], _ambient_color[3])
 				global.u_fog_distance.set(_fog_distance[0], _fog_distance[1])
 				global.u_fog_color.set(_fog_color[0], _fog_color[1], _fog_color[2], _fog_color[3])
-				global.u_light_data.set(_area.light_data)
+				global.u_wind.set(_wind_strength, _wind_direction[0], _wind_direction[1], _wind_direction[2])
+				global.u_light_data.set(_light_data)
+				global.u_time.set(_time * 0.001)
 				
 				if model != undefined {
 					model.draw()

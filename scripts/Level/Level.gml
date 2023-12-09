@@ -11,6 +11,8 @@ function Level() constructor {
 		music = undefined
 		clear_color = undefined
 		ambient_color = undefined
+		wind_strength = 1
+		wind_direction = undefined
 		gravity = 0.6
 	#endregion
 	

@@ -20,6 +20,8 @@ function Area() constructor {
 	ambient_color = undefined
 	fog_distance = undefined
 	fog_color = undefined
+	wind_strength = 1
+	wind_direction = undefined
 	gravity = 0.6
 	
 	/// @desc Attempts to activate the area.

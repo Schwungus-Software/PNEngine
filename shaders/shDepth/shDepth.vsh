@@ -33,8 +33,7 @@ varying float v_light_depth;
 
 uniform float u_time;
 
-uniform float u_wind_strength;
-uniform vec3 u_wind_direction;
+uniform vec4 u_wind; // strength, xyz
 
 uniform vec2 u_material_scroll;
 uniform vec3 u_material_wind; // waviness, lock bottom, speed
@@ -186,14 +185,15 @@ void main() {
 	// Wind effect: Move vertices around using 4D simplex noise
 	if (u_material_wind.x > 0.) {
 		float wind_time = u_time * u_material_wind.z;
-		float wind_weight = (1. - (u_material_wind.y * clamp(in_TextureCoord.y, 0., 1.))) * u_wind_strength * u_material_wind.x;
+		float wind_strength = u_wind.x;
+		float wind_weight = (1. - (u_material_wind.y * clamp(in_TextureCoord.y, 0., 1.))) * wind_strength * u_material_wind.x;
 		float vx = in_Position.x;
 		float vy = in_Position.y;
 		float vz = in_Position.z;
 	
-		object_space_position_vec4.x += u_wind_direction.x * snoise(vec4(vx, -vy, -vz, wind_time)) * wind_weight;
-		object_space_position_vec4.y += u_wind_direction.y * snoise(vec4(-vx, vy, -vz, wind_time)) * wind_weight;
-		object_space_position_vec4.z += u_wind_direction.z * snoise(vec4(-vx, -vy, vz, wind_time)) * wind_weight;
+		object_space_position_vec4.x += u_wind.y * snoise(vec4(vx, -vy, -vz, wind_time)) * wind_weight;
+		object_space_position_vec4.y += u_wind.z * snoise(vec4(-vx, vy, -vz, wind_time)) * wind_weight;
+		object_space_position_vec4.z += u_wind.w * snoise(vec4(-vx, -vy, vz, wind_time)) * wind_weight;
 	}
 	
 	gl_Position = gm_Matrices[MATRIX_PROJECTION] * view_matrix * object_space_position_vec4;

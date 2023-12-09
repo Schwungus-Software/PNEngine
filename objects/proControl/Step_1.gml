@@ -162,6 +162,11 @@ if load_state != LoadStates.NONE {
 					fog_distance = is_array(_fog_distance) ? [real(_fog_distance[0]), real(_fog_distance[1])] : [0, 65535]
 					fog_color = color_to_vec5(_json[$ "fog_color"])
 					ambient_color = color_to_vec5(_json[$ "ambient_color"])
+					wind_strength = _json[$ "wind_strength"] ?? 1
+					
+					var _wind_direction = _json[$ "wind_direction"]
+					
+					wind_direction = is_array(_wind_direction) ? [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])] : [1, 1, 1]
 					gravity = _json[$ "gravity"] ?? 0.6
 				}
 #endregion
@@ -293,11 +298,14 @@ if load_state != LoadStates.NONE {
 								var _ambient_color = _area_info[$ "ambient_color"]
 								var _fog_distance = _area_info[$ "fog_distance"]
 								var _fog_color = _area_info[$ "fog_color"]
+								var _wind_direction = _area_info[$ "wind_direction"]
 								
 								clear_color = _clear_color == undefined ? _level.clear_color : color_to_vec5(_clear_color)
 								ambient_color = _ambient_color == undefined ? _level.ambient_color : color_to_vec5(_ambient_color)
 								fog_distance = is_array(_fog_distance) ? [real(_fog_distance[0]), real(_fog_distance[1])] : _level.fog_distance
 								fog_color = _fog_color == undefined ? _level.fog_color : color_to_vec5(_fog_color)
+								wind_strength = _area_info[$ "wind_strength"] ?? _level.wind_strength
+								wind_direction = _wind_direction == undefined ? _level.wind_direction : [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])]
 								gravity = _area_info[$ "gravity"] ?? _level.gravity
 							}
 							
