@@ -385,7 +385,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 							} else {
 								_u_material_blend.set(image2.GetTexture(0))
 							
-								var _uvs = _image.GetUVs(_idx)
+								var _uvs = image2.GetUVs(_idx)
 							
 								with _uvs {
 									_u_material_blend_uvs.set(normLeft, normTop, normRight, normBottom)
