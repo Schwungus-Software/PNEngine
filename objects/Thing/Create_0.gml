@@ -90,6 +90,9 @@
 	model = undefined
 	
 	emitter = undefined
+	emitter_falloff = 0
+	emitter_falloff_max = 360
+	emitter_falloff_factor = 1
 	
 	f_created = false
 	f_new = false
@@ -195,6 +198,9 @@
 	play_sound_local = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
 		if emitter == undefined or not audio_emitter_exists(emitter) {
 			emitter = audio_emitter_create()
+			audio_emitter_falloff(emitter, emitter_falloff, emitter_falloff_max, emitter_falloff_factor)
+			audio_emitter_position(emitter, x, y, z)
+			audio_emitter_velocity(emitter, x_speed, y_speed, z_speed)
 		}
 		
 		return area.sounds.play_on(emitter, _sound, _loop, _offset, _pitch)
