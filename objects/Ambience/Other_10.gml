@@ -18,9 +18,9 @@ repeat i {
 			_sounds.load(_ambient)
 		} else {
 			array_delete(_ambience, i, 1)
-			
-			continue
 		}
+		
+		continue
 	}
 	
 	var _sound = _ambient.sound
