@@ -16,8 +16,8 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 	var _x_offset = (_image.GetXOffset() / _image.GetWidth()) * _width
 	var _y_offset = (_image.GetYOffset() / _image.GetHeight()) * _height
 	
-	var _yaw = _camera.yaw + 180
-	var _pitch = -_camera.pitch
+	var _yaw = _camera.syaw + 180
+	var _pitch = -_camera.spitch
 	
 	var _matrix = matrix_multiply(
 		matrix_multiply(
@@ -48,10 +48,10 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 	var _y4 = _vert4[1]
 	var _z4 = _vert4[2]
 	
-	var _pitch_factor = dcos(_pitch)
+	/*var _pitch_factor = dcos(_pitch)
 	var _nx = dcos(_yaw) * _pitch_factor
 	var _ny = -dsin(_yaw) * _pitch_factor
-	var _nz = dsin(_pitch)
+	var _nz = dsin(_pitch)*/
 	
 	var _uvs = _image.GetUVs(_frame)
 	var _u1 = _uvs.normLeft
@@ -61,12 +61,12 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 	
 	var _batch_vbo = global.batch_vbo
 	
-	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, _nx, _ny, _nz, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, _nx, _ny, _nz, _u2, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, _nx, _ny, _nz, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, _nx, _ny, _nz, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, _nx, _ny, _nz, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, _nx, _ny, _nz, _u1, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, 1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, 0, 0, 1, _u2, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, 1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, 1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, 1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, 0, 0, 1, _u1, _v1, _color, _alpha)
 	
 	return true
 }
