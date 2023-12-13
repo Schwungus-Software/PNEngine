@@ -712,8 +712,6 @@ if _tick >= 1 {
 			input_verb_consume("aim_right")
 		} else {
 			_tick = 0
-			
-			exit
 		}
 	} else {
 		if input_check_pressed("debug_console") {
