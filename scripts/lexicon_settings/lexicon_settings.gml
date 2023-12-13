@@ -3,7 +3,7 @@
 /* 
     Enables Lexicons debugging (outputs specific errors or extra info to console)
 */
-#macro __LEXICON_DEBUG (GM_build_type == "run") 
+#macro __LEXICON_DEBUG false //(GM_build_type == "run") 
 
 /*
     Whether Lexicon should be verbose in certain areas (such as cache clearing)

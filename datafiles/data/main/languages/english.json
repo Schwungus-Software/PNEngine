@@ -16,13 +16,13 @@
 		
 		"netgame": {
 			"no_connection": "Network connection not found",
-			"hosting": "Hosting on port %s",
-			"connecting": "Connecting to %s...",
+			"hosting": "Hosting on port {0}",
+			"connecting": "Connecting to {0}...",
 			"lost_connection": "Connection lost",
 			"connected": "Connected",
 			"disconnected": "Disconnected",
-			"player_joined": "%s joined as Player %s!",
-			"player_left": "%s left!",
+			"player_joined": "{0} joined as Player {1}!",
+			"player_left": "{0} left!",
 			
 			"code": {
 				"NET_UNKNOWN": "Unknown error",
@@ -40,7 +40,7 @@
 			"back": "BACK",
 			"confirm": "CONFIRM",
 			"cancel": "CANCEL",
-			"player": "PLAYER %s",
+			"player": "PLAYER {0}",
 		},
 		
 		"value": {
