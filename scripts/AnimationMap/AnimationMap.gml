@@ -7,7 +7,7 @@ function AnimationMap() : AssetMap() constructor {
 		var _path = "animations/" + _name
 		var _json = json_load(mod_find_file(_path + ".json"))
 		
-		if _json == undefined {
+		if not is_struct(_json) {
 			print($"! AnimationMap: '{_name}' has no JSON")
 			
 			exit

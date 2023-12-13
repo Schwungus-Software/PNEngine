@@ -14,7 +14,7 @@ function SoundMap() : AssetMap() constructor {
 			var _loop_end = undefined
 			var _json = json_load(mod_find_file(_path + ".json"))
 			
-			if _json != undefined {
+			if is_struct(_json) {
 				var _pitch = _json[$ "pitch"]
 				
 				if is_array(_pitch) {

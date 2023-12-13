@@ -26,7 +26,7 @@ function FontMap() : AssetMap() constructor {
 				
 				var _json = json_load(mod_find_file(_path + ".json"))
 				
-				if _json != undefined {
+				if is_struct(_json) {
 					_size = _json[$ "size"] ?? 8
 					_bold = _json[$ "bold"] ?? false
 					_italics = _json[$ "italics"] ?? false
@@ -62,7 +62,7 @@ function FontMap() : AssetMap() constructor {
 				
 				var _json = json_load(mod_find_file(_path + ".json"))
 				
-				if _json != undefined {
+				if is_struct(_json) {
 					_frames = _json[$ "frames"] ?? 1
 					_first = _json[$ "first"] ?? "!"
 					_proportional = _json[$ "proportional"] ?? true

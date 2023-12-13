@@ -19,7 +19,7 @@ function MusicMap() : AssetMap() constructor {
 			var _metadata = _no_metadata
 			var _json = json_load(mod_find_file(_path + ".json"))
 			
-			if _json != undefined {
+			if is_struct(_json) {
 				_loop_start = _json[$ "loop_start"]
 				_loop_end = _json[$ "loop_end"]
 				_metadata = _json[$ "metadata"] ?? _no_metadata

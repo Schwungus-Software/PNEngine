@@ -27,7 +27,7 @@ function ImageMap() : AssetMap() constructor {
 		var _y_repeat = true
 		var _json = json_load(mod_find_file(_path + ".json"))
 		
-		if _json != undefined {
+		if is_struct(_json) {
 			_frames = _json[$ "frames"] ?? 1
 			_x_offset = _json[$ "x_offset"] ?? 0
 			_y_offset = _json[$ "y_offset"] ?? 0

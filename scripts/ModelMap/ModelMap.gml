@@ -9,7 +9,7 @@ function ModelMap() : AssetMap() constructor {
 		if directory_exists(_folder) {
 			var _json = json_load(_folder + "model.json")
 			
-			if _json != undefined {
+			if is_struct(_json) {
 				var _model = new Model()
 				
 				_model.name = _name

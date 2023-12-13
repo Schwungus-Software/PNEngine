@@ -4,7 +4,7 @@ function config_load() {
 	var _config = global.config
 	var _json = json_load(CONFIG_PATH)
 	
-	if _json != undefined {
+	if is_struct(_json) {
 		var _cvars = variable_struct_get_names(_json)
 		var i = 0
 		
@@ -25,7 +25,7 @@ function config_load() {
 	
 	_json = json_load(CONTROLS_PATH)
 	
-	if _json != undefined {
+	if is_struct(_json) {
 		input_player_import(_json)
 	}
 }

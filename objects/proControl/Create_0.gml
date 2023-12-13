@@ -545,7 +545,7 @@
 		
 		var _info = json_load(_path + "mod.json")
 		
-		if _info != undefined {
+		if is_struct(_info) {
 			var _title = string(_info[$ "title"])
 			
 			if is_string(_title) {

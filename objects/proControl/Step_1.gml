@@ -74,7 +74,7 @@ if load_state != LoadStates.NONE {
 			
 			var _json = json_load(mod_find_file("levels/" + load_level + ".json"))
 			
-			if _json == undefined {
+			if not is_struct(_json) {
 				show_error($"!!! proControl: '{load_level}' not found", true)
 			} else {
 #region Discord Rich Presence

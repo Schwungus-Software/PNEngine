@@ -20,7 +20,7 @@ function MaterialMap() : AssetMap() constructor {
 		var _color = [1, 1, 1, 1, c_white]
 		var _json = json_load(mod_find_file(_path + ".json"))
 		
-		if _json != undefined {
+		if is_struct(_json) {
 			var _images = global.images
 			
 			_image = _json[$ "image"] ?? -1
