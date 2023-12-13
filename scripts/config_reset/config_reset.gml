@@ -7,6 +7,9 @@ function config_reset() {
 		// USER
 		language: "English",
 		name: "Player",
+		chat: true,
+		vc_enable: false,
+		vc_push: true,
 		
 		// VIDEO
 		vid_fullscreen: false,
