@@ -1,5 +1,9 @@
 /// @description Create
+// Feather disable GM1014
+// Feather disable GM1019
 // Feather disable GM2016
+face_angle = angle
+
 event_inherited()
 
 playcam = [x, y, z]

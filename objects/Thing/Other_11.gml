@@ -1,4 +1,6 @@
 /// @description Create
+move_angle = angle
+
 if create != undefined {
 	create.setSelf(self)
 	create()
