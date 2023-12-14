@@ -530,6 +530,14 @@
 #endregion
 
 // CREATE
+ui_font = scribble_fallback_font
+ui_font_name = ""
+chat_font = scribble_fallback_font
+chat_font_name = ""
+
+var _custom_ui_font = undefined
+var _custom_chat_font = undefined
+
 #region Mods
 	var _mods = global.mods
 	var _key = ds_map_find_first(_mods)
@@ -578,6 +586,18 @@
 					++i
 				}
 			}
+			
+			var _ui_font = _info[$ "ui_font"]
+			
+			if is_string(_ui_font) {
+				_custom_ui_font = _ui_font
+			}
+			
+			var _chat_font = _info[$ "chat_font"]
+			
+			if is_string(_chat_font) {
+				_custom_chat_font = _chat_font
+			}
 		}
 		
 		_key = ds_map_find_next(_mods, _key)
@@ -594,8 +614,27 @@
 config_update()
 
 // MESSAGE
-global.fonts.load("fntHUD")
-caption = scribble("", "__PNENGINE_CAPTION__").starting_format("fntHUD", c_white).align(fa_center, fa_bottom)
+var _fonts = global.fonts
+
+if is_string(_custom_ui_font) {
+	_fonts.load(_custom_ui_font)
+	
+	var _font = _fonts.get(_custom_ui_font)
+	
+	ui_font = _font.font
+	ui_font_name = _font.name
+}
+
+if is_string(_custom_chat_font) {
+	_fonts.load(_custom_chat_font)
+	
+	var _font = _fonts.get(_custom_chat_font)
+	
+	chat_font = _font.font
+	chat_font_name = _font.name
+}
+
+caption = scribble("", "__PNENGINE_CAPTION__").starting_format(ui_font_name, c_white).align(fa_center, fa_bottom)
 caption_time = -1
 
 // LEVEL
