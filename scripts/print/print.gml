@@ -34,8 +34,4 @@ function print(_str) {
 	var _console_log = global.console_log
 	
 	ds_list_add(global.console_log, _output)
-	
-	while ds_list_size(_console_log) > 256 {
-		ds_list_delete(_console_log, 0)
-	}
 }
