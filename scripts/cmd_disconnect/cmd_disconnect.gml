@@ -20,6 +20,8 @@ function cmd_disconnect(_args) {
 	show_caption($"[c_red]{lexicon_text("netgame.disconnected")}")
 	global.level.goto("lvlTitle")
 	game_update_status()
+	ds_list_clear(global.chat)
+	global.chat_typing = false
 	
 	return true
 }

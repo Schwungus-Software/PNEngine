@@ -12,6 +12,7 @@
 		global.console_log = ds_list_create()
 	}
 	
+	global.console_input = ""
 	global.console_input_previous = ""
 #endregion
 

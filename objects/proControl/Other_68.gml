@@ -192,7 +192,7 @@ if async_load[? "type"] == network_type_data {
 					
 					with _other {
 						buffer_write(b, buffer_u8, slot)
-						show_caption($"[c_red]{lexicon_text("netgame.player_left", name)}")
+						net_chat(lexicon_text("netgame.player_left", name), "c_gray")
 						destroy()
 					}
 					
@@ -435,7 +435,7 @@ if async_load[? "type"] == network_type_data {
 				
 				with add_player(_slot, "127.0.0.1", 0) {
 					name = buffer_read(_buffer, buffer_string)
-					show_caption($"[c_lime]{lexicon_text("netgame.player_joined", name, -~_slot)}")
+					net_chat(lexicon_text("netgame.player_joined", name, -~_slot), "c_gray")
 				}
 				
 				game_update_status()
@@ -484,7 +484,7 @@ if async_load[? "type"] == network_type_data {
 				if _other != undefined {
 					with _other {
 						destroy()
-						show_caption($"[c_red]{lexicon_text("netgame.player_left", name)}")
+						net_chat(lexicon_text("netgame.player_left", name), "c_gray")
 					}
 				}
 				
@@ -514,7 +514,7 @@ if async_load[? "type"] == network_type_data {
 					break
 				}
 				
-				show_caption($"{_net.name}: {buffer_read(_buffer, buffer_string)}", 8 * TICKRATE)
+				net_chat($"{_net.name}: {buffer_read(_buffer, buffer_string)}")
 			break
 			
 			case NetHeaders.INPUT:

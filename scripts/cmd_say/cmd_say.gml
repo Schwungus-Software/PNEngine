@@ -6,5 +6,5 @@ function cmd_say(_args) {
 		global.netgame.send(SEND_OTHERS, b)
 	}
 	
-	show_caption(_args, 8 * TICKRATE)
+	net_chat(">" + _args, "c_ltgray")
 }

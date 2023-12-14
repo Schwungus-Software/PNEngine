@@ -185,6 +185,55 @@ with proTransition {
 	event_user(ThingEvents.DRAW_GUI)
 }
 
+var _netgame = global.netgame
+
+if _netgame != undefined and _netgame.active {
+	draw_set_font(chat_font)
+	draw_set_valign(fa_bottom)
+	
+	var _alpha, _lines
+	
+	if global.chat_typing {
+		var _input = input_string_get()
+		
+		if current_time % 1000 < 500 {
+			_input += "_"
+		}
+		
+		draw_text(8, 252, _input)
+		_lines = 10
+		_alpha = 1
+	} else {
+		_lines = 5
+		_alpha = 0.64
+	}
+	
+	var _chat = global.chat
+	var i = ds_list_size(_chat)
+	
+	if i {
+		var _y = 236
+	
+		repeat _lines {
+			with scribble(_chat[| --i]).
+				 starting_format(chat_font_name, c_white).
+				 blend(c_white, _alpha).
+				 align(fa_left, fa_bottom).
+				 wrap(464) {
+				draw(8, _y)
+				_y -= -~get_height()
+			}
+		
+			if i <= 0 {
+				break
+			}
+		}
+	}
+	
+	draw_set_valign(fa_top)
+	draw_set_font(-1)
+}
+
 if caption_time > 0 {
 	caption.draw(240, 240)
 	caption_time -= d
@@ -221,7 +270,12 @@ if global.console {
 		draw_text_ext_transformed(0, _console_bottom - _y, _str, -1, 960, 0.5, 0.5, 0)
 	}
 	
-	var _input = input_string_get() + "_"
+	var _input = input_string_get()
+	
+	if current_time % 1000 < 500 {
+		_input += "_"
+	}
+	
 	var _x = string_width(_input) * 0.5
 	
 	_x = _x > 480 ? 480 - _x : 0
@@ -230,5 +284,5 @@ if global.console {
 }
 
 if load_state != LoadStates.NONE and load_level != undefined {
-	scribble("[fntHUD][wave][fa_center][fa_middle]" + lexicon_text("loading"), "__PNENGINE_LOADING__").draw(240, 135)
+	scribble($"[{ui_font_name}][wave][fa_center][fa_middle]{lexicon_text("loading")}", "__PNENGINE_LOADING__").draw(240, 135)
 }

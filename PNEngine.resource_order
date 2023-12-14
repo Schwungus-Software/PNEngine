@@ -364,6 +364,7 @@
     {"name":"__scribble_gen_7_build_pages","order":7,"path":"scripts/__scribble_gen_7_build_pages/__scribble_gen_7_build_pages.yy",},
     {"name":"input_profile_reset_bindings","order":6,"path":"scripts/input_profile_reset_bindings/input_profile_reset_bindings.yy",},
     {"name":"__input_restart","order":20,"path":"scripts/__input_restart/__input_restart.yy",},
+    {"name":"net_chat","order":11,"path":"scripts/net_chat/net_chat.yy",},
     {"name":"Script","order":1,"path":"scripts/Script/Script.yy",},
     {"name":"lexicon_index_fallback_language_set","order":6,"path":"scripts/lexicon_index_fallback_language_set/lexicon_index_fallback_language_set.yy",},
     {"name":"input_binding_mouse_wheel_down","order":5,"path":"scripts/input_binding_mouse_wheel_down/input_binding_mouse_wheel_down.yy",},

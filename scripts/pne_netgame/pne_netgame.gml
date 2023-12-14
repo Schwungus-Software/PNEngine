@@ -57,3 +57,6 @@ enum NetDataTypes {
 }
 
 global.netgame = undefined
+global.chat = ds_list_create()
+global.chat_typing = false
+global.chat_input_previous = ""

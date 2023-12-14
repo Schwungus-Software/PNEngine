@@ -595,10 +595,19 @@ global.delta = _tick_inc
 _tick += _tick_inc
 
 var _console = global.console
+var _chat_typing = global.chat_typing
 
-if _console {
+if _console or _chat_typing {
 	input_string_tick()
 }
+
+// Cache a lot of things into local variables
+var _interps = global.interps
+var _players = global.players
+var _config = global.config
+var _game_status = global.game_status
+var _netgame = global.netgame
+var _syncables = global.level.syncables
 
 if _tick >= 1 {
 	__input_system_tick()
@@ -606,7 +615,6 @@ if _tick >= 1 {
 #region New Players
 	with input_players_get_status() {
 		if any_changed {
-			var _players = global.players
 			var i = 0
 		
 			repeat array_length(new_connections) {
@@ -646,53 +654,109 @@ if _tick >= 1 {
 		show_debug_overlay(global.debug_overlay)
 	}
 	
-	if _console {
-		if input_check_pressed("debug_console_previous") {
-			input_string_set(global.console_input_previous)
+	if _chat_typing {
+		// Boring list of inputs we have to block while typing...
+		input_verb_consume("up")
+		input_verb_consume("left")
+		input_verb_consume("down")
+		input_verb_consume("right")
+		input_verb_consume("jump")
+		input_verb_consume("interact")
+		input_verb_consume("attack")
+		input_verb_consume("inventory_up")
+		input_verb_consume("inventory_left")
+		input_verb_consume("inventory_down")
+		input_verb_consume("inventory_right")
+		input_verb_consume("aim")
+		input_verb_consume("aim_up")
+		input_verb_consume("aim_left")
+		input_verb_consume("aim_down")
+		input_verb_consume("aim_right")
+		input_verb_consume("leave")
+		input_verb_consume("chat")
+		input_verb_consume("voice")
+		input_verb_consume("debug_console")
+		
+		if input_check_pressed("chat_previous") {
+			input_string_set(global.chat_input_previous)
 		}
 		
-		if input_check_pressed("debug_console_submit") {
-			var _input = input_string_get()
+		if input_check_pressed("chat_submit") {
+			global.chat_typing = false
 			
-			global.console_input_previous = _input
-			print($"> {_input}")
-				
-			array_foreach(string_split(_input, ";", true), function (_element, _index) {
-				var _input = string_trim(_element)
-				
-				if _input != "" {
-					var _cmd = _input
-					var _args = ""
-					var _args_pos = string_pos(" ", _cmd)
-					
-					if _args_pos > 0 {
-						_cmd = string_copy(_cmd, 1, _args_pos - 1)
-						_args = string_delete(_input, 1, _args_pos)
-					}
-					
-					var _cmd_function = variable_global_get($"cmd_{_cmd}")
-					
-					if is_method(_cmd_function) {
-						_cmd_function(_args)
-					} else {
-						print($"Unknown command '{_cmd}'")
-					}
-				}
-			})
+			var _input = string_trim(input_string_get())
+			
+			if _input != "" {
+				cmd_say(_input)
+				global.chat_input_previous = _input
+			}
 			
 			input_string_set("")
 		}
 		
 		if input_check_pressed("pause") {
-			if global.netgame == undefined {
+			input_verb_consume("pause")
+			global.chat_typing = false
+		}
+	} else {
+		if input_check_pressed("chat") and _netgame != undefined and _netgame.active {
+			global.chat_typing = true
+			input_string_set("")
+		}
+	}
+	
+	if _console {
+		input_verb_consume("leave")
+		
+		if input_check_pressed("debug_console_previous") {
+			input_string_set(global.console_input_previous)
+		}
+		
+		if input_check_pressed("debug_console_submit") {
+			var _input = string_trim(input_string_get())
+			
+			if _input != "" {
+				global.console_input_previous = _input
+				print($"> {_input}")
+				
+				array_foreach(string_split(_input, ";", true), function (_element, _index) {
+					var _input = string_trim(_element)
+				
+					if _input != "" {
+						var _cmd = _input
+						var _args = ""
+						var _args_pos = string_pos(" ", _cmd)
+					
+						if _args_pos > 0 {
+							_cmd = string_copy(_cmd, 1, _args_pos - 1)
+							_args = string_delete(_input, 1, _args_pos)
+						}
+					
+						var _cmd_function = variable_global_get($"cmd_{_cmd}")
+					
+						if is_method(_cmd_function) {
+							_cmd_function(_args)
+						} else {
+							print($"Unknown command '{_cmd}'")
+						}
+					}
+				})
+			}
+			
+			input_string_set("")
+		}
+		
+		if input_check_pressed("pause") {
+			if _netgame == undefined {
 				input_source_mode_set(INPUT_SOURCE_MODE.JOIN)
 			}
 			
 			input_verb_consume("pause")
 			global.console = false
+			global.console_input = input_string_get()
 		}
 		
-		if global.game_status & GameStatus.NETGAME {
+		if _game_status & GameStatus.NETGAME {
 			// Gross hack, will clean up later
 			input_verb_consume("up")
 			input_verb_consume("left")
@@ -710,6 +774,10 @@ if _tick >= 1 {
 			input_verb_consume("aim_left")
 			input_verb_consume("aim_down")
 			input_verb_consume("aim_right")
+			input_verb_consume("leave")
+			input_verb_consume("chat")
+			input_verb_consume("chat_submit")
+			input_verb_consume("voice")
 		} else {
 			_tick = 0
 		}
@@ -717,12 +785,12 @@ if _tick >= 1 {
 		if input_check_pressed("debug_console") {
 			input_source_mode_set(INPUT_SOURCE_MODE.FIXED)
 			global.console = true
+			input_string_set(global.console_input)
 		}
 	}
 #endregion
 	
 #region Start Interpolation
-	var _interps = global.interps
 	var i = ds_list_size(_interps)
 	var _gc = false
 	
@@ -808,11 +876,6 @@ if _tick >= 1 {
 #endregion
 		
 #region Players
-		var _players = global.players
-		var _config = global.config
-		var _game_status = global.game_status
-		var _netgame = global.netgame
-		var _syncables = global.level.syncables
 		var i = 0
 		
 		repeat INPUT_MAX_PLAYERS {
@@ -1044,7 +1107,6 @@ global.tick = _tick
 
 #region End Interpolation
 var _gc = false
-var _interps = global.interps
 var i = ds_list_size(_interps)
 
 if _tick_inc >= 1 {
