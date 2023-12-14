@@ -26,13 +26,11 @@ if level != undefined and sync_id != noone {
 	var i = ds_grid_width(_syncables)
 	
 	repeat i {
-		--i
-		
-		if _syncables[# i, 0] != noone {
+		if _syncables[# --i, 0] != noone {
 			break
 		}
 		
-		ds_grid_resize(_syncables, i, 2)
+		ds_grid_resize(_syncables, -~i, 2)
 	}
 }
 
