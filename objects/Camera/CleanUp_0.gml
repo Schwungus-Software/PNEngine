@@ -14,4 +14,5 @@ if instance_exists(parent) {
 
 ds_map_destroy(targets)
 ds_map_destroy(pois)
+ds_grid_destroy(path)
 output.Free()

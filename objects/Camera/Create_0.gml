@@ -14,6 +14,18 @@ enum CameraPOIData {
 	Z_OFFSET,
 }
 
+enum CameraPathData {
+	TIME,
+	X,
+	Y,
+	Z,
+	YAW,
+	PITCH,
+	ROLL,
+	FOV,
+	__SIZE,
+}
+
 event_inherited()
 
 #region Variables
@@ -35,6 +47,12 @@ event_inherited()
 	
 	view_matrix = undefined
 	projection_matrix = undefined
+	
+	path = ds_grid_create(0, CameraPathData.__SIZE)
+	path_elapsed = 0
+	path_time = 0
+	path_playback = AnimationTypes.LINEAR
+	path_active = false
 	
 	alpha = 1
 	output = (new Canvas(480, 270)).SetDepthDisabled(true)
@@ -71,6 +89,44 @@ event_inherited()
 		} else {
 			ds_map_delete(pois, _target)
 		}
+	}
+	
+	add_path = function (_time, _x, _y, _z, _yaw, _pitch, _roll, _fov) {
+		gml_pragma("forceinline")
+		
+		var i = ds_grid_width(path)
+		
+		ds_grid_resize(path, -~i, CameraPathData.__SIZE)
+		path[# i, CameraPathData.TIME] = _time
+		path[# i, CameraPathData.X] = _x
+		path[# i, CameraPathData.Y] = _y
+		path[# i, CameraPathData.Z] = _z
+		path[# i, CameraPathData.YAW] = _yaw
+		path[# i, CameraPathData.PITCH] = _pitch
+		path[# i, CameraPathData.ROLL] = _roll
+		path[# i, CameraPathData.FOV] = _fov
+	}
+	
+	clear_path = function () {
+		ds_grid_resize(_path, 0, CameraPathData.__SIZE)
+		stop_path()
+	}
+	
+	start_path = function (_time, _playback) {
+		if ds_grid_width(path) == 0 {
+			return false
+		}
+		
+		path_elapsed = 0
+		path_time = _time
+		path_playback = _playback
+		path_active = true
+		
+		return true
+	}
+	
+	stop_path = function () {
+		path_active = false
 	}
 	
 	set_child = function (_camera) {
@@ -119,7 +175,7 @@ event_inherited()
 	
 	render = function (_width, _height, _allow_sky = true, _allow_screen = true, _world_shader = global.world_shader) {
 		if instance_exists(child) {
-			return child.render(_width, _height, _allow_sky, _allow_screen)
+			return child.render(_width, _height, _allow_sky, _allow_screen, _world_shader)
 		}
 		
 		output.Resize(_width, _height)
