@@ -38,18 +38,25 @@ function ScriptMap() : AssetMap() constructor {
 		var _code = ""
 		var _line = ""
 		var _lines = 0
+		var _omit_line = true
+		var _type_header_exists = false
+		var _imports = undefined
+		var _macros = []
 		
 		try {
 			while not file_text_eof(_script_file) {
-				_line = file_text_read_string(_script_file)
+				var _omit_line = false
+				
+				_line = string_trim(file_text_read_string(_script_file))
 				file_text_readln(_script_file);
 				++_lines
 				
-				if _lines <= 1 {
-					var _header = string_trim_start(string_trim_end(_line))
-					
-					if string_starts_with(_header, "#thing") {
+				if string_starts_with(_line, "#thing") {
 #region ThingScript
+					if _type_header_exists {
+						throw $"Cannot have more than one type header, found '{_line}'"
+					}
+					
 						var _index = asset_get_index(_name)
 						
 						if object_exists(_index) and object_is_ancestor(_index, Thing) {
@@ -58,7 +65,7 @@ function ScriptMap() : AssetMap() constructor {
 						
 						_script = new ThingScript()
 						
-						var _parents = string_split(_header, " ", true)
+						var _parents = string_split(_line, " ", true)
 						var _parents_n = array_length(_parents)
 						
 						if _parents_n >= 2 {
@@ -108,12 +115,19 @@ function ScriptMap() : AssetMap() constructor {
 								thing_load(internal_parent, _special)
 							}
 						}
+					
+					_type_header_exists = true
+					_omit_line = true
 #endregion
-					} else if string_starts_with(_header, "#level") {
+				} else if string_starts_with(_line, "#level") {
 #region Level
+					if _type_header_exists {
+						throw $"Cannot have more than one type header, found '{_line}'"
+					}
+					
 						_script = new LevelScript()
 						
-						var _parents = string_split(_header, " ", true)
+						var _parents = string_split(_line, " ", true)
 						var _parents_n = array_length(_parents)
 						
 						if _parents_n >= 2 {
@@ -129,24 +143,12 @@ function ScriptMap() : AssetMap() constructor {
 								parent = other.get(_parent)
 								
 								if parent == undefined {
-									_index = asset_get_index(_parent)
-									
-									if not object_exists(_index) {
-										throw $"Unknown parent Transition '{_parent}'"
+									throw $"Parent '{_parent}' not found"
+								} else {
+									if not is_instanceof(parent, LevelScript) {
+										throw $"Cannot inherit non-LevelScript '{_parent}'"
 									}
 									
-									if not object_is_ancestor(_index, proTransition) {
-										throw $"Cannot inherit non-Transition '{_parent}'"
-									}
-									
-									if string_starts_with(_parent, "pro") {
-										throw $"Cannot inherit protected Transition '{_parent}'"
-									}
-									
-									internal_parent = _index
-								}
-								
-								if parent != undefined {
 									main = _parent.main
 									load = _parent.load
 									start = _parent.start
@@ -156,12 +158,19 @@ function ScriptMap() : AssetMap() constructor {
 								}
 							}
 						}
+					
+					_type_header_exists = true
+					_omit_line = true
 #endregion
-					} else if string_starts_with(_header, "#transition") {
+				} else if string_starts_with(_line, "#transition") {
 #region Transition
+					if _type_header_exists {
+						throw $"Cannot have more than one type header, found '{_line}'"
+					}
+					
 						_script = new TransitionScript()
 						
-						var _parents = string_split(_header, " ", true)
+						var _parents = string_split(_line, " ", true)
 						var _parents_n = array_length(_parents)
 						
 						if _parents_n >= 2 {
@@ -186,11 +195,69 @@ function ScriptMap() : AssetMap() constructor {
 								}
 							}
 						}
+					
+					_type_header_exists = true
+					_omit_line = true
 #endregion
-					} else {
-						throw "Script has invalid header"
+				} else if string_starts_with(_line, "#mixin") {
+#region Mixin
+					if _type_header_exists {
+						throw $"Cannot have more than one type header, found '{_line}'"
 					}
 					
+					_script = new MixinScript()
+					_type_header_exists = true
+					_omit_line = true
+#endregion
+				} else if string_starts_with(_line, "#import") {
+#region Import Mixin(s)
+					var _mixins = string_split(_line, " ", true)
+					var n = array_length(_mixins) - 1
+					
+					if not n {
+						throw "No mixin specified in #import"
+					}
+					
+					var i = 1
+					
+					repeat n {
+						var _mixin = _mixins[i++]
+						
+						load(_mixin, _special)
+						
+						var _import = get(_mixin)
+						
+						if _import == undefined {
+							throw $"Mixin '{_mixin}' not found"
+						}
+						
+						if not is_instanceof(_import, MixinScript) {
+							throw $"Cannot import non-mixin '{_mixin}'"
+						}
+						
+						_imports ??= {}
+						
+						var _import_globals = _import.main.getGlobals()
+						var _import_names = struct_get_names(_import_globals)
+						var j = 0
+						
+						repeat struct_names_count(_import_globals) {
+							var _key = _import_names[j++]
+							
+							_imports[$ _key] = _import_globals[$ _key]
+						}
+					}
+					
+					_omit_line = true
+#endregion
+				} else if string_starts_with(_line, "#macro") {
+					var _macro = string_split(_line, " ", true, 2)
+					
+					array_push(_macros, [string_trim(_macro[1]), string_trim(_macro[2])])
+					_omit_line = true
+				}
+				
+				if _omit_line {
 					_line = ""
 				}
 				
@@ -198,6 +265,20 @@ function ScriptMap() : AssetMap() constructor {
 			}
 		} catch (e) {
 			show_error($"!!! ScriptMap.load: '{_name}': Error at line {_lines}: {e.longMessage}", true)
+		}
+		
+		if not _type_header_exists {
+			show_error($"!!! ScriptMap.load: '{_name}' has no type headers", true)
+		}
+		
+		// GROSS HACK: Implement macros by replacing every substring in the
+		//             code
+		var i = 0
+		
+		repeat array_length(_macros) {
+			var _macro = _macros[i++]
+			
+			_code = string_replace_all(_code, _macro[0], _macro[1])
 		}
 		
 		file_text_close(_script_file)
@@ -218,6 +299,17 @@ function ScriptMap() : AssetMap() constructor {
 				var _key = _parent_globals_names[i++]
 				
 				_globals[$ _key] = _parent_globals[$ _key]
+			}
+		}
+		
+		if _imports != undefined {
+			var _imports_names = struct_get_names(_imports)
+			var i = 0
+			
+			repeat struct_names_count(_imports) {
+				var _key = _imports_names[i++]
+				
+				_globals[$ _key] = _imports[$ _key]
 			}
 		}
 		

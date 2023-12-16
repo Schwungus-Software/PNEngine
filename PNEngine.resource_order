@@ -469,6 +469,7 @@
     {"name":"image_get_uvs","order":9,"path":"scripts/image_get_uvs/image_get_uvs.yy",},
     {"name":"flags_force_clear","order":1,"path":"scripts/flags_force_clear/flags_force_clear.yy",},
     {"name":"input_check_opposing_repeat","order":8,"path":"scripts/input_check_opposing_repeat/input_check_opposing_repeat.yy",},
+    {"name":"MixinScript","order":4,"path":"scripts/MixinScript/MixinScript.yy",},
     {"name":"Music","order":3,"path":"scripts/Music/Music.yy",},
     {"name":"input_mouse_check_released","order":2,"path":"scripts/input_mouse_check_released/input_mouse_check_released.yy",},
     {"name":"FontMap","order":6,"path":"scripts/FontMap/FontMap.yy",},
