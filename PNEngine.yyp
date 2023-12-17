@@ -1332,6 +1332,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndMarioYah.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndMarioYah2.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndMarioYahoo.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndMarioYipee.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndMessageClose.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndMessageOpen.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndPause.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},

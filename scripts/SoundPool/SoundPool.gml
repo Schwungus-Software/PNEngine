@@ -19,7 +19,9 @@ function SoundPool() constructor {
 		}
 		
 		if is_array(_sound) {
-			return play(_sound[irandom(array_length(_sound) - 1)], _loop, _offset, _pitch)
+			var n = array_length(_sound)
+			
+			return n ? play(_sound[irandom(n - 1)], _loop, _offset, _pitch) : undefined
 		}
 		
 		var _id, _final_pitch
@@ -42,7 +44,9 @@ function SoundPool() constructor {
 		}
 		
 		if is_array(_sound) {
-			return play_at(_sound[irandom(array_length(_sound) - 1)],  _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, _offset, _pitch)
+			var n = array_length(_sound)
+			
+			return n ? play_at(_sound[irandom(n - 1)],  _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, _offset, _pitch) : undefined
 		}
 		
 		var _id, _final_pitch
@@ -65,7 +69,9 @@ function SoundPool() constructor {
 		}
 		
 		if is_array(_sound) {
-			return play_on(_emitter, _sound[irandom(array_length(_sound) - 1)], _loop, _offset, _pitch)
+			var n = array_length(_sound)
+			
+			return n ? play_on(_emitter, _sound[irandom(n - 1)], _loop, _offset, _pitch) : undefined
 		}
 		
 		var _id, _final_pitch
