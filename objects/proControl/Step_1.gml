@@ -443,10 +443,10 @@ if load_state != LoadStates.NONE {
 			_images.end_batch()
 			
 			var _materials_map = global.materials.assets
-			var key = ds_map_find_first(_materials_map)
+			var _key = ds_map_find_first(_materials_map)
 			
 			repeat ds_map_size(_materials_map) {
-				with _materials_map[? key] {
+				with _materials_map[? _key] {
 					if image != -1 {
 						image = CollageImageGetInfo(image)
 					}
@@ -456,7 +456,7 @@ if load_state != LoadStates.NONE {
 					}
 				}
 				
-				key = ds_map_find_next(_materials_map, key)
+				_key = ds_map_find_next(_materials_map, _key)
 			}
 			
 			load_state = LoadStates.FINISH
