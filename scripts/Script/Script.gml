@@ -1,5 +1,6 @@
 function Script() : Asset() constructor {
 	parent = undefined
+	imports = []
 	
 	main = undefined
 	load = undefined

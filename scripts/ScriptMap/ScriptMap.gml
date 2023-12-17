@@ -2,20 +2,22 @@ function ScriptMap() : AssetMap() constructor {
 	static load = function (_name, _special = undefined) {
 		if ds_map_exists(assets, _name) {
 			with assets[? _name] {
-				if load != undefined {
-					load(_special)
+				if is_instanceof(self, ThingScript) {
+					thing_load(internal_parent, _special)
 				}
 				
 				if parent != undefined {
-					with parent {
-						if load != undefined {
-							load(_special)
-						}
-					}
+					other.load(parent.name, _special)
 				}
 				
-				if is_instanceof(self, ThingScript) {
-					thing_load(internal_parent, _special)
+				var i = 0
+				
+				repeat array_length(imports) {
+					other.load(imports[i++].name, _special)
+				}
+				
+				if load != undefined {
+					load(_special)
 				}
 			}
 			
@@ -40,7 +42,6 @@ function ScriptMap() : AssetMap() constructor {
 		var _lines = 0
 		var _omit_line = true
 		var _type_header_exists = false
-		var _imports = undefined
 		var _macros = []
 		
 		try {
@@ -211,6 +212,10 @@ function ScriptMap() : AssetMap() constructor {
 #endregion
 				} else if string_starts_with(_line, "#import") {
 #region Import Mixin(s)
+					if not _type_header_exists {
+						throw "Script type is not defined before #import"
+					}
+					
 					var _mixins = string_split(_line, " ", true)
 					var n = array_length(_mixins) - 1
 					
@@ -235,17 +240,7 @@ function ScriptMap() : AssetMap() constructor {
 							throw $"Cannot import non-mixin '{_mixin}'"
 						}
 						
-						_imports ??= {}
-						
-						var _import_globals = _import.main.getGlobals()
-						var _import_names = struct_get_names(_import_globals)
-						var j = 0
-						
-						repeat struct_names_count(_import_globals) {
-							var _key = _import_names[j++]
-							
-							_imports[$ _key] = _import_globals[$ _key]
-						}
+						array_push(_script.imports, _import)
 					}
 					
 					_omit_line = true
@@ -302,15 +297,13 @@ function ScriptMap() : AssetMap() constructor {
 			}
 		}
 		
-		if _imports != undefined {
-			var _imports_names = struct_get_names(_imports)
-			var i = 0
+		var _imports = _script.imports
+		var i = 0
+		
+		repeat array_length(_imports) {
+			var _import = _imports[i++]
 			
-			repeat struct_names_count(_imports) {
-				var _key = _imports_names[i++]
-				
-				_globals[$ _key] = _imports[$ _key]
-			}
+			_globals[$ _import.name] = _import.main.getGlobals()
 		}
 		
 		_main()
@@ -319,6 +312,8 @@ function ScriptMap() : AssetMap() constructor {
 			name = _name
 			main = _main
 			load = _globals[$ "load"]
+			
+			var _is_mixin = false
 			
 			if is_instanceof(self, ThingScript) {
 				create = _globals[$ "create"]
@@ -338,6 +333,9 @@ function ScriptMap() : AssetMap() constructor {
 				clean_up = _globals[$ "clean_up"]
 				tick = _globals[$ "tick"]
 				draw_gui = _globals[$ "draw_gui"]
+			} else is_instanceof(self, MixinScript) {
+				create = _globals[$ "create"]
+				_is_mixin = true
 			}
 			
 			if load != undefined {
