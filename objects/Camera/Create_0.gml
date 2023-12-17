@@ -8,7 +8,7 @@ enum CameraTargetData {
 }
 
 enum CameraPOIData {
-	SMOOTH,
+	LERP,
 	X_OFFSET,
 	Y_OFFSET,
 	Z_OFFSET,

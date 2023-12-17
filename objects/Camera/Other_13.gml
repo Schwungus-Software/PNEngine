@@ -53,6 +53,53 @@ if _targets {
 	z = _z + lengthdir_y(_range, pitch)
 }
 
+var _pois = ds_map_size(pois)
+
+if _pois {
+	var _lerp = 0
+	var _x = 0
+	var _y = 0
+	var _z = 0
+	
+	var _key = ds_map_find_last(pois)
+	
+	repeat _pois {
+		var _poi = pois[? _key]
+		
+		if is_array(_key) {
+			_x += _key[0]
+			_y += _key[1]
+			_z += _key[2]
+		} else {
+			if instance_exists(_key) {
+				_x += _key.x
+				_y += _key.y
+				_z += _key.z
+			} else {
+				ds_map_delete(pois, _key)
+				
+				continue
+			}
+		}
+		
+		_lerp += clamp(_poi[CameraPOIData.LERP], 0, 1)
+		_x += _poi[CameraPOIData.X_OFFSET]
+		_y += _poi[CameraPOIData.Y_OFFSET]
+		_z += _poi[CameraPOIData.Z_OFFSET]
+		
+		_key = ds_map_find_previous(pois, _key)
+	}
+	
+	var _pois_inv = 1 / _pois
+	
+	_lerp *= _pois_inv
+	_x *= _pois_inv
+	_y *= _pois_inv
+	_z *= _pois_inv
+	yaw = lerp_angle(yaw, point_direction(x, y, _x, _y), _lerp)
+	pitch = lerp_angle(pitch, point_pitch(x, y, z, _x, _y, _z), _lerp)
+}
+
 // Camera
 if path_active {
 	// Camera animation
