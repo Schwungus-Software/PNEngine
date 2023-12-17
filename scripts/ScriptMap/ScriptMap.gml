@@ -212,10 +212,6 @@ function ScriptMap() : AssetMap() constructor {
 #endregion
 				} else if string_starts_with(_line, "#import") {
 #region Import Mixin(s)
-					if not _type_header_exists {
-						throw "Script type is not defined before #import"
-					}
-					
 					var _mixins = string_split(_line, " ", true)
 					var n = array_length(_mixins) - 1
 					
