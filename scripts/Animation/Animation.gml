@@ -1,7 +1,7 @@
 enum AnimationTypes {
 	LINEAR,
-	QUADRATIC,
 	LINEAR_LOOP,
+	QUADRATIC,
 	QUADRATIC_LOOP,
 }
 
