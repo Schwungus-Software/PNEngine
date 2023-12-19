@@ -301,9 +301,18 @@
 		
 		return _out
 	}
+	
+	do_sequence = function (_sequence) {
+		if is_catspeak(thing_sequenced) {
+			thing_sequenced.setSelf(self)
+		}
+		
+		thing_sequenced(_sequence)
+	}
 #endregion
 
 #region Virtual Functions
 	player_entered = function (_player) {}
 	player_left = function (_player) {}
+	thing_sequenced = function (_sequence) {}
 #endregion
