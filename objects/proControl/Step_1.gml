@@ -362,7 +362,7 @@ if load_state != LoadStates.NONE {
 											
 											delete _area_thing
 										} else {
-											var _special = _thing_info[$ "special"] ?? {}
+											var _special = _thing_info[$ "special"]
 											
 											if thing_load(type, _special) {
 												x = _thing_info[$ "x"] ?? 0

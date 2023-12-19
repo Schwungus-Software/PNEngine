@@ -1,11 +1,13 @@
 /// @description Create
-yaw = special[$ "yaw"] ?? angle
-pitch = special[$ "pitch"] ?? 0
-roll = special[$ "roll"] ?? 0
-fov = special[$ "fov"] ?? 45
+if is_struct(special) {
+	yaw = special[$ "yaw"] ?? angle
+	pitch = special[$ "pitch"] ?? 0
+	roll = special[$ "roll"] ?? 0
+	fov = special[$ "fov"] ?? 45
 
-if special[$ "active"] {
-	global.camera_active = id
+	if special[$ "active"] {
+		global.camera_active = id
+	}
 }
 
 event_inherited()

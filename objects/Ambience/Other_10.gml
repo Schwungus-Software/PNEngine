@@ -1,6 +1,11 @@
 /// @description Load
 event_inherited()
 
+if not is_struct(special) {
+	print("! Ambience.load: Special properties invalid or not found")
+	exit
+}
+
 var _ambience = special[$ "ambience"]
 
 if not is_array(_ambience) {

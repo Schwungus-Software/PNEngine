@@ -174,8 +174,6 @@ function Area() constructor {
 	/// @func add(type, [x], [y], [z], [angle], [tag], [special])
 	/// @desc Creates a new Thing.
 	static add = function (_type, _x = 0, _y = 0, _z = 0, _angle = 0, _tag = 0, _special = undefined) {
-		static _no_special = {}
-		
 		var _thing = noone
 		
 		if is_string(_type) {
@@ -240,7 +238,7 @@ function Area() constructor {
 			z_previous = _z
 			angle = _angle
 			tag = _tag
-			special = _special ?? _no_special
+			special = _special
 			f_new = true
 			event_user(ThingEvents.CREATE)
 			f_created = true
@@ -473,17 +471,31 @@ function Area() constructor {
 	static find_tag = function (_tag) {
 		static things = []
 		
-		array_resize(things, 0)
-		
 		var i = 0
+		var j = 0
 		
-		repeat ds_list_size(active_things) {
-			with active_things[| i++] {
-				if tag == _tag {
-					array_push(things, id)
+		switch _tag {
+			case ThingTags.PLAYERS:
+				repeat ds_list_size(active_things) {
+					with active_things[| i++] {
+						if object_index == PlayerPawn or object_is_ancestor(object_index, PlayerPawn) {
+							things[j++] = id
+						}
+					}
 				}
-			}
+			break
+			
+			default:
+				repeat ds_list_size(active_things) {
+					with active_things[| i++] {
+						if tag == _tag {
+							things[j++] = id
+						}
+					}
+				}
 		}
+		
+		array_resize(things, j)
 		
 		return things
 	}
