@@ -485,6 +485,16 @@ function Area() constructor {
 				}
 			break
 			
+			case ThingTags.PLAYER_SPAWNS:
+				repeat ds_list_size(active_things) {
+					with active_things[| i++] {
+						if object_index == PlayerSpawn or object_is_ancestor(object_index, PlayerSpawn) {
+							things[j++] = id
+						}
+					}
+				}
+			break
+			
 			default:
 				repeat ds_list_size(active_things) {
 					with active_things[| i++] {

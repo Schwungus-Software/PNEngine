@@ -18,6 +18,10 @@ function player_force_area(_scope, _id) {
 				}
 			}
 			
+			if instance_exists(thing) {
+				thing.destroy(false)
+			}
+			
 			var _players_in_area = _current_area.players
 			
 			ds_list_delete(_players_in_area, ds_list_find_index(_players_in_area, self))
@@ -61,6 +65,7 @@ function player_force_area(_scope, _id) {
 					master ??= _newcomer
 					ds_list_add(players, _newcomer)
 					activate()
+					_newcomer.respawn()
 					
 					var i = ds_list_size(active_things)
 					

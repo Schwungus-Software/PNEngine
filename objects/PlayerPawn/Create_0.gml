@@ -61,12 +61,6 @@ event_inherited()
 #endregion
 
 #region Virtual Functions
-	player_left = function (_player) {
-		if _player == player {
-			destroy(false)
-		}
-	}
-	
 	try_jump = function () {
 		return true
 	}

@@ -70,5 +70,6 @@
 		ENEMIES = -3,
 		NONE = -4, // noone
 		ALL = -5,
+		PLAYER_SPAWNS = -6,
 	}
 #endregion

@@ -74,6 +74,75 @@ function Player() constructor {
 		return false
 	}
 	
+	static respawn = function () {
+		if status != PlayerStatus.ACTIVE or area == undefined {
+			return noone
+		}
+		
+		var _netgame = global.netgame
+		
+		if _netgame != undefined and not _netgame.master {
+			return noone
+		}
+		
+		var _type = global.flags[0].get("player_class")
+			
+		if _type == undefined {
+			return noone
+		}
+		
+		var _spawns = area.find_tag(ThingTags.PLAYER_SPAWNS)
+		var n = array_length(_spawns)
+		
+		if n {
+			var _spawn = _spawns[RNG.irandom(n - 1)]
+			var _player_pawn = noone
+			
+			global.last_player = slot
+			
+			with _spawn {
+				var _player_pawn = area.add(_type, x, y, z, angle, tag, special)
+				
+				if not instance_exists(_player_pawn) {
+					return noone
+				}
+				
+				var _player = other
+				
+				with _player_pawn {
+					if not is_ancestor(PlayerPawn) {
+						destroy(false)
+						
+						return noone
+					}
+					
+					player = _player
+					states = _player.states
+					input = _player.input
+					input_previous = _player.input_previous
+				}
+			}
+			
+			if instance_exists(_player_pawn) {
+				if instance_exists(thing) {
+					instance_destroy(thing, false)
+				}
+				
+				thing = _player_pawn
+				
+				if instance_exists(camera) {
+					instance_destroy(camera, false)
+				}
+				
+				camera = _player_pawn.camera
+				
+				return _player_pawn
+			}
+		}
+		
+		return noone
+	}
+	
 	static set_area = function (_id) {
 		var _netgame = global.netgame
 		
