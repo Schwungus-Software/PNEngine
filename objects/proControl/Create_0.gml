@@ -350,7 +350,11 @@
 			
 			#region Things
 				addConstant(
-					"TAG_NONE", noone,
+					"TAG_PLAYERS", ThingTags.PLAYERS,
+					"TAG_FRIENDS", ThingTags.FRIENDS,
+					"TAG_ENEMIES", ThingTags.ENEMIES,
+					"TAG_NONE", ThingTags.NONE,
+					"TAG_ALL", ThingTags.ALL,
 					
 					"M_COLLISION_NONE", MCollision.NONE,
 					"M_COLLISION_NORMAL", MCollision.NORMAL,

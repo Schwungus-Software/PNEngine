@@ -63,4 +63,12 @@
 		DRAW_SCREEN,
 		DRAW_GUI,
 	}
+	
+	enum ThingTags {
+		PLAYERS = -1,
+		FRIENDS = -2,
+		ENEMIES = -3,
+		NONE = -4, // noone
+		ALL = -5,
+	}
 #endregion
