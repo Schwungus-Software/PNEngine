@@ -24,6 +24,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		animation_name = ""
 		animation = undefined
 		animation_finished = false
+		animation_state = 0
 		frame = 0
 		frame_speed = 1
 		sample = dq_build_identity()
@@ -45,6 +46,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			animation_name = _animation.name
 			animation = _animation
+			animation_finished = false
+			animation_state = 0
 			
 			if _frame >= 0 {
 				frame = _frame
@@ -330,7 +333,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					_samples = samples
 				}
 				
-				var _next_frame = -~_real_frame
+				var _next_frame = _real_frame + 1
 				var _final_sample = sample
 				
 				sample_blend(_final_sample, _samples[floor(_real_frame)], _samples[floor(_loop ? _next_frame % _frames : min(_next_frame, _frames))], frac(_real_frame))
