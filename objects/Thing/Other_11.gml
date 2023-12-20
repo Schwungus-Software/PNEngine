@@ -10,12 +10,18 @@ if not (global.game_status & GameStatus.NETGAME) or not f_sync {
 	ds_list_destroy(net_variables)
 	net_variables = undefined
 } else {
-	add_net_variable("x", NetVarFlags.GENERIC)
-	add_net_variable("y", NetVarFlags.GENERIC)
-	add_net_variable("z", NetVarFlags.GENERIC)
-	add_net_variable("x_speed", NetVarFlags.GENERIC)
-	add_net_variable("y_speed", NetVarFlags.GENERIC)
-	add_net_variable("z_speed", NetVarFlags.GENERIC)
+	if f_sync_pos {
+		add_net_variable("x", NetVarFlags.GENERIC)
+		add_net_variable("y", NetVarFlags.GENERIC)
+		add_net_variable("z", NetVarFlags.GENERIC)
+	}
+	
+	if f_sync_vel {
+		add_net_variable("x_speed", NetVarFlags.GENERIC)
+		add_net_variable("y_speed", NetVarFlags.GENERIC)
+		add_net_variable("z_speed", NetVarFlags.GENERIC)
+	}
+	
 	add_net_variable("tag", NetVarFlags.CREATE)
 }
 

@@ -100,6 +100,8 @@
 	f_disposable = false
 	f_unique = false
 	f_sync = true
+	f_sync_pos = true
+	f_sync_vel = true
 	f_visible = true
 	f_lookable = false
 	f_gravity = false
