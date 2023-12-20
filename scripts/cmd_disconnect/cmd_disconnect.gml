@@ -23,5 +23,12 @@ function cmd_disconnect(_args) {
 	ds_list_clear(global.chat)
 	global.chat_typing = false
 	
+	var _chat_line_times = global.chat_line_times
+	var i = 0
+	
+	repeat MAX_CHAT_LINES {
+		_chat_line_times[i++] = 0
+	}
+	
 	return true
 }

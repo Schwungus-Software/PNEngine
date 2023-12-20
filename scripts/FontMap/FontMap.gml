@@ -56,7 +56,6 @@ function FontMap() : AssetMap() constructor {
 				// Sprite Font
 				var _sprite
 				var _frames = 1
-				var _first = "!"
 				var _proportional = true
 				var _space = 1
 				
@@ -64,20 +63,17 @@ function FontMap() : AssetMap() constructor {
 				
 				if is_struct(_json) {
 					_frames = _json[$ "frames"] ?? 1
-					_first = _json[$ "first"] ?? "!"
 					_proportional = _json[$ "proportional"] ?? true
 					_space = _json[$ "space"] ?? 1
 				}
 				
-				_first = ord(_first)
 				_sprite = sprite_add(_font_file, _frames, false, false, 0, 0)
 				sprite_collision_mask(_sprite, true, 0, 0, 0, 0, 0, bboxkind_precise, 255)
 				
 				var _font = new Font()
-				var _font_id = font_add_sprite(_sprite, _first, _proportional, _space)
+				var _font_id = font_add_sprite(_sprite, 32, _proportional, _space)
 				var _font_name = font_get_name(_font_id)
 				
-				scribble_glyph_set(_font_name, " ", SCRIBBLE_GLYPH.WIDTH, 0.4 * sprite_get_width(_sprite))
 				scribble_font_rename(_font_name, _name)
 				
 				with _font {

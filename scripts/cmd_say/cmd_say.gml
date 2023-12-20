@@ -6,5 +6,5 @@ function cmd_say(_args) {
 		global.netgame.send(SEND_OTHERS, b)
 	}
 	
-	net_chat(">" + _args, "c_ltgray")
+	net_chat(">" + _args, c_ltgray)
 }

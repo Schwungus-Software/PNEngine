@@ -191,39 +191,55 @@ if _netgame != undefined and _netgame.active {
 	draw_set_font(chat_font)
 	draw_set_valign(fa_bottom)
 	
-	var _alpha, _lines
+	var _lines = MAX_CHAT_LINES
+	var _typing = global.chat_typing
+	var _y = 262
 	
-	if global.chat_typing {
-		var _input = input_string_get()
+	if _typing {
+		var _input = ">" + input_string_get() + (current_time % 1000 < 500 ? "_" : " ")
+		var _width = string_width(_input)
+		var _height = string_height(_input)
+		var _x = _width > 464 ? 8 - (_width - 464) : 8
 		
-		if current_time % 1000 < 500 {
-			_input += "_"
-		}
-		
-		draw_text(8, 252, _input)
-		_lines = 10
-		_alpha = 1
-	} else {
-		_lines = 5
-		_alpha = 0.64
+		draw_set_alpha(0.5)
+		draw_rectangle_color(_x - 1, 262 - _height, _x + _width, 262, c_black, c_black, c_black, c_black, false)
+		draw_set_alpha(1)
+		draw_text(_x, 262, _input)
+		_y -= _height + 1
+		_lines *= 2
 	}
 	
 	var _chat = global.chat
+	var _chat_line_times = global.chat_line_times
 	var i = ds_list_size(_chat)
+	var j = 0
 	
 	if i {
-		var _y = 236
-	
 		repeat _lines {
-			with scribble(_chat[| --i]).
-				 starting_format(chat_font_name, c_white).
-				 blend(c_white, _alpha).
-				 align(fa_left, fa_bottom).
-				 wrap(464) {
-				draw(8, _y)
-				_y -= -~get_height()
+			if not _typing {
+				if _chat_line_times[j] > 0 {
+					_chat_line_times[j] -= d
+				} else {
+					++j
+					
+					continue
+				}
+				
+				++j
 			}
-		
+			
+			i -= 2
+			
+			var _message = _chat[| i]
+			var _color = _chat[| -~i]
+			var _height = string_height_ext(_message, -1, 464)
+			
+			draw_set_alpha(0.5)
+			draw_rectangle_color(7, _y - _height, 8 + string_width_ext(_message, -1, 464), _y, c_black, c_black, c_black, c_black, false)
+			draw_set_alpha(1)
+			draw_text_color(8, _y, _message, _color, _color, _color, _color, 1)
+			_y -= _height + 1
+			
 			if i <= 0 {
 				break
 			}
@@ -232,11 +248,16 @@ if _netgame != undefined and _netgame.active {
 	
 	draw_set_valign(fa_top)
 	draw_set_font(-1)
-}
-
-if caption_time > 0 {
-	caption.draw(240, 240)
-	caption_time -= d
+	
+	if caption_time > 0 {
+		caption.align(fa_right, fa_bottom).draw(450, 240)
+		caption_time -= d
+	}
+} else {
+	if caption_time > 0 {
+		caption.align(fa_center, fa_bottom).draw(240, 240)
+		caption_time -= d
+	}
 }
 
 if global.console {

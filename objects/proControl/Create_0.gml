@@ -653,7 +653,7 @@ if is_string(_custom_chat_font) {
 	chat_font_name = _font.name
 }
 
-caption = scribble("", "__PNENGINE_CAPTION__").starting_format(ui_font_name, c_white).align(fa_center, fa_bottom)
+caption = scribble("", "__PNENGINE_CAPTION__").starting_format(ui_font_name, c_white)
 caption_time = -1
 
 // LEVEL

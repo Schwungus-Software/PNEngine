@@ -1,4 +1,6 @@
 #macro MAX_NET_PLAYERS INPUT_MAX_PLAYERS
+#macro MAX_CHAT_LINES 5
+#macro CHAT_LINE_DURATION 300
 
 #macro SEND_HOST -1
 #macro SEND_ALL -2
@@ -60,3 +62,4 @@ global.netgame = undefined
 global.chat = ds_list_create()
 global.chat_typing = false
 global.chat_input_previous = ""
+global.chat_line_times = array_create(MAX_CHAT_LINES)
