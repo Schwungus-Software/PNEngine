@@ -21,7 +21,7 @@
 			"lost_connection": "Connection lost",
 			"connected": "Connected",
 			"disconnected": "Disconnected",
-			"player_joined": "{0} joined as Player {1}",
+			"player_joined": "{0} joined",
 			"player_left": "{0} left",
 			
 			"code": {

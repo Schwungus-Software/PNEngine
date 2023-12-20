@@ -169,7 +169,7 @@ if async_load[? "type"] == network_type_data {
 					var _pind = -~_slot
 					
 					print($"proControl: Assigned client '{_name}' to player {_pind}")
-					show_caption($"[c_lime]{_name} joined as player {_pind}!")
+					net_chat(lexicon_text("netgame.player_joined", _name), C_PN_YELLOW)
 					
 					exit
 					
@@ -192,7 +192,7 @@ if async_load[? "type"] == network_type_data {
 					
 					with _other {
 						buffer_write(b, buffer_u8, slot)
-						net_chat(lexicon_text("netgame.player_left", name), "c_gray")
+						net_chat(lexicon_text("netgame.player_left", name), C_PN_YELLOW)
 						destroy()
 					}
 					
@@ -435,7 +435,7 @@ if async_load[? "type"] == network_type_data {
 				
 				with add_player(_slot, "127.0.0.1", 0) {
 					name = buffer_read(_buffer, buffer_string)
-					net_chat(lexicon_text("netgame.player_joined", name, -~_slot), "c_gray")
+					net_chat(lexicon_text("netgame.player_joined", name), C_PN_YELLOW)
 				}
 				
 				game_update_status()
@@ -484,7 +484,7 @@ if async_load[? "type"] == network_type_data {
 				if _other != undefined {
 					with _other {
 						destroy()
-						net_chat(lexicon_text("netgame.player_left", name), "c_gray")
+						net_chat(lexicon_text("netgame.player_left", name), C_PN_YELLOW)
 					}
 				}
 				
