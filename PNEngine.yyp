@@ -1246,6 +1246,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"musTitle.json","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"musTitle.ogg","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"musTutorial.ogg","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"musWestern.json","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"musWestern.ogg","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ArenaControl.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"FadeInOut.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},

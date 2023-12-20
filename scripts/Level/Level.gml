@@ -1,7 +1,4 @@
 function Level() constructor {
-	static _empty_array = []
-	static _empty_struct = {}
-	
 	name = ""
 	areas = ds_map_create()
 	
