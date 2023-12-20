@@ -529,6 +529,16 @@
 						return global.game_status
 					},
 					
+					"game_master", function () {
+						var _netgame = global.netgame
+						
+						if _netgame != undefined {
+							return _netgame.master
+						}
+						
+						return true
+					},
+					
 					"delta_time", function () {
 						return global.delta
 					}
