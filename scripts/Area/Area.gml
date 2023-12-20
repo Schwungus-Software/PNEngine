@@ -406,6 +406,54 @@ function Area() constructor {
 		return n
 	}
 	
+	/// @func nearest(x, y, z, type)
+	/// @desc Returns the specified Thing or its children nearest to the given point.
+	static nearest = function (_x, _y, _z, _type) {
+		var _result = noone
+		var _distance = infinity
+		
+		var i = ds_list_size(active_things)
+		
+		repeat i {
+			with active_things[| --i] {
+				if is_ancestor(_type) {
+					var _newdist = point_distance_3d(_x, _y, _z, x, y, z)
+					
+					if _newdist < _distance {
+						_result = id
+						_distance = _newdist
+					}
+				}
+			}
+		}
+		
+		return _result
+	}
+	
+	/// @func furthest(x, y, z, type)
+	/// @desc Returns the specified Thing or its children farthest from the given point.
+	static furthest = function (_x, _y, _z, _type) {
+		var _result = noone
+		var _distance = -infinity
+		
+		var i = ds_list_size(active_things)
+		
+		repeat i {
+			with active_things[| --i] {
+				if is_ancestor(_type) {
+					var _newdist = point_distance_3d(_x, _y, _z, x, y, z)
+					
+					if _newdist > _distance {
+						_result = id
+						_distance = _newdist
+					}
+				}
+			}
+		}
+		
+		return _result
+	}
+	
 	/// @desc Attempts to deactivate the area, clearing everything in the process.
 	static deactivate = function () {
 		if not active {
