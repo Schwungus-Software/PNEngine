@@ -91,11 +91,44 @@ function Player() constructor {
 			return noone
 		}
 		
-		var _spawns = area.find_tag(ThingTags.PLAYER_SPAWNS)
-		var n = array_length(_spawns)
+		var _spawn = noone
+		
+		// Pick a spawn furthest from all players.
+		var _pawns = area.find_tag(ThingTags.PLAYERS)
+		var n = array_length(_pawns)
 		
 		if n {
-			var _spawn = _spawns[RNG.irandom(n - 1)]
+			var _x = 0
+			var _y = 0
+			var _z = 0
+			var i = 0
+			
+			repeat n {
+				with _pawns[i++] {
+					_x += x
+					_y += y
+					_z += z
+				}
+			}
+			
+			var _inv = 1 / n2
+			
+			_x *= _inv
+			_y *= _inv
+			_z *= _inv
+			_spawn = area.furthest(_x, _y, _z, PlayerSpawn)
+		} else {
+			// There are no players in this level, pick a random spawn.
+			var _spawns = area.find_tag(ThingTags.PLAYER_SPAWNS)
+			
+			n = array_length(_spawns)
+			
+			if n {
+				_spawn = _spawns[RNG.irandom(n - 1)]
+			}
+		}
+		
+		if instance_exists(_spawn) {
 			var _player_pawn = noone
 			
 			global.last_player = slot
