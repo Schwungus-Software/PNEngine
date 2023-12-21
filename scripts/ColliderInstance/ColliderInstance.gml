@@ -10,7 +10,7 @@ function ColliderInstance(_collider) constructor {
 	layer_mask = _collider.layer_mask
 	
 	#region Matrices
-		matrix = undefined
+		matrix = matrix_build_identity()
 		inverse_matrix = matrix_build_identity()
 		is_static = true
 		
@@ -73,11 +73,11 @@ function ColliderInstance(_collider) constructor {
 		}
 		
 		static reset_matrix = function () {
-			set_matrix(matrix_build_identity())
+			static _identity = matrix_build_identity()
+			
+			matrix = _identity
 			is_static = true
 		}
-		
-		reset_matrix()
 	#endregion
 	
 	#region Collision
