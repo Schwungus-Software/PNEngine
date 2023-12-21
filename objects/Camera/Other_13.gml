@@ -45,12 +45,34 @@ if _targets {
 	_y *= _targets_inv
 	_z *= _targets_inv
 	
+	// Raycast outwards camera angle for third person view
 	var _nz = dcos(pitch)
 	
-	range = _range
-	x = _x - lengthdir_x(_range, yaw) * _nz
-	y = _y - lengthdir_y(_range, yaw) * _nz
-	z = _z + lengthdir_y(_range, pitch)
+	var _range_x = lengthdir_x(_range, yaw) * _nz
+	var _range_y = lengthdir_y(_range, yaw) * _nz
+	var _range_z = lengthdir_y(_range, pitch)
+	
+	var _raycast = raycast(_x, _y, _z, _x - _range_x, _y - _range_y, _z + _range_z, CollisionFlags.CAMERA)
+	
+	if _raycast[RaycastData.HIT] {
+		// Wall behind camera, shorten range
+		var _distance = point_distance_3d(_x, _y, _z, _raycast[RaycastData.X], _raycast[RaycastData.Y], _raycast[RaycastData.Z]) - 2
+		
+		if _distance > range - 16 {
+			range = _distance
+		} else {
+			range -= 16
+		}
+	} else {
+		// Empty space behind camera, lerp to normal range
+		range = lerp(range, _range, 0.25)
+	}
+	
+	var _nr = _range <= 0 ?  0 : range / _range
+	
+	x = _x - (_range_x * _nr)
+	y = _y - (_range_y * _nr)
+	z = _z + (_range_z * _nr)
 }
 
 var _pois = ds_map_size(pois)

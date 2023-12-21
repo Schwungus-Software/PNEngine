@@ -288,7 +288,7 @@
 		}
 	}
 	
-	raycast = function (_x1, _y1, _z1, _x2, _y2, _z2, _layers = CollisionLayers.ALL, _out = undefined) {
+	raycast = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _layers = CollisionLayers.ALL, _out = undefined) {
 		static result = raycast_data_create()
 		
 		_out ??= result
@@ -296,7 +296,7 @@
 		var _collider = area.collider
 		
 		if _collider != undefined {
-			array_copy(_out, 0, _collider.raycast(_x1, _y1, _z1, _x2, _y2, _z2, _layers), 0, RaycastData.__SIZE)
+			array_copy(_out, 0, _collider.raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers), 0, RaycastData.__SIZE)
 		} else {
 			result[RaycastData.HIT] = false
 		}

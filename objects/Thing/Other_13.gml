@@ -37,7 +37,7 @@ switch m_collision {
 		// X-axis
 		var _add_x = x + x_speed
 		
-		if raycast(_add_x - radius, y, _center_z, _add_x + radius, y, _center_z, CollisionFlags.BODY, wall_ray)[RaycastData.HIT] {
+		if raycast(_add_x - radius, y, _center_z, _add_x + radius, y, _center_z, CollisionFlags.BODY, CollisionLayers.ALL, wall_ray)[RaycastData.HIT] {
 			var _hit_x = wall_ray[RaycastData.X]
 			
 			x = _hit_x + (_hit_x < x ? radius : -radius)
@@ -49,7 +49,7 @@ switch m_collision {
 		// Y-axis
 		var _add_y = y + y_speed
 		
-		if raycast(x, _add_y - radius, _center_z, x, _add_y + radius, _center_z, CollisionFlags.BODY, wall_ray)[RaycastData.HIT] {
+		if raycast(x, _add_y - radius, _center_z, x, _add_y + radius, _center_z, CollisionFlags.BODY, CollisionLayers.ALL, wall_ray)[RaycastData.HIT] {
 			var _hit_y = wall_ray[RaycastData.Y]
 			
 			y = _hit_y + (_hit_y < y ? radius : -radius)
@@ -59,13 +59,13 @@ switch m_collision {
 		y += y_speed
 		
 		// Ceiling
-		if raycast(x, y, z + _half_height, x, y, z + z_speed + height, CollisionFlags.BODY, ceiling_ray)[RaycastData.HIT] {
+		if raycast(x, y, z + _half_height, x, y, z + z_speed + height, CollisionFlags.BODY, CollisionLayers.ALL, ceiling_ray)[RaycastData.HIT] {
 			z = ceiling_ray[RaycastData.Z] - height
 			z_speed = 0
 		}
 		
 		// Floor
-		if raycast(x, y, z + _half_height, x, y, (z + z_speed) - ((floor_ray[RaycastData.HIT] and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, floor_ray)[RaycastData.HIT] {
+		if raycast(x, y, z + _half_height, x, y, (z + z_speed) - ((floor_ray[RaycastData.HIT] and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
 			z = floor_ray[RaycastData.Z]
 			
 			/*if z_speed > 0 {
@@ -163,7 +163,7 @@ switch m_shadow {
 			_z = z + height * 0.5
 		}
 		
-		if raycast(_x, _y, _z, _x, _y, _z - 65535, CollisionFlags.VISION, shadow_ray)[RaycastData.HIT] {
+		if raycast(_x, _y, _z, _x, _y, _z - 65535, CollisionFlags.VISION, CollisionLayers.ALL, shadow_ray)[RaycastData.HIT] {
 			shadow_x = shadow_ray[RaycastData.X]
 			shadow_y = shadow_ray[RaycastData.Y]
 			shadow_z = shadow_ray[RaycastData.Z]

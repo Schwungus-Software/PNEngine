@@ -81,7 +81,7 @@ function ColliderInstance(_collider) constructor {
 	#endregion
 	
 	#region Collision
-		static raycast = function (_x1, _y1, _z1, _x2, _y2, _z2, _layers = CollisionLayers.ALL) {
+		static raycast = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _layers = CollisionLayers.ALL) {
 			static _result = raycast_data_create()
 			
 			var _hit = false
@@ -141,9 +141,17 @@ function ColliderInstance(_collider) constructor {
 								repeat ds_list_size(_region) {
 									// Check this triangle for an intersection.
 									var _triangle = _region[| i++]
+									
+									// Skip if this triangle does not match our
+									// flags.
+									if not _triangle[TriangleData.FLAGS] & _flags {
+										continue
+									}
+									
 									var _tl = _triangle[TriangleData.LAYERS]
 									
-									// Skip if this triangle belongs to a non-matching layer.
+									// Skip if this triangle does not match our
+									// layers.
 									if (not (_tl & _layers)) or (not (_tl & layer_mask)) {
 										continue
 									}
@@ -152,7 +160,8 @@ function ColliderInstance(_collider) constructor {
 									var _tny = _triangle[10]
 									var _tnz = _triangle[11]
 									
-									// Find the intersection between the ray and the triangle's plane.
+									// Find the intersection between the ray
+									// and the triangle's plane.
 									var _dot = dot_product_3d(_tnx, _tny, _tnz, _x2 - _x1, _y2 - _y1, _z2 - _z1)
 									
 									if _dot == 0 {
