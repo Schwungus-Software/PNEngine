@@ -183,6 +183,7 @@
 					"gpu_set_tex_filter", gpu_set_tex_filter,
 					"gpu_set_blendmode", gpu_set_blendmode,
 					"gpu_set_blendmode_ext", gpu_set_blendmode_ext,
+					"gpu_set_blendmode_ext_sepalpha", gpu_set_blendmode_ext_sepalpha,
 					
 					"draw_get_color", draw_get_color,
 					"draw_get_alpha", draw_get_alpha,
