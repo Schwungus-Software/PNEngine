@@ -14,7 +14,7 @@ void main() {
     vec2 uv = v_fragcoord.xy / vec2(u_curve.z, u_curve.w);
     vec2 uv_center = uv * 2. - 1.;
     
-    vec3 color = vec3(0.);
+    vec4 color = vec4(0.);
     
     // 0
     vec2 d0 = channel_center - uv_center;
@@ -23,8 +23,9 @@ void main() {
 	float curve = u_curve.x;
     
     vec2 uv0 = uv_center / vec2(1. + curve * d2 + k2 * d4);
+	vec4 sample1 = texture2D(gm_BaseTexture, uv0 * 0.5 + 0.5);
 	
-    color[0] = texture2D(gm_BaseTexture, uv0 * 0.5 + 0.5)[0];
+	color.r = sample1.r;
     
     // 1
     d0 = channel_center2 - uv_center;
@@ -32,8 +33,9 @@ void main() {
     d4 = d2 * d2;
     
     vec2 uv1 = uv_center / vec2(1. + curve * d2 + k2 * d4);
+	vec4 sample2 = texture2D(gm_BaseTexture, uv1 * 0.5 + 0.5);
     
-    color[1] = texture2D(gm_BaseTexture, uv1 * 0.5 + 0.5)[1];
+    color.g = sample2.g;
     
     // 2
     d0 = channel_center3 - uv_center;
@@ -41,7 +43,10 @@ void main() {
     d4 = d2 * d2;
     
     vec2 uv2 = uv_center / vec2(1. + curve * d2 + k2 * d4);
-    color[2] = texture2D(gm_BaseTexture, uv2 * 0.5 + 0.5)[2];
+	vec4 sample3 = texture2D(gm_BaseTexture, uv2 * 0.5 + 0.5);
+	
+    color.b = sample3.b;
     
-    gl_FragColor = v_color * vec4(color, 1);
+	color.a = (sample1.a + sample2.a + sample3.a) / 3.;
+    gl_FragColor = v_color * color;
 }
