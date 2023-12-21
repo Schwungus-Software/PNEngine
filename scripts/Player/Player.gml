@@ -36,6 +36,8 @@ function Player() constructor {
 			return true
 		}
 		
+		print("! Player.activate: Player is already ready/active")
+		
 		return false
 	}
 	
@@ -45,6 +47,8 @@ function Player() constructor {
 			
 			if status == PlayerStatus.ACTIVE {
 				if global.players_active <= 1 {
+					print("! Player.deactivate: Cannot deactivate with one player remaining")
+					
 					return false
 				}
 				
@@ -70,6 +74,8 @@ function Player() constructor {
 			
 			return true
 		}
+		
+		print("! Player.deactivate: Player is already inactive")
 		
 		return false
 	}
@@ -111,7 +117,7 @@ function Player() constructor {
 				}
 			}
 			
-			var _inv = 1 / n2
+			var _inv = 1 / n
 			
 			_x *= _inv
 			_y *= _inv
