@@ -615,6 +615,7 @@ if _tick >= 1 {
 #region New Players
 	with input_players_get_status() {
 		if any_changed {
+			print($"proControl: Player input status updated ({new_connections}, {new_disconnections})")
 			var i = 0
 		
 			repeat array_length(new_connections) {
@@ -633,14 +634,14 @@ if _tick >= 1 {
 						}
 					}
 				}
+			}
 			
-				i = 0
-				
-				repeat array_length(new_disconnections) {
-					with _players[new_disconnections[i++]] {
-						if not deactivate() {
-							show_caption($"[c_red]Player {-~slot} disconnected. Press any key to reconnect.")
-						}
+			i = 0
+			
+			repeat array_length(new_disconnections) {
+				with _players[new_disconnections[i++]] {
+					if not deactivate() {
+						show_caption($"[c_red]Player {-~slot} disconnected. Press any key to reconnect.")
 					}
 				}
 			}
