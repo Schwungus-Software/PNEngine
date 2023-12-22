@@ -48,9 +48,12 @@ switch m_collision {
 		
 		// Y-axis
 		var _add_y = y + y_speed
+		var _raycast = raycast(x, _add_y - radius, _center_z, x, _add_y + radius, _center_z, CollisionFlags.BODY, CollisionLayers.ALL)
 		
-		if raycast(x, _add_y - radius, _center_z, x, _add_y + radius, _center_z, CollisionFlags.BODY, CollisionLayers.ALL, wall_ray)[RaycastData.HIT] {
-			var _hit_y = wall_ray[RaycastData.Y]
+		if _raycast[RaycastData.HIT] {
+			array_copy(wall_ray, 0, _raycast, 0, RaycastData.__SIZE)
+			
+			var _hit_y = _raycast[RaycastData.Y]
 			
 			y = _hit_y + (_hit_y < y ? radius : -radius)
 			y_speed = 0
