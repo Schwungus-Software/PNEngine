@@ -1,7 +1,7 @@
 /// @description Create
 // Feather ignore GM2016
-if level.name != "lvlTitle" {
-	instance_destroy(id, false)
+if code_is_compiled() or level.name != "lvlTitle" {
+	instance_destroy(self, false)
 	
 	exit
 }

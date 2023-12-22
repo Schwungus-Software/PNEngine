@@ -85,40 +85,6 @@ set_menu = function (_menu, _allow_return = true) {
 	
 	return false
 }
-
-/*request_result = function (_interaction, _option = 0) {
-	switch _interaction {
-		case TitleInteractions.DELETE_FILE:
-			var _saves = global.saves
-			var _save = _saves[| _option]
-			
-			if _save == undefined {
-				return false
-			}*/
-			
-			/* This won't actually delete the save, but move it to
-			   saves/deleted. This is so that any maliciously deleted save can
-			   be recovered as long as it isn't overwritten. */
-			/*var _filename = _save.filename
-			var _path = "saves/" + _filename
-			
-			if not file_exists(_path) {
-				return false
-			}
-			
-			file_copy(_path, "saves/deleted/" + _filename)
-			file_delete(_path)
-			ds_list_delete(_saves, _option)
-			array_delete(save_data, _option, 1)
-			
-			return true
-			
-		case TitleInteractions.OPTIONS:
-			return true
-	}
-	
-	return false
-}*/
 #endregion
 
 #region Virtual Functions
