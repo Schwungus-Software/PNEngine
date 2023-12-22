@@ -168,7 +168,7 @@ if _has_target {
 	var _ray = raycast(x, y, _center, x + _playcam_x_offset_to, y + _playcam_y_offset_to, _center, CollisionFlags.CAMERA)
 	
 	if _ray[RaycastData.HIT] {
-		var f = max((vector_speed / movement_speed) * 0.5, 0.125)
+		var f = max((vector_speed / movement_speed) * 0.6, 0.125)
 		
 		playcam_x_offset = lerp(playcam_x_offset, _ray[RaycastData.NX], f)
 		playcam_y_offset = lerp(playcam_y_offset, _ray[RaycastData.NY], f)
