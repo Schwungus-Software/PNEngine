@@ -1,3 +1,5 @@
+/// @feather ignore GM1019
+
 #region Scripting
 	with Catspeak {
 		#region Standard Library
@@ -351,6 +353,8 @@
 			
 			#region Things
 				addConstant(
+					"NO_THING", noone,
+					
 					"TAG_PLAYERS", ThingTags.PLAYERS,
 					"TAG_FRIENDS", ThingTags.FRIENDS,
 					"TAG_ENEMIES", ThingTags.ENEMIES,
@@ -376,6 +380,8 @@
 					"NVAR_TICK", NetVarFlags.TICK,
 					"NVAR_GENERIC", NetVarFlags.GENERIC
 				)
+				
+				addFunction("thing_exists", instance_exists)
 			#endregion
 			
 			#region Collision
