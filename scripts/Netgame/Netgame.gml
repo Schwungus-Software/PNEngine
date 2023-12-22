@@ -111,6 +111,10 @@ function Netgame() constructor {
 	}
 	
 	static send = function (_to, _buffer, _size = undefined, _dispose = true, _overwrite = true) {
+		if not active {
+			exit
+		}
+		
 		_size ??= buffer_get_size(_buffer)
 		
 		switch _to {
