@@ -29,6 +29,8 @@ enum CameraPathData {
 event_inherited()
 
 #region Variables
+	f_sync_vel = false
+	
 	yaw = 0
 	pitch = 0
 	roll = 0
@@ -108,7 +110,7 @@ event_inherited()
 	}
 	
 	clear_path = function () {
-		ds_grid_resize(_path, 0, CameraPathData.__SIZE)
+		ds_grid_resize(path, 0, CameraPathData.__SIZE)
 		stop_path()
 	}
 	
@@ -121,6 +123,21 @@ event_inherited()
 		path_time = _time
 		path_playback = _playback
 		path_active = true
+		
+		x = path[# 0, CameraPathData.X]
+		y = path[# 0, CameraPathData.Y]
+		z = path[# 0, CameraPathData.Z]
+		yaw = path[# 0, CameraPathData.YAW]
+		pitch = path[# 0, CameraPathData.PITCH]
+		roll = path[# 0, CameraPathData.ROLL]
+		fov = path[# 0, CameraPathData.FOV]
+		interp_skip("sx")
+		interp_skip("sy")
+		interp_skip("sz")
+		interp_skip("syaw")
+		interp_skip("spitch")
+		interp_skip("sroll")
+		interp_skip("sfov")
 		
 		return true
 	}
