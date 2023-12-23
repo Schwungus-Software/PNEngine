@@ -8,9 +8,9 @@
 	
 	enum MBump {
 		NONE,
-		ALL,
-		TO,
-		FROM,
+		ALL, // This and other Things can bump into each other
+		TO, // Only this Thing can bump into others
+		FROM, // Only other Things can bump into this
 	}
 	
 	enum MShadow {
@@ -109,6 +109,7 @@
 	f_cull_destroy = false
 	f_garbage = false
 	f_frozen = false
+	f_bump_avoid = false
 	
 	m_collision = MCollision.NONE
 	m_bump = MBump.NONE
@@ -311,10 +312,46 @@
 		
 		thing_sequenced(_sequence)
 	}
+	
+	bump_avoid = function (_from) {
+		var _px, _py, _pr
+		
+		with _from {
+			_px = x
+			_py = y
+			_pr = bump_radius
+		}
+		
+		var _len = ((bump_radius + _pr) - point_distance(_px, _py, x, y)) + 0.001
+		var _dir = point_direction(_px, _py, x, y)
+		
+		var _lx = lengthdir_x(_len, _dir)
+		var _ly = lengthdir_y(_len, _dir)
+		
+		if m_collision != MCollision.NONE {
+			var _z = z + height * 0.5
+			var _raycast = raycast(x, y, _z, x + _lx + lengthdir_x(radius, _dir), y + _ly + lengthdir_y(radius, _dir), _z)
+			
+			if _raycast[RaycastData.HIT] {
+				_dir = darctan2(-_raycast[RaycastData.NY], _raycast[RaycastData.NX])
+				_lx = (_raycast[RaycastData.X] - x) + lengthdir_x(radius, _dir)
+				_ly = (_raycast[RaycastData.Y] - y) + lengthdir_y(radius, _dir)
+			}
+		}
+		
+		x += _lx
+		y += _ly
+		
+		return point_distance(x_previous, y_previous, x, y) > 0.001
+	}
 #endregion
 
 #region Virtual Functions
 	player_entered = function (_player) {}
 	player_left = function (_player) {}
 	thing_sequenced = function (_sequence) {}
+	
+	bump_check = function (_from) {
+		return true
+	}
 #endregion

@@ -20,6 +20,70 @@ if f_gravity and not floor_ray[RaycastData.HIT] {
 	z_speed = clamp(z_speed - (area.gravity * grav), max_fall_speed, max_fly_speed)
 }
 
+// Thing collision
+if m_bump != MBump.NONE and m_bump != MBump.FROM {
+	var _bump_grid = area.bump_grid
+	var _gx = clamp(floor((x - area.bump_x) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_width(_bump_grid) - 1)
+	var _gy = clamp(floor((y - area.bump_y) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_height(_bump_grid) - 1)
+	var _list = area.bump_lists[# _gx, _gy] 
+	var i = 0
+	
+	repeat ds_list_size(_list) {
+		var _thing = _list[| i++]
+		
+		if instance_exists(_thing) and _thing != id and _thing.m_bump != MBump.TO {
+			var _tx, _ty, _tz, _th
+			
+			with _thing {
+				_tx = x
+				_ty = y
+				_tz = z
+				_th = height
+			}
+			
+			// Bounding box check
+			if z < (_tz + _th) and (z + height) > _tz
+			   and point_distance(x, y, _tx, _ty) < bump_radius + _thing.bump_radius {
+				var _bump_result
+				
+				with _thing {
+					if is_catspeak(bump_check) {
+						bump_check.setSelf(self)
+					}
+					
+					_bump_result = bump_check(other.id)
+				}
+				
+				if not _bump_result {
+					continue
+				}
+				
+				// Avoid this Thing if all these conditions are met
+				var _pusher, _pushed
+				
+				if _thing.f_bump_avoid
+				   and point_distance(0, 0, x_speed, y_speed) > point_distance(0, 0, _thing.x_speed, _thing.y_speed) {
+					_pusher = id
+					_pushed = _thing
+				} else {
+					if not f_bump_avoid {
+						// None of the Things can avoid each other
+						continue
+					}
+					
+					_pusher = _thing
+					_pushed = id
+				}
+				
+				if not _pushed.bump_avoid(_pusher) and _pushed.f_bump_avoid {
+					_pusher.bump_avoid(_pushed)
+				}
+			}
+		}
+	}
+}
+
+// World collision
 switch m_collision {
 	default:
 		x += x_speed

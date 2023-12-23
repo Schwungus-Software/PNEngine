@@ -266,24 +266,21 @@ if load_state != LoadStates.NONE {
 #region Areas
 				var _add_areas = _json[$ "areas"]
 				
-				if _add_areas == undefined {
+				if not is_array(_add_areas) {
 					show_error($"!!! proControl: Level '{load_level}' has no areas", true)
 				} else {
 					var _thing_slot = 0
-					var _update_bump_grid = false
-					var _bump_x1 = infinity
-					var _bump_y1 = infinity
-					var _bump_x2 = -infinity
-					var _bump_y2 = -infinity
 					
 					var _areas = _level.areas
 					var _images = global.images
 					var _models = global.models
 					var _scripts = global.scripts
 					
+					var _current_area_pos = 0
+					
 					repeat array_length(_add_areas) {
 						var _area = new Area()
-						var _area_info = array_pop(_add_areas)
+						var _area_info = _add_areas[_current_area_pos++]
 						
 						// Check for valid ID
 						var _id = _area_info[$ "id"] ?? undefined
@@ -333,6 +330,10 @@ if load_state != LoadStates.NONE {
 							// Check for things
 							var _things = _area.things
 							var _add_things = _area_info[$ "things"]
+							var _bump_x1 = infinity
+							var _bump_y1 = infinity
+							var _bump_x2 = -infinity
+							var _bump_y2 = -infinity
 							
 							if is_array(_add_things) {
 								_images.load("imgShadow")
@@ -369,11 +370,10 @@ if load_state != LoadStates.NONE {
 												y = _thing_info[$ "y"] ?? 0
 												z = _thing_info[$ "z"] ?? 0
 												
-												_update_bump_grid = true
-												_bump_x1 = min(_bump_x1, x - COLLIDER_REGION_SIZE)
-												_bump_y1 = min(_bump_y1, y - COLLIDER_REGION_SIZE)
-												_bump_x2 = max(_bump_x2, x + COLLIDER_REGION_SIZE)
-												_bump_y2 = max(_bump_y2, y + COLLIDER_REGION_SIZE)
+												_bump_x1 = min(_bump_x1, x - COLLIDER_REGION_RADIUS)
+												_bump_y1 = min(_bump_y1, y - COLLIDER_REGION_RADIUS)
+												_bump_x2 = max(_bump_x2, x + COLLIDER_REGION_RADIUS)
+												_bump_y2 = max(_bump_y2, y + COLLIDER_REGION_RADIUS)
 												
 												angle = _thing_info[$ "angle"] ?? 0
 												tag = _thing_info[$ "tag"] ?? 0
@@ -395,6 +395,39 @@ if load_state != LoadStates.NONE {
 									++i
 								}
 							}
+							
+							with _area {
+								var n = array_length(_things)
+							
+								if n {
+									/* The size of the bump grid is based on the leftmost and rightmost
+									   area thing positions. Any Things outside of this grid will have
+									   their region clamped accordingly. */
+									var _width = ceil(abs(_bump_x2 - _bump_x1) * COLLIDER_REGION_SIZE_INVERSE)
+									var _height = ceil(abs(_bump_y2 - _bump_y1) * COLLIDER_REGION_SIZE_INVERSE)
+								
+									ds_grid_resize(bump_grid, _width, _height)
+									ds_grid_resize(bump_lists, _width, _height)
+								
+									var i = 0
+								
+									repeat ds_grid_width(bump_lists) {
+										var j = 0
+									
+										repeat ds_grid_height(bump_lists) {
+											bump_lists[# i, j++] = ds_list_create()
+										}
+									
+										++i
+									}
+								
+									bump_x = _bump_x1
+									bump_y = _bump_y1
+								} else {
+									// This level has no area actors, set defaults
+									bump_lists[# 0, 0] = ds_list_create()
+								}
+							}
 						} else {
 							print($"! proControl: Invalid area ID '{_id}', expected real")
 							
@@ -402,37 +435,6 @@ if load_state != LoadStates.NONE {
 						}
 						
 						delete _area_info
-					}
-					
-					if _update_bump_grid {
-						/* The size of the bump grid is based on the nearest and farthest room
-						   thing position. Any Things outside of this grid will be clamped
-						   accordingly. */
-						var _width = ceil(abs(_bump_x2 - _bump_x1) * COLLIDER_REGION_SIZE_INVERSE)
-						var _height = ceil(abs(_bump_y2 - _bump_y1) * COLLIDER_REGION_SIZE_INVERSE)
-						
-						with _level {
-							ds_grid_resize(bump_grid, _width, _height)
-							ds_grid_resize(bump_lists, _width, _height)
-							
-							var i = 0
-							
-							repeat ds_grid_width(bump_lists) {
-								var j = 0
-								
-								repeat ds_grid_height(bump_lists) {
-									bump_lists[# i, j++] = ds_list_create()
-								}
-								
-								++i
-							}
-							
-							bump_x = _bump_x1
-							bump_y = _bump_y1
-						}
-					} else {
-						// This level has no room actors, set defaults
-						_level.bump_lists[# 0, 0] = ds_list_create()
 					}
 				}
 #endregion
@@ -504,7 +506,7 @@ if load_state != LoadStates.NONE {
 					
 					// Bring new players in-game
 					if status == PlayerStatus.PENDING {
-						status = PlayerStatus.ACTIVE
+						status = PlayerStatus.ACTIVE;
 						++global.players_active;
 						--global.players_ready
 					}
@@ -979,7 +981,60 @@ if _tick >= 1 {
 						}
 						
 						var _players_in_area = players
-						var j = ds_list_size(active_things)
+						var _nthings = ds_list_size(active_things)
+						
+						// Add actors to actor collision grid
+						var _bump_grid = bump_grid
+						var _bump_lists = bump_lists
+						var _bump_x = bump_x
+						var _bump_y = bump_y
+						var _bump_width = ds_grid_width(_bump_grid)
+						var _bump_height = ds_grid_height(_bump_grid)
+						var _bump_max_x = _bump_width - 1
+						var _bump_max_y = _bump_height - 1
+						
+						ds_grid_clear(_bump_grid, false)
+						
+						var j = 0
+						
+						repeat _nthings {
+							with active_things[| j++] {
+								if m_bump == MBump.NONE or f_culled or f_frozen {
+									continue
+								}
+								
+								var _gx = (x - _bump_x) * COLLIDER_REGION_SIZE_INVERSE
+								var _gy = (y - _bump_y) * COLLIDER_REGION_SIZE_INVERSE
+								var _gr = bump_radius * COLLIDER_REGION_SIZE_INVERSE
+								
+								var _gx1 = clamp(floor(_gx - _gr), 0, _bump_max_x)
+								var _gy1 = clamp(floor(_gy - _gr), 0, _bump_max_y)
+								var _gx2 = clamp(ceil(_gx + _gr), 1, _bump_width)
+								var _gy2 = clamp(ceil(_gy + _gr), 1, _bump_height)
+								
+								var _gi = _gx1
+								
+								repeat _gx2 - _gx1 {
+									var _gj = _gy1
+									
+									repeat _gy2 - _gy1 {
+										var _list = _bump_lists[# _gi, _gj]
+										
+										if not _bump_grid[# _gi, _gj] {
+											_bump_grid[# _gi, _gj] = true
+											ds_list_clear(_list)
+										}
+										
+										ds_list_add(_list, id);
+										++_gj
+									}
+									
+									++_gi
+								}
+							}
+						}
+						
+						j = _nthings
 						
 						repeat j {
 							with active_things[| --j] {

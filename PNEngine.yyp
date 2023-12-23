@@ -1348,6 +1348,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"musWestern.ogg","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ArenaControl.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"FadeInOut.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"HangoutScene.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"IntroScene.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Logo.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Mario.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},

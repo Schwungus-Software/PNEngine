@@ -16,6 +16,11 @@ function Area() constructor {
 	light_data = array_create(MAX_LIGHTS * LightData.__SIZE)
 	sounds = new SoundPool()
 	
+	bump_x = 0
+	bump_y = 0
+	bump_grid = ds_grid_create(1, 1)
+	bump_lists = ds_grid_create(1, 1)
+	
 	clear_color = undefined
 	ambient_color = undefined
 	fog_distance = undefined
@@ -506,14 +511,37 @@ function Area() constructor {
 	}
 	
 	static destroy = function () {
-		repeat ds_list_size(active_things) {
-			instance_destroy(active_things[| 0], false)
+		var i = ds_list_size(active_things)
+		
+		repeat i {
+			var _thing = active_things[| --i]
+			
+			if instance_exists(_thing) {
+				instance_destroy(_thing, false)
+			} else {
+				ds_list_delete(active_things, i)
+			}
 		}
 		
 		ds_list_destroy(active_things)
 		ds_list_destroy(particles)
 		ds_list_destroy(players)
 		sounds.destroy()
+		ds_grid_destroy(bump_grid)
+		
+		var i = 0
+		
+		repeat ds_grid_width(bump_lists) {
+			var j = 0
+			
+			repeat ds_grid_height(bump_lists) {
+				ds_list_destroy(bump_lists[# i, j++])
+			}
+			
+			++i
+		}
+		
+		ds_grid_destroy(bump_lists)
 	}
 	
 	static find_tag = function (_tag) {

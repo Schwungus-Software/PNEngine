@@ -40,20 +40,6 @@ function Level() constructor {
 		}
 		
 		ds_map_destroy(areas)
-		ds_grid_destroy(bump_grid)
-		
-		var i = 0
-		
-		repeat ds_grid_width(bump_lists) {
-			var j = 0
-			
-			repeat ds_grid_height(bump_lists) {
-				ds_list_destroy(bump_lists[# i, j++])
-			}
-			
-			++i
-		}
-		
 		ds_grid_destroy(syncables)
 	}
 	
