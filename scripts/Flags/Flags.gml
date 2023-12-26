@@ -29,6 +29,17 @@ function Flags(_id) constructor {
 		return true
 	}
 	
+	static copy = function (_struct) {
+		var _names = struct_get_names(_struct)
+		var i = 0
+		
+		repeat struct_names_count(_struct) {
+			var _name = _names[i++]
+			
+			set(_name, _struct[$ _name])
+		}
+	}
+	
 	static clear = function () {
 		var _netgame = global.netgame
 		

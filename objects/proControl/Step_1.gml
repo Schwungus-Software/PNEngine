@@ -439,6 +439,23 @@ if load_state != LoadStates.NONE {
 				}
 #endregion
 				
+				var _copy_flags = _json[$ "flags"]
+				
+				if is_struct(_copy_flags) {
+					var _flags = global.flags
+					var _copy_global = _copy_flags[$ "global"]
+					
+					if is_struct(_copy_global) {
+						_flags[0].copy(_copy_global)
+					}
+					
+					var _copy_local = _copy_flags[$ "local"]
+					
+					if is_struct(_copy_local) {
+						_flags[1].copy(_copy_local)
+					}
+				}
+				
 				delete _json
 			}
 			
