@@ -16,9 +16,20 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		++i
 	}
 	
+	skins_updated = true
+	cache = []
+	cache_amount = 0
+	
 	head_bone = _model.head_bone
 	torso_bone = _model.torso_bone
 	hold_bone = _model.hold_bone
+	
+	static set_skin = function (_submodel, _skin) {
+		gml_pragma("forceinline")
+		
+		skins[_submodel] = _skin
+		skins_updated = true
+	}
 	
 	#region Animation
 		animation_name = ""
@@ -40,6 +51,18 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			if _animation == undefined {
 				animation_name = ""
 				animation = undefined
+				animation_finished = false
+				animation_state = 0
+				
+				if _frame >= 0 {
+					frame = _frame
+					frame_speed = 1
+					interp_skip("sframe")
+				}
+				
+				transition = 0
+				transition_time = 0
+				interp_skip("stransition")
 				
 				exit
 			}
@@ -51,19 +74,19 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			if _frame >= 0 {
 				frame = _frame
-				interp_skip("sframe")
 				frame_speed = 1
 				
 				var _copy_sample = _animation.samples[_frame % _animation.frames]
 				
 				array_copy(sample, 0, _copy_sample, 0, array_length(_copy_sample))
+				interp_skip("sframe")
 			}
 			
 			var _transition_previous = transition < transition_time
 			
 			transition = 0
-			interp_skip("stransition")
 			transition_time = _time
+			interp_skip("stransition")
 			
 			if _time > 0 {
 				var _final_sample = _transition_previous ? transition_sample2 : sample
@@ -324,19 +347,26 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				global.u_animated.set(1)
 				
 				var _frame = sframe
-				var _frames, _loop, _real_frame, _samples
+				var _frames, _loop, _current_frame, _next_frame, _samples
 				
 				with animation {
 					_frames = frames
 					_loop = type == AnimationTypes.LINEAR_LOOP or type == AnimationTypes.QUADRATIC_LOOP
-					_real_frame = _loop ? _frame mod frames : min(_frame, frames)
+					
+					if _loop {
+						_current_frame = _frame mod _frames
+						_next_frame = (_frame + 1) mod _frames
+					} else {
+						_current_frame = min(_frame, frames)
+						_next_frame = min(_frame + 1, frames)
+					}
+					
 					_samples = samples
 				}
 				
-				var _next_frame = _real_frame + 1
 				var _final_sample = sample
 				
-				sample_blend(_final_sample, _samples[floor(_real_frame)], _samples[floor(_loop ? _next_frame % _frames : min(_next_frame, _frames))], frac(_real_frame))
+				sample_blend(_final_sample, _samples[floor(_current_frame)], _samples[floor(_next_frame)], frac(_current_frame))
 				
 				if update_sample != undefined {
 					update_sample.setSelf(self)
@@ -362,70 +392,88 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _u_material_blend = global.u_material_blend
 			var _u_material_blend_uvs = global.u_material_blend_uvs
 			var _u_uvs = global.u_uvs
+			
+			if skins_updated {
+				var i = 0
+				var j = 0
+				
+				repeat submodels_amount {
+					var _skin = skins[i]
+					
+					if _skin == -1 {
+						++i
+						
+						continue
+					}
+					
+					var _submodel = submodels[i++]
+					
+					cache[j] = _submodel.vbo
+					cache[-~j] = _submodel.materials[_skin]
+					j += 2
+				}
+				
+				array_resize(cache, j)
+				cache_amount = j * 0.5
+				skins_updated = false
+			}
+			
 			var i = 0
 			
-			repeat submodels_amount {
-				var _skin = skins[i]
+			repeat cache_amount {
+				var _material = cache[-~i]
+				var _image
 				
-				if _skin == -1 {
-					++i
+				with _material {
+					_image = image
 					
-					continue
+					if image2 != undefined {
+						_u_material_can_blend.set(1)
+						
+						if image2 == -1 {
+							_u_material_blend.set(-1)
+						} else {
+							_u_material_blend.set(image2.GetTexture(0))
+							
+							var _uvs = image2.GetUVs(_idx)
+							
+							with _uvs {
+								_u_material_blend_uvs.set(normLeft, normTop, normRight, normBottom)
+							}
+						}
+					} else {
+						_u_material_can_blend.set(0)
+					}
+					
+					_u_material_bright.set(bright)
+					_u_material_specular.set(specular, specular_exponent)
+					_u_material_wind.set(wind, wind_lock_bottom, wind_speed)
+					_u_material_color.set(color[0], color[1], color[2], color[3])
 				}
 				
-				with submodels[i] {
-					var _material = materials[_skin]
-					var _image
+				var _vbo = cache[i]
+				
+				if _image == -1 {
+					vertex_submit(_vbo, pr_trianglelist, -1)
+				} else {
+					var _idx
 					
 					with _material {
-						_image = image
-						
-						if image2 != undefined {
-							_u_material_can_blend.set(1)
-							
-							if image2 == -1 {
-								_u_material_blend.set(-1)
-							} else {
-								_u_material_blend.set(image2.GetTexture(0))
-							
-								var _uvs = image2.GetUVs(_idx)
-							
-								with _uvs {
-									_u_material_blend_uvs.set(normLeft, normTop, normRight, normBottom)
-								}
-							}
-						} else {
-							_u_material_can_blend.set(0)
-						}
-						
-						_u_material_bright.set(bright)
-						_u_material_specular.set(specular, specular_exponent)
-						_u_material_wind.set(wind, wind_lock_bottom, wind_speed)
-						_u_material_color.set(color[0], color[1], color[2], color[3])
+						_idx = frame_speed * current_time
+						_u_material_alpha_test.set(alpha_test)
+						_u_material_scroll.set(x_scroll, y_scroll)
 					}
 					
-					if _image == -1 {
-						vertex_submit(vbo, pr_trianglelist, -1)
-					} else {
-						var _idx
-						
-						with _material {
-							_idx = frame_speed * current_time
-							_u_material_alpha_test.set(alpha_test)
-							_u_material_scroll.set(x_scroll, y_scroll)
-						}
-						
-						var _uvs = _image.GetUVs(_idx)
-						
-						with _uvs {
-							_u_uvs.set(normLeft, normTop, normRight, normBottom)
-						}
-						
-						vertex_submit(vbo, pr_trianglelist, _image.GetTexture(_idx))
+					var _uvs = _image.GetUVs(_idx)
+					
+					with _uvs {
+						_u_uvs.set(normLeft, normTop, normRight, normBottom)
 					}
+					
+					vertex_submit(_vbo, pr_trianglelist, _image.GetTexture(_idx))
 				}
 				
-				++i
+				i += 2
 			}
 			
 			matrix_set(matrix_world, _mwp)
