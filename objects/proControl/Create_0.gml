@@ -561,9 +561,11 @@ ui_font = scribble_fallback_font
 ui_font_name = ""
 chat_font = scribble_fallback_font
 chat_font_name = ""
+chat_sound = undefined
 
 var _custom_ui_font = undefined
 var _custom_chat_font = undefined
+var _custom_chat_sound = undefined
 
 #region Mods
 	var _mods = global.mods
@@ -625,6 +627,12 @@ var _custom_chat_font = undefined
 			if is_string(_chat_font) {
 				_custom_chat_font = _chat_font
 			}
+			
+			var _chat_sound = _info[$ "chat_sound"]
+			
+			if is_string(_chat_sound) {
+				_custom_chat_sound = _chat_sound
+			}
 		}
 		
 		_key = ds_map_find_next(_mods, _key)
@@ -644,21 +652,21 @@ config_update()
 var _fonts = global.fonts
 
 if is_string(_custom_ui_font) {
-	_fonts.load(_custom_ui_font)
-	
-	var _font = _fonts.get(_custom_ui_font)
+	var _font = _fonts.fetch(_custom_ui_font)
 	
 	ui_font = _font.font
 	ui_font_name = _font.name
 }
 
 if is_string(_custom_chat_font) {
-	_fonts.load(_custom_chat_font)
-	
-	var _font = _fonts.get(_custom_chat_font)
+	var _font = _fonts.fetch(_custom_chat_font)
 	
 	chat_font = _font.font
 	chat_font_name = _font.name
+}
+
+if is_string(_custom_chat_sound) {
+	chat_sound = global.sounds.fetch(_custom_chat_sound)
 }
 
 caption = scribble("", "__PNENGINE_CAPTION__").starting_format(ui_font_name, c_white)

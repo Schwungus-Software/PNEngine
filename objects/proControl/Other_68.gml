@@ -515,6 +515,7 @@ if async_load[? "type"] == network_type_data {
 				}
 				
 				net_chat($"{_net.name}: {buffer_read(_buffer, buffer_string)}")
+				global.ui_sounds.play(chat_sound)
 			break
 			
 			case NetHeaders.INPUT:

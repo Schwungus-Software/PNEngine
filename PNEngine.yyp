@@ -136,6 +136,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"controllertypes.csv","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"english.json","CopyToMask":-1,"filePath":"datafiles/data/main/languages",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"languages.json","CopyToMask":-1,"filePath":"datafiles/data/main/languages",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"mod.json","CopyToMask":-1,"filePath":"datafiles/data/main",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndChat.wav","CopyToMask":-1,"filePath":"datafiles/data/main/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"COMMIT_EDITMSG","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/.git",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"config","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/.git",},
