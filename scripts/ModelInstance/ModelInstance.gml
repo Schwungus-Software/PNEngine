@@ -27,8 +27,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 	static set_skin = function (_submodel, _skin) {
 		gml_pragma("forceinline")
 		
-		skins[_submodel] = _skin
-		skins_updated = true
+		if skins[_submodel] != _skin {
+			skins[_submodel] = _skin
+			skins_updated = true
+		}
 	}
 	
 	#region Animation
@@ -396,6 +398,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			if skins_updated {
 				var i = 0
 				var j = 0
+				var k = 0
 				
 				repeat submodels_amount {
 					var _skin = skins[i]
@@ -410,11 +413,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					
 					cache[j] = _submodel.vbo
 					cache[-~j] = _submodel.materials[_skin]
-					j += 2
+					j += 2;
+					++k
 				}
 				
 				array_resize(cache, j)
-				cache_amount = j * 0.5
+				cache_amount = k
 				skins_updated = false
 			}
 			
