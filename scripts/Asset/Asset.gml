@@ -1,5 +1,6 @@
 function Asset() constructor {
 	name = ""
+	transient = false
 	
 	static destroy = function () {}
 	
