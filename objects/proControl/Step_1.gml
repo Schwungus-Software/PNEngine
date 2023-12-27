@@ -95,19 +95,20 @@ if load_state != LoadStates.NONE {
 				var _script = _json[$ "script"]
 				
 				if is_string(_script) {
-					global.scripts.load(_script)
-					
 					with _level {
-						level_script = global.scripts.get(_script)
-						start = level_script.start
-						area_changed = level_script.area_changed
-						area_activated = level_script.area_activated
-						area_deactivated = level_script.area_deactivated
+						level_script = global.scripts.fetch(_script)
 						
-						if (start != undefined) start.setSelf(_level)
-						if (area_changed != undefined) area_changed.setSelf(_level)
-						if (area_activated != undefined) area_activated.setSelf(_level)
-						if (area_deactivated != undefined) area_deactivated.setSelf(_level)
+						if level_script != undefined {
+							start = level_script.start
+							area_changed = level_script.area_changed
+							area_activated = level_script.area_activated
+							area_deactivated = level_script.area_deactivated
+						
+							if (start != undefined) start.setSelf(_level)
+							if (area_changed != undefined) area_changed.setSelf(_level)
+							if (area_activated != undefined) area_activated.setSelf(_level)
+							if (area_deactivated != undefined) area_deactivated.setSelf(_level)
+						}
 					}
 				}
 				
@@ -310,9 +311,7 @@ if load_state != LoadStates.NONE {
 							var _model_name = _area_info[$ "model"]
 							
 							if is_string(_model_name) {
-								_models.load(_model_name)
-								
-								var _model = _models.get(_model_name)
+								var _model = _models.fetch(_model_name)
 								
 								if _model != undefined {
 									with _area {

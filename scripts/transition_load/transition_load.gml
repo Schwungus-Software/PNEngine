@@ -1,11 +1,7 @@
 /// @func transition_load(index)
 function transition_load(_type) {
 	if is_string(_type) {
-		var _scripts = global.scripts
-		
-		_scripts.load(_type)
-		
-		var _script = _scripts.get(_type)
+		var _script = global.scripts.fetch(_type)
 		
 		if _script != undefined and is_instanceof(_script, TransitionScript) {
 			return true
