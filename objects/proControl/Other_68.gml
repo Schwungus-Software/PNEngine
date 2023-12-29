@@ -220,6 +220,7 @@ if async_load[? "type"] == network_type_data {
 				case NetHeaders.HOST_LEVEL:
 				case NetHeaders.HOST_AREA:
 				case NetHeaders.HOST_THING:
+				case NetHeaders.HOST_DAMAGE_THING:
 				case NetHeaders.HOST_DESTROY_THING:
 				case NetHeaders.HOST_PLAYER_STATE:
 				case NetHeaders.HOST_FLAG:
@@ -733,6 +734,30 @@ if async_load[? "type"] == network_type_data {
 							}
 						}
 					}
+				}
+			break
+			
+			case NetHeaders.HOST_DAMAGE_THING:
+				if _ip != ip or _port != port or _from != 0 or _from == _to {
+					break
+				}
+				
+				var _to_id = buffer_read(_buffer, buffer_u16)
+				var _from_id = buffer_read(_buffer, buffer_u16) - 1
+				var _amount = buffer_read(_buffer, buffer_f32)
+				var _type = buffer_read(_buffer, buffer_string)
+				var _result = buffer_read(_buffer, buffer_u8)
+				
+				var _level = global.level
+				var _to = _level.syncables[# _to_id, 0] ?? noone
+				var _from = _from_id == -1 ? noone : (_level.syncables[# _from_id, 0] ?? noone)
+				
+				if instance_exists(_to) {
+					_to.damage_received(_from, _amount, _type)
+				}
+				
+				if instance_exists(_from) {
+					_from.damage_dealt(_to, _amount, _type, _result)
 				}
 			break
 			

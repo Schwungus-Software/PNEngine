@@ -300,6 +300,9 @@
 			array_copy(_out, 0, _collider.raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers), 0, RaycastData.__SIZE)
 		} else {
 			result[RaycastData.HIT] = false
+			result[RaycastData.X] = _x2
+			result[RaycastData.Y] = _y2
+			result[RaycastData.Z] = _z2
 		}
 		
 		return _out
@@ -311,6 +314,49 @@
 		}
 		
 		thing_sequenced(_sequence)
+	}
+	
+	receive_damage = function (_amount, _type = "Normal", _from = noone) {
+		if f_sync {
+			var _netgame = global.netgame
+			
+			if _netgame != undefined {
+				with _netgame {
+					if not active or not master {
+						return DamageResults.NONE
+					}
+					
+					var b = net_buffer_create(true, NetHeaders.HOST_DAMAGE_THING)
+					
+					buffer_write(b, buffer_u16, other.sync_id) // Victim
+					
+					var _from_exists = instance_exists(_from)
+					
+					buffer_write(b, buffer_u16, _from_exists ? -~_from.sync_id : 0) // Attacker
+					buffer_write(b, buffer_f32, _amount)
+					buffer_write(b, buffer_string, _type)
+					
+					var _result = other.damage_received(_from, _amount, _type)
+					
+					if _from_exists {
+						_from.damage_dealt(other.id, _amount, _type, _result)
+					}
+					
+					buffer_write(b, buffer_u8, _result)
+					send(SEND_OTHERS, b)
+					
+					return _result
+				}
+			}
+		}
+		
+		var _result = damage_received(_from, _amount, _type)
+		
+		if instance_exists(_from) {
+			_from.damage_dealt(id, _amount, _type, _result)
+		}
+		
+		return _result
 	}
 	
 	bump_avoid = function (_from) {
@@ -350,6 +396,11 @@
 	player_entered = function (_player) {}
 	player_left = function (_player) {}
 	thing_sequenced = function (_sequence) {}
+	damage_dealt = function (_to, _amount, _type, _result) {}
+	
+	damage_received = function (_from, _amount, _type) {
+		return DamageResults.NONE
+	}
 	
 	bump_check = function (_from) {
 		return true

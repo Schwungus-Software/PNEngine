@@ -72,4 +72,12 @@
 		ALL = -5,
 		PLAYER_SPAWNS = -6,
 	}
+	
+	enum DamageResults {
+		NONE,
+		MISSED,
+		BLOCKED,
+		DAMAGED,
+		FATAL,
+	}
 #endregion
