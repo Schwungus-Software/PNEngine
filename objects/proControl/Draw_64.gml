@@ -163,21 +163,19 @@ var _players = global.players
 			}
 		}
 		
-		var _draw_priority = global.draw_priority
 		var _things = _area.active_things
 		var j = ds_list_size(_things)
 		
 		repeat j {
-			var _thing = _things[| --j]
-		
-			ds_priority_add(_draw_priority, _thing, _thing.gui_depth)
-		}
-	
-		repeat ds_priority_size(_draw_priority) {
-			with ds_priority_delete_max(_draw_priority) {
-				event_user(ThingEvents.DRAW_GUI)
+			with _things[| --j] {
+				if f_visible {
+					gpu_set_depth(gui_depth)
+					event_user(ThingEvents.DRAW_GUI)
+				}
 			}
 		}
+		
+		gpu_set_depth(0)
 	}
 #endregion
 

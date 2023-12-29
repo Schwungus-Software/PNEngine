@@ -39,7 +39,6 @@
 	gpu_set_ztestenable(true)
 	gpu_set_zwriteenable(true)
 	global.current_shader = undefined
-	global.draw_priority = ds_priority_create()
 #endregion
 
 #region Cameras
