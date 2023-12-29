@@ -71,9 +71,13 @@ if menu != undefined and not locked {
 					
 					global.flags[0].clear()
 					
-					array_foreach(global.players, function (_element, _index) {
-						_element.clear_states()
-					})
+					var _players = global.players
+					
+					i = 0
+					
+					repeat INPUT_MAX_PLAYERS {
+						_players[i++].clear_states()
+					}
 					
 					global.save_name = $"File {i}"
 					_exit = true
@@ -131,9 +135,11 @@ if menu != undefined and not locked {
 						var _players = global.players
 						var i = 0
 						
-						array_foreach(_players, function (_element, _index) {
-							_element.clear_states()
-						})
+						repeat INPUT_MAX_PLAYERS {
+							_players[i++].clear_states()
+						}
+						
+						i = 0
 						
 						repeat array_length(states) {
 							var _player = _players[i]

@@ -368,12 +368,11 @@ if async_load[? "type"] == network_type_data {
 				active = true
 				
 				var _players = global.players
+				var i = INPUT_MAX_PLAYERS
 				
-				array_foreach(_players, function (_element, _index) {
-					if _index != 0 {
-						_element.deactivate()
-					}
-				})
+				repeat i - 1 {
+					_players[--i].deactivate()
+				}
 				
 				local_slot = buffer_read(_buffer, buffer_u8)
 				print($"proControl: Assigned as Player {-~local_slot}")
@@ -401,9 +400,10 @@ if async_load[? "type"] == network_type_data {
 				// Iterate through all players for ready and active counts
 				global.players_ready = 0
 				global.players_active = 0
+				i = 0
 				
-				array_foreach(_players, function (_element, _index) {
-					switch _element.status {
+				repeat INPUT_MAX_PLAYERS {
+					switch _players[i++].status {
 						case PlayerStatus.PENDING:
 							++global.players_ready
 						break
@@ -412,7 +412,7 @@ if async_load[? "type"] == network_type_data {
 							++global.players_active
 						break
 					}
-				})
+				}
 				
 				print($"Total players: {player_count} ({global.players_ready} ready, {global.players_active} active)")
 				

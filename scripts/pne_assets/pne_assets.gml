@@ -8,6 +8,7 @@ if not is_array(_disabled_mods) {
 
 var n = array_length(_disabled_mods)
 var _load_mods = []
+var _loaded = 0
 var _mod = file_find_first(DATA_PATH + "*", fa_directory)
 
 while _mod != "" {
@@ -25,7 +26,8 @@ while _mod != "" {
 		}
 		
 		if _enabled {
-			array_push(_load_mods, _mod)
+			array_push(_load_mods, _mod);
+			++_loaded
 		}
 	}
 	
@@ -34,6 +36,8 @@ while _mod != "" {
 
 file_find_close()
 
-array_foreach(_load_mods, function (_element, _index) {
-	var _mod = new Mod(_element)
-})
+var i = 0
+
+repeat _loaded {
+	var _mod = new Mod(_load_mods[i++])
+}

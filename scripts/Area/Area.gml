@@ -35,10 +35,14 @@ function Area() constructor {
 			exit
 		}
 		
-		array_foreach(things, function (_element, _index) {
+		var i = 0
+		
+		repeat array_length(things) {
+			var _element = things[i++]
+			
 			with _element {
 				if disposed or instance_exists(thing) {
-					exit
+					continue
 				}
 			}
 			
@@ -67,13 +71,13 @@ function Area() constructor {
 					if not object_is_ancestor(_type, Thing) {
 						print($"! Area.add: Tried to add non-Thing '{_type}'")
 						
-						return noone
+						continue
 					}
 					
 					if string_starts_with(_type, "pro") {
 						print($"! Area.add: Tried to add protected Thing '{_type}'")
 						
-						return noone
+						continue
 					}
 					
 					_thing = instance_create_depth(_x, _y, 0, _idx)
@@ -83,7 +87,7 @@ function Area() constructor {
 					if not object_is_ancestor(_type, Thing) {
 						print($"! Area.add: Tried to add non-Thing '{_type}'")
 						
-						return noone
+						continue
 					}
 					
 					_thing = instance_create_depth(_x, _y, 0, _type)
@@ -97,7 +101,7 @@ function Area() constructor {
 					instance_destroy(_thing, false)
 					print($"! Area.add: Unknown Thing '{_type}'")
 					
-					exit
+					continue
 				}
 				
 				_thing = instance_create_depth(_x, _y, 0, _thing_script.internal_parent)
@@ -131,7 +135,7 @@ function Area() constructor {
 			}
 			
 			ds_list_add(active_things, _thing.id)
-		})
+		}
 		
 		
 		var _thing_amount, _syncables

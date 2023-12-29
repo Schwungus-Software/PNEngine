@@ -6,9 +6,12 @@ if load_state != LoadStates.NONE {
 		
 		case LoadStates.UNLOAD:
 #region Unload Previous Level
-			array_foreach(global.canvases, function (_element, _index) {
-				_element.Flush()
-			})
+			var _canvases = global.canvases
+			var i = 0
+			
+			repeat array_length(_canvases) {
+				_canvases[i++].Flush()
+			}
 			
 			global.ui_sounds.clear()
 			
@@ -20,14 +23,18 @@ if load_state != LoadStates.NONE {
 			
 			global.level.destroy()
 			
-			array_foreach(global.players, function (_element, _index) {
-				with _element {
+			var _players = global.players
+			
+			i = 0
+			
+			repeat INPUT_MAX_PLAYERS {
+				with _players[i++] {
 					level = undefined
 					area = undefined
 					thing = noone
 					camera = noone
 				}
-			})
+			}
 			
 			global.images.clear()
 			global.materials.clear()
@@ -843,9 +850,13 @@ if _tick >= 1 {
 		}
 		
 		with _ref {
-			array_foreach(__interp, function (_element, _index) {
+			var j = 0
+			
+			repeat array_length(__interp) {
+				var _element = __interp[j++]
+				
 				_element[InterpData.PREVIOUS_VALUE] = struct_get_from_hash(self, _element[InterpData.IN_HASH])
-			})
+			}
 		}
 	}
 	
@@ -1213,9 +1224,13 @@ if _tick_inc >= 1 {
 		}
 		
 		with _ref {
-			array_foreach(__interp, function (_element, _index) {
+			var j = 0
+			
+			repeat array_length(__interp) {
+				var _element = __interp[j++]
+				
 				struct_set_from_hash(self, _element[InterpData.OUT_HASH], struct_get_from_hash(self, _element[InterpData.IN_HASH]))
-			})
+			}
 		}
 	}
 #endregion
