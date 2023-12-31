@@ -1647,7 +1647,6 @@
     {"id":{"name":"Canvas","path":"scripts/Canvas/Canvas.yy",},},
     {"id":{"name":"__lexicon_localization_class","path":"scripts/__lexicon_localization_class/__lexicon_localization_class.yy",},},
     {"id":{"name":"input_binding_scan_params_set","path":"scripts/input_binding_scan_params_set/input_binding_scan_params_set.yy",},},
-    {"id":{"name":"scr_catspeak_compatibility_v2","path":"scripts/scr_catspeak_compatibility_v2/scr_catspeak_compatibility_v2.yy",},},
     {"id":{"name":"dq_get_z","path":"scripts/dq_get_z/dq_get_z.yy",},},
     {"id":{"name":"lines_intersect","path":"scripts/lines_intersect/lines_intersect.yy",},},
     {"id":{"name":"lexicon_flush_cache","path":"scripts/lexicon_flush_cache/lexicon_flush_cache.yy",},},

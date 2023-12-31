@@ -212,7 +212,6 @@
     {"name":"Canvas","order":3,"path":"scripts/Canvas/Canvas.yy",},
     {"name":"__lexicon_localization_class","order":13,"path":"scripts/__lexicon_localization_class/__lexicon_localization_class.yy",},
     {"name":"input_binding_scan_params_set","order":4,"path":"scripts/input_binding_scan_params_set/input_binding_scan_params_set.yy",},
-    {"name":"scr_catspeak_compatibility_v2","order":4,"path":"scripts/scr_catspeak_compatibility_v2/scr_catspeak_compatibility_v2.yy",},
     {"name":"dq_get_z","order":7,"path":"scripts/dq_get_z/dq_get_z.yy",},
     {"name":"lines_intersect","order":2,"path":"scripts/lines_intersect/lines_intersect.yy",},
     {"name":"lexicon_flush_cache","order":2,"path":"scripts/lexicon_flush_cache/lexicon_flush_cache.yy",},
