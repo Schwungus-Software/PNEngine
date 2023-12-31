@@ -189,7 +189,7 @@ function Area() constructor {
 			var _idx = asset_get_index(_type)
 			
 			if object_exists(_idx) {
-				if not object_is_ancestor(_type, Thing) {
+				if not object_is_ancestor(_idx, Thing) {
 					print($"! Area.add: Tried to add non-Thing '{_type}'")
 					
 					return noone
