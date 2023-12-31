@@ -1,23 +1,30 @@
 function cmd_host(_args) {
-	var _parse_args = string_split(_args, " ", true)
-	var n = array_length(_parse_args)
-	
 	if global.game_status == GameStatus.NETGAME {
-		cmd_disconnect("")
-	} else {
-		if global.game_status & GameStatus.DEMO {
-			print("! cmd_host: Cannot host from a demo")
-			
-			return false
-		}
+		print("! cmd_host: Cannot host from a netgame")
 		
-		if (global.players_ready + global.players_active) > 1 {
-			print("! cmd_host: Cannot host with more than 1 player")
-			
-			return false
-		}
+		return false
 	}
 	
+	if global.game_status & GameStatus.DEMO {
+		print("! cmd_host: Cannot host from a demo")
+		
+		return false
+	}
+	
+	if (global.players_ready + global.players_active) > 1 {
+		print("! cmd_host: Cannot host with more than 1 player")
+		
+		return false
+	}
+	
+	if global.level.name != "lvlTitle" {
+		print("! cmd_host: Cannot host outside of lvlTitle")
+		
+		return false
+	}
+	
+	var _parse_args = string_split(_args, " ", true)
+	var n = array_length(_parse_args)
 	var _netgame = global.netgame
 	
 	if _netgame == undefined {
