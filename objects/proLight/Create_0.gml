@@ -19,3 +19,6 @@ interp("arg2", "sarg2")
 
 color = c_white
 alpha = 1
+
+// Virtual Functions
+update_args = function () {}

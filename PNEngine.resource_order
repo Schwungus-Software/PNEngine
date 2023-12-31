@@ -623,6 +623,7 @@
     {"name":"input_player_export","order":1,"path":"scripts/input_player_export/input_player_export.yy",},
     {"name":"CollageImageGetInfo","order":1,"path":"scripts/CollageImageGetInfo/CollageImageGetInfo.yy",},
     {"name":"line_in_rectangle","order":3,"path":"scripts/line_in_rectangle/line_in_rectangle.yy",},
+    {"name":"PointLight","order":2,"path":"objects/PointLight/PointLight.yy",},
     {"name":"__input_initialize","order":4,"path":"scripts/__input_initialize/__input_initialize.yy",},
     {"name":"lexicon_dynamic_define","order":1,"path":"scripts/lexicon_dynamic_define/lexicon_dynamic_define.yy",},
     {"name":"input_gamepad_get_description","order":5,"path":"scripts/input_gamepad_get_description/input_gamepad_get_description.yy",},
