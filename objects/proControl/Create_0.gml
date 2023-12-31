@@ -676,6 +676,8 @@ caption_time = -1
 load_level = "lvlLogo"
 load_area = 0
 load_tag = noone
+load_global = undefined
+load_local = undefined
 load_state = LoadStates.START
 
 // DISCORD

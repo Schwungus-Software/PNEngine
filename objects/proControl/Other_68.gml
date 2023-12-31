@@ -1,3 +1,6 @@
+#macro CLIENT_CHECK_PACKET_DIRECT if (_ip != ip or _port != port or _from != 0) break
+#macro CLIENT_CHECK_PACKET if (_ip != ip or _port != port or _from != 0 or _from == _to) break
+
 if async_load[? "type"] == network_type_data {
 	switch load_state {
 		default: exit
@@ -308,9 +311,7 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_CHECK_CLIENT:
-				if _ip != ip or _port != port or _from != 0 {
-					break
-				}
+				CLIENT_CHECK_PACKET_DIRECT
 				
 				var b = net_buffer_create(false, NetHeaders.CLIENT_VERIFY)
 				
@@ -333,10 +334,7 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_BLOCK_CLIENT:
-				if _ip != ip or _port != port or _from != 0 {
-					break
-				}
-				
+				CLIENT_CHECK_PACKET_DIRECT
 				disconnect()
 				code = buffer_read(_buffer, buffer_string)
 				
@@ -346,10 +344,7 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_ALLOW_CLIENT:
-				if _ip != ip or _port != port or _from != 0 {
-					break
-				}
-				
+				CLIENT_CHECK_PACKET_DIRECT
 				time_source_stop(connect_time_source)
 				time_source_start(timeout_time_source)
 				
@@ -360,10 +355,7 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_ADD_CLIENT:
-				if _ip != ip or _port != port or _from != 0 {
-					break
-				}
-				
+				CLIENT_CHECK_PACKET_DIRECT
 				time_source_stop(connect_time_source)
 				active = true
 				
@@ -424,9 +416,7 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.PLAYER_JOINED:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
 				var _slot = buffer_read(_buffer, buffer_u8)
 				
@@ -443,26 +433,13 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_DISCONNECT:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
-				
-				/*disconnect()
-				code = "NET_CLOSE"
-				
-				if connect_fail_callback != undefined {
-					connect_fail_callback()
-				}
-				
-				game_update_status()*/
+				CLIENT_CHECK_PACKET
 				cmd_disconnect("")
 				show_caption($"[c_red]{lexicon_text("netgame.code.NET_CLOSE")}")
 			break
 			
 			case NetHeaders.PLAYER_LEFT:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
 				var _slot = buffer_read(_buffer, buffer_u8)
 				
@@ -493,10 +470,7 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_PING:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
-				
+				CLIENT_CHECK_PACKET
 				time_source_reset(timeout_time_source)
 				time_source_start(timeout_time_source)
 				send_direct(_ip, _port, net_buffer_create(false, NetHeaders.CLIENT_PONG))
@@ -549,9 +523,7 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_LEVEL:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
 				var _level = buffer_read(_buffer, buffer_string)
 				var _area = buffer_read(_buffer, buffer_u32)
@@ -561,17 +533,12 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_AREA:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
-				
+				CLIENT_CHECK_PACKET
 				player_force_area(global.players[buffer_read(_buffer, buffer_u8)], buffer_read(_buffer, buffer_u8))
 			break
 			
 			case NetHeaders.HOST_THING:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
 				var _level = global.level
 				var _syncables = _level.syncables
@@ -738,9 +705,7 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_DAMAGE_THING:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
 				var _to_id = buffer_read(_buffer, buffer_u16)
 				var _from_id = buffer_read(_buffer, buffer_u16) - 1
@@ -762,11 +727,10 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_DESTROY_THING:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
-				var _thing = global.level.syncables[# buffer_read(_buffer, buffer_u16), 0]
+				var _id = buffer_read(_buffer, buffer_u16)
+				var _thing = global.level.syncables[# _id, 0]
 				
 				if _thing != undefined {
 					instance_destroy(_thing, buffer_read(_buffer, buffer_bool))
@@ -774,11 +738,11 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_PLAYER_STATE:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
-				with global.players[buffer_read(_buffer, buffer_u8)] {
+				var _index = buffer_read(_buffer, buffer_u8)
+				
+				with global.players[_index] {
 					var _key = buffer_read(_buffer, buffer_string)
 					var _value = buffer_read_dynamic(_buffer)
 					
@@ -787,11 +751,11 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_FLAG:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
-				with global.flags[buffer_read(_buffer, buffer_u8)] {
+				var _local = buffer_read(_buffer, buffer_u8)
+				
+				with global.flags[_local] {
 					var _key = buffer_read(_buffer, buffer_string)
 					var _value = buffer_read_dynamic(_buffer)
 					
@@ -800,19 +764,19 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.HOST_RESET_PLAYER_STATES:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
-				player_force_clear_states(global.players[buffer_read(_buffer, buffer_u8)])
+				var _index = buffer_read(_buffer, buffer_u8)
+				
+				player_force_clear_states(global.players[_index])
 			break
 			
 			case NetHeaders.HOST_RESET_FLAGS:
-				if _ip != ip or _port != port or _from != 0 or _from == _to {
-					break
-				}
+				CLIENT_CHECK_PACKET
 				
-				flags_force_clear(global.flags[buffer_read(_buffer, buffer_u8)])
+				var _local = buffer_read(_buffer, buffer_u8)
+				
+				flags_force_clear(global.flags[_local])
 			break
 			
 			default:
