@@ -1,11 +1,5 @@
 /// @description Create
 // Feather ignore GM2016
-if code_is_compiled() or level.name != "lvlTitle" {
-	instance_destroy(self, false)
-	
-	exit
-}
-
 var _saves = global.saves
 
 ds_list_clear(_saves)

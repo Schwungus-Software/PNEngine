@@ -1288,16 +1288,15 @@ function __catspeak_function__() {
         } else {
             throw e;
         }
-    } finally {
-        if (isRecursing) {
-            // bad practice to use `localCount_` here, but it saves
-            // a tiny bit of time so I'll be a bit evil
-            //# feather disable once GM2043
-            array_copy(locals, 0, oldLocals, 0, localCount);
-        } else {
-            // reset the timer
-            callTime = -1;
-        }
+    }
+    if (isRecursing) {
+        // bad practice to use `localCount_` here, but it saves
+        // a tiny bit of time so I'll be a bit evil
+        //# feather disable once GM2043
+        array_copy(locals, 0, oldLocals, 0, localCount);
+    } else {
+        // reset the timer
+        callTime = -1;
     }
     return value;
 }
