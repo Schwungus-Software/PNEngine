@@ -139,7 +139,7 @@ function ModelMap() : AssetMap() constructor {
 									
 										switch typeof(_batch_layer) {
 											case "undefined":
-												_batch_mask = 0xFF
+												_batch_mask = CollisionLayers.ALL
 											break
 										
 											case "real":

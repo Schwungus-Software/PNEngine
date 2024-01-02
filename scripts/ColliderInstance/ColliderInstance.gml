@@ -144,7 +144,7 @@ function ColliderInstance(_collider) constructor {
 									
 									// Skip if this triangle does not match our
 									// flags.
-									if not _triangle[TriangleData.FLAGS] & _flags {
+									if not (_triangle[TriangleData.FLAGS] & _flags) {
 										continue
 									}
 									
