@@ -163,8 +163,11 @@ function Player() constructor {
 			}
 			
 			if instance_exists(_player_pawn) {
+				var _respawned = false
+				
 				if instance_exists(thing) {
 					instance_destroy(thing, false)
+					_respawned = true
 				}
 				
 				thing = _player_pawn
@@ -174,6 +177,18 @@ function Player() constructor {
 				}
 				
 				camera = _player_pawn.camera
+				input[PlayerInputs.FORCE_LEFT_RIGHT] = _player_pawn.angle
+				input[PlayerInputs.FORCE_UP_DOWN] = -15
+				
+				if _respawned {
+					with _player_pawn {
+						if is_catspeak(player_respawned) {
+							player_respawned.setSelf(_player_pawn)
+						}
+						
+						player_respawned()
+					}
+				}
 				
 				return _player_pawn
 			}
