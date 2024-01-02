@@ -626,6 +626,31 @@ if global.freeze_step {
 	exit
 }
 
+var _mouse_focused = global.mouse_focused
+var _mouse_dx, _mouse_dy
+
+if _mouse_focused {
+	if input_window_has_focus() {
+		_mouse_dx = window_mouse_get_delta_x()
+		_mouse_dy = window_mouse_get_delta_y()
+	} else {
+		window_mouse_set_locked(false)
+		global.mouse_focused = false
+		_mouse_focused = false
+		_mouse_dx = 0
+		_mouse_dy = 0
+	}
+} else {
+	if input_window_has_focus() {
+		window_mouse_set_locked(true)
+		global.mouse_focused = true
+		_mouse_focused = true
+	}
+	
+	_mouse_dx = 0
+	_mouse_dy = 0
+}
+
 var _tick = global.tick
 var _tick_inc = (delta_time * TICKRATE_DELTA) * global.tick_scale
 
@@ -715,6 +740,8 @@ if _tick >= 1 {
 		input_verb_consume("chat")
 		input_verb_consume("voice")
 		input_verb_consume("debug_console")
+		_mouse_dx = 0
+		_mouse_dy = 0
 		
 		if input_check_pressed("chat_previous") {
 			input_string_set(global.chat_input_previous)
@@ -817,6 +844,8 @@ if _tick >= 1 {
 			input_verb_consume("chat")
 			input_verb_consume("chat_submit")
 			input_verb_consume("voice")
+			_mouse_dx = 0
+			_mouse_dy = 0
 		} else {
 			_tick = 0
 		}
@@ -911,6 +940,8 @@ if _tick >= 1 {
 		}
 		
 		if _skip_tick {
+			_mouse_dx = 0
+			_mouse_dy = 0
 			input_clear_momentary(true);
 			--_tick
 			
@@ -931,14 +962,17 @@ if _tick >= 1 {
 				
 				var _get_input = false
 				var _index = i
+				var _mouse = false
 				
 				if _game_status & GameStatus.NETGAME {
 					if _netgame.local_slot == i {
 						_get_input = true
 						_index = 0
+						_mouse = _mouse_focused
 					}
 				} else {
 					_get_input = true
+					_mouse = _index == 0 and _mouse_focused
 				}
 				
 				if _get_input {
@@ -958,8 +992,6 @@ if _tick >= 1 {
 					
 					// Camera
 					var _input_aim = input_check("aim", _index)
-					var _input_aim_up_down = round((input_check_opposing("aim_up", "aim_down", _index, true) * (_config.in_invert_y ? -1 : 1)) * 127)
-					var _input_aim_left_right = round((input_check_opposing("aim_left", "aim_right", _index, true) * _config.in_sensitivity_x * (_config.in_invert_x ? -1 : 1)) * 127)
 					
 					// Write to input array
 					input[PlayerInputs.UP_DOWN] = _input_up_down
@@ -972,8 +1004,43 @@ if _tick >= 1 {
 					input[PlayerInputs.INVENTORY_DOWN] = _input_inventory_down
 					input[PlayerInputs.INVENTORY_RIGHT] = _input_inventory_right
 					input[PlayerInputs.AIM] = _input_aim
-					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
-					input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
+					
+					// This one kinda sucks...
+					var _dx_factor = input_check_opposing("aim_left", "aim_right", _index, true)
+					var _dy_factor = input_check_opposing("aim_up", "aim_down", _index, true)
+					var _dx_angle, _dy_angle
+					
+					with _config {
+						_dx_angle = in_pan_x * (in_invert_x ? -1 : 1)
+						_dy_angle = in_pan_y * (in_invert_y ? -1 : 1)
+						
+						if _mouse {
+							_dx_factor += _mouse_dx * in_mouse_x
+							_dy_factor += _mouse_dy * in_mouse_y
+						}
+					}
+					
+					var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
+					
+					if is_nan(_input_force_left_right) {
+						var _dx = round(((_dx_factor * _dx_angle) * 0.0027777777777778) * 32768)
+						
+						input[PlayerInputs.AIM_LEFT_RIGHT] = (input[PlayerInputs.AIM_LEFT_RIGHT] - _dx) % 32768
+					} else {
+						input[PlayerInputs.AIM_LEFT_RIGHT] = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
+						input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
+					}
+					
+					var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
+					
+					if is_nan(_input_force_up_down) {
+						var _dy = round(((_dy_factor * _dy_angle) * 0.0027777777777778) * 32768)
+						
+						input[PlayerInputs.AIM_UP_DOWN] = (input[PlayerInputs.AIM_UP_DOWN] - _dy) % 32768
+					} else {
+						input[PlayerInputs.AIM_UP_DOWN] = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
+						input[PlayerInputs.FORCE_UP_DOWN] = NaN
+					}
 					
 					if _game_status & GameStatus.NETGAME and not array_equals(input, input_previous) {
 						// Send input data to the server
@@ -989,8 +1056,8 @@ if _tick >= 1 {
 						buffer_write(b, buffer_bool, _input_inventory_down)
 						buffer_write(b, buffer_bool, _input_inventory_right)
 						buffer_write(b, buffer_bool, _input_aim)
-						buffer_write(b, buffer_s8, _input_aim_up_down)
-						buffer_write(b, buffer_s8, _input_aim_left_right)
+						buffer_write(b, buffer_s16, input[PlayerInputs.AIM_UP_DOWN])
+						buffer_write(b, buffer_s16, input[PlayerInputs.AIM_LEFT_RIGHT])
 						_netgame.send(SEND_OTHERS, b)
 					}
 				} else {
@@ -1192,6 +1259,9 @@ if _tick >= 1 {
 			++i
 		}
 #endregion
+		
+		_mouse_dx = 0
+		_mouse_dy = 0
 		input_clear_momentary(true);
 		--_tick
 	}

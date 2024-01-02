@@ -14,6 +14,7 @@ camera = area.add(PlayerCamera, x, y, z, angle)
 
 if instance_exists(camera) {
 	camera.add_target(playcam, 128, 0, 0, height + 4)
+	camera.pitch = -15
 }
 
 add_net_variable("face_angle", NetVarFlags.GENERIC)
@@ -43,22 +44,6 @@ add_net_variable("player", NetVarFlags.CREATE, function (_value) {
 	}
 }, function () {
 	return global.last_player
-})
-
-add_net_variable("playcam_yaw", NetVarFlags.GENERIC, function (_value) {
-	if instance_exists(camera) {
-		camera.yaw = _value
-	}
-}, function () {
-	return instance_exists(camera) ? camera.yaw : 0
-})
-
-add_net_variable("playcam_pitch", NetVarFlags.GENERIC, function (_value) {
-	if instance_exists(camera) {
-		camera.pitch = _value
-	}
-}, function () {
-	return instance_exists(camera) ? camera.pitch : 0
 })
 
 sync_jump = add_net_variable("net_jump", NetVarFlags.DEFAULT, function (_value) {

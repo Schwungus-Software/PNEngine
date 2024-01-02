@@ -32,8 +32,7 @@ event_inherited()
 	playcam_y_offset = 0
 	playcam_z_lerp = 0.25
 	playcam_z_snap = false
-	playcam_yaw_speed = 0
-	playcam_yaw_speed_max = 0
+	playcam_sync_input = true
 #endregion
 
 #region Functions
@@ -72,4 +71,5 @@ event_inherited()
 	}
 	
 	player_maneuvered = function () {}
+	player_respawned = function () {}
 #endregion

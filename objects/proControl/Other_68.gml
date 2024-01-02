@@ -517,8 +517,8 @@ if async_load[? "type"] == network_type_data {
 					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
 					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
 					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_bool))
-					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s8))
-					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s8))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s16))
+					ds_queue_enqueue(input_queue, buffer_read(_buffer, buffer_s16))
 				}
 			break
 			
@@ -718,11 +718,23 @@ if async_load[? "type"] == network_type_data {
 				var _from = _from_id == -1 ? noone : (_level.syncables[# _from_id, 0] ?? noone)
 				
 				if instance_exists(_to) {
-					_to.damage_received(_from, _amount, _type)
+					with _to {
+						if is_catspeak(damage_received) {
+							damage_received.setSelf(_to)
+						}
+						
+						damage_received(_from, _amount, _type)
+					}
 				}
 				
 				if instance_exists(_from) {
-					_from.damage_dealt(_to, _amount, _type, _result)
+					with _from {
+						if is_catspeak(damage_dealt) {
+							damage_dealt.setSelf(_from)
+						}
+						
+						damage_dealt(_to, _amount, _type, _result)
+					}
 				}
 			break
 			

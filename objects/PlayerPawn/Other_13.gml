@@ -181,55 +181,25 @@ if _has_target {
 	_py = y + playcam_y_offset
 }
 
-// ROTATION
-var _yaw, _pitch_factor, _range
-
-if _camera_exists {
-	_yaw = camera.yaw
-	_pitch_factor = dcos(camera.pitch)
-	_range = camera.range
-} else {
-	_yaw = 0
-	_pitch_factor = 1
-	_range = 128
-}
-
-var _cx2 = _px - (lengthdir_x(_range, _yaw) * _pitch_factor)
-var _cy2 = _py - (lengthdir_y(_range, _yaw) * _pitch_factor)
-
-if _camera_exists {
-	// GROSS HACK: If automatic panning is enabled, try not to steer the player off
-	//             a slope while they're walking up one and facing the camera
-	if /*config.in_auto_pan and*/ (_range > 100 or abs(angle_difference(_yaw, move_angle)) < 157.5) {
-		// When enabled, turn automatically when angle isn't sharp
-		var _playcam_yaw_auto = angle_difference(_yaw, point_direction(_cx2, _cy2, _px + x_speed, _py + y_speed))
+if _camera_exists and playcam_sync_input {
+	var _input = input
 	
-		if abs(_playcam_yaw_auto) < 45 {
-			camera.yaw -= _playcam_yaw_auto
+	with camera {
+		if _frozen {
+			_input[PlayerInputs.FORCE_LEFT_RIGHT] = yaw
+			_input[PlayerInputs.FORCE_UP_DOWN] = pitch
+		} else {
+			yaw = _input[PlayerInputs.AIM_LEFT_RIGHT] * PLAYER_AIM_INVERSE
+			pitch = _input[PlayerInputs.AIM_UP_DOWN] * PLAYER_AIM_INVERSE
+			
+			if abs(pitch) > 89.5 {
+				var _clamp = clamp(pitch, -89.5, 89.5)
+				
+				pitch = _clamp
+				_input[PlayerInputs.FORCE_UP_DOWN] = _clamp
+			}
 		}
 	}
-}
-
-var _input_aim_left_right = 0
-var _input_aim_up_down = 0
-
-if not _frozen {
-	_input_aim_left_right = input[PlayerInputs.AIM_LEFT_RIGHT] * PLAYER_INPUT_INVERSE
-	_input_aim_up_down = input[PlayerInputs.AIM_UP_DOWN] * PLAYER_INPUT_INVERSE
-}
-
-if _input_aim_left_right != 0 {
-	// Clamp turn speed according to sensitivity
-	playcam_yaw_speed_max = abs(_input_aim_left_right) * 12.5
-}
-
-playcam_yaw_speed = clamp((playcam_yaw_speed * 0.8) - _input_aim_left_right * 1.5, -playcam_yaw_speed_max, playcam_yaw_speed_max)
-
-if _camera_exists {
-	var _playcam_pitch_auto = point_pitch(_cx2, _cy2, playcam_z, _px, _py, playcam_z_to) * 2
-	
-	camera.yaw += playcam_yaw_speed
-	camera.pitch = lerp_angle(camera.pitch, clamp((not _has_target ? -15 : -6.25) - (_input_aim_up_down * 22.5) + _playcam_pitch_auto, -60, 60), 0.1)
 }
 
 // Apply to camera

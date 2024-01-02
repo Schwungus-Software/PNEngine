@@ -36,6 +36,7 @@
 	global.tick = 0
 	global.tick_scale = 1
 	global.delta = 1
+	global.mouse_focused = false
 	
 	global.interps = ds_list_create()
 	
