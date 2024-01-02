@@ -8,6 +8,8 @@ if is_struct(special) {
 	if special[$ "active"] {
 		global.camera_active = id
 	}
+} else {
+	yaw = angle
 }
 
 event_inherited()
