@@ -54,6 +54,10 @@ if m_bump != MBump.NONE and m_bump != MBump.FROM {
 					_bump_result = bump_check(other.id)
 				}
 				
+				if not instance_exists(id) {
+					exit
+				}
+				
 				if not _bump_result {
 					continue
 				}

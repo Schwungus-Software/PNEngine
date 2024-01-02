@@ -119,8 +119,8 @@
 #region Functions
 	is_ancestor = function (_type) {
 		if is_string(_type) {
-			if thing_script != undefined {
-				return thing_script.is_ancestor(_type)
+			if thing_script != undefined and thing_script.is_ancestor(_type) {
+				return true
 			}
 			
 			_type = asset_get_index(_type)
@@ -336,10 +336,26 @@
 					buffer_write(b, buffer_f32, _amount)
 					buffer_write(b, buffer_string, _type)
 					
-					var _result = other.damage_received(_from, _amount, _type)
+					var _result
+					
+					with other {
+						if is_catspeak(damage_received) {
+							damage_received.setSelf(self)
+						}
+						
+						_result = damage_received(_from, _amount, _type)
+					}
 					
 					if _from_exists {
-						_from.damage_dealt(other.id, _amount, _type, _result)
+						var _to = other.id
+						
+						with _from {
+							if is_catspeak(damage_dealt) {
+								damage_dealt.setSelf(_from)
+							}
+							
+							damage_dealt(_to, _amount, _type, _result)
+						}
 					}
 					
 					buffer_write(b, buffer_u8, _result)
@@ -350,10 +366,20 @@
 			}
 		}
 		
+		if is_catspeak(damage_received) {
+			damage_received.setSelf(self)
+		}
+		
 		var _result = damage_received(_from, _amount, _type)
 		
 		if instance_exists(_from) {
-			_from.damage_dealt(id, _amount, _type, _result)
+			with _from {
+				if is_catspeak(damage_dealt) {
+					damage_dealt.setSelf(self)
+				}
+				
+				damage_dealt(other.id, _amount, _type, _result)
+			}
 		}
 		
 		return _result
