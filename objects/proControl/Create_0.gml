@@ -375,6 +375,12 @@
 					"M_SHADOW_NORMAL", MShadow.NORMAL,
 					"M_SHADOW_BONE", MShadow.BONE,
 					
+					"DMG_NONE", DamageResults.NONE,
+					"DMG_MISSED", DamageResults.MISSED,
+					"DMG_BLOCKED", DamageResults.BLOCKED,
+					"DMG_DAMAGED", DamageResults.DAMAGED,
+					"DMG_FATAL", DamageResults.FATAL,
+					
 					"NVAR_DEFAULT", NetVarFlags.DEFAULT,
 					"NVAR_CREATE", NetVarFlags.CREATE,
 					"NVAR_TICK", NetVarFlags.TICK,
