@@ -662,6 +662,7 @@ if is_string(_custom_ui_font) {
 	
 	ui_font = _font.font
 	ui_font_name = _font.name
+	_font.transient = true
 }
 
 if is_string(_custom_chat_font) {
@@ -669,10 +670,12 @@ if is_string(_custom_chat_font) {
 	
 	chat_font = _font.font
 	chat_font_name = _font.name
+	_font.transient = true
 }
 
 if is_string(_custom_chat_sound) {
 	chat_sound = global.sounds.fetch(_custom_chat_sound)
+	chat_sound.transient = true
 }
 
 caption = scribble("", "__PNENGINE_CAPTION__").starting_format(ui_font_name, c_white)

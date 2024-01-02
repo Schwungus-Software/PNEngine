@@ -18,22 +18,31 @@ function AssetMap() constructor {
 	}
 	
 	static clear = function () {
-		var _key = ds_map_find_last(assets)
-		var _transient_key = undefined
+		static keep_assets = []
 		
-		while _key != undefined {
+		var _kept = 0
+		
+		repeat ds_map_size(assets) {
+			var _key = ds_map_find_first(assets)
 			var _asset = assets[? _key]
 			
 			if _asset.transient {
-				_transient_key = _key
-				_key = ds_map_find_previous(assets, _key)
-				
-				continue
+				keep_assets[_kept++] = _asset
+			} else {
+				_asset.destroy()
 			}
 			
-			_asset.destroy()
 			ds_map_delete(assets, _key)
-			_key = _transient_key != undefined ? ds_map_find_previous(assets, _transient_key) : ds_map_find_last(assets)
 		}
+		
+		var i = 0
+		
+		repeat _kept {
+			var _asset = keep_assets[i++]
+			
+			ds_map_add(assets, _asset.name, _asset)
+		}
+		
+		array_resize(keep_assets, _kept)
 	}
 }
