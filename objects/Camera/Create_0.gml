@@ -81,8 +81,8 @@ event_inherited()
 		}
 	}
 	
-	add_poi = function (_target, _smooth = false, _x_offset = 0, _y_offset = 0, _z_offset = 0) {
-		ds_map_add(pois, _target, [_smooth, _x_offset, _y_offset, _z_offset])
+	add_poi = function (_target, _lerp = 1, _x_offset = 0, _y_offset = 0, _z_offset = 0) {
+		ds_map_add(pois, _target, [_lerp, _x_offset, _y_offset, _z_offset])
 	}
 	
 	delete_poi = function (_target) {
