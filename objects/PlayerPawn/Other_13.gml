@@ -13,7 +13,7 @@ var _frozen = states[? "frozen"]
 var _can_move = true
 var _on_ground = floor_ray[RaycastData.HIT]
 
-if _frozen /* lock_animation or player_lock or item_animation > 0 */ {
+if _frozen or lock_animation {
 	_can_move = false
 } else {
 	if _on_ground and model != undefined {
