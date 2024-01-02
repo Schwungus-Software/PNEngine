@@ -53,6 +53,7 @@
 	
 	cull_tick = -1
 	cull_draw = -1
+	target_priority = 0
 	
 	z = 0
 	x_start = x
@@ -104,6 +105,9 @@
 	f_sync_vel = true
 	f_visible = true
 	f_lookable = false
+	f_targetable = false
+	f_friend = false
+	f_enemy = false
 	f_gravity = false
 	f_culled = false
 	f_cull_destroy = false
@@ -415,6 +419,63 @@
 		y += _ly
 		
 		return point_distance(x_previous, y_previous, x, y) > 0.001
+	}
+	
+	grid_iterate = function (_type, _distance, _include_self = false) {
+		static results = []
+		
+		var _bump_grid, _bump_lists, _bump_x, _bump_y
+		
+		with area {
+			_bump_grid = bump_grid
+			_bump_lists = bump_lists
+			_bump_x = bump_x
+			_bump_y = bump_y
+		}
+		
+		var _grid_width = ds_grid_width(_bump_grid)
+		var _grid_height = ds_grid_height(_bump_grid)
+		var _grid_max_x = _grid_width - 1
+		var _grid_max_y = _grid_height - 1
+	
+		var _gx = (x - _bump_x) * COLLIDER_REGION_SIZE_INVERSE
+		var _gy = (y - _bump_y) * COLLIDER_REGION_SIZE_INVERSE
+		var _gr = _distance * COLLIDER_REGION_SIZE_INVERSE
+	
+		var _gx1 = clamp(floor(_gx - _gr), 0, _grid_max_x)
+		var _gy1 = clamp(floor(_gy - _gr), 0, _grid_max_y)
+		var _gx2 = clamp(ceil(_gx + _gr), 1, _grid_width)
+		var _gy2 = clamp(ceil(_gy + _gr), 1, _grid_height)
+		
+		var _found = 0
+		var i = _gx1
+		
+		repeat _gx2 - _gx1 {
+			var j = _gy1
+		
+			repeat _gy2 - _gy1 {
+				var _list = _bump_lists[# i, j]
+				var k = 0
+			
+				repeat ds_list_size(_list) {
+					var _thing = _list[| k]
+				
+					if instance_exists(_thing) and (_thing != id or _include_self) and _thing.is_ancestor(_type) {
+						results[_found++] = _thing
+					}
+				
+					++k
+				}
+			
+				++j
+			}
+		
+			++i
+		}
+		
+		array_resize(results, _found)
+		
+		return results
 	}
 #endregion
 
