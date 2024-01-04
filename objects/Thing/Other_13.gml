@@ -26,10 +26,10 @@ if m_bump != MBump.NONE and m_bump != MBump.FROM {
 	var _gx = clamp(floor((x - area.bump_x) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_width(_bump_grid) - 1)
 	var _gy = clamp(floor((y - area.bump_y) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_height(_bump_grid) - 1)
 	var _list = area.bump_lists[# _gx, _gy] 
-	var i = 0
+	var i = ds_list_size(_list)
 	
-	repeat ds_list_size(_list) {
-		var _thing = _list[| i++]
+	repeat i {
+		var _thing = _list[| --i]
 		
 		if instance_exists(_thing) and _thing != id and _thing.m_bump != MBump.TO {
 			var _tx, _ty, _tz, _th
@@ -44,21 +44,36 @@ if m_bump != MBump.NONE and m_bump != MBump.FROM {
 			// Bounding box check
 			if z < (_tz + _th) and (z + height) > _tz
 			   and point_distance(x, y, _tx, _ty) < bump_radius + _thing.bump_radius {
-				var _bump_result
+				var _result
+				var _me = id
 				
-				with _thing {
-					if is_catspeak(bump_check) {
-						bump_check.setSelf(self)
-					}
-					
-					_bump_result = bump_check(other.id)
+				if is_catspeak(bump_check) {
+					bump_check.setSelf(_me)
 				}
 				
-				if not instance_exists(id) {
+				_result = bump_check(_thing)
+				
+				if not instance_exists(_me) {
 					exit
 				}
 				
-				if not _bump_result {
+				if not _result or not instance_exists(_thing) {
+					continue
+				}
+				
+				with _thing {
+					if is_catspeak(bump_check) {
+						bump_check.setSelf(_thing)
+					}
+					
+					_result = bump_check(_me)
+				}
+				
+				if not instance_exists(_me) {
+					exit
+				}
+				
+				if not _result or not instance_exists(_thing) {
 					continue
 				}
 				
@@ -79,7 +94,7 @@ if m_bump != MBump.NONE and m_bump != MBump.FROM {
 					_pushed = id
 				}
 				
-				if not _pushed.bump_avoid(_pusher) and _pushed.f_bump_avoid {
+				if not _pushed.bump_avoid(_pusher) and _pusher.f_bump_avoid {
 					_pusher.bump_avoid(_pushed)
 				}
 			}
