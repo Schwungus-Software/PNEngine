@@ -392,6 +392,7 @@
     {"name":"PlayerCamera","order":2,"path":"objects/PlayerCamera/PlayerCamera.yy",},
     {"name":"dq_build_identity","order":1,"path":"scripts/dq_build_identity/dq_build_identity.yy",},
     {"name":"input_system_export","order":9,"path":"scripts/input_system_export/input_system_export.yy",},
+    {"name":"flags_force_copy","order":2,"path":"scripts/flags_force_copy/flags_force_copy.yy",},
     {"name":"__lexicon_buffer_read_utf8","order":6,"path":"scripts/__lexicon_buffer_read_utf8/__lexicon_buffer_read_utf8.yy",},
     {"name":"__CollageTexturePageClass","order":4,"path":"scripts/__CollageTexturePageClass/__CollageTexturePageClass.yy",},
     {"name":"CollageImagesNamesToArray","order":6,"path":"scripts/CollageImagesNamesToArray/CollageImagesNamesToArray.yy",},
