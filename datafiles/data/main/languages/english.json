@@ -55,5 +55,7 @@
 			"disconnected": "DISCONNECTED",
 			"ready": "READY",
 		},
+		
+		"paused": "Paused",
     },
 }

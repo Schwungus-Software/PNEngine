@@ -12,7 +12,7 @@ draw_gui = fun {
 	draw_set_alpha(1)
 	draw_set_halign(FA_CENTER)
 	draw_set_valign(FA_CENTER)
-	draw_text(240, 135, "Paused")
+	draw_text(240, 135, string_localize("paused"))
 	draw_set_halign(FA_LEFT)
 	draw_set_valign(FA_TOP)
 }
