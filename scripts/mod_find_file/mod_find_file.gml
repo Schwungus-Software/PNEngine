@@ -1,6 +1,6 @@
 function mod_find_file(_filename) {
 	var _mods = global.mods
-	var _key = ds_map_find_first(_mods)
+	var _key = ds_map_find_last(_mods)
 	
 	repeat ds_map_size(_mods) {
 		var _path = _mods[? _key].path + _filename
@@ -9,7 +9,7 @@ function mod_find_file(_filename) {
 			return _path
 		}
 		
-		_key = ds_map_find_next(_mods, _key)
+		_key = ds_map_find_previous(_mods, _key)
 	}
 	
 	return ""
