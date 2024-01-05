@@ -94,11 +94,13 @@ function ColliderInstance(_collider) constructor {
 			if _layers != 0 and layer_mask != 0 {
 				if not is_static {
 					var _start = matrix_transform_point(inverse_matrix, _x1, _y1, _z1)
-					var _end = matrix_transform_point(inverse_matrix, _x2, _y2, _z2)
 					
 					_x1 = _start[0]
 					_y1 = _start[1]
 					_z1 = _start[2]
+					
+					var _end = matrix_transform_point(inverse_matrix, _x2, _y2, _z2)
+					
 					_x2 = _end[0]
 					_y2 = _end[1]
 					_z2 = _end[2]

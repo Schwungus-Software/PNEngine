@@ -19,6 +19,12 @@ if area != undefined {
 	var _active_things = area.active_things
 	
 	ds_list_delete(_active_things, ds_list_find_index(_active_things, id))
+	
+	if collider != undefined {
+		var _collidables = area.collidables
+		
+		ds_list_delete(_collidables, ds_list_find_index(_collidables, id))
+	}
 }
 
 if level != undefined and sync_id != noone {

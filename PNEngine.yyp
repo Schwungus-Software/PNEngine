@@ -2154,6 +2154,7 @@
     {"id":{"name":"input_xy","path":"scripts/input_xy/input_xy.yy",},},
     {"id":{"name":"__input_key_get_name","path":"scripts/__input_key_get_name/__input_key_get_name.yy",},},
     {"id":{"name":"lexicon_index_fallback_locale_set","path":"scripts/lexicon_index_fallback_locale_set/lexicon_index_fallback_locale_set.yy",},},
+    {"id":{"name":"Prop","path":"objects/Prop/Prop.yy",},},
     {"id":{"name":"input_source_share","path":"scripts/input_source_share/input_source_share.yy",},},
     {"id":{"name":"Collider","path":"scripts/Collider/Collider.yy",},},
     {"id":{"name":"string_height_scribble","path":"scripts/string_height_scribble/string_height_scribble.yy",},},

@@ -16,7 +16,6 @@ event_inherited()
 	camera = noone
 	
 	input_length = 0
-	face_angle = 0
 	jumped = false
 	coyote = 0
 	interaction = PlayerInteractions.NONE

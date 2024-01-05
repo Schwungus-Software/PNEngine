@@ -491,6 +491,7 @@
     {"name":"input_binding_key","order":3,"path":"scripts/input_binding_key/input_binding_key.yy",},
     {"name":"input_xy","order":4,"path":"scripts/input_xy/input_xy.yy",},
     {"name":"lexicon_index_fallback_locale_set","order":7,"path":"scripts/lexicon_index_fallback_locale_set/lexicon_index_fallback_locale_set.yy",},
+    {"name":"Prop","order":14,"path":"objects/Prop/Prop.yy",},
     {"name":"input_source_share","order":7,"path":"scripts/input_source_share/input_source_share.yy",},
     {"name":"Collider","order":3,"path":"scripts/Collider/Collider.yy",},
     {"name":"string_height_scribble","order":2,"path":"scripts/string_height_scribble/string_height_scribble.yy",},

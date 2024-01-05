@@ -11,6 +11,7 @@ function Area() constructor {
 	things = []
 	
 	active_things = ds_list_create()
+	collidables = ds_list_create()
 	particles = ds_list_create()
 	lights = array_create(MAX_LIGHTS, false)
 	light_data = array_create(MAX_LIGHTS * LightData.__SIZE)
@@ -316,7 +317,7 @@ function Area() constructor {
 								
 								value = _value
 								buffer_write(b, buffer_u8, i)
-								buffer_write_dynamic(b, _value)
+								buffer_write_dynamic(b, _value);
 								++j
 							}
 							
@@ -528,6 +529,7 @@ function Area() constructor {
 		}
 		
 		ds_list_destroy(active_things)
+		ds_list_destroy(collidables)
 		ds_list_destroy(particles)
 		ds_list_destroy(players)
 		sounds.destroy()

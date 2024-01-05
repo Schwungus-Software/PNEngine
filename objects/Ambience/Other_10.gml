@@ -3,13 +3,14 @@ event_inherited()
 
 if not is_struct(special) {
 	print("! Ambience.load: Special properties invalid or not found")
+	
 	exit
 }
 
 var _ambience = special[$ "ambience"]
 
 if not is_array(_ambience) {
-	exit
+	show_error($"!!! Ambience.create: Invalid ambience '{_ambience}', expected array", true)
 }
 
 var _sounds = global.sounds

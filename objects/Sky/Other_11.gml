@@ -3,7 +3,7 @@ event_inherited()
 
 if not is_struct(special) {
 	print("! Sky.create: Special properties invalid or not found")
-	destroy()
+	instance_destroy(id, false)
 	
 	exit
 }

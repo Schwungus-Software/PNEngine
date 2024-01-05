@@ -66,6 +66,7 @@
 	y_speed = 0
 	z_speed = 0
 	vector_speed = 0
+	face_angle = 0
 	move_angle = 0
 	
 	fric = 0
@@ -90,6 +91,8 @@
 	
 	model = undefined
 	collider = undefined
+	collider_yaw = 0
+	collider_yaw_previous = 0
 	
 	emitter = undefined
 	emitter_falloff = 0
@@ -116,6 +119,7 @@
 	f_garbage = false
 	f_frozen = false
 	f_bump_avoid = false
+	f_collider_stick = true
 	
 	m_collision = MCollision.NONE
 	m_bump = MBump.NONE
@@ -312,15 +316,43 @@
 		
 		_out ??= result
 		
-		var _collider = area.collider
+		var _collider, _collidables
+		
+		with area {
+			_collider = collider
+			_collidables = collidables
+		}
 		
 		if _collider != undefined {
 			array_copy(_out, 0, _collider.raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers), 0, RaycastData.__SIZE)
+			_x2 = _out[RaycastData.X]
+			_y2 = _out[RaycastData.Y]
+			_z2 = _out[RaycastData.Z]
 		} else {
-			result[RaycastData.HIT] = false
-			result[RaycastData.X] = _x2
-			result[RaycastData.Y] = _y2
-			result[RaycastData.Z] = _z2
+			_out[RaycastData.HIT] = false
+			_out[RaycastData.X] = _x2
+			_out[RaycastData.Y] = _y2
+			_out[RaycastData.Z] = _z2
+		}
+		
+		var i = ds_list_size(_collidables)
+		
+		repeat i {
+			var _thing = _collidables[| --i]
+			
+			if _thing == id or _thing.f_culled {
+				continue
+			}
+			
+			var _ray = _thing.collider.raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers)
+			
+			if _ray[RaycastData.HIT] {
+				array_copy(_out, 0, _ray, 0, RaycastData.__SIZE)
+				_out[RaycastData.THING] = _thing
+				_x2 = _out[RaycastData.X]
+				_y2 = _out[RaycastData.Y]
+				_z2 = _out[RaycastData.Z]
+			}
 		}
 		
 		return _out

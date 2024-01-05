@@ -5,19 +5,12 @@ f_sync = false
 
 if not is_struct(special) {
 	print("! Ambience.create: Special properties invalid or not found")
-	destroy()
+	instance_destroy(id, false)
 	
 	exit
 }
 
 var _samb = special[$ "ambience"]
-
-if not is_array(_samb) {
-	destroy()
-	
-	exit
-}
-
 var i = array_length(_samb)
 
 array_copy(ambience, 0, _samb, 0, i)

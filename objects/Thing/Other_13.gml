@@ -2,6 +2,7 @@
 x_previous = x
 y_previous = y
 z_previous = z
+collider_yaw_previous = collider_yaw
 
 // Source: https://github.com/YoYoGames/GameMaker-HTML5/blob/37ebef72db6b238b892bb0ccc60184d4c4ba5d12/scripts/yyInstance.js#L1157
 if fric != 0 {
@@ -154,44 +155,46 @@ switch m_collision {
 		if raycast(x, y, z + _half_height, x, y, (z + z_speed) - ((floor_ray[RaycastData.HIT] and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
 			z = floor_ray[RaycastData.Z]
 			
-			/*if z_speed > 0 {
-				floor_ray[RaycastData.HIT] = false
-			}*/
-			
 			if abs(floor_ray[RaycastData.NZ]) >= 0.5 {
 				z_speed = 0
 				
-				/*// Stick to movers
-				var mover =	collision[7]
+				// Stick to movers
+				var _thing = floor_ray[RaycastData.THING]
 				
-				if instance_exists(mover) {
-					var mx, my, mz, mzp, mxs, mys, myaw, myawp
+				if instance_exists(_thing) and _thing.f_collider_stick {
+					var _x, _y, _z, _z_previous, _x_speed, _y_speed, _yaw, _yaw_previous
 					
-					with mover {
-						mx = x
-						my = y
-						mz = z
-						mzp = z_previous
-						mxs = x_speed
-						mys = y_speed
-						myaw = yaw
-						myawp = yaw_previous
+					with _thing {
+						_x = x
+						_y = y
+						_z = z
+						_z_previous = z_previous
+						_x_speed = x_speed
+						_y_speed = y_speed
+						_yaw = collider_yaw
+						_yaw_previous = collider_yaw_previous
 					}
 					
-					var dir_difference = angle_difference(myaw, myawp)
-					var dir = point_direction(mx, my, x, y) + dir_difference
-					var len = point_distance(x, y, mx, my)
+					var _diff = angle_difference(_yaw, _yaw_previous)
+					var _dir = point_direction(_x, _y, x, y) + _diff
+					var _len = point_distance(x, y, _x, _y)
 					
-					x = mx + lengthdir_x(len, dir) + mxs
-					y = my + lengthdir_y(len, dir) + mys
-					z += mz - mzp
-					yaw += dir_difference
-					face_direction += dir_difference
-					move_direction += dir_difference
-				}*/
+					x = _x + lengthdir_x(_len, _dir) + _x_speed
+					y = _y + lengthdir_y(_len, _dir) + _y_speed
+					z += _z - _z_previous
+					
+					if model != undefined {
+						model.yaw += _diff
+					}
+					
+					face_angle += _diff
+					move_angle += _diff
+				}
 			} else {
-				x += floor_ray[RaycastData.NX]
-				y += floor_ray[RaycastData.NY]
+				var _dir = darctan2(-floor_ray[RaycastData.NY], floor_ray[RaycastData.NX])
+				
+				x += dcos(_dir)
+				y -= dsin(_dir)
 				floor_ray[RaycastData.HIT] = false
 			}
 		}
@@ -206,11 +209,32 @@ if tick != undefined {
 }
 
 if model != undefined {
+	var _x = x
+	var _y = y
+	var _z = z
+	
 	with model {
 		tick()
-		x = other.x
-		y = other.y
-		z = other.z
+		x = _x
+		y = _y
+		z = _z
+	}
+	
+	if collider != undefined {
+		var _yaw, _pitch, _roll, _scale, _x_scale, _y_scale, _z_scale
+		
+		with model {
+			_yaw = yaw
+			_pitch = pitch
+			_roll = roll
+			_scale = scale
+			_x_scale = x_scale
+			_y_scale = y_scale
+			_z_scale = z_scale
+		}
+		
+		collider_yaw = _yaw
+		collider.set_matrix(matrix_build(_x, _y, _z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale))
 	}
 }
 
