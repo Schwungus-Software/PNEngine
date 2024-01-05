@@ -94,6 +94,7 @@
 	emitter_falloff = 0
 	emitter_falloff_max = 360
 	emitter_falloff_factor = 1
+	voice = undefined
 	
 	f_created = false
 	f_new = false
@@ -214,6 +215,18 @@
 	
 	play_sound_ui = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
 		return global.ui_sounds.play(_sound, _loop, _offset, _pitch)
+	}
+	
+	play_voice = function (_sound) {
+		if _sound == undefined {
+			exit
+		}
+		
+		if voice != undefined and audio_exists(voice) {
+			audio_stop_sound(voice)
+		}
+		
+		voice = _sound
 	}
 	
 	set_speed = function (_spd) {

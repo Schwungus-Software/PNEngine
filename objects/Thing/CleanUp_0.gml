@@ -3,6 +3,10 @@ if clean_up != undefined {
 	clean_up()
 }
 
+if voice != undefined and audio_exists(voice) {
+	audio_stop_sound(voice)
+}
+
 if emitter != undefined and audio_emitter_exists(emitter) {
 	audio_emitter_free(emitter)
 }
