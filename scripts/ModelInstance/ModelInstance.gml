@@ -367,8 +367,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				}
 				
 				var _final_sample = sample
+				var _current_sample = _samples[floor(_current_frame)]
+				var _next_sample = _samples[floor(_next_frame)]
 				
-				sample_blend(_final_sample, _samples[floor(_current_frame)], _samples[floor(_next_frame)], frac(_current_frame))
+				sample_blend(_final_sample, _current_sample, _next_sample, frac(_current_frame))
 				
 				if update_sample != undefined {
 					update_sample.setSelf(self)
