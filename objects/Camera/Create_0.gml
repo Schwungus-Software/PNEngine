@@ -158,7 +158,7 @@ event_inherited()
 		}
 	}
 	
-	update_matrices = function (_width = window_get_width(), _height = window_get_height()) {
+	update_matrices = function (_width = window_get_width(), _height = window_get_height(), _update_listener = false) {
 		var _nx = dcos(syaw)
 		var _ny = -dsin(syaw)
 		var _nz = dtan(clamp(spitch, -89.95, 89.95))
@@ -167,8 +167,11 @@ event_inherited()
 		
 		view_matrix = matrix_build_lookat(sx, sy, sz, sx + _nx, sy + _ny, sz + _nz, 0, _yup, _zup)
 		projection_matrix = matrix_build_projection_perspective_fov(-sfov, -(_width / _height), 1, 65535)
-		audio_listener_position(sx, sy, sz)
-		audio_listener_orientation(-_nx, -_ny, _nz, 0, _yup, _zup)
+		
+		if _update_listener {
+			audio_listener_position(sx, sy, sz)
+			audio_listener_orientation(-_nx, -_ny, _nz, 0, _yup, _zup)
+		}
 	}
 	
 	world_to_screen = function (_x, _y, _z) {
@@ -190,9 +193,9 @@ event_inherited()
 		return _pos
 	}
 	
-	render = function (_width, _height, _allow_sky = true, _allow_screen = true, _world_shader = global.world_shader) {
+	render = function (_width, _height, _update_listener = false, _allow_sky = true, _allow_screen = true, _world_shader = global.world_shader) {
 		if instance_exists(child) {
-			return child.render(_width, _height, _allow_sky, _allow_screen, _world_shader)
+			return child.render(_width, _height, _update_listener, _allow_sky, _allow_screen, _world_shader)
 		}
 		
 		output.Resize(_width, _height)
@@ -220,7 +223,7 @@ event_inherited()
 			
 			var _render_camera = view_camera[0]
 			
-			update_matrices(_width, _height)
+			update_matrices(_width, _height, _update_listener)
 			
 			var _view_matrix = view_matrix
 			var _projection_matrix = projection_matrix

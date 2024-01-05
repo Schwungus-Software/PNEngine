@@ -8,7 +8,7 @@ var _players = global.players
 	var _camera_active = global.camera_active
 	
 	if instance_exists(_camera_active) {
-		_camera_active.render(_width, _height).DrawStretched(0, 0, 480, 270)
+		_camera_active.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 	} else {
 		var _netgame = global.netgame
 		
@@ -17,7 +17,7 @@ var _players = global.players
 				if active {
 					with _players[local_slot] {
 						if instance_exists(camera) {
-							camera.render(_width, _height).DrawStretched(0, 0, 480, 270)
+							camera.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 						}
 					}
 				}
@@ -30,7 +30,7 @@ var _players = global.players
 					repeat INPUT_MAX_PLAYERS {
 						with _players[i++] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height).DrawStretched(0, 0, 480, 270)
+								camera.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 							
 								break
 							}
@@ -47,7 +47,7 @@ var _players = global.players
 					repeat INPUT_MAX_PLAYERS {
 						with _players[i++] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height).DrawStretched(0, _y, 480, 135)
+								camera.render(_width, _height, i == 0).DrawStretched(0, _y, 480, 135)
 							}
 						}
 						
@@ -67,7 +67,7 @@ var _players = global.players
 					repeat INPUT_MAX_PLAYERS {
 						with _players[i++] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height).DrawStretched(_x, _y, 240, 135)
+								camera.render(_width, _height, i == 0).DrawStretched(_x, _y, 240, 135)
 							}
 						}
 					
