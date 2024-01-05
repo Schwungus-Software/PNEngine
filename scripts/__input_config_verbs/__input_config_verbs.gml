@@ -26,7 +26,7 @@ return {
 		inventory_down:  input_binding_key("3"),
 		inventory_right: input_binding_key("4"),
         
-        aim:       input_binding_key(vk_alt),
+        aim:       [input_binding_key(vk_alt), input_binding_mouse_button(mb_right)],
 		aim_up:    input_binding_key(vk_up),
 		aim_left:  input_binding_key(vk_left),
         aim_down:  input_binding_key(vk_down),
