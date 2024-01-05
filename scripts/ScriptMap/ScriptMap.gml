@@ -242,10 +242,77 @@ function ScriptMap() : AssetMap() constructor {
 					_omit_line = true
 #endregion
 				} else if string_starts_with(_line, "#macro") {
+#region Macro
 					var _macro = string_split(_line, " ", true, 2)
 					
 					array_push(_macros, [string_trim(_macro[1]), string_trim(_macro[2])])
 					_omit_line = true
+#endregion
+				} else if string_starts_with(_line, "#ui") {
+#region UIScript
+					if _type_header_exists {
+						throw $"Cannot have more than one type header, found '{_line}'"
+					}
+					
+					var _index = variable_global_get(_name)
+						
+					if _index != undefined and is_instanceof(_index, UI) {
+						throw "Cannot override internal UI of the same name"
+					}
+					
+					_script = new UIScript()
+					
+					var _parents = string_split(_line, " ", true)
+					var _parents_n = array_length(_parents)
+					
+					if _parents_n >= 2 {
+						if _parents_n > 2 {
+							throw "Cannot inherit more than one UI"
+						}
+						
+						var _parent = _parents[1]
+						
+						load(_parent)
+						
+						with _script {
+							parent = other.get(_parent)
+							
+							if parent == undefined {
+								_index = variable_global_get(_parent)
+								
+								if _index == undefined {
+									throw $"Unknown parent UI '{_parent}'"
+								}
+								
+								if not is_instanceof(_index, UI) {
+									throw $"Cannot inherit non-UI '{_parent}'"
+								}
+								
+								if string_starts_with(_parent, "pro") {
+									throw $"Cannot inherit protected UI '{_parent}'"
+								}
+								
+								internal_parent = _index
+							}
+							
+							if parent != undefined {
+								internal_parent = parent.internal_parent
+								main = parent.main
+								
+								load = parent.load
+								create = parent.create
+								clean_up = parent.clean_up
+								tick = parent.tick
+								draw_gui = parent.draw_gui
+							}
+							
+							ui_load(internal_parent)
+						}
+					}
+					
+					_type_header_exists = true
+					_omit_line = true
+#endregion
 				}
 				
 				if _omit_line {
@@ -329,9 +396,14 @@ function ScriptMap() : AssetMap() constructor {
 				clean_up = _globals[$ "clean_up"]
 				tick = _globals[$ "tick"]
 				draw_gui = _globals[$ "draw_gui"]
-			} else is_instanceof(self, MixinScript) {
+			} else if is_instanceof(self, MixinScript) {
 				create = _globals[$ "create"]
 				_is_mixin = true
+			} else if is_instanceof(self, UIScript) {
+				create = _globals[$ "create"]
+				clean_up = _globals[$ "clean_up"]
+				tick = _globals[$ "tick"]
+				draw_gui = _globals[$ "draw_gui"]
 			}
 			
 			if load != undefined {

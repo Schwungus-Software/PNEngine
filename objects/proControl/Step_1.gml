@@ -6,6 +6,12 @@ if load_state != LoadStates.NONE {
 		
 		case LoadStates.UNLOAD:
 #region Unload Previous Level
+			var _ui = global.ui
+			
+			if _ui != undefined {
+				_ui.destroy()
+			}
+			
 			var _canvases = global.canvases
 			var i = 0
 			
@@ -613,11 +619,12 @@ if global.freeze_step {
 	exit
 }
 
+var _ui = global.ui
 var _mouse_focused = global.mouse_focused
 var _mouse_dx, _mouse_dy
 
 if _mouse_focused {
-	if input_window_has_focus() {
+	if window_has_focus() and _ui == undefined {
 		_mouse_dx = window_mouse_get_delta_x()
 		_mouse_dy = window_mouse_get_delta_y()
 	} else {
@@ -628,7 +635,7 @@ if _mouse_focused {
 		_mouse_dy = 0
 	}
 } else {
-	if input_window_has_focus() {
+	if window_has_focus() and _ui == undefined {
 		window_mouse_set_locked(true)
 		global.mouse_focused = true
 		_mouse_focused = true
@@ -923,6 +930,100 @@ if _tick >= 1 {
 				case 2:
 					_skip_tick = true
 				break
+			}
+		}
+		
+		_ui = global.ui
+		
+		if _ui != undefined {
+			var _ui_input = global.ui_input
+			
+			_ui_input[UIInputs.UP_DOWN] = input_check_opposing_pressed("up", "down", 0, true) + input_check_opposing_repeat("up", "down", 0, true, 1, 12)
+			_ui_input[UIInputs.LEFT_RIGHT] = input_check_opposing_pressed("left", "right", 0, true) + input_check_opposing_repeat("left", "right", 0, true, 1, 12)
+			_ui_input[UIInputs.CONFIRM] = input_check_pressed("jump")
+			_ui_input[UIInputs.BACK] = input_check_pressed("pause")
+			
+			var _tick_target = _ui
+			
+			while true {
+				var _child = _tick_target.child
+				
+				if _child == undefined {
+					break
+				}
+				
+				_tick_target = _child
+			}
+			
+			with _tick_target {
+				if tick != undefined {
+					if is_catspeak(tick) {
+						tick.setSelf(_tick_target)
+					}
+					
+					tick()
+				}
+				
+				if exists and f_blocking {
+					if _game_status & GameStatus.NETGAME {
+						// Gross hack, will clean up later
+						input_verb_consume("up")
+						input_verb_consume("left")
+						input_verb_consume("down")
+						input_verb_consume("right")
+						input_verb_consume("jump")
+						input_verb_consume("interact")
+						input_verb_consume("attack")
+						input_verb_consume("inventory_up")
+						input_verb_consume("inventory_left")
+						input_verb_consume("inventory_down")
+						input_verb_consume("inventory_right")
+						input_verb_consume("aim")
+						input_verb_consume("aim_up")
+						input_verb_consume("aim_left")
+						input_verb_consume("aim_down")
+						input_verb_consume("aim_right")
+						//input_verb_consume("leave")
+						input_verb_consume("chat")
+						input_verb_consume("chat_submit")
+						input_verb_consume("voice")
+					} else {
+						_skip_tick = true
+					}
+				}
+			}
+		} else {
+			var _paused = false
+			
+			if input_check_pressed("pause") {
+				_paused = true
+				
+				if not (_game_status & GameStatus.NETGAME) {
+					var i = INPUT_MAX_PLAYERS
+					
+					repeat i {
+						with _players[--i] {
+							if status != PlayerStatus.ACTIVE {
+								break
+							}
+						
+							if not instance_exists(thing) or get_state("frozen") {
+								_paused = false
+								
+								break
+							}
+						}
+						
+						if not _paused {
+							break
+						}
+					}
+				}
+			}
+			
+			if _paused {
+				ui_create("Pause")
+				_skip_tick = true
 			}
 		}
 		

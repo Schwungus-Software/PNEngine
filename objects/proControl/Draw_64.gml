@@ -179,6 +179,36 @@ var _players = global.players
 	}
 #endregion
 
+#region Draw Active UI
+
+var _ui = global.ui
+
+if _ui != undefined {
+	var _draw_target = _ui
+	
+	while true {
+		var _child = _draw_target.child
+		
+		if _child == undefined {
+			break
+		}
+		
+		_draw_target = _child
+	}
+	
+	with _draw_target {
+		if draw_gui != undefined {
+			if is_catspeak(draw_gui) {
+				draw_gui.setSelf(_draw_target)
+			}
+			
+			draw_gui()
+		}
+	}
+}
+
+#endregion
+
 with proTransition {
 	event_user(ThingEvents.DRAW_GUI)
 }

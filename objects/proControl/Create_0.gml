@@ -311,6 +311,8 @@
 					"INPUT_AIM", PlayerInputs.AIM,
 					"INPUT_AIM_UP_DOWN", PlayerInputs.AIM_UP_DOWN,
 					"INPUT_AIM_LEFT_RIGHT", PlayerInputs.AIM_LEFT_RIGHT,
+					"INPUT_FORCE_UP_DOWN", PlayerInputs.FORCE_UP_DOWN,
+					"INPUT_FORCE_LEFT_RIGHT", PlayerInputs.FORCE_LEFT_RIGHT,
 				)
 				
 				addFunction(
@@ -556,6 +558,20 @@
 					"delta_time", function () {
 						return global.delta
 					}
+				)
+			#endregion
+			
+			#region UI
+				addConstant(
+					"UINP_UP_DOWN", UIInputs.UP_DOWN,
+					"UINP_LEFT_RIGHT", UIInputs.LEFT_RIGHT,
+					"UINP_CONFIRM", UIInputs.CONFIRM,
+					"UINP_BACK", UIInputs.BACK
+				)
+				
+				addFunction(
+					"ui_create", ui_create,
+					"ui_exists", ui_exists
 				)
 			#endregion
 		#endregion

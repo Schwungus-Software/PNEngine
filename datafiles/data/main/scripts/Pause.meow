@@ -1,0 +1,18 @@
+#ui
+
+tick = fun {
+	if self.input[UINP_BACK] {
+		self.destroy()
+	}
+}
+
+draw_gui = fun {
+	draw_set_alpha(0.5)
+	draw_rectangle_color(0, 0, 480, 270, BLACK, BLACK, BLACK, BLACK, false)
+	draw_set_alpha(1)
+	draw_set_halign(FA_CENTER)
+	draw_set_valign(FA_CENTER)
+	draw_text(240, 135, "Paused")
+	draw_set_halign(FA_LEFT)
+	draw_set_valign(FA_TOP)
+}
