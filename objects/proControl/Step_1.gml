@@ -1235,7 +1235,7 @@ if _tick >= 1 {
 							with active_things[| --j] {
 								var _can_tick = true
 								
-								if cull_tick != -1 {
+								if cull_tick != infinity {
 									_can_tick = false
 									
 									var _ox = x

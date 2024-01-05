@@ -51,8 +51,8 @@
 	target = noone
 	master = noone
 	
-	cull_tick = -1
-	cull_draw = -1
+	cull_tick = infinity
+	cull_draw = infinity
 	target_priority = 0
 	
 	z = 0
@@ -89,6 +89,7 @@
 	shadow_ray = raycast_data_create()
 	
 	model = undefined
+	collider = undefined
 	
 	emitter = undefined
 	emitter_falloff = 0
