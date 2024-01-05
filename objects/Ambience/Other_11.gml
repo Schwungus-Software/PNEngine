@@ -57,6 +57,15 @@ repeat i {
 	}
 	
 	_amb[0] = _snd
-	_amb[1] = _ambient.time * TICKRATE
+	
+	var _time = _ambient.time
+	
+	if is_array(_time) {
+		_time = [_time[0] * TICKRATE, _time[1] * TICKRATE]
+	} else {
+		_time *= TICKRATE
+	}
+	
+	_amb[1] = _time
 	ambience[i] = _amb
 }

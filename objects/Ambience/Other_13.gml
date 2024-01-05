@@ -9,7 +9,9 @@ repeat array_length(ambience) {
 	_amb[2]--
 	
 	if _amb[2] <= 0 {
-		_amb[2] = _amb[1]
+		var _time = _amb[1]
+		
+		_amb[2] = is_array(_time) ? irandom_range(_time[0], _time[1]) : _time
 		
 		if local {
 			play_sound_local(_amb[0])

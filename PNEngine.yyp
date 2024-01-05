@@ -1554,6 +1554,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"IntroScene.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Logo.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Mario.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Coin.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Pause.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Peach.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Pipe.meow","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/scripts",},
