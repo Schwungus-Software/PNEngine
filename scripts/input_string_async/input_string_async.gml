@@ -2,10 +2,10 @@
 
 function input_string_async_get(_prompt, _string = undefined)
 {
-    _string = _string ?? (__input_string()).__value;
-    
+    static _warning = false;    
     with (__input_string())
     {
+        _string = _string ?? __value;
         if (__async_id != undefined)
         {
             // Do not request the input modal when it is already open
@@ -14,16 +14,16 @@ function input_string_async_get(_prompt, _string = undefined)
         }
         else
         {
-            // Note platform suitability
-            var _source = input_string_platform_hint();
-            if (_source != "async")    show_debug_message("Input String Warning: Async dialog is not suitable for use on the current platform");
-            if (_source == "virtual")  show_debug_message("Input String Warning: Consider showing the virtual keyboard for non-modal text input instead");
-            
-            if ((os_type == os_android) || (os_type == os_ios) || (os_type == os_tvos))
+            if (!_warning)
             {
-                // Hide lingering overlay on dialog prompt open (Fixes mobile keyboard focus quirk)
-                keyboard_virtual_hide();
+                // Note platform suitability
+                if (__platform_hint != "async")    show_debug_message("Input String Warning: Async dialog is not suitable for use on the current platform");
+                if (__platform_hint == "virtual")  show_debug_message("Input String Warning: Consider showing the virtual keyboard for non-modal text input instead");                
+                _warning = true;
             }
+            
+            // Hide lingering overlay on dialog prompt open (Fixes mobile keyboard focus quirk)
+            if (__on_mobile) keyboard_virtual_hide();
             
             if (_string != "")
             {
@@ -36,21 +36,21 @@ function input_string_async_get(_prompt, _string = undefined)
                     case os_ps4: case os_ps5:              _console_limit = 1024; break;
                 }
                 
-                if (_console_limit > 0)
+                if (_console_limit < string_length(_string))
                 {
                     show_debug_message("Input String Warning: Platform dialog has a limit of " + string(_console_limit) + " characters");
                     _string = string_copy(_string, 1, _console_limit);
                 }
                 
-                if (string_length(_string) > max_length)
+                if (string_length(_string) > __max_length)
                 {
                     // Enforce configured character limit
-                    show_debug_message("Input String Warning: Truncating string to " + string(max_length) + " characters");
-                    _string = string_copy(_string, 1, max_length);
+                    show_debug_message("Input String Warning: Truncating string to " + string(__max_length) + " characters");
+                    _string = string_copy(_string, 1, __max_length);
                 }
             }
         
-            __predialog = input_string_get();
+            __predialog = __value;
             __async_id  = get_string_async(_prompt, _string);
         
             return true;
@@ -85,7 +85,7 @@ function input_string_dialog_async_event()
     
     with (__input_string())
     {
-        if (input_string_async_active() && (async_load != -1) && (async_load[? "id"] == __async_id))
+        if ((__async_id != undefined) && (async_load != -1) && (async_load[? "id"] == __async_id))
         {                
             // Confirm Async
             var _result = async_load[? "result"];
@@ -99,7 +99,7 @@ function input_string_dialog_async_event()
                 _result = string(_result);
             }
                 
-            if ((async_load[? "status"] != true) || (!allow_empty && (_result == "")))
+            if ((async_load[? "status"] != true) || (!__allow_empty && (_result == "")))
             {
                 // Revert empty
                 _result = __predialog;
@@ -117,7 +117,4 @@ function input_string_dialog_async_event()
     }
 }
 
-function input_string_async_active()
-{
-    return ((__input_string()).__async_id != undefined);
-}
+function input_string_async_active(){ return ((__input_string()).__async_id != undefined); }
