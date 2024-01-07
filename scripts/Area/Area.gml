@@ -611,4 +611,16 @@ function Area() constructor {
 		
 		return instance_exists(_thing)
 	}
+	
+	static player_count = function () {
+		gml_pragma("forceinline")
+		
+		return ds_list_size(players)
+	}
+	
+	static get_player = function (_index) {
+		gml_pragma("forceinline")
+		
+		return players[| _index]
+	}
 }
