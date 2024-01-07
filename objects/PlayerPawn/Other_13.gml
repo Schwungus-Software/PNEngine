@@ -17,7 +17,15 @@ if _frozen or lock_animation {
 	_can_move = false
 } else {
 	if _on_ground and model != undefined {
-		model.yaw = lerp_angle(model.yaw, instance_exists(target) ? point_direction(x, y, target.x, target.y) : move_angle, 0.4)
+		var _yaw_to
+		
+		if aiming {
+			_yaw_to = instance_exists(target) ? point_direction(x, y, target.x, target.y) : aim_angle
+		} else {
+			_yaw_to = move_angle
+		}
+		
+		model.yaw = lerp_angle(model.yaw, _yaw_to, 0.4)
 	}
 }
 
@@ -116,18 +124,59 @@ if _can_move and input[PlayerInputs.INTERACT] and not input_previous[PlayerInput
 	}
 }
 
+/* =================
+   LOCK-ON TARGETING
+   ================== */
+
+if _can_move and input[PlayerInputs.AIM] {
+	if not aiming {
+		aiming = true
+		aim_angle = move_angle
+		player_aimed(noone)
+	}
+} else {
+	if aiming {
+		aiming = false
+		
+		if vector_speed <= 0 {
+			move_angle = aim_angle
+		}
+		
+		player_aimed(noone)
+	}
+}
+
 /* ======
    CAMERA
    ====== */
 
 var _px, _py
-var _has_target = instance_exists(target)
 
-if _has_target {
-	// The player is targetting a Thing, set an angle between the two
-	_px = lerp(playcam[0], lerp(x, target.x, 0.5), 0.325)
-	_py = lerp(playcam[1], lerp(y, target.y, 0.5), 0.325)
-	playcam_z = lerp(playcam_z, lerp(z, target.z, 0.5), 0.325)
+if aiming {
+	var _x_to, _y_to, _z_to
+	
+	if instance_exists(target) {
+		// The player is targetting a Thing, set an angle between the two
+		_x_to = lerp(x, target.x, 0.5)
+		_y_to = lerp(y, target.y, 0.5)
+		_z_to = lerp(z, target.z, 0.5)
+	} else {
+		// Not targetting anything, focus towards direction
+		_x_to = x
+		_y_to = y
+		_z_to = z + 4
+		
+		if _camera_exists {
+			with camera {
+				yaw = lerp_angle(yaw, other.aim_angle, 0.325)
+				pitch = lerp_angle(pitch, 0, 0.325)
+			}
+		}
+	}
+	
+	_px = lerp(playcam[0], _x_to, 0.325)
+	_py = lerp(playcam[1], _y_to, 0.325)
+	playcam_z = lerp(playcam_z, _z_to, 0.325)
 } else {
 	// POSITION
 	// Z-lerp if player is out of vertical range
@@ -185,7 +234,7 @@ if _camera_exists and playcam_sync_input {
 	var _input = input
 	
 	with camera {
-		if _frozen {
+		if _frozen or other.aiming {
 			_input[PlayerInputs.FORCE_LEFT_RIGHT] = yaw
 			_input[PlayerInputs.FORCE_UP_DOWN] = pitch
 		} else {

@@ -19,6 +19,9 @@ event_inherited()
 	jumped = false
 	coyote = 0
 	interaction = PlayerInteractions.NONE
+	aiming = false
+	aim_angle = 0
+	nearest_target = noone
 	
 	movement_speed = 6
 	jump_speed = 6.44
@@ -71,4 +74,5 @@ event_inherited()
 	
 	player_maneuvered = function () {}
 	player_respawned = function () {}
+	player_aimed = function (_target) {}
 #endregion
