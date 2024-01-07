@@ -56,6 +56,15 @@ event_inherited()
 	path_playback = AnimationTypes.LINEAR
 	path_active = false
 	
+	quake = 0
+	quake_x = 0
+	quake_y = 0
+	quake_z = 0
+	
+	interp("quake_x", "squake_x")
+	interp("quake_y", "squake_y")
+	interp("quake_z", "squake_z")
+	
 	alpha = 1
 	output = (new Canvas(480, 270)).SetDepthDisabled(true)
 #endregion
@@ -199,6 +208,9 @@ event_inherited()
 		}
 		
 		output.Resize(_width, _height)
+		sx += squake_x
+		sy += squake_y
+		sz += squake_z
 		
 		var _area = area
 		

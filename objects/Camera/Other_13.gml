@@ -122,7 +122,6 @@ if _pois {
 	pitch = lerp_angle(pitch, point_pitch(x, y, z, _x, _y, _z), _lerp)
 }
 
-// Camera
 if path_active {
 	// Camera animation
 	var _loop = path_playback == AnimationTypes.LINEAR_LOOP or path_playback == AnimationTypes.QUADRATIC_LOOP
@@ -226,4 +225,15 @@ if path_active {
 	
 	++path_elapsed
 	path_elapsed = _loop ? path_elapsed % path_time : min(path_elapsed, path_time)
+}
+
+if quake > 0 {
+	quake -= 1
+	
+	var a = -quake
+	var b = quake
+	
+	quake_x = random_range(a, b)
+	quake_y = random_range(a, b)
+	quake_z = random_range(a, b)
 }
