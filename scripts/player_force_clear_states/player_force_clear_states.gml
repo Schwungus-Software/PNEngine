@@ -7,5 +7,6 @@ function player_force_clear_states(_scope) {
 		states[? "coins"] = 0
 		states[? "invincible"] = false
 		states[? "frozen"] = false
+		states[? "hud"] = true
 	}
 }
