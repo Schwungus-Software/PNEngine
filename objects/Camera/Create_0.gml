@@ -299,7 +299,7 @@ event_inherited()
 						_world_canvas.Clear(clear_color[4])
 					}
 				} else {
-					_world_canvas.Clear(c_black)
+					_world_canvas.Clear()
 				}
 				
 				_world_shader.set()
