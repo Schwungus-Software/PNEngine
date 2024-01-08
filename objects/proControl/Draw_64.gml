@@ -45,13 +45,14 @@ var _players = global.players
 					var i = 0
 				
 					repeat INPUT_MAX_PLAYERS {
-						with _players[i++] {
+						with _players[i] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
 								camera.render(_width, _height, i == 0).DrawStretched(0, _y, 480, 135)
 							}
 						}
 						
-						_y += 135
+						_y += 135;
+						++i
 					}
 				break
 			
@@ -65,18 +66,20 @@ var _players = global.players
 					var i = 0
 				
 					repeat INPUT_MAX_PLAYERS {
-						with _players[i++] {
+						with _players[i] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
 								camera.render(_width, _height, i == 0).DrawStretched(_x, _y, 240, 135)
 							}
 						}
-					
+						
 						_x += 240
-					
+						
 						if _x > 240 {
 							_x = 0
 							_y += 135
 						}
+						
+						++i
 					}
 				break
 			}
