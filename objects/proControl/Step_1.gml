@@ -651,14 +651,9 @@ var _tick_inc = (delta_time * TICKRATE_DELTA) * global.tick_scale
 global.delta = _tick_inc
 _tick += _tick_inc
 
+// Cache a lot of things into local variables
 var _console = global.console
 var _chat_typing = global.chat_typing
-
-if _console or _chat_typing {
-	input_string_tick()
-}
-
-// Cache a lot of things into local variables
 var _interps = global.interps
 var _players = global.players
 var _config = global.config
@@ -738,20 +733,20 @@ if _tick >= 1 {
 		_mouse_dy = 0
 		
 		if input_check_pressed("chat_previous") {
-			input_string_set(global.chat_input_previous)
+			keyboard_string = global.chat_input_previous
 		}
 		
 		if input_check_pressed("chat_submit") {
 			global.chat_typing = false
 			
-			var _input = string_trim(input_string_get())
+			var _input = string_trim(keyboard_string)
 			
 			if _input != "" {
 				cmd_say(_input)
 				global.chat_input_previous = _input
 			}
 			
-			input_string_set("")
+			keyboard_string = ""
 		}
 		
 		if input_check_pressed("pause") {
@@ -761,7 +756,7 @@ if _tick >= 1 {
 	} else {
 		if input_check_pressed("chat") and _netgame != undefined and _netgame.active {
 			global.chat_typing = true
-			input_string_set("")
+			keyboard_string = ""
 		}
 	}
 	
@@ -769,11 +764,11 @@ if _tick >= 1 {
 		input_verb_consume("leave")
 		
 		if input_check_pressed("debug_console_previous") {
-			input_string_set(global.console_input_previous)
+			keyboard_string = global.console_input_previous
 		}
 		
 		if input_check_pressed("debug_console_submit") {
-			var _input = string_trim(input_string_get())
+			var _input = string_trim(keyboard_string)
 			
 			if _input != "" {
 				global.console_input_previous = _input
@@ -803,7 +798,7 @@ if _tick >= 1 {
 				})
 			}
 			
-			input_string_set("")
+			keyboard_string = ""
 		}
 		
 		if input_check_pressed("pause") {
@@ -813,7 +808,7 @@ if _tick >= 1 {
 			
 			input_verb_consume("pause")
 			global.console = false
-			global.console_input = input_string_get()
+			global.console_input = keyboard_string
 		}
 		
 		if _game_status & GameStatus.NETGAME {
@@ -847,7 +842,7 @@ if _tick >= 1 {
 		if input_check_pressed("debug_console") {
 			input_source_mode_set(INPUT_SOURCE_MODE.FIXED)
 			global.console = true
-			input_string_set(global.console_input)
+			keyboard_string = global.console_input
 		}
 	}
 #endregion

@@ -227,7 +227,7 @@ if _netgame != undefined and _netgame.active {
 	var _y = 262
 	
 	if _typing {
-		var _input = ">" + input_string_get() + (current_time % 1000 < 500 ? "_" : " ")
+		var _input = ">" + keyboard_string + (current_time % 1000 < 500 ? "_" : " ")
 		var _width = string_width(_input)
 		var _height = string_height(_input)
 		var _x = _width > 464 ? 8 - (_width - 464) : 8
@@ -322,7 +322,7 @@ if global.console {
 		draw_text_ext_transformed(0, _console_bottom - _y, _str, -1, 960, 0.5, 0.5, 0)
 	}
 	
-	var _input = input_string_get()
+	var _input = keyboard_string
 	
 	if current_time % 1000 < 500 {
 		_input += "_"
