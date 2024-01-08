@@ -224,20 +224,22 @@ function Player() constructor {
 		return states[? _key]
 	}
 	
-	static set_state = function (_key, _value) {
-		var _netgame = global.netgame
+	static set_state = function (_key, _value, _sync = true) {
+		if _sync {
+			var _netgame = global.netgame
 		
-		if _netgame != undefined {
-			with _netgame {
-				if active and master {
-					var b = net_buffer_create(true, NetHeaders.HOST_PLAYER_STATE)
+			if _netgame != undefined {
+				with _netgame {
+					if active and master {
+						var b = net_buffer_create(true, NetHeaders.HOST_PLAYER_STATE)
 					
-					buffer_write(b, buffer_u8, other.slot)
-					buffer_write(b, buffer_string, _key)
-					buffer_write_dynamic(b, _value)
-					send(SEND_OTHERS, b)
-				} else {
-					return false
+						buffer_write(b, buffer_u8, other.slot)
+						buffer_write(b, buffer_string, _key)
+						buffer_write_dynamic(b, _value)
+						send(SEND_OTHERS, b)
+					} else {
+						return false
+					}
 				}
 			}
 		}
