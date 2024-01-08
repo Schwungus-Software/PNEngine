@@ -5,7 +5,7 @@ if global.camera_active == id {
 }
 
 if instance_exists(child) {
-	child.destroy(false)
+	child.parent = noone
 }
 
 if instance_exists(parent) {
