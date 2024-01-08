@@ -30,7 +30,7 @@ add_net_variable("player", NetVarFlags.CREATE, function (_value) {
 	
 	with _player {
 		if instance_exists(thing) and thing != other {
-			thing.destroy()
+			instance_destroy(thing, false)
 		}
 		
 		thing = other
@@ -38,7 +38,7 @@ add_net_variable("player", NetVarFlags.CREATE, function (_value) {
 		var _newcam = other.camera
 		
 		if instance_exists(camera) and camera != _newcam {
-			camera.destroy()
+			instance_destroy(camera, false)
 		}
 		
 		camera = _newcam

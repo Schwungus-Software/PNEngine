@@ -745,7 +745,9 @@ if async_load[? "type"] == network_type_data {
 				var _thing = global.level.syncables[# _id, 0]
 				
 				if _thing != undefined {
-					instance_destroy(_thing, buffer_read(_buffer, buffer_bool))
+					var _natural = buffer_read(_buffer, buffer_bool)
+					
+					instance_destroy(_thing, _natural)
 				}
 			break
 			
