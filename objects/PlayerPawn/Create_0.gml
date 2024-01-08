@@ -22,6 +22,8 @@ event_inherited()
 	aiming = false
 	aim_angle = 0
 	nearest_target = noone
+	untarget_buffer = false
+	targets = undefined
 	
 	movement_speed = 6
 	jump_speed = 6.44
@@ -51,6 +53,33 @@ event_inherited()
 	}
 	
 	do_maneuver = function () {}
+	
+	do_target = function (_thing) {
+		gml_pragma("forceinline")
+		
+		if not aiming or target != _thing {
+			aiming = true
+			aim_angle = move_angle
+			target = _thing
+			player_aimed(_thing)
+		}
+	}
+	
+	do_untarget = function () {
+		gml_pragma("forceinline")
+		
+		if aiming {
+			aiming = false
+			
+			if vector_speed <= 0 {
+				move_angle = aim_angle
+			}
+			
+			target = noone
+			player_aimed(noone)
+			untarget_buffer = true
+		}
+	}
 	
 	get_state = function (_key) {
 		return states[? _key]

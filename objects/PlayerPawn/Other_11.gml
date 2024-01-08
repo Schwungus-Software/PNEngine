@@ -15,6 +15,9 @@ if instance_exists(camera) {
 	camera.pitch = -15
 }
 
+targets = ds_priority_create()
+
+#region Net Variables
 add_net_variable("face_angle", NetVarFlags.GENERIC)
 
 add_net_variable("player", NetVarFlags.CREATE, function (_value) {
@@ -55,3 +58,4 @@ sync_maneuver = add_net_variable("net_maneuver", NetVarFlags.DEFAULT, function (
 }, function () {
 	return undefined
 })
+#endregion

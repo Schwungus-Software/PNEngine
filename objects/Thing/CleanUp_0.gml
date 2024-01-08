@@ -51,3 +51,7 @@ if net_variables != undefined {
 if model != undefined {
 	delete model
 }
+
+if collider != undefined {
+	delete collider
+}

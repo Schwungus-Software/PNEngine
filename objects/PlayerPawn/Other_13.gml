@@ -128,22 +128,89 @@ if _can_move and input[PlayerInputs.INTERACT] and not input_previous[PlayerInput
    LOCK-ON TARGETING
    ================== */
 
-if _can_move and input[PlayerInputs.AIM] {
-	if not aiming {
-		aiming = true
-		aim_angle = move_angle
-		player_aimed(noone)
-	}
-} else {
-	if aiming {
-		aiming = false
+if target != noone and (not instance_exists(target) or target.f_culled or not target.f_targetable or point_distance(x, y, target.x, target.y) > 256) {
+	do_untarget()
+}
+
+if targets == undefined {
+	exit
+}
+
+ds_priority_clear(targets)
+
+if not _frozen {
+	var _things = grid_iterate(Thing, 256)
+	var i = array_length(_things)
+	
+	repeat i {
+		var _thing = _things[--i]
 		
-		if vector_speed <= 0 {
-			move_angle = aim_angle
+		if _thing == target or not _thing.f_targetable {
+			continue
 		}
 		
-		player_aimed(noone)
+		var _x, _y
+		
+		with _thing {
+			_x = x
+			_y = y
+		}
+		
+		var _dist = point_distance(x, y, _x, _y)
+		
+		if _dist >= 256 {
+			continue
+		}
+		
+		var _diff = abs(angle_difference(point_direction(x, y, _x, _y), move_angle))
+		
+		if _diff > 75 {
+			continue
+		}
+		
+		// Smallest priority value is considered the nearest target
+		var _priority = _dist
+		
+		with _thing {
+			_priority -= target_priority + f_enemy - f_friend
+		}
+		
+		ds_priority_add(targets, _thing, _priority)
 	}
+	
+	nearest_target = ds_priority_find_min(targets) ?? noone
+}
+
+var _has_target = instance_exists(target)
+
+if _can_move and input[PlayerInputs.AIM] {
+	var _can_target = instance_exists(nearest_target)
+	
+	if _can_target {
+		if not input_previous[PlayerInputs.AIM] {
+			do_target(nearest_target)
+			_has_target = _can_target
+		}
+	} else {
+		if not aiming {
+			if not untarget_buffer {
+				do_target(noone)
+			}
+		} else if _has_target and not input_previous[PlayerInputs.AIM] {
+			do_untarget()
+			_has_target = false
+		}
+	}
+} else {
+	untarget_buffer = false
+	
+	if aiming and not _has_target {
+		do_untarget()
+	}
+}
+
+if _has_target {
+	aim_angle = point_direction(x, y, target.x, target.y)
 }
 
 /* ======
@@ -155,7 +222,7 @@ var _px, _py
 if aiming {
 	var _x_to, _y_to, _z_to
 	
-	if instance_exists(target) {
+	if _has_target {
 		// The player is targetting a Thing, set an angle between the two
 		_x_to = lerp(x, target.x, 0.5)
 		_y_to = lerp(y, target.y, 0.5)
@@ -232,12 +299,14 @@ if aiming {
 
 if _camera_exists and playcam_sync_input {
 	var _input = input
+	var _aiming = aiming
 	
 	with camera {
-		if _frozen or other.aiming {
+		if _frozen or (_aiming and not _has_target) {
 			_input[PlayerInputs.FORCE_LEFT_RIGHT] = yaw
 			_input[PlayerInputs.FORCE_UP_DOWN] = pitch
 		} else {
+			f_raycast = not (_aiming and _has_target)
 			yaw = _input[PlayerInputs.AIM_LEFT_RIGHT] * PLAYER_AIM_INVERSE
 			pitch = _input[PlayerInputs.AIM_UP_DOWN] * PLAYER_AIM_INVERSE
 			

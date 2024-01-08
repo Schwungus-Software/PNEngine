@@ -118,6 +118,7 @@
 	f_cull_destroy = false
 	f_garbage = false
 	f_frozen = false
+	f_destroyed = false
 	f_bump_avoid = false
 	f_collider_stick = true
 	

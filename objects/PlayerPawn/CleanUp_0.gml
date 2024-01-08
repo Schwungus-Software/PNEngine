@@ -13,3 +13,9 @@ if player != undefined {
 if instance_exists(camera) {
 	camera.destroy(false)
 }
+
+// GROSS HACK: Because ticking still persists after cleanup
+if targets != undefined {
+	ds_priority_destroy(targets)
+	targets = undefined
+}

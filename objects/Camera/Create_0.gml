@@ -46,6 +46,7 @@ event_inherited()
 	pois = ds_map_create()
 	child = noone
 	parent = noone
+	f_raycast = true
 	
 	view_matrix = undefined
 	projection_matrix = undefined
