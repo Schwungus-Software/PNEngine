@@ -122,4 +122,10 @@ function Level() constructor {
 			level_force_goto(_level, _area, _tag, false)
 		}
 	}
+	
+	static area_exists = function (_id) {
+		gml_pragma("forceinline")
+		
+		return ds_map_exists(areas, _id)
+	}
 }
