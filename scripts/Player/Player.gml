@@ -91,8 +91,8 @@ function Player() constructor {
 			return noone
 		}
 		
-		var _flags = _flags
-		var _type = _flags[0].get("player_class") ?? _flags[1].get("player_class") ?? get_state("player_class")
+		var _flags = global.flags
+		var _type = (_flags[0].get("player_class") ?? _flags[1].get("player_class")) ?? get_state("player_class")
 			
 		if _type == undefined {
 			return noone
