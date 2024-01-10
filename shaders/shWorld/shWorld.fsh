@@ -64,18 +64,16 @@ void main() {
 	starting_color.a *= mix(1., u_fog_color.a, v_fog);
     gl_FragColor = starting_color * u_color;
 	
-	// Uncomment this section to enable screen-door transparency. May look
-	// uglier, but runs better on some computers.
-	/*mat4 pattern = mat4(
-		vec4(0.0588235294117647, 0.5294117647058824, 0.1764705882352941, 0.6470588235294118),
-		vec4(0.7647058823529412, 0.2941176470588235, 0.8823529411764706, 0.4117647058823529),
-		vec4(0.2352941176470588, 0.7058823529411765, 0.1176470588235294, 0.5882352941176471),
-		vec4(0.9411764705882353, 0.4705882352941176, 0.8235294117647059, 0.3529411764705882)
+	mat4 pattern = mat4(
+		vec4(0.0625, 0.5625, 0.1875,  0.6875),
+		vec4(0.8125, 0.3125, 0.9375,  0.4375),
+		vec4(0.25, 0.75, 0.125, 0.625),
+		vec4(1.0, 0.5, 0.875,  0.375)
 	);
     
 	if (gl_FragColor.a < pattern[int(mod(gl_FragCoord.x, 4.))][int(mod(gl_FragCoord.y, 4.))]) {
 		discard;
 	}
 	
-	gl_FragColor.a = 1.;*/
+	gl_FragColor.a = 1.;
 }
