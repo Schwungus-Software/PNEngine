@@ -187,7 +187,7 @@ switch m_collision {
 						model.yaw += _diff
 					}
 					
-					face_angle += _diff
+					angle += _diff
 					move_angle += _diff
 				}
 			} else {
@@ -273,10 +273,18 @@ switch m_shadow {
 			_z = z + height * 0.5
 		}
 		
+		var _has_blob = shadow_ray[RaycastData.HIT]
+		
 		if raycast(_x, _y, _z, _x, _y, _z - 65535, CollisionFlags.VISION, CollisionLayers.ALL, shadow_ray)[RaycastData.HIT] {
 			shadow_x = shadow_ray[RaycastData.X]
 			shadow_y = shadow_ray[RaycastData.Y]
 			shadow_z = shadow_ray[RaycastData.Z]
+			
+			if not _has_blob {
+				interp_skip("sshadow_x")
+				interp_skip("sshadow_y")
+				interp_skip("sshadow_z")
+			}
 		}
 	break
 }

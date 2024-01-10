@@ -18,8 +18,6 @@ if instance_exists(camera) {
 targets = ds_priority_create()
 
 #region Net Variables
-add_net_variable("face_angle", NetVarFlags.GENERIC)
-
 add_net_variable("player", NetVarFlags.CREATE, function (_value) {
 	var _player = global.players[_value]
 	

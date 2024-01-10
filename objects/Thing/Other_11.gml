@@ -1,5 +1,4 @@
 /// @description Create
-face_angle = angle
 move_angle = angle
 
 if create != undefined {

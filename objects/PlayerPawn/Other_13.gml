@@ -56,7 +56,7 @@ if _input_up_down != 0 or _input_left_right != 0 {
 	input_length = point_distance(0, 0, _input_left_right, _input_up_down)
 	
 	if _camera_exists {
-		face_angle = camera.resolve().yaw
+		angle = camera.resolve().yaw
 	}
 	
 	var _up = max(-_input_up_down, 0)
@@ -65,26 +65,26 @@ if _input_up_down != 0 or _input_left_right != 0 {
 	var _right = max(_input_left_right, 0)
 	
 	if _up > 0 {
-		add_motion(face_angle, _acc * _up)
+		add_motion(angle, _acc * _up)
 	}
 	
 	if _left > 0 {
-		add_motion(face_angle + 90, _acc * _left)
+		add_motion(angle + 90, _acc * _left)
 	}
 	
 	if _down > 0 {
-		add_motion(face_angle + 180, _acc * _down)
+		add_motion(angle + 180, _acc * _down)
 	}
 	
 	if _right > 0 {
-		add_motion(face_angle + 270, _acc * _right)
+		add_motion(angle + 270, _acc * _right)
 	}
 	
 	if vector_speed > movement_speed {
 		set_speed(movement_speed)
 	}
 	
-	face_angle += point_direction(0, 0, _input_left_right, _input_up_down) - 90
+	angle += point_direction(0, 0, _input_left_right, _input_up_down) - 90
 } else {
 	input_length = 0
 }
