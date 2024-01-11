@@ -15,18 +15,18 @@ return {
 		left:  input_binding_key("A"),
         down:  input_binding_key("S"),
         right: input_binding_key("D"),
-		walk: input_binding_key(vk_period),
+		walk: input_binding_key(vk_control),
         
         jump:     input_binding_key(vk_space),
-        interact: input_binding_key(vk_shift),
-		attack:   [input_binding_key(vk_control), input_binding_mouse_button(mb_left)],
+        interact: input_binding_key("E"),
+		attack:   [input_binding_key(vk_period), input_binding_mouse_button(mb_left)],
 		
 		inventory_up:    input_binding_key("1"),
 		inventory_left:  input_binding_key("2"),
 		inventory_down:  input_binding_key("3"),
 		inventory_right: input_binding_key("4"),
         
-        aim:       [input_binding_key(vk_alt), input_binding_mouse_button(mb_right)],
+        aim:       [input_binding_key(vk_comma), input_binding_mouse_button(mb_right)],
 		aim_up:    input_binding_key(vk_up),
 		aim_left:  input_binding_key(vk_left),
         aim_down:  input_binding_key(vk_down),
