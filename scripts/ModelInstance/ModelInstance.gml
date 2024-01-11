@@ -74,13 +74,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			animation_finished = false
 			animation_state = 0
 			
+			var _copy = false
+			
 			if _frame >= 0 {
+				_copy = true
 				frame = _frame
 				frame_speed = 1
-				
-				var _copy_sample = _animation.samples[_frame % _animation.frames]
-				
-				array_copy(sample, 0, _copy_sample, 0, array_length(_copy_sample))
 				interp_skip("sframe")
 			}
 			
@@ -94,6 +93,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				var _final_sample = _transition_previous ? transition_sample2 : sample
 				
 				array_copy(transition_sample, 0, _final_sample, 0, array_length(_final_sample))
+			}
+			
+			if _copy {
+				var _copy_sample = _animation.samples[_frame % _animation.frames]
+				
+				array_copy(sample, 0, _copy_sample, 0, array_length(_copy_sample))
 			}
 		}
 		
