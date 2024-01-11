@@ -109,7 +109,7 @@ function AnimationMap() : AssetMap() constructor {
 		
 		buffer_delete(_buffer)
 		ds_map_add(assets, _name, _animation)
-		print($"AnimationMap: Added '{_name}' ({_animation})")
+		print($"AnimationMap: Added '{_name}'")
 	}
 }
 
