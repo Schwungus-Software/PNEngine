@@ -79,6 +79,8 @@
 	
 	radius = 8
 	bump_radius = undefined
+	hold_radius = undefined
+	interact_radius = undefined
 	height = 16
 	floor_ray = raycast_data_create()
 	wall_ray = raycast_data_create()
@@ -582,7 +584,7 @@
 	
 	do_unhold = function (_forced = false, _sync = true) {
 		if not instance_exists(holding) {
-			return false
+			return true
 		}
 		
 		if _sync and f_sync {

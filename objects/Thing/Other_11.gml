@@ -66,6 +66,8 @@ if model != undefined {
 imgShadow = global.images.get("imgShadow")
 
 bump_radius ??= radius
+hold_radius ??= radius
+interact_radius ??= radius
 shadow_radius ??= radius
 
 interp("x", "sx")

@@ -21,8 +21,10 @@ if f_gravity and not floor_ray[RaycastData.HIT] {
 	z_speed = clamp(z_speed - (area.gravity * grav), max_fall_speed, max_fly_speed)
 }
 
+var _held = instance_exists(holder)
+
 // Thing collision
-if m_bump != MBump.NONE and m_bump != MBump.FROM {
+if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 	var _bump_grid = area.bump_grid
 	var _gx = clamp(floor((x - area.bump_x) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_width(_bump_grid) - 1)
 	var _gy = clamp(floor((y - area.bump_y) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_height(_bump_grid) - 1)
@@ -104,108 +106,121 @@ if m_bump != MBump.NONE and m_bump != MBump.FROM {
 }
 
 // World collision
-switch m_collision {
-	default:
-		x += x_speed
-		y += y_speed
-		z += z_speed
-		floor_ray[RaycastData.HIT] = false
-		wall_ray[RaycastData.HIT] = false
-		ceiling_ray[RaycastData.HIT] = false
-	break
+if _held {
+	floor_ray[RaycastData.HIT] = false
+	wall_ray[RaycastData.HIT] = false
+	ceiling_ray[RaycastData.HIT] = false
+} else {
+	switch m_collision {
+		default:
+			x += x_speed
+			y += y_speed
+			z += z_speed
+			floor_ray[RaycastData.HIT] = false
+			wall_ray[RaycastData.HIT] = false
+			ceiling_ray[RaycastData.HIT] = false
+		break
 	
-	case MCollision.NORMAL:
-		var _half_height = height * 0.5
-		var _center_z = z + _half_height
+		case MCollision.NORMAL:
+			var _half_height = height * 0.5
+			var _center_z = z + _half_height
 		
-		// X-axis
-		var _add_x = x + x_speed
+			// X-axis
+			var _add_x = x + x_speed
 		
-		if raycast(_add_x - radius, y, _center_z, _add_x + radius, y, _center_z, CollisionFlags.BODY, CollisionLayers.ALL, wall_ray)[RaycastData.HIT] {
-			var _hit_x = wall_ray[RaycastData.X]
+			if raycast(_add_x - radius, y, _center_z, _add_x + radius, y, _center_z, CollisionFlags.BODY, CollisionLayers.ALL, wall_ray)[RaycastData.HIT] {
+				var _hit_x = wall_ray[RaycastData.X]
 			
-			x = _hit_x + (_hit_x < x ? radius : -radius)
-			x_speed = 0
-		}
-		
-		x += x_speed
-		
-		// Y-axis
-		var _add_y = y + y_speed
-		var _raycast = raycast(x, _add_y - radius, _center_z, x, _add_y + radius, _center_z, CollisionFlags.BODY, CollisionLayers.ALL)
-		
-		if _raycast[RaycastData.HIT] {
-			array_copy(wall_ray, 0, _raycast, 0, RaycastData.__SIZE)
-			
-			var _hit_y = _raycast[RaycastData.Y]
-			
-			y = _hit_y + (_hit_y < y ? radius : -radius)
-			y_speed = 0
-		}
-		
-		y += y_speed
-		
-		// Ceiling
-		if raycast(x, y, z + _half_height, x, y, z + z_speed + height, CollisionFlags.BODY, CollisionLayers.ALL, ceiling_ray)[RaycastData.HIT] {
-			z = ceiling_ray[RaycastData.Z] - height
-			z_speed = 0
-		}
-		
-		// Floor
-		if raycast(x, y, z + _half_height, x, y, (z + z_speed) - ((floor_ray[RaycastData.HIT] and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
-			z = floor_ray[RaycastData.Z]
-			
-			if abs(floor_ray[RaycastData.NZ]) >= 0.5 {
-				z_speed = 0
-				
-				// Stick to movers
-				var _thing = floor_ray[RaycastData.THING]
-				
-				if instance_exists(_thing) and _thing.f_collider_stick {
-					var _x, _y, _z, _z_previous, _x_speed, _y_speed, _yaw, _yaw_previous
-					
-					with _thing {
-						_x = x
-						_y = y
-						_z = z
-						_z_previous = z_previous
-						_x_speed = x_speed
-						_y_speed = y_speed
-						_yaw = collider_yaw
-						_yaw_previous = collider_yaw_previous
-					}
-					
-					var _diff = angle_difference(_yaw, _yaw_previous)
-					var _dir = point_direction(_x, _y, x, y) + _diff
-					var _len = point_distance(x, y, _x, _y)
-					
-					x = _x + lengthdir_x(_len, _dir) + _x_speed
-					y = _y + lengthdir_y(_len, _dir) + _y_speed
-					z += _z - _z_previous
-					
-					if model != undefined {
-						model.yaw += _diff
-					}
-					
-					angle += _diff
-					move_angle += _diff
-				}
-			} else {
-				var _dir = darctan2(-floor_ray[RaycastData.NY], floor_ray[RaycastData.NX])
-				
-				x += dcos(_dir)
-				y -= dsin(_dir)
-				floor_ray[RaycastData.HIT] = false
+				x = _hit_x + (_hit_x < x ? radius : -radius)
+				x_speed = 0
 			}
-		}
 		
-		z += z_speed
-	break
+			x += x_speed
+		
+			// Y-axis
+			var _add_y = y + y_speed
+			var _raycast = raycast(x, _add_y - radius, _center_z, x, _add_y + radius, _center_z, CollisionFlags.BODY, CollisionLayers.ALL)
+		
+			if _raycast[RaycastData.HIT] {
+				array_copy(wall_ray, 0, _raycast, 0, RaycastData.__SIZE)
+			
+				var _hit_y = _raycast[RaycastData.Y]
+			
+				y = _hit_y + (_hit_y < y ? radius : -radius)
+				y_speed = 0
+			}
+		
+			y += y_speed
+		
+			// Ceiling
+			if raycast(x, y, z + _half_height, x, y, z + z_speed + height, CollisionFlags.BODY, CollisionLayers.ALL, ceiling_ray)[RaycastData.HIT] {
+				z = ceiling_ray[RaycastData.Z] - height
+				z_speed = 0
+			}
+		
+			// Floor
+			if raycast(x, y, z + _half_height, x, y, (z + z_speed) - ((floor_ray[RaycastData.HIT] and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
+				z = floor_ray[RaycastData.Z]
+			
+				if abs(floor_ray[RaycastData.NZ]) >= 0.5 {
+					z_speed = 0
+				
+					// Stick to movers
+					var _thing = floor_ray[RaycastData.THING]
+				
+					if instance_exists(_thing) and _thing.f_collider_stick {
+						var _x, _y, _z, _z_previous, _x_speed, _y_speed, _yaw, _yaw_previous
+					
+						with _thing {
+							_x = x
+							_y = y
+							_z = z
+							_z_previous = z_previous
+							_x_speed = x_speed
+							_y_speed = y_speed
+							_yaw = collider_yaw
+							_yaw_previous = collider_yaw_previous
+						}
+					
+						var _diff = angle_difference(_yaw, _yaw_previous)
+						var _dir = point_direction(_x, _y, x, y) + _diff
+						var _len = point_distance(x, y, _x, _y)
+					
+						x = _x + lengthdir_x(_len, _dir) + _x_speed
+						y = _y + lengthdir_y(_len, _dir) + _y_speed
+						z += _z - _z_previous
+					
+						if model != undefined {
+							model.yaw += _diff
+						}
+					
+						angle += _diff
+						move_angle += _diff
+					}
+				} else {
+					var _dir = darctan2(-floor_ray[RaycastData.NY], floor_ray[RaycastData.NX])
+				
+					x += dcos(_dir)
+					y -= dsin(_dir)
+					floor_ray[RaycastData.HIT] = false
+				}
+			}
+		
+			z += z_speed
+		break
+	}
 }
 
 if tick != undefined {
 	tick.setSelf(self)
 	tick()
+}
+
+if instance_exists(holding) {
+	holding.x = x
+	holding.y = y
+	holding.z = z + height
+	holding.angle = angle
 }
 
 if model != undefined {
@@ -238,7 +253,10 @@ if model != undefined {
 	}
 }
 
-switch m_shadow {
+if _held {
+	shadow_ray[RaycastData.HIT] = false
+} else {
+	switch m_shadow {
 	default:
 	case MShadow.NONE:
 		shadow_ray[RaycastData.HIT] = false
@@ -287,4 +305,5 @@ switch m_shadow {
 			}
 		}
 	break
+}
 }
