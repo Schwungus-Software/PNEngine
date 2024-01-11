@@ -115,12 +115,78 @@ if jumped {
 	}
 }
 
-interaction = PlayerInteractions.NONE
+/* ===========
+   INTERACTION
+   =========== */
 
-if _can_move and input[PlayerInputs.INTERACT] and not input_previous[PlayerInputs.INTERACT] {
-	// Scenario 1: Attack
-	if can_maneuver and input_length >= 0.1 {
-		interaction = PlayerInteractions.ATTACK
+nearest_holdable = noone
+nearest_interactive = noone
+
+if _can_move {
+	// Scan for nearby interactives and holdables
+	var _radius = interact_radius + 10
+	var _neardist = infinity
+	var _things = grid_iterate(Thing, _radius)
+	var i = 0
+	
+	repeat array_length(_things) {
+		var _thing = _things[i++]
+		
+		if _thing.f_interactive and not instance_exists(_thing.holder) {
+			var _dist = point_distance_3d(x, y, z, _thing.x, _thing.y, _thing.z)
+			
+			if _dist < _neardist and _dist < (_radius + _thing.interact_radius) {
+				nearest_interactive = _thing
+				_neardist = _dist
+			}
+		}
+	}
+	
+	if not instance_exists(holding) and not instance_exists(nearest_interactive) {
+		_radius = hold_radius + 10
+		_neardist = infinity
+		_things = grid_iterate(Thing, _radius)
+		i = 0
+	
+		repeat array_length(_things) {
+			var _thing = _things[i++]
+			
+			if _thing.f_holdable and not instance_exists(_thing.holder) {
+				var _dist = point_distance_3d(x, y, z, _thing.x, _thing.y, _thing.z)
+				
+				if _dist < _neardist and _dist < (_radius + _thing.hold_radius) {
+					nearest_holdable = _thing
+					_neardist = _dist
+				}
+			}
+		}
+	}
+	
+	// Input
+	if input[PlayerInputs.INTERACT] and not input_previous[PlayerInputs.INTERACT] {
+		if instance_exists(nearest_interactive) {
+			do_interact(nearest_interactive)
+		} else {
+			if instance_exists(holding) {
+				if input_length >= 0.1 or not floor_ray[RaycastData.HIT] {
+					// Scenario: Throw
+					do_unhold()
+				} else {
+					// Scenario: Drop
+					do_unhold()
+				}
+			} else {
+				if instance_exists(nearest_holdable) {
+					// Scenario: Hold
+					do_hold(nearest_holdable)
+				} else {
+					if can_maneuver and input_length >= 0.1 {
+						// Scenario: Maneuver
+						do_maneuver()
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -128,24 +194,26 @@ if _can_move and input[PlayerInputs.INTERACT] and not input_previous[PlayerInput
    LOCK-ON TARGETING
    ================== */
 
-if target != noone and (not instance_exists(target) or target.f_culled or not target.f_targetable or point_distance(x, y, target.x, target.y) > 256) {
+if target != noone
+   and (not instance_exists(target) 
+        or target.f_culled 
+		or not target.f_targetable 
+		or instance_exists(target.holder) 
+		or point_distance_3d(x, y, z, target.x, target.y, target.z) > 256) {
 	do_untarget()
 }
 
-if targets == undefined {
-	exit
-}
-
-ds_priority_clear(targets)
+nearest_target = noone
 
 if not _frozen {
+	var _best = infinity
 	var _things = grid_iterate(Thing, 256)
 	var i = array_length(_things)
 	
 	repeat i {
 		var _thing = _things[--i]
 		
-		if _thing == target or not _thing.f_targetable {
+		if _thing == target or not _thing.f_targetable or instance_exists(_thing.holder) {
 			continue
 		}
 		
@@ -156,7 +224,7 @@ if not _frozen {
 			_y = y
 		}
 		
-		var _dist = point_distance(x, y, _x, _y)
+		var _dist = point_distance_3d(x, y, z, _x, _y, _thing.z)
 		
 		if _dist >= 256 {
 			continue
@@ -175,10 +243,11 @@ if not _frozen {
 			_priority -= target_priority + f_enemy - f_friend
 		}
 		
-		ds_priority_add(targets, _thing, _priority)
+		if _priority < _best {
+			nearest_target = _thing
+			_best = _priority
+		}
 	}
-	
-	nearest_target = ds_priority_find_min(targets) ?? noone
 }
 
 var _has_target = instance_exists(target)

@@ -1,11 +1,3 @@
-enum PlayerInteractions {
-	NONE,
-	ATTACK,
-	THING,
-	HOLDABLE,
-	THROW,
-}
-
 event_inherited()
 
 #region Variables
@@ -18,12 +10,12 @@ event_inherited()
 	input_length = 0
 	jumped = false
 	coyote = 0
-	interaction = PlayerInteractions.NONE
 	aiming = false
 	aim_angle = 0
 	nearest_target = noone
+	nearest_holdable = noone
+	nearest_interactive = noone
 	untarget_buffer = false
-	targets = undefined
 	
 	movement_speed = 6
 	jump_speed = 6.44
