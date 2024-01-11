@@ -642,14 +642,14 @@
 					
 					var b = net_buffer_create(true, NetHeaders.HOST_INTERACT_THING)
 					
-					buffer_write(b, buffer_u16, other.sync_id) // Interacter
+					buffer_write(b, buffer_u16, other.sync_id) // Interactor
 					buffer_write(b, buffer_u16, _thing.sync_id) // Interactive
 					send(SEND_OTHERS, b)
 				}
 			}
 		}
 		
-		return _thing.interactive_triggered(id) and interacter_triggered(_thing)
+		return _thing.interactive_triggered(id) and interactor_triggered(_thing)
 	}
 #endregion
 
@@ -683,7 +683,7 @@
 		return true
 	}
 	
-	interacter_triggered = function (_to) {
+	interactor_triggered = function (_to) {
 		return true
 	}
 	
