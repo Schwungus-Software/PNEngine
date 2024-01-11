@@ -528,12 +528,12 @@
 		return results
 	}
 	
-	do_hold = function (_thing, _forced = false) {
+	do_hold = function (_thing, _forced = false, _sync = true) {
 		if not instance_exists(_thing) {
 			return false
 		}
 		
-		if f_sync {
+		if _sync and f_sync {
 			var _netgame = global.netgame
 			
 			if _netgame != undefined {
@@ -556,13 +556,13 @@
 			}
 		}
 		
-		if not do_unhold(_forced) and not _forced {
+		if not do_unhold(_forced, false) and not _forced {
 			return false
 		}
 		
 		var _holder = _thing.holder
 		
-		if instance_exists(_holder) and (not _holder.do_unhold(_forced) and not _forced) {
+		if instance_exists(_holder) and (not _holder.do_unhold(_forced, false) and not _forced) {
 			return false
 		}
 		
@@ -580,12 +580,12 @@
 		return true
 	}
 	
-	do_unhold = function (_forced = false) {
+	do_unhold = function (_forced = false, _sync = true) {
 		if not instance_exists(holding) {
 			return false
 		}
 		
-		if f_sync {
+		if _sync and f_sync {
 			var _netgame = global.netgame
 			
 			if _netgame != undefined {
@@ -620,12 +620,12 @@
 		return true
 	}
 	
-	do_interact = function (_thing) {
+	do_interact = function (_thing, _sync = true) {
 		if not instance_exists(_thing) {
 			return false
 		}
 		
-		if f_sync {
+		if _sync and f_sync {
 			var _netgame = global.netgame
 			
 			if _netgame != undefined {

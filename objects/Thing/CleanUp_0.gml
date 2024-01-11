@@ -1,9 +1,9 @@
 if instance_exists(holding) {
-	do_unhold(true)
+	do_unhold(true, false)
 }
 
 if instance_exists(holder) {
-	holder.do_unhold(true)
+	holder.do_unhold(true, false)
 }
 
 if clean_up != undefined {

@@ -752,42 +752,8 @@ if async_load[? "type"] == network_type_data {
 				var _holder = _level.syncables[# _holder_id, 0] ?? noone
 				var _holding = _holding_id == -1 ? noone : (_level.syncables[# _holding_id, 0] ?? noone)
 				
-				if not instance_exists(_holder) or not instance_exists(_holding) {
-					break
-				}
-				
-				// Anything below this will mess with your head
-				if (not _holding.holdable_unheld(_holder, _forced) or not _holder.holder_unheld(_holding, _forced)) and not _forced {
-					break
-				}
-		
-				holding.holder = noone
-				holding = noone
-				
-				var _override_holder = _holding.holder
-				
-				if instance_exists(_override_holder) {
-					with _override_holder {
-						if (not holding.holdable_unheld(id, _forced) or not holder_unheld(holding, _forced)) and not _forced {
-							exit
-						}
-						
-						holding.holder = noone
-						holding = noone
-					}
-				}
-				
-				with _holding {
-					if not holdable_held(_holder, _forced) and not _forced {
-						exit
-					}
-					
-					holder = _holder
-				}
-				
-				with _holder {
-					holding = _holding
-					holder_held(_holding)
+				if instance_exists(_holder) and instance_exists(_holding) {
+					_holder.do_hold(_holding, _forced, false)
 				}
 			break
 			
@@ -795,24 +761,15 @@ if async_load[? "type"] == network_type_data {
 				CLIENT_CHECK_PACKET
 				
 				var _holder_id = buffer_read(_buffer, buffer_u16)
-				var _holding_id = buffer_read(_buffer, buffer_u16)
+				var _holding_id = buffer_read(_buffer, buffer_u16) // Unused, could be used for verifying?
 				var _forced = buffer_read(_buffer, buffer_bool)
 				
 				var _level = global.level
 				var _holder = _level.syncables[# _holder_id, 0] ?? noone
-				var _holding = _holding_id == -1 ? noone : (_level.syncables[# _holding_id, 0] ?? noone)
+				//var _holding = _holding_id == -1 ? noone : (_level.syncables[# _holding_id, 0] ?? noone)
 				
-				if not instance_exists(_holder) or not instance_exists(_holding) {
-					break
-				}
-				
-				with _holder {
-					if holding != _holding or ((not _holding.holdable_unheld(_holder, _forced) or not holder_unheld(_holding, _forced)) and not _forced) {
-						break
-					}
-					
-					_holding.holder = noone
-					holding = noone
+				if instance_exists(_holder) {
+					_holder.do_unhold(_forced, false)
 				}
 			break
 			
@@ -826,11 +783,9 @@ if async_load[? "type"] == network_type_data {
 				var _from = _level.syncables[# _from_id, 0] ?? noone
 				var _to = _to_id == -1 ? noone : (_level.syncables[# _to_id, 0] ?? noone)
 				
-				if not instance_exists(_from) or not instance_exists(_to) or not _to.interactive_triggered(_from) {
-					break
+				if instance_exists(_from) and instance_exists(_to) {
+					_from.do_interact(_to, false)
 				}
-				
-				_from.interacter_triggered(_thing)
 			break
 			
 			case NetHeaders.HOST_DESTROY_THING:
