@@ -50,6 +50,8 @@
 	
 	target = noone
 	master = noone
+	holding = noone
+	holder = noone
 	
 	cull_tick = infinity
 	cull_draw = infinity
@@ -66,7 +68,6 @@
 	y_speed = 0
 	z_speed = 0
 	vector_speed = 0
-	face_angle = 0
 	move_angle = 0
 	
 	fric = 0
@@ -121,6 +122,8 @@
 	f_destroyed = false
 	f_bump_avoid = false
 	f_collider_stick = true
+	f_holdable = false
+	f_interactive = false
 	
 	m_collision = MCollision.NONE
 	m_bump = MBump.NONE
@@ -524,6 +527,130 @@
 		
 		return results
 	}
+	
+	do_hold = function (_thing, _forced = false) {
+		if not instance_exists(_thing) {
+			return false
+		}
+		
+		if f_sync {
+			var _netgame = global.netgame
+			
+			if _netgame != undefined {
+				with _netgame {
+					if not _thing.f_sync {
+						break
+					}
+					
+					if not active or not master {
+						return false
+					}
+					
+					var b = net_buffer_create(true, NetHeaders.HOST_HOLD_THING)
+					
+					buffer_write(b, buffer_u16, other.sync_id) // Holder
+					buffer_write(b, buffer_u16, _thing.sync_id) // Holding
+					buffer_write(b, buffer_bool, _forced)
+					send(SEND_OTHERS, b)
+				}
+			}
+		}
+		
+		if not do_unhold(_forced) and not _forced {
+			return false
+		}
+		
+		var _holder = _thing.holder
+		
+		if instance_exists(_holder) and (not _holder.do_unhold(_forced) and not _forced) {
+			return false
+		}
+		
+		with _thing {
+			if not holdable_held(holder, _forced) and not _forced {
+				return false
+			}
+			
+			holder = other.id
+		}
+		
+		holding = _thing
+		holder_held(_thing)
+		
+		return true
+	}
+	
+	do_unhold = function (_forced = false) {
+		if not instance_exists(holding) {
+			return false
+		}
+		
+		if f_sync {
+			var _netgame = global.netgame
+			
+			if _netgame != undefined {
+				var _holding = holding
+				
+				with _netgame {
+					if not _holding.f_sync {
+						break
+					}
+					
+					if not active or not master {
+						return false
+					}
+					
+					var b = net_buffer_create(true, NetHeaders.HOST_UNHOLD_THING)
+					
+					buffer_write(b, buffer_u16, other.sync_id) // Holder
+					buffer_write(b, buffer_u16, _holding.sync_id) // Holding
+					buffer_write(b, buffer_bool, _forced)
+					send(SEND_OTHERS, b)
+				}
+			}
+		}
+		
+		if (not holding.holdable_unheld(id, _forced) or not holder_unheld(holding, _forced)) and not _forced {
+			return false
+		}
+		
+		holding.holder = noone
+		holding = noone
+		
+		return true
+	}
+	
+	do_interact = function (_thing) {
+		if not instance_exists(_thing) {
+			return false
+		}
+		
+		if f_sync {
+			var _netgame = global.netgame
+			
+			if _netgame != undefined {
+				var _holding = holding
+				
+				with _netgame {
+					if not _thing.f_sync {
+						break
+					}
+					
+					if not active or not master {
+						return false
+					}
+					
+					var b = net_buffer_create(true, NetHeaders.HOST_INTERACT_THING)
+					
+					buffer_write(b, buffer_u16, other.sync_id) // Interacter
+					buffer_write(b, buffer_u16, _thing.sync_id) // Interactive
+					send(SEND_OTHERS, b)
+				}
+			}
+		}
+		
+		return _thing.interactive_triggered(id) and interacter_triggered(_thing)
+	}
 #endregion
 
 #region Virtual Functions
@@ -537,6 +664,30 @@
 	}
 	
 	bump_check = function (_from) {
+		return true
+	}
+	
+	holder_held = function (_to, _forced) {
+		return true
+	}
+	
+	holder_unheld = function (_to, _forced) {
+		return true
+	}
+	
+	holdable_held = function (_from, _forced) {
+		return true
+	}
+	
+	holdable_unheld = function (_from, _forced) {
+		return true
+	}
+	
+	interacter_triggered = function (_to) {
+		return true
+	}
+	
+	interactive_triggered = function (_from) {
 		return true
 	}
 #endregion

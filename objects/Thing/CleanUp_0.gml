@@ -1,3 +1,11 @@
+if instance_exists(holding) {
+	do_unhold(true)
+}
+
+if instance_exists(holder) {
+	holder.do_unhold(true)
+}
+
 if clean_up != undefined {
 	clean_up.setSelf(self)
 	clean_up()
