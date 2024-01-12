@@ -1,3 +1,4 @@
+/// @feather ignore GM1017
 /// @feather ignore GM1019
 
 #region Scripting
@@ -254,7 +255,11 @@
 			#region String
 				addFunction(
 					"string_localize", lexicon_text,
-					"string_rich", scribble
+					"string_rich", scribble,
+					
+					"string_input", function (_verb, _player_index = 0) {
+						return input_binding_get_name(input_binding_get(_verb, _player_index))
+					}
 				)
 			#endregion
 			
