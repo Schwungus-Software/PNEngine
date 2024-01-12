@@ -17,9 +17,8 @@ if model != undefined {
 					var _mwp = matrix_get(matrix_world)
 					
 					matrix_build_dq(_parent_model.get_bone_dq(_hold_bone), matrix)
-				
-					var _offset_matrix = matrix_build(hold_offset_x, hold_offset_y, hold_offset_z, 0, 0, 0, 1, 1, 1)
-					var _hold_matrix = matrix_multiply(_offset_matrix, matrix)
+					
+					var _hold_matrix = matrix_multiply(hold_offset_matrix, matrix)
 					
 					matrix_set(matrix_world, matrix_multiply(_hold_matrix, _parent_model.matrix))
 					submit()

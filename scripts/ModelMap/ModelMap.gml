@@ -18,9 +18,9 @@ function ModelMap() : AssetMap() constructor {
 					var _offset = _json[$ "hold_offset"]
 					
 					if is_array(_offset) and array_length(_offset) >= 3 {
-						hold_offset_x = _offset[0]
-						hold_offset_y = _offset[1]
-						hold_offset_z = _offset[2]
+						hold_offset_matrix = matrix_build(_offset[0], _offset[1], _offset[2], 0, 0, 0, 1, 1, 1)
+					} else {
+						hold_offset_matrix = matrix_build_identity()
 					}
 				}
 				

@@ -24,9 +24,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 	torso_bone = _model.torso_bone
 	hold_bone = _model.hold_bone
 	
-	hold_offset_x = _model.hold_offset_x
-	hold_offset_y = _model.hold_offset_y
-	hold_offset_z = _model.hold_offset_z
+	hold_offset_matrix = _model.hold_offset_matrix
 	
 	static set_skin = function (_submodel, _skin) {
 		gml_pragma("forceinline")

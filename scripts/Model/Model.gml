@@ -6,9 +6,7 @@ function Model() : Asset() constructor {
 	torso_bone = -1
 	hold_bone = -1
 	
-	hold_offset_x = 0
-	hold_offset_y = 0
-	hold_offset_z = 0
+	hold_offset_matrix = undefined
 	
 	static destroy = function () {
 		destroy_array(submodels)
