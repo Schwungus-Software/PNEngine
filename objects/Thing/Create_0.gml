@@ -64,6 +64,7 @@
 	x_previous = x
 	y_previous = y
 	z_previous = z
+	angle = 0
 	x_speed = 0
 	y_speed = 0
 	z_speed = 0
@@ -74,8 +75,6 @@
 	grav = 1
 	max_fall_speed = -10
 	max_fly_speed = infinity
-	
-	angle = 0
 	
 	radius = 8
 	bump_radius = undefined
@@ -125,6 +124,7 @@
 	f_bump_avoid = false
 	f_collider_stick = true
 	f_holdable = false
+	f_holdable_in_hand = false
 	f_interactive = false
 	
 	m_collision = MCollision.NONE

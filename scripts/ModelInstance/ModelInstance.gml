@@ -24,6 +24,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 	torso_bone = _model.torso_bone
 	hold_bone = _model.hold_bone
 	
+	hold_offset_x = _model.hold_offset_x
+	hold_offset_y = _model.hold_offset_y
+	hold_offset_z = _model.hold_offset_z
+	
 	static set_skin = function (_submodel, _skin) {
 		gml_pragma("forceinline")
 		
@@ -34,6 +38,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 	}
 	
 	#region Animation
+		animated = false
 		animation_name = ""
 		animation = undefined
 		animation_finished = false
@@ -74,7 +79,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			animation_finished = false
 			animation_state = 0
 			
-			var _copy = false
+			var _first = not animated
+			var _copy = _first
 			
 			if _frame >= 0 {
 				_copy = true
@@ -97,8 +103,14 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			if _copy {
 				var _copy_sample = _animation.samples[_frame % _animation.frames]
+				var n = array_length(_copy_sample)
 				
-				array_copy(sample, 0, _copy_sample, 0, array_length(_copy_sample))
+				array_copy(sample, 0, _copy_sample, 0, n)
+				
+				if _first {
+					array_copy(transition_sample2, 0, _copy_sample, 0, n)
+					animated = true
+				}
 			}
 		}
 		
@@ -114,12 +126,13 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			   existing dual quaternion.
 			   If targetQ is not provided, a new dual quaternion is created. */
 			
+			var _sample = (transition < transition_time) ? transition_sample2 : sample
 			var b = 8 * _index
 			var s = animation.bind_pose[_index]
-			var r3 = sample[b + 3]
-			var r4 = sample[b + 4]
-			var r5 = sample[b + 5]
-			var r6 = sample[b + 6]
+			var r3 = _sample[b + 3]
+			var r4 = _sample[b + 4]
+			var r5 = _sample[b + 5]
+			var r6 = _sample[b + 6]
 			
 			if r3 == 1 and r4 == 0 and r5 == 0 and r6 == 0 {
 				/* An early out if this bone has not been transformed, letting us skip a dual
@@ -129,10 +142,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				return bone_dq
 			}
 			
-			var r0 = sample[b]
-			var r1 = sample[-~b]
-			var r2 = sample[b + 2]
-			var r7 = sample[b + 7]
+			var r0 = _sample[b]
+			var r1 = _sample[-~b]
+			var r2 = _sample[b + 2]
+			var r7 = _sample[b + 7]
 			
 			var s0 = s[0]
 			var s1 = s[1]
@@ -340,12 +353,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		color = c_white
 		alpha = 1
 		
-		static draw = function () {
-			var _mwp = matrix_get(matrix_world)
-			
-			matrix = matrix_build(sx, sy, sz, sroll, spitch, syaw, sscale * sx_scale, sscale * sy_scale, sscale * sz_scale)
-			matrix_set(matrix_world, matrix)
-			
+		static submit = function () {
 			global.u_color.set(color_get_red(color) * COLOR_INVERSE, color_get_green(color) * COLOR_INVERSE, color_get_blue(color) * COLOR_INVERSE, alpha)
 			
 			if animation == undefined {
@@ -486,7 +494,14 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				
 				i += 2
 			}
+		}
+		
+		static draw = function () {
+			var _mwp = matrix_get(matrix_world)
 			
+			matrix = matrix_build(sx, sy, sz, sroll, spitch, syaw, sscale * sx_scale, sscale * sy_scale, sscale * sz_scale)
+			matrix_set(matrix_world, matrix)
+			submit()
 			matrix_set(matrix_world, _mwp)
 		}
 	#endregion

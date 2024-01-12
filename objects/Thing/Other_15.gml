@@ -4,7 +4,36 @@ if emitter != undefined and audio_emitter_exists(emitter) {
 }
 
 if model != undefined {
-	model.draw()
+	var _draw = true
+	
+	if f_holdable_in_hand and instance_exists(holder) {
+		var _parent_model = holder.model
+		
+		if _parent_model != undefined {
+			var _hold_bone = _parent_model.hold_bone
+			
+			if _hold_bone != -1 {
+				with model {
+					var _mwp = matrix_get(matrix_world)
+					
+					matrix_build_dq(_parent_model.get_bone_dq(_hold_bone), matrix)
+				
+					var _offset_matrix = matrix_build(hold_offset_x, hold_offset_y, hold_offset_z, 0, 0, 0, 1, 1, 1)
+					var _hold_matrix = matrix_multiply(_offset_matrix, matrix)
+					
+					matrix_set(matrix_world, matrix_multiply(_hold_matrix, _parent_model.matrix))
+					submit()
+					matrix_set(matrix_world, _mwp)
+				}
+				
+				_draw = false
+			}
+		}
+	}
+	
+	if _draw {
+		model.draw()
+	}
 }
 
 if draw != undefined {

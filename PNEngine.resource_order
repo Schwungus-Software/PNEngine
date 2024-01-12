@@ -311,6 +311,7 @@
     {"name":"__scribble_get_krutidev_matra_lookup_map","order":12,"path":"scripts/__scribble_get_krutidev_matra_lookup_map/__scribble_get_krutidev_matra_lookup_map.yy",},
     {"name":"input_icons_gamepad","order":3,"path":"scripts/input_icons_gamepad/input_icons_gamepad.yy",},
     {"name":"input_check_press_most_recent","order":9,"path":"scripts/input_check_press_most_recent/input_check_press_most_recent.yy",},
+    {"name":"matrix_build_dq","order":3,"path":"scripts/matrix_build_dq/matrix_build_dq.yy",},
     {"name":"CollageDrawImagePartExt","order":4,"path":"scripts/CollageDrawImagePartExt/CollageDrawImagePartExt.yy",},
     {"name":"__CollageVFormat","order":2,"path":"scripts/__CollageVFormat/__CollageVFormat.yy",},
     {"name":"input_virtual_debug_draw","order":2,"path":"scripts/input_virtual_debug_draw/input_virtual_debug_draw.yy",},

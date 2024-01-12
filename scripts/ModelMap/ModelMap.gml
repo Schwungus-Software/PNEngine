@@ -12,7 +12,17 @@ function ModelMap() : AssetMap() constructor {
 			if is_struct(_json) {
 				var _model = new Model()
 				
-				_model.name = _name
+				with _model {
+					name = _name
+					
+					var _offset = _json[$ "hold_offset"]
+					
+					if is_array(_offset) and array_length(_offset) >= 3 {
+						hold_offset_x = _offset[0]
+						hold_offset_y = _offset[1]
+						hold_offset_z = _offset[2]
+					}
+				}
 				
 				#region Submodels
 					var _get_submodels = _json[$ "submodels"]
