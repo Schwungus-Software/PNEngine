@@ -173,7 +173,7 @@ if _can_move {
 			do_interact(nearest_interactive)
 		} else {
 			if instance_exists(holding) {
-				if _moving or not _on_ground {
+				if aiming or _moving or not _on_ground {
 					// Scenario: Throw
 					do_unhold()
 				} else {
