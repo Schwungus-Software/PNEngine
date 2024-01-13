@@ -320,7 +320,7 @@ event_inherited()
 				
 				repeat i {
 					with _active_things[| --i] {
-						if f_visible and point_distance(_x, _y, sx, sy) < cull_draw {
+						if f_visible and not (f_holdable_in_hand and instance_exists(holder)) and point_distance(_x, _y, sx, sy) < cull_draw {
 							event_user(ThingEvents.DRAW)
 						}
 					}

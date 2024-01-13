@@ -3,35 +3,33 @@ if emitter != undefined and audio_emitter_exists(emitter) {
 	audio_emitter_position(emitter, sx, sy, sz)
 }
 
-if model != undefined {
-	var _draw = true
+var _model = model
+
+if _model != undefined {
+	_model.draw()
 	
-	if f_holdable_in_hand and instance_exists(holder) {
-		var _parent_model = holder.model
+	if instance_exists(holding) and holding.f_holdable_in_hand {
+		var _hold_bone = _model.hold_bone
 		
-		if _parent_model != undefined {
-			var _hold_bone = _parent_model.hold_bone
-			
-			if _hold_bone != -1 {
+		if _hold_bone != -1 {
+			with holding {
+				if model == undefined {
+					break
+				}
+				
 				with model {
 					var _mwp = matrix_get(matrix_world)
 					
-					matrix_build_dq(_parent_model.get_bone_dq(_hold_bone), matrix)
+					matrix_build_dq(_model.get_bone_dq(_hold_bone), matrix)
 					
 					var _hold_matrix = matrix_multiply(hold_offset_matrix, matrix)
 					
-					matrix_set(matrix_world, matrix_multiply(_hold_matrix, _parent_model.matrix))
+					matrix_set(matrix_world, matrix_multiply(_hold_matrix, _model.matrix))
 					submit()
 					matrix_set(matrix_world, _mwp)
 				}
-				
-				_draw = false
 			}
 		}
-	}
-	
-	if _draw {
-		model.draw()
 	}
 }
 
