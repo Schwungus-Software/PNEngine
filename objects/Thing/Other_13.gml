@@ -34,7 +34,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 	repeat i {
 		var _thing = _list[| --i]
 		
-		if instance_exists(_thing) and _thing != id and _thing.m_bump != MBump.TO {
+		if instance_exists(_thing) and _thing != id and _thing.m_bump != MBump.TO and not instance_exists(_thing.holder) {
 			var _tx, _ty, _tz, _th
 			
 			with _thing {
@@ -76,7 +76,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 					exit
 				}
 				
-				if not _result or not instance_exists(_thing) {
+				if not _result or not instance_exists(_thing) or f_bump_passive or _thing.f_bump_passive {
 					continue
 				}
 				
@@ -221,6 +221,11 @@ if instance_exists(holding) {
 	holding.y = y
 	holding.z = z + height
 	holding.angle = angle
+	
+	with holding {
+		set_speed(0)
+		z_speed = 0
+	}
 }
 
 if model != undefined {
