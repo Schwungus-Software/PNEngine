@@ -69,7 +69,7 @@
 					"point_pitch", point_pitch,
 			        "point_distance", point_distance,
 			        "dot_product", dot_product,
-			        "dot_product_normalised", dot_product_normalised,
+			        "dot_product_normalized", dot_product_normalized,
 			        "angle_difference", angle_difference,
 			        "lengthdir_x", lengthdir_x,
 			        "lengthdir_y", lengthdir_y
@@ -78,7 +78,8 @@
 				addFunction(
 			        "point_distance_3d", point_distance_3d,
 			        "dot_product_3d", dot_product_3d,
-			        "dot_product_3d_normalised", dot_product_3d_normalised,
+			        "dot_product_3d_normalized", dot_product_3d_normalized,
+					"cross_product_3d_normalized", cross_product_3d_normalized,
 			        "matrix_build", matrix_build,
 			        "matrix_multiply", matrix_multiply,
 			        "matrix_build_identity", matrix_build_identity,
@@ -526,6 +527,7 @@
 					"batch_billboard", batch_billboard,
 					"batch_floor", batch_floor,
 					"batch_floor_ext", batch_floor_ext,
+					"batch_line", batch_line,
 					"batch_set_alpha_test", batch_set_alpha_test,
 					"batch_set_bright", batch_set_bright
 				)
