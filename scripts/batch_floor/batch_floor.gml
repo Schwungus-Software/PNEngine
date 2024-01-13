@@ -12,11 +12,15 @@ function batch_floor(_image, _frame, _width, _height, _x, _y, _z, _color = c_whi
 	var _x2 = _x1 + _width
 	var _y2 = _y1 + _height
 	
+	var _u1, _v1, _u2, _v2
 	var _uvs = _image.GetUVs(_frame)
-	var _u1 = _uvs.normLeft
-	var _v1 = _uvs.normTop
-	var _u2 = _u1 + _uvs.normRight
-	var _v2 = _v1 + _uvs.normBottom
+	
+	with _uvs {
+		_u1 = normLeft
+		_v1 = normTop
+		_u2 = _u1 + normRight
+		_v2 = _v1 + normBottom
+	}
 	
 	var _batch_vbo = global.batch_vbo
 	
