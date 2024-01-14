@@ -76,10 +76,11 @@
 			    )
 				
 				addFunction(
-			        "point_distance_3d", point_distance_3d,
+					"point_distance_3d", point_distance_3d,
 			        "dot_product_3d", dot_product_3d,
 			        "dot_product_3d_normalized", dot_product_3d_normalized,
 					"cross_product_3d_normalized", cross_product_3d_normalized,
+					"lengthdir_3d", lengthdir_3d,
 			        "matrix_build", matrix_build,
 			        "matrix_multiply", matrix_multiply,
 			        "matrix_build_identity", matrix_build_identity,
@@ -443,6 +444,8 @@
 					"RAY_THING", RaycastData.THING,
 					"RAY_TRIANGLE", RaycastData.TRIANGLE
 				)
+				
+				addFunction("raycast_data_create", raycast_data_create)
 			#endregion
 			
 			#region Rendering
