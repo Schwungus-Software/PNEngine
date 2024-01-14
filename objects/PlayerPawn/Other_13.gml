@@ -119,10 +119,46 @@ if jumped {
    INTERACTION
    =========== */
 
+var _has_target = instance_exists(target)
+
+if _has_target {
+	var _x, _y, _z
+	
+	with target {
+		_x = x
+		_y = y
+		_z = z
+	}
+	
+	aim_angle = point_direction(x, y, _x, _y)
+	pitch = -point_pitch(x, y, z, _x, _y, _z)
+} else {
+	if not aiming {
+		aim_angle = angle
+	}
+	
+	pitch = 0
+}
+
+if instance_exists(holding) {
+	holding.angle = aim_angle
+	holding.pitch = pitch
+}
+
 nearest_holdable = noone
 nearest_interactive = noone
 
 if _can_move {
+	if input[PlayerInputs.ATTACK] and not input_previous[PlayerInputs.ATTACK] {
+		if is_catspeak(try_attack) {
+			try_attack.setSelf(self)
+		}
+		
+		if try_attack() and (sync_attack == undefined or sync_attack.update()) {
+			do_attack()
+		}
+	}
+	
 	var _moving = input_length >= 0.1
 	var _can_maneuver = can_maneuver and _moving
 	
@@ -175,7 +211,7 @@ if _can_move {
 			if instance_exists(holding) {
 				if aiming or _moving or not _on_ground {
 					// Scenario: Throw
-					do_unhold()
+					do_unhold(true)
 				} else {
 					// Scenario: Drop
 					do_unhold()
@@ -255,8 +291,6 @@ if not _frozen {
 	}
 }
 
-var _has_target = instance_exists(target)
-
 if _can_move and input[PlayerInputs.AIM] {
 	var _can_target = instance_exists(nearest_target)
 	
@@ -283,10 +317,6 @@ if _can_move and input[PlayerInputs.AIM] {
 	}
 }
 
-if _has_target {
-	aim_angle = point_direction(x, y, target.x, target.y)
-}
-
 /* ======
    CAMERA
    ====== */
@@ -303,9 +333,9 @@ if aiming {
 		_z_to = lerp(z, target.z, 0.5)
 	} else {
 		// Not targetting anything, focus towards direction
-		_x_to = x
-		_y_to = y
-		_z_to = z + 4
+		_x_to = x + lengthdir_x(6, aim_angle)
+		_y_to = y + lengthdir_y(6, aim_angle)
+		_z_to = z + 6
 		
 		if _camera_exists {
 			with camera {

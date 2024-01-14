@@ -65,6 +65,7 @@
 	y_previous = y
 	z_previous = z
 	angle = 0
+	pitch = 0
 	x_speed = 0
 	y_speed = 0
 	z_speed = 0
@@ -559,13 +560,13 @@
 			}
 		}
 		
-		if not do_unhold(_forced, false) and not _forced {
+		if not do_unhold(false, _forced, false) and not _forced {
 			return false
 		}
 		
 		var _holder = _thing.holder
 		
-		if instance_exists(_holder) and (not _holder.do_unhold(_forced, false) and not _forced) {
+		if instance_exists(_holder) and (not _holder.do_unhold(false, _forced, false) and not _forced) {
 			return false
 		}
 		
@@ -583,7 +584,7 @@
 		return true
 	}
 	
-	do_unhold = function (_forced = false, _sync = true) {
+	do_unhold = function (_tossed = false, _forced = false, _sync = true) {
 		if not instance_exists(holding) {
 			return true
 		}
@@ -607,17 +608,22 @@
 					
 					buffer_write(b, buffer_u16, other.sync_id) // Holder
 					buffer_write(b, buffer_u16, _holding.sync_id) // Holding
+					buffer_write(b, buffer_bool, _tossed)
 					buffer_write(b, buffer_bool, _forced)
 					send(SEND_OTHERS, b)
 				}
 			}
 		}
 		
-		if (not holding.holdable_unheld(id, _forced) or not holder_unheld(holding, _forced)) and not _forced {
+		if (not holding.holdable_unheld(id, _tossed, _forced) or not holder_unheld(holding, _tossed, _forced)) and not _forced {
 			return false
 		}
 		
-		holding.holder = noone
+		with holding {
+			holder = noone
+			pitch = 0
+		}
+		
 		holding = noone
 		
 		return true
@@ -674,7 +680,7 @@
 		return true
 	}
 	
-	holder_unheld = function (_to, _forced) {
+	holder_unheld = function (_to, _tossed, _forced) {
 		return true
 	}
 	
@@ -682,7 +688,7 @@
 		return true
 	}
 	
-	holdable_unheld = function (_from, _forced) {
+	holdable_unheld = function (_from, _tossed, _forced) {
 		return true
 	}
 	

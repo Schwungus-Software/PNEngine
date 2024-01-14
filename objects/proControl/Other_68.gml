@@ -762,6 +762,7 @@ if async_load[? "type"] == network_type_data {
 				
 				var _holder_id = buffer_read(_buffer, buffer_u16)
 				var _holding_id = buffer_read(_buffer, buffer_u16) // Unused, could be used for verifying?
+				var _tossed = buffer_read(_buffer, buffer_bool)
 				var _forced = buffer_read(_buffer, buffer_bool)
 				
 				var _level = global.level
@@ -769,7 +770,7 @@ if async_load[? "type"] == network_type_data {
 				//var _holding = _holding_id == -1 ? noone : (_level.syncables[# _holding_id, 0] ?? noone)
 				
 				if instance_exists(_holder) {
-					_holder.do_unhold(_forced, false)
+					_holder.do_unhold(_tossed, _forced, false)
 				}
 			break
 			

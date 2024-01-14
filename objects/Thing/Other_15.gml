@@ -5,7 +5,7 @@ if emitter != undefined and audio_emitter_exists(emitter) {
 
 var _model = model
 
-if _model != undefined {
+if _model != undefined and (not instance_exists(holder) or not f_holdable_in_hand) {
 	_model.draw()
 	
 	if instance_exists(holding) and holding.f_holdable_in_hand {
@@ -24,7 +24,8 @@ if _model != undefined {
 					
 					var _hold_matrix = matrix_multiply(hold_offset_matrix, matrix)
 					
-					matrix_set(matrix_world, matrix_multiply(_hold_matrix, _model.matrix))
+					matrix = matrix_multiply(_hold_matrix, _model.matrix)
+					matrix_set(matrix_world, matrix)
 					submit()
 					matrix_set(matrix_world, _mwp)
 				}

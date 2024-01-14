@@ -44,7 +44,27 @@ event_inherited()
 		player_jumped()
 	}
 	
-	do_maneuver = function () {}
+	do_maneuver = function () {
+		if is_catspeak(player_maneuvered) {
+			player_maneuvered.setSelf(self)
+		}
+		
+		player_maneuvered()
+	}
+	
+	do_attack = function () {
+		if instance_exists(holding) and not holding.f_holdable_in_hand {
+			do_unhold(true)
+			
+			exit
+		}
+		
+		if is_catspeak(player_attacked) {
+			player_attacked.setSelf(self)
+		}
+		
+		player_attacked()
+	}
 	
 	do_target = function (_thing) {
 		gml_pragma("forceinline")
@@ -94,6 +114,12 @@ event_inherited()
 	}
 	
 	player_maneuvered = function () {}
+	
+	try_attack = function () {
+		return true
+	}
+	
+	player_attacked = function () {}
 	player_respawned = function () {}
 	player_aimed = function (_target) {}
 #endregion

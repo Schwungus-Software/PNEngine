@@ -56,4 +56,10 @@ sync_maneuver = add_net_variable("net_maneuver", NetVarFlags.DEFAULT, function (
 }, function () {
 	return undefined
 })
+
+sync_attack = add_net_variable("net_attack", NetVarFlags.DEFAULT, function (_value) {
+	do_attack()
+}, function () {
+	return undefined
+})
 #endregion
