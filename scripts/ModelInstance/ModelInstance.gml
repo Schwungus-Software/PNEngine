@@ -25,6 +25,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 	hold_bone = _model.hold_bone
 	
 	hold_offset_matrix = _model.hold_offset_matrix
+	points = _model.points
 	
 	static set_skin = function (_submodel, _skin) {
 		gml_pragma("forceinline")
@@ -110,6 +111,33 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					animated = true
 				}
 			}
+		}
+		
+		static get_point = function (_name) {
+			if points == undefined {
+				return undefined
+			}
+			
+			var _point = points[$ _name]
+			
+			if not is_array(_point) {
+				return undefined
+			}
+			
+			var _x = _point[0]
+			var _y = _point[1]
+			var _z = _point[2]
+			var _bone = _point[3]
+			
+			if _bone != -1 {
+				var _bone_pos = dq_get_translation(dq_add_translation(get_bone_dq(_bone), _x, _y, _z))
+				
+				_x = _bone_pos[0]
+				_y = _bone_pos[1]
+				_z = _bone_pos[2]
+			}
+			
+			return matrix_transform_point(matrix, _x, _y, _z)
 		}
 		
 		static get_bone_dq = function (_index) {

@@ -22,6 +22,12 @@ function ModelMap() : AssetMap() constructor {
 					} else {
 						hold_offset_matrix = matrix_build_identity()
 					}
+					
+					var _points = _json[$ "points"]
+					
+					if is_struct(_points) {
+						points = _points
+					}
 				}
 				
 				#region Submodels
