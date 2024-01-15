@@ -47,6 +47,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		sample = dq_build_identity()
 		interp("frame", "sframe")
 		
+		splice = undefined
+		splice_bone = -1
+		splice_frame = 0
+		splice_push = false
+		interp("splice_frame", "ssplice_frame")
+		
 		transition = 0
 		transition_time = 0
 		transition_sample = dq_build_identity()
@@ -111,6 +117,18 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					animated = true
 				}
 			}
+		}
+		
+		static set_splice_animation = function (_animation, _bone, _frame = 0, _push = false) {
+			if _frame < 0 and _animation != undefined {
+				_frame = _animation.frames
+			}
+			
+			splice = _animation
+			splice_bone = _bone
+			splice_frame = _frame
+			splice_push = _push
+			interp_skip("ssplice_frame")
 		}
 		
 		static get_point = function (_name) {
@@ -292,18 +310,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _current_sample, _next_sample
 			var n = _animation.frames
 			
-			switch _animation.type {
-				case AnimationTypes.LINEAR:
-				case AnimationTypes.QUADRATIC:
-					_current_sample = min(floor(_frame), n)
-					_next_sample = min(floor(_frame + 1), n)
-				break
-				
-				case AnimationTypes.LINEAR_LOOP:
-				case AnimationTypes.QUADRATIC_LOOP:
-					_current_sample = floor(_frame) % n
-					_next_sample = floor(_frame + 1) % n
-				break
+			if _animation.type % 2 {
+				_current_sample = floor(_frame) % n
+				_next_sample = floor(_frame + 1) % n
+			} else {
+				_current_sample = min(floor(_frame), n)
+				_next_sample = min(floor(_frame + 1), n)
 			}
 			
 			var _samples = _animation.samples
@@ -408,91 +420,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 		}
 		
-		/*function sample_splice_branch(rig, nodeInd, D, S, W) 
-		{	//
-			//	This script lets you combine one bone and all its descendants from one sample into another.
-			//	Useful if you've only animated parts of the rig in one sample.
-			//
-			//	weight should be between 0 and 1. At 0, there will be no change to the sample. At 1, the branch will be copied from the source to the destination.
-			//	Anything inbetween will interpolate linearly. Note that the interpolation may accidentally detach bones from their parents.
-			//
-			if (nodeInd < 0 || nodeInd > rig.nodeNum){return D;}
-			var bindMap = rig.bindMap;
-			var nodeList = rig.nodeList;
-			var node = nodeList[| nodeInd];
-
-			//Find the bone index of the parent node
-			var descendants = node[eAnimNode.Descendants];
-			var num = array_length(descendants);
-			var parent = node[eAnimNode.Parent];
-			var parBone = bindMap[| parent];
-			if (parBone < 0)
-			{
-				parBone = bindMap[| nodeInd];
-				if (parBone < 0)
-				{
-					//The parent node is not mapped to any bone. Simply interpolate between source and destination without transformation.
-					b = 8 * bindMap[| nodeInd];
-					for (var i = 0; i <= num; i ++)
-					{
-						if (b >= 0)
-						{
-							D[@ b]   += W * (S[b]   - D[b]);
-							D[@ b+1] += W * (S[b+1] - D[b+1]);
-							D[@ b+2] += W * (S[b+2] - D[b+2]);
-							D[@ b+3] += W * (S[b+3] - D[b+3]);
-							D[@ b+4] += W * (S[b+4] - D[b+4]);
-							D[@ b+5] += W * (S[b+5] - D[b+5]);
-							D[@ b+6] += W * (S[b+6] - D[b+6]);
-							D[@ b+7] += W * (S[b+7] - D[b+7]);
-						}
-						if (i < num)
-						{
-							b = 8 * bindMap[| descendants[i]];
-						}
-					}
-					return D;
-				}
-			}
-
-			//Find the change in orientation from the source sample to the destination sample. Same as dq_multiply(D, dq_get_conjugate(S));
-			var b = parBone * 8;
-			var s0 = S[b], s1 = S[b+1], s2 = S[b+2], s3 = S[b+3], s4 = S[b+4], s5 = S[b+5], s6 = S[b+6], s7 = S[b+7];
-			var d0 = D[b], d1 = D[b+1], d2 = D[b+2], d3 = D[b+3], d4 = D[b+4], d5 = D[b+5], d6 = D[b+6], d7 = D[b+7];
-			var r0 = -d3 * s0 + d0 * s3 - d1 * s2 + d2 * s1;
-			var r1 = -d3 * s1 + d1 * s3 - d2 * s0 + d0 * s2;
-			var r2 = -d3 * s2 + d2 * s3 - d0 * s1 + d1 * s0;
-			var r3 =  d3 * s3 + d0 * s0 + d1 * s1 + d2 * s2;
-			var r4 = -d3 * s4 + d0 * s7 - d1 * s6 + d2 * s5 - d7 * s0 + d4 * s3 - d5 * s2 + d6 * s1;
-			var r5 = -d3 * s5 + d1 * s7 - d2 * s4 + d0 * s6 - d7 * s1 + d5 * s3 - d6 * s0 + d4 * s2;
-			var r6 = -d3 * s6 + d2 * s7 - d0 * s5 + d1 * s4 - d7 * s2 + d6 * s3 - d4 * s1 + d5 * s0;
-			var r7 =  d3 * s7 + d0 * s4 + d1 * s5 + d2 * s6 + d7 * s3 + d4 * s0 + d5 * s1 + d6 * s2;
-
-			//Transform the source sample so that it stays attached to the parent in the destination sample. Linearly interpolate between source and destination samples.
-			b = 8 * bindMap[| nodeInd];
-			for (var i = 0; i <= num; i ++)
-			{
-				if (b >= 0)
-				{
-					var s0 = S[b], s1 = S[b+1], s2 = S[b+2], s3 = S[b+3], s4 = S[b+4], s5 = S[b+5], s6 = S[b+6], s7 = S[b+7];
-					var d0 = D[b], d1 = D[b+1], d2 = D[b+2], d3 = D[b+3], d4 = D[b+4], d5 = D[b+5], d6 = D[b+6], d7 = D[b+7];
-					D[@ b]   += W * (r3 * s0 + r0 * s3 + r1 * s2 - r2 * s1 - d0);
-					D[@ b+1] += W * (r3 * s1 + r1 * s3 + r2 * s0 - r0 * s2 - d1);
-					D[@ b+2] += W * (r3 * s2 + r2 * s3 + r0 * s1 - r1 * s0 - d2);
-					D[@ b+3] += W * (r3 * s3 - r0 * s0 - r1 * s1 - r2 * s2 - d3);
-					D[@ b+4] += W * (r3 * s4 + r0 * s7 + r1 * s6 - r2 * s5 + r7 * s0 + r4 * s3 + r5 * s2 - r6 * s1 - d4);
-					D[@ b+5] += W * (r3 * s5 + r1 * s7 + r2 * s4 - r0 * s6 + r7 * s1 + r5 * s3 + r6 * s0 - r4 * s2 - d5);
-					D[@ b+6] += W * (r3 * s6 + r2 * s7 + r0 * s5 - r1 * s4 + r7 * s2 + r6 * s3 + r4 * s1 - r5 * s0 - d6);
-					D[@ b+7] += W * (r3 * s7 - r0 * s4 - r1 * s5 - r2 * s6 + r7 * s2 - r4 * s0 - r5 * s1 - r6 * s2 - d7);
-				}
-				if (i < num)
-				{
-					b = 8 * bindMap[| descendants[i]];
-				}
-			}
-			return D;
-		}*/
-		
 		update_sample = undefined
 		
 		static tick = function () {
@@ -502,7 +429,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				
 				animation_finished = false
 				
-				if _animation_type == AnimationTypes.LINEAR_LOOP or _animation_type == AnimationTypes.QUADRATIC_LOOP {
+				if _animation_type % 2 {
 					// Looping animation
 					frame += _frame_step
 				} else {
@@ -515,6 +442,14 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				
 				if transition < transition_time {
 					++transition
+				}
+			}
+			
+			if splice != undefined {
+				splice_frame += splice.frame_speed
+				
+				if splice_push and (splice.type % 2) and splice_frame >= splice.frames {
+					splice = undefined
 				}
 			}
 		}
@@ -603,7 +538,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				
 				with animation {
 					_frames = frames
-					_loop = type == AnimationTypes.LINEAR_LOOP or type == AnimationTypes.QUADRATIC_LOOP
+					_loop = type % 2
 					
 					if _loop {
 						_current_frame = _frame mod _frames
@@ -621,6 +556,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				var _next_sample = _samples[floor(_next_frame)]
 				
 				sample_blend(_final_sample, _current_sample, _next_sample, frac(_current_frame))
+				
+				if splice != undefined {
+					splice_animation(splice, splice_frame, splice_bone)
+				}
 				
 				if update_sample != undefined {
 					update_sample(self)
