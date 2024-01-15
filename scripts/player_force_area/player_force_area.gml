@@ -15,7 +15,7 @@ function player_force_area(_scope, _id) {
 			repeat i {
 				var _thing = _active_things[| --i]
 				
-				_thing.player_left(_thing, id)
+				_thing.player_left(_thing, self)
 			}
 			
 			if instance_exists(thing) {
