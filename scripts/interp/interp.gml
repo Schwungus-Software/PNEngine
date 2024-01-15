@@ -13,7 +13,17 @@ function interp(_in, _out, _angle = false, _scope = undefined) {
 			_id = ds_list_size(_interps)
 		}
 		
-		_interps[| _id] = (is_numeric(_scope) and instance_exists(_scope)) ? _scope.id : weak_ref_create(_scope)
+		var _weak_ref
+		
+		if instance_exists(_scope) and not object_exists(_scope) {
+			_weak_ref = _scope.id
+		} else if is_struct(_scope) {
+			_weak_ref = weak_ref_create(_scope)
+		} else {
+			show_error($"!!! interp: Invalid scope, got {typeof(_scope)}", true)
+		}
+		
+		_interps[| _id] = _weak_ref
 		_data = []
 		struct_set_from_hash(_scope, __interp_hash, _data)
 	}
