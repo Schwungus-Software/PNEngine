@@ -176,7 +176,7 @@ function Area() constructor {
 		
 		with level {
 			if area_activated != undefined {
-				area_activated(other)
+				area_activated(self, other)
 			}
 		}
 	}
@@ -306,11 +306,7 @@ function Area() constructor {
 								var _value
 								
 								if write != undefined {
-									if is_catspeak(write) {
-										write.setSelf(scope)
-									}
-									
-									_value = write()
+									_value = write(scope)
 								} else {
 									_value = struct_get_from_hash(scope, hash)
 								}
@@ -510,7 +506,7 @@ function Area() constructor {
 		
 		with level {
 			if area_deactivated != undefined {
-				area_deactivated(other)
+				area_deactivated(self, other)
 			}
 		}
 	}

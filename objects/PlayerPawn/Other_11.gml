@@ -18,7 +18,7 @@ if instance_exists(camera) {
 targets = ds_priority_create()
 
 #region Net Variables
-add_net_variable("player", NetVarFlags.CREATE, function (_value) {
+add_net_variable("player", NetVarFlags.CREATE, function (_self, _value) {
 	var _player = global.players[_value]
 	
 	player = _player
@@ -41,25 +41,25 @@ add_net_variable("player", NetVarFlags.CREATE, function (_value) {
 		
 		camera = _newcam
 	}
-}, function () {
+}, function (_self) {
 	return global.last_player
 })
 
-sync_jump = add_net_variable("net_jump", NetVarFlags.DEFAULT, function (_value) {
+sync_jump = add_net_variable("net_jump", NetVarFlags.DEFAULT, function (_self, _value) {
 	do_jump()
-}, function () {
+}, function (_self) {
 	return undefined
 })
 
-sync_maneuver = add_net_variable("net_maneuver", NetVarFlags.DEFAULT, function (_value) {
+sync_maneuver = add_net_variable("net_maneuver", NetVarFlags.DEFAULT, function (_self, _value) {
 	do_maneuver()
-}, function () {
+}, function (_self) {
 	return undefined
 })
 
-sync_attack = add_net_variable("net_attack", NetVarFlags.DEFAULT, function (_value) {
+sync_attack = add_net_variable("net_attack", NetVarFlags.DEFAULT, function (_self, _value) {
 	do_attack()
-}, function () {
+}, function (_self) {
 	return undefined
 })
 #endregion

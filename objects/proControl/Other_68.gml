@@ -692,11 +692,7 @@ if async_load[? "type"] == network_type_data {
 							if _netvar != undefined {
 								with _netvar {
 									if read != undefined {
-										if is_catspeak(read) {
-											read.setSelf(scope)
-										}
-										
-										read(_value)
+										read(scope, _value)
 									} else {
 										struct_set_from_hash(scope, hash, _value)
 									}
@@ -721,23 +717,11 @@ if async_load[? "type"] == network_type_data {
 				var _from = _from_id == -1 ? noone : (_level.syncables[# _from_id, 0] ?? noone)
 				
 				if instance_exists(_to) {
-					with _to {
-						if is_catspeak(damage_received) {
-							damage_received.setSelf(_to)
-						}
-						
-						damage_received(_from, _amount, _type)
-					}
+					_to.damage_received(_to, _from, _amount, _type)
 				}
 				
 				if instance_exists(_from) {
-					with _from {
-						if is_catspeak(damage_dealt) {
-							damage_dealt.setSelf(_from)
-						}
-						
-						damage_dealt(_to, _amount, _type, _result)
-					}
+					_from.damage_dealt(_from, _to, _amount, _type, _result)
 				}
 			break
 			

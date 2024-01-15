@@ -201,11 +201,7 @@ if _ui != undefined {
 	
 	with _draw_target {
 		if draw_gui != undefined {
-			if is_catspeak(draw_gui) {
-				draw_gui.setSelf(_draw_target)
-			}
-			
-			draw_gui()
+			draw_gui(_draw_target)
 		}
 	}
 }

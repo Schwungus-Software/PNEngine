@@ -22,7 +22,6 @@
 
 #region Variables
 	thing_script = undefined
-	//thing_self = catspeak_special_to_struct(id)
 	
 	sync_id = noone
 	net_variables = ds_list_create()
@@ -124,6 +123,7 @@
 	f_destroyed = false
 	f_bump_passive = false
 	f_bump_avoid = false
+	f_bump_intercept = false
 	f_collider_stick = true
 	f_holdable = false
 	f_holdable_in_hand = false
@@ -195,11 +195,7 @@
 			scope = other.id
 			
 			if _write != undefined {
-				if is_catspeak(_write) {
-					_write.setSelf(scope)
-				}
-				
-				value = _write()
+				value = _write(scope)
 			}
 		}
 		
@@ -366,15 +362,165 @@
 		return _out
 	}
 	
-	do_sequence = function (_sequence) {
-		if is_catspeak(thing_sequenced) {
-			thing_sequenced.setSelf(self)
+	hitscan = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _layers = CollisionLayers.ALL, _out = undefined) {
+		var _result = raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers, _out)
+		
+		_x2 = _result[RaycastData.X]
+		_y2 = _result[RaycastData.Y]
+		_z2 = _result[RaycastData.Z]
+		
+		var _bump_lists, _bump_x1, _bump_y1
+		
+		with area {
+			_bump_lists = bump_lists
+			_bump_x1 = bump_x
+			_bump_y1 = bump_y
 		}
 		
-		thing_sequenced(_sequence)
+		var _width = ds_grid_width(_bump_lists)
+		var _height = ds_grid_height(_bump_lists)
+		var _bump_x2 = _bump_x1 + (_width * COLLIDER_REGION_SIZE)
+		var _bump_y2 = _bump_y1 + (_height * COLLIDER_REGION_SIZE)
+		
+		if line_in_rectangle(_x1, _y1, _x2, _y2, _bump_x1, _bump_y1, _bump_x2, _bump_y2) {
+			// Iterate through every region overlapped by the ray
+			// Line coordinates in grid
+			var _lx1 = floor((_x1 - _bump_x1) * COLLIDER_REGION_SIZE_INVERSE)
+			var _ly1 = floor((_y1 - _bump_y1) * COLLIDER_REGION_SIZE_INVERSE)
+			var _lx2 = floor((_x2 - _bump_x1) * COLLIDER_REGION_SIZE_INVERSE)
+			var _ly2 = floor((_y2 - _bump_y1) * COLLIDER_REGION_SIZE_INVERSE)
+			
+			// Distance between (lx1, ly1) and (lx2, ly2)
+			var _dx = abs(_lx2 - _lx1)
+			var _dy = abs(_ly2 - _ly1)
+			
+			// Current position
+			var _x = _lx1
+			var _y = _ly1
+			
+			// Iteration
+			var _hit = false
+			var _self = id
+			
+			var _ray_yaw = point_direction(_x1, _y1, _x2, _y2)
+			var _ray_pitch = point_pitch(_x1, _y1, _z1, _x2, _y2, _z2)
+			var _ray_length = point_distance_3d(_x1, _y1, _z1, _x2, _y2, _z2)
+			
+			var _pitch_factor = dcos(_ray_pitch)
+			var _nx = dcos(_ray_yaw) * _pitch_factor
+			var _ny = -dsin(_ray_yaw) * _pitch_factor
+			var _nz = dsin(_ray_pitch)
+			var _x_inv = 1 / _nx
+			var _y_inv = 1 / _ny
+			var _z_inv = 1 / _nz
+			
+			var _x_step = _lx2 > _lx1 ? 1 : -1
+			var _y_step = _ly2 > _ly1 ? 1 : -1
+			var _error = _dx - _dy
+			
+			_dx *= 2
+			_dy *= 2
+			
+			repeat 1 + _dx + _dy {
+				if _x >= 0 and _x < _width and _y >= 0 and _y < _height {
+					var _region = _bump_lists[# _x, _y]
+					var i = ds_list_size(_region)
+					
+					repeat i {
+						// Check this region to see if we're intersecting any Things.
+						var _thing = _region[| --i]
+						
+						if _thing == id or _thing.holding == id or not _thing.f_bump_intercept {
+							continue
+						}
+						
+						var _tx1, _ty1, _tz1, _tx2, _ty2, _tz2
+						
+						with _thing {
+							_tx1 = x - radius
+							_ty1 = y - radius
+							_tz1 = z
+							_tx2 = x + radius
+							_ty2 = y + radius
+							_tz2 = z + height
+						}
+							
+							var _t1 = (_tx1 - _x1) * _x_inv
+					        var _t2 = (_tx2 - _x1) * _x_inv
+					        var _t3 = (_ty1 - _y1) * _y_inv
+					        var _t4 = (_ty2 - _y1) * _y_inv
+					        var _t5 = (_tz1 - _z1) * _z_inv
+					        var _t6 = (_tz2 - _z1) * _z_inv
+							
+							var _tmin = max(min(_t1, _t2), min(_t3, _t4), min(_t5, _t6))
+					        var _tmax = min(max(_t1, _t2), max(_t3, _t4), max(_t5, _t6))
+							
+							if _tmax < 0 or _tmin > _tmax {
+								continue
+							}
+							
+							var t = _tmax
+							
+					        if _tmin > 0 {
+					            t = _tmin
+					        }
+							
+							var _ix = _x1 + (_nx * t)
+							var _iy = _y1 + (_ny * t)
+							var _iz = _z1 + (_nz * t)
+							var _idist = point_distance_3d(_x1, _y1, _z1, _ix, _iy, _iz)
+							
+							if _idist >= _ray_length {
+								continue
+							}
+							
+							if not _thing.hitscan_intercept(_thing, _self, _x1, _y1, _z1, _x2, _y2, _z2, _flags) {
+								continue
+							}
+							
+							_x2 = _ix
+							_y2 = _iy
+							_z2 = _iz
+							_ray_length = _idist
+							_result[RaycastData.X] = _x2
+							_result[RaycastData.Y] = _y2
+							_result[RaycastData.Z] = _z2
+							_result[RaycastData.THING] = _thing
+							_hit = true
+						}
+						
+						if _hit {
+							_result[RaycastData.HIT] = true
+							_result[RaycastData.NX] = _nx
+							_result[RaycastData.NY] = _ny
+							_result[RaycastData.NZ] = _nz
+							_result[RaycastData.SURFACE] = 0
+							_result[RaycastData.TRIANGLE] = undefined
+							
+							break
+						}
+				}
+				
+				if _error > 0 {
+					_x += _x_step
+					_error -= _dy
+				} else {
+					_y += _y_step
+					_error += _dx
+				}
+			}
+		}
+		
+		return _result
+	}
+	
+	do_sequence = function (_sequence) {
+		thing_sequenced(id, _sequence)
 	}
 	
 	receive_damage = function (_amount, _type = "Normal", _from = noone) {
+		var _to = id
+		
 		if f_sync {
 			var _netgame = global.netgame
 			
@@ -386,7 +532,7 @@
 					
 					var b = net_buffer_create(true, NetHeaders.HOST_DAMAGE_THING)
 					
-					buffer_write(b, buffer_u16, other.sync_id) // Victim
+					buffer_write(b, buffer_u16, _to.sync_id) // Victim
 					
 					var _from_exists = instance_exists(_from)
 					
@@ -394,26 +540,10 @@
 					buffer_write(b, buffer_f32, _amount)
 					buffer_write(b, buffer_string, _type)
 					
-					var _result
-					
-					with other {
-						if is_catspeak(damage_received) {
-							damage_received.setSelf(self)
-						}
-						
-						_result = damage_received(_from, _amount, _type)
-					}
+					var _result = _to.damage_received(_to, _from, _amount, _type)
 					
 					if _from_exists {
-						var _to = other.id
-						
-						with _from {
-							if is_catspeak(damage_dealt) {
-								damage_dealt.setSelf(_from)
-							}
-							
-							damage_dealt(_to, _amount, _type, _result)
-						}
+						_from.damage_dealt(_from, _to, _amount, _type, _result)
 					}
 					
 					buffer_write(b, buffer_u8, _result)
@@ -424,20 +554,10 @@
 			}
 		}
 		
-		if is_catspeak(damage_received) {
-			damage_received.setSelf(self)
-		}
-		
-		var _result = damage_received(_from, _amount, _type)
+		var _result = damage_received(_to, _from, _amount, _type)
 		
 		if instance_exists(_from) {
-			with _from {
-				if is_catspeak(damage_dealt) {
-					damage_dealt.setSelf(self)
-				}
-				
-				damage_dealt(other.id, _amount, _type, _result)
-			}
+			_from.damage_dealt(_from, _to, _amount, _type, _result)
 		}
 		
 		return _result
@@ -571,7 +691,7 @@
 		}
 		
 		with _thing {
-			if not holdable_held(holder, _forced) and not _forced {
+			if not holdable_held(_thing, holder, _forced) and not _forced {
 				return false
 			}
 			
@@ -579,7 +699,7 @@
 		}
 		
 		holding = _thing
-		holder_held(_thing)
+		holder_held(id, _thing)
 		
 		return true
 	}
@@ -615,7 +735,7 @@
 			}
 		}
 		
-		if (not holding.holdable_unheld(id, _tossed, _forced) or not holder_unheld(holding, _tossed, _forced)) and not _forced {
+		if (not holding.holdable_unheld(holding, id, _tossed, _forced) or not holder_unheld(id, holding, _tossed, _forced)) and not _forced {
 			return false
 		}
 		
@@ -658,45 +778,49 @@
 			}
 		}
 		
-		return _thing.interactive_triggered(id) and interactor_triggered(_thing)
+		return _thing.interactive_triggered(_thing, id) and interactor_triggered(id, _thing)
 	}
 #endregion
 
 #region Virtual Functions
-	player_entered = function (_player) {}
-	player_left = function (_player) {}
-	thing_sequenced = function (_sequence) {}
-	damage_dealt = function (_to, _amount, _type, _result) {}
+	player_entered = function (_self, _player) {}
+	player_left = function (_self, _player) {}
+	thing_sequenced = function (_self, _sequence) {}
+	damage_dealt = function (_self, _to, _amount, _type, _result) {}
 	
-	damage_received = function (_from, _amount, _type) {
+	damage_received = function (_self, _from, _amount, _type) {
 		return DamageResults.NONE
 	}
 	
-	bump_check = function (_from) {
+	bump_check = function (_self, _from) {
 		return true
 	}
 	
-	holder_held = function (_to, _forced) {
+	holder_held = function (_self, _to, _forced) {
 		return true
 	}
 	
-	holder_unheld = function (_to, _tossed, _forced) {
+	holder_unheld = function (_self, _to, _tossed, _forced) {
 		return true
 	}
 	
-	holdable_held = function (_from, _forced) {
+	holdable_held = function (_self, _from, _forced) {
 		return true
 	}
 	
-	holdable_unheld = function (_from, _tossed, _forced) {
+	holdable_unheld = function (_self, _from, _tossed, _forced) {
 		return true
 	}
 	
-	interactor_triggered = function (_to) {
+	interactor_triggered = function (_self, _to) {
 		return true
 	}
 	
-	interactive_triggered = function (_from) {
+	interactive_triggered = function (_self, _from) {
+		return true
+	}
+	
+	hitscan_intercept = function (_self, _from, _x1, _y1, _z1, _x2, _y2, _z2, _flags) {
 		return true
 	}
 #endregion

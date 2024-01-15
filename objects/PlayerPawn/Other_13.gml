@@ -105,11 +105,7 @@ if jumped {
 	if (_on_ground or coyote-- > 0)
 	   and z_speed <= 0 and _can_move
 	   and input[PlayerInputs.JUMP] and not input_previous[PlayerInputs.JUMP] {
-		if is_catspeak(try_jump) {
-			try_jump.setSelf(self)
-		}
-		
-		if try_jump() and (sync_jump == undefined or sync_jump.update()) {
+		if try_jump(id) and (sync_jump == undefined or sync_jump.update()) {
 			do_jump()
 		}
 	}
@@ -131,7 +127,7 @@ if _has_target {
 	}
 	
 	aim_angle = point_direction(x, y, _x, _y)
-	pitch = -point_pitch(x, y, z, _x, _y, _z)
+	pitch = point_pitch(x, y, z, _x, _y, _z)
 } else {
 	if not aiming {
 		aim_angle = angle
@@ -150,11 +146,7 @@ nearest_interactive = noone
 
 if _can_move {
 	if input[PlayerInputs.ATTACK] and not input_previous[PlayerInputs.ATTACK] {
-		if is_catspeak(try_attack) {
-			try_attack.setSelf(self)
-		}
-		
-		if try_attack() and (sync_attack == undefined or sync_attack.update()) {
+		if try_attack(id) and (sync_attack == undefined or sync_attack.update()) {
 			do_attack()
 		}
 	}
@@ -236,7 +228,8 @@ if _can_move {
    ================== */
 
 if target != noone
-   and (not instance_exists(target) 
+   and (not can_aim
+		or not instance_exists(target) 
         or target.f_culled 
 		or not target.f_targetable 
 		or instance_exists(target.holder) 
@@ -291,7 +284,7 @@ if not _frozen {
 	}
 }
 
-if _can_move and input[PlayerInputs.AIM] {
+if not _frozen and can_aim and input[PlayerInputs.AIM] {
 	var _can_target = instance_exists(nearest_target)
 	
 	if _can_target {

@@ -73,12 +73,7 @@ set_menu = function (_menu, _allow_return = true) {
 		var _previous = menu
 		
 		menu = _menu
-		
-		if is_catspeak(change_menu) {
-			change_menu.setSelf(self)
-		}
-		
-		change_menu(_previous)
+		change_menu(id, _previous)
 		
 		return true
 	}
@@ -88,11 +83,11 @@ set_menu = function (_menu, _allow_return = true) {
 #endregion
 
 #region Virtual Functions
-change_menu = function (_previous) {}
+change_menu = function (_self, _previous) {}
 
-change_option = function (_previous) {}
+change_option = function (_self, _previous) {}
 
-change_delete_state = function (_state) {}
+change_delete_state = function (_self, _state) {}
 
-exit_title = function (_option) {}
+exit_title = function (_self, _option) {}
 #endregion

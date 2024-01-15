@@ -5,6 +5,5 @@ if area_thing != undefined {
 }
 
 if on_destroy != undefined {
-	on_destroy.setSelf(self)
-	on_destroy()
+	on_destroy(id)
 }

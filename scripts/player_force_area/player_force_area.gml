@@ -13,9 +13,9 @@ function player_force_area(_scope, _id) {
 			var i = ds_list_size(_active_things)
 			
 			repeat i {
-				with _active_things[| --i] {
-					player_left(other)
-				}
+				var _thing = _active_things[| --i]
+				
+				_thing.player_left(_thing, id)
 			}
 			
 			if instance_exists(thing) {
@@ -70,12 +70,14 @@ function player_force_area(_scope, _id) {
 					var i = ds_list_size(active_things)
 					
 					repeat i {
-						active_things[| --i].player_entered(_newcomer)
+						var _thing = active_things[| --i]
+						
+						_thing.player_entered(_thing, _newcomer)
 					}
 					
 					with level {
 						if area_changed != undefined {
-							area_changed(_newcomer, other)
+							area_changed(self, _newcomer, other)
 						}
 					}
 				}

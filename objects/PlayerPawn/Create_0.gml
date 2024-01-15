@@ -10,6 +10,8 @@ event_inherited()
 	input_length = 0
 	jumped = false
 	coyote = 0
+	
+	can_aim = true
 	aiming = false
 	aim_angle = 0
 	nearest_target = noone
@@ -36,20 +38,11 @@ event_inherited()
 		coyote = 0
 		z_speed = jump_speed
 		jumped = true
-		
-		if is_catspeak(player_jumped) {
-			player_jumped.setSelf(self)
-		}
-		
-		player_jumped()
+		player_jumped(id)
 	}
 	
 	do_maneuver = function () {
-		if is_catspeak(player_maneuvered) {
-			player_maneuvered.setSelf(self)
-		}
-		
-		player_maneuvered()
+		player_maneuvered(id)
 	}
 	
 	do_attack = function () {
@@ -59,11 +52,7 @@ event_inherited()
 			exit
 		}
 		
-		if is_catspeak(player_attacked) {
-			player_attacked.setSelf(self)
-		}
-		
-		player_attacked()
+		player_attacked(id)
 	}
 	
 	do_target = function (_thing) {
@@ -73,7 +62,7 @@ event_inherited()
 			aiming = true
 			aim_angle = move_angle
 			target = _thing
-			player_aimed(_thing)
+			player_aimed(id, _thing)
 		}
 	}
 	
@@ -88,7 +77,7 @@ event_inherited()
 			}
 			
 			target = noone
-			player_aimed(noone)
+			player_aimed(id, noone)
 			untarget_buffer = true
 		}
 	}
@@ -103,23 +92,23 @@ event_inherited()
 #endregion
 
 #region Virtual Functions
-	try_jump = function () {
+	try_jump = function (_self) {
 		return true
 	}
 	
-	player_jumped = function () {}
+	player_jumped = function (_self) {}
 	
-	try_maneuver = function () {
+	try_maneuver = function (_self) {
 		return true
 	}
 	
-	player_maneuvered = function () {}
+	player_maneuvered = function (_self) {}
 	
-	try_attack = function () {
+	try_attack = function (_self) {
 		return true
 	}
 	
-	player_attacked = function () {}
-	player_respawned = function () {}
-	player_aimed = function (_target) {}
+	player_attacked = function (_self) {}
+	player_respawned = function (_self) {}
+	player_aimed = function (_self, _target) {}
 #endregion

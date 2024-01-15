@@ -38,11 +38,7 @@ function UI(_ui_script) constructor {
 		}
 		
 		if clean_up != undefined {
-			if is_catspeak(clean_up) {
-				clean_up.setSelf(self)
-			}
-		
-			clean_up()
+			clean_up(self)
 		}
 		
 		if global.ui == self {

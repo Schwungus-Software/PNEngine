@@ -116,11 +116,6 @@ if load_state != LoadStates.NONE {
 							area_changed = level_script.area_changed
 							area_activated = level_script.area_activated
 							area_deactivated = level_script.area_deactivated
-						
-							if (start != undefined) start.setSelf(_level)
-							if (area_changed != undefined) area_changed.setSelf(_level)
-							if (area_activated != undefined) area_activated.setSelf(_level)
-							if (area_deactivated != undefined) area_deactivated.setSelf(_level)
 						}
 					}
 				}
@@ -556,8 +551,7 @@ if load_state != LoadStates.NONE {
 			
 			with _level {
 				if start != undefined {
-					start.setSelf(_level)
-					start()
+					start(_level)
 				}
 			}
 #endregion
@@ -952,11 +946,7 @@ if _tick >= 1 {
 			
 			with _tick_target {
 				if tick != undefined {
-					if is_catspeak(tick) {
-						tick.setSelf(_tick_target)
-					}
-					
-					tick()
+					tick(_tick_target)
 				}
 				
 				if exists and f_blocking {
@@ -1309,11 +1299,7 @@ if _tick >= 1 {
 												var _value
 												
 												if write != undefined {
-													if is_catspeak(write) {
-														write.setSelf(scope)
-													}
-													
-													_value = write()
+													_value = write(scope)
 												} else {
 													_value = struct_get_from_hash(scope, hash)
 												}

@@ -7,8 +7,7 @@ if instance_exists(holder) {
 }
 
 if clean_up != undefined {
-	clean_up.setSelf(self)
-	clean_up()
+	clean_up(id)
 }
 
 if voice != undefined and audio_exists(voice) {

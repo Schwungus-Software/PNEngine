@@ -41,11 +41,7 @@ function NetVariable(_name, _flags, _read, _write) constructor {
 		var _value
 		
 		if write != undefined {
-			if is_catspeak(write) {
-				write.setSelf(scope)
-			}
-			
-			_value = write()
+			_value = write(scope)
 		} else {
 			_value = struct_get_from_hash(scope, hash)
 		}

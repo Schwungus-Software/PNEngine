@@ -13,7 +13,7 @@ function interp(_in, _out, _angle = false, _scope = undefined) {
 			_id = ds_list_size(_interps)
 		}
 		
-		_interps[| _id] = instanceof(_scope) == "instance" ? _scope.id : weak_ref_create(_scope)
+		_interps[| _id] = (is_numeric(_scope) and instance_exists(_scope)) ? _scope.id : weak_ref_create(_scope)
 		_data = []
 		struct_set_from_hash(_scope, __interp_hash, _data)
 	}

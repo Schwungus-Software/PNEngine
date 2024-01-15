@@ -35,8 +35,7 @@ if _model != undefined and (not instance_exists(holder) or not f_holdable_in_han
 }
 
 if draw != undefined {
-	draw.setSelf(self)
-	draw()
+	draw(id)
 }
 
 if m_shadow and shadow_ray[RaycastData.HIT] {

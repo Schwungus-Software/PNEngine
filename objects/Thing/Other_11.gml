@@ -2,8 +2,7 @@
 move_angle = angle
 
 if create != undefined {
-	create.setSelf(self)
-	create()
+	create(id)
 }
 
 if not (global.game_status & GameStatus.NETGAME) or not f_sync {

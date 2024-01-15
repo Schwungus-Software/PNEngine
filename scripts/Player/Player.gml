@@ -182,13 +182,7 @@ function Player() constructor {
 				input[PlayerInputs.FORCE_UP_DOWN] = -15
 				
 				if _respawned {
-					with _player_pawn {
-						if is_catspeak(player_respawned) {
-							player_respawned.setSelf(_player_pawn)
-						}
-						
-						player_respawned()
-					}
+					_player_pawn.player_respawned(_player_pawn)
 				}
 				
 				return _player_pawn

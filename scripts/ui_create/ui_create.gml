@@ -26,11 +26,7 @@ function ui_create(_type, _replace = true) {
 	
 	with _ui {
 		if create != undefined {
-			if is_catspeak(create) {
-				create.setSelf(_ui)
-			}
-			
-			create()
+			create(_ui)
 		}
 		
 		if not exists {

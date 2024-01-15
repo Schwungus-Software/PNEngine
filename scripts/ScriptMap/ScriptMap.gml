@@ -342,10 +342,17 @@ function ScriptMap() : AssetMap() constructor {
 		file_text_close(_script_file)
 		
 		var _main = Catspeak.compileGML(Catspeak.parseString(_code))
-		
-		_main.setSelf(_script)
-		
 		var _globals = _main.getGlobals()
+		
+		var _imports = _script.imports
+		var i = 0
+		
+		repeat array_length(_imports) {
+			var _import = _imports[i++]
+			
+			_globals[$ _import.name] = _import.main.getGlobals()
+		}
+		
 		var _parent = _script.parent
 		
 		if _parent != undefined {
@@ -358,15 +365,6 @@ function ScriptMap() : AssetMap() constructor {
 				
 				_globals[$ _key] = _parent_globals[$ _key]
 			}
-		}
-		
-		var _imports = _script.imports
-		var i = 0
-		
-		repeat array_length(_imports) {
-			var _import = _imports[i++]
-			
-			_globals[$ _import.name] = _import.main.getGlobals()
 		}
 		
 		_main()

@@ -623,8 +623,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				sample_blend(_final_sample, _current_sample, _next_sample, frac(_current_frame))
 				
 				if update_sample != undefined {
-					update_sample.setSelf(self)
-					update_sample()
+					update_sample(self)
 				}
 				
 				if stransition < transition_time {
