@@ -101,7 +101,7 @@ function AnimationMap() : AssetMap() constructor {
 			
 			j = 0
 			
-			repeat frames + (type == AnimationTypes.LINEAR or type == AnimationTypes.QUADRATIC) {
+			repeat frames + not (type % 2) {
 				array_push(samples, create_sample(j / frames));
 				++j
 			}

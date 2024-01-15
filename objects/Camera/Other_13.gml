@@ -135,7 +135,7 @@ if _pois {
 
 if path_active {
 	// Camera animation
-	var _loop = path_playback == AnimationTypes.LINEAR_LOOP or path_playback == AnimationTypes.QUADRATIC_LOOP
+	var _loop = path_playback % 2
 	var _nodes = ds_grid_width(path)
 	
 	switch path_playback {
