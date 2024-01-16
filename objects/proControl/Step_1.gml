@@ -466,6 +466,8 @@ if load_state != LoadStates.NONE {
 				delete _json
 			}
 			
+			ui_load("Pause")
+			
 			_images.end_batch()
 			
 			var _materials_map = global.materials.assets
