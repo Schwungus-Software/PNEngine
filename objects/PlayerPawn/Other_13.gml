@@ -155,37 +155,39 @@ if _can_move {
 	var _can_maneuver = can_maneuver and _moving
 	
 	if _on_ground and not _can_maneuver {
-		// Scan for nearby interactives and holdables
-		var _radius = interact_radius + 10
-		var _neardist = infinity
-		var _things = grid_iterate(Thing, _radius)
-		var i = 0
+		if can_interact {
+			// Scan for nearby interactives and holdables
+			var _radius = interact_radius + 10
+			var _neardist = infinity
+			var _things = grid_iterate(Thing, _radius)
+			var i = 0
 		
-		repeat array_length(_things) {
-			var _thing = _things[i++]
+			repeat array_length(_things) {
+				var _thing = _things[i++]
 			
-			if _thing.f_interactive and not instance_exists(_thing.holder) {
-				var _dist = point_distance_3d(x, y, z, _thing.x, _thing.y, _thing.z)
+				if _thing.f_interactive and not instance_exists(_thing.holder) {
+					var _dist = point_distance_3d(x, y, z, _thing.x, _thing.y, _thing.z)
 				
-				if _dist < _neardist and _dist < (_radius + _thing.interact_radius) {
-					nearest_interactive = _thing
-					_neardist = _dist
+					if _dist < _neardist and _dist < (_radius + _thing.interact_radius) {
+						nearest_interactive = _thing
+						_neardist = _dist
+					}
 				}
 			}
 		}
 		
-		if not instance_exists(holding) and not instance_exists(nearest_interactive) {
-			_radius = hold_radius + 10
-			_neardist = infinity
-			_things = grid_iterate(Thing, _radius)
-			i = 0
-			
+		if can_hold and not instance_exists(holding) and not instance_exists(nearest_interactive) {
+			var _radius = hold_radius + 10
+			var _neardist = infinity
+			var _things = grid_iterate(Thing, _radius)
+			var i = 0
+		
 			repeat array_length(_things) {
 				var _thing = _things[i++]
-				
+			
 				if _thing.f_holdable and not instance_exists(_thing.holder) {
 					var _dist = point_distance_3d(x, y, z, _thing.x, _thing.y, _thing.z)
-					
+				
 					if _dist < _neardist and _dist < (_radius + _thing.hold_radius) {
 						nearest_holdable = _thing
 						_neardist = _dist

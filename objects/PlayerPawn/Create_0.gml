@@ -23,6 +23,8 @@ event_inherited()
 	jump_speed = 6.44
 	coyote_time = 4
 	can_maneuver = true
+	can_hold = true
+	can_interact = true
 	
 	lock_animation = false
 	
@@ -102,6 +104,18 @@ event_inherited()
 		return player.set_state(_key, _value)
 	}
 	
+	respawn = function () {
+		gml_pragma("forceinline")
+		
+		if player == undefined {
+			instance_destroy()
+			
+			return noone
+		}
+		
+		return player.respawn()
+	}
+	
 	is_local = function () {
 		gml_pragma("forceinline")
 		
@@ -131,6 +145,6 @@ event_inherited()
 	}
 	
 	player_attacked = function (_self) {}
-	player_respawned = function (_self) {}
 	player_aimed = function (_self, _target) {}
+	player_respawned = function (_self) {}
 #endregion

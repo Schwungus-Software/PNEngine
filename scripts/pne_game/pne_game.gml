@@ -47,7 +47,7 @@
 #endregion
 
 #region Levels
-	global.checkpoint = ["", 0, noone, false]
+	global.checkpoint = ["", 0, noone]
 	global.level = new Level()
 	global.flags = [new Flags(0), new Flags(1)]
 	global.default_flags = ds_map_create()
