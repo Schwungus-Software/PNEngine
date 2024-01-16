@@ -83,11 +83,33 @@ event_inherited()
 	}
 	
 	get_state = function (_key) {
+		gml_pragma("forceinline")
+		
+		if states == undefined {
+			return undefined
+		}
+		
 		return states[? _key]
 	}
 	
 	set_state = function (_key, _value) {
+		gml_pragma("forceinline")
+		
+		if player == undefined {
+			return false
+		}
+		
 		return player.set_state(_key, _value)
+	}
+	
+	is_local = function () {
+		gml_pragma("forceinline")
+		
+		if player == undefined {
+			return false
+		}
+		
+		return player.is_local()
 	}
 #endregion
 
