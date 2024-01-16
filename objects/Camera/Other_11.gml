@@ -4,6 +4,7 @@ if is_struct(special) {
 	pitch = special[$ "pitch"] ?? pitch
 	roll = special[$ "roll"] ?? 0
 	fov = special[$ "fov"] ?? 45
+	f_sync = special[$ "sync"] ?? f_sync
 
 	if special[$ "active"] {
 		global.camera_active = id
