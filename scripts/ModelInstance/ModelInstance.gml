@@ -107,7 +107,13 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			if _copy {
-				var _copy_sample = _animation.samples[_frame % _animation.frames]
+				var _copy_sample
+				
+				with _animation {
+					_frame = floor(_frame)
+					_copy_sample = samples[(type % 2) ? (_frame % frames) : min(_frame, frames)]
+				}
+				
 				var n = array_length(_copy_sample)
 				
 				array_copy(sample, 0, _copy_sample, 0, n)
@@ -307,22 +313,25 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				exit
 			}
 			
-			var _current_sample, _next_sample
-			var n = _animation.frames
+			var _current_sample, _next_sample, n, _samples, _bind_pose
 			
-			if _animation.type % 2 {
-				_current_sample = floor(_frame) % n
-				_next_sample = floor(_frame + 1) % n
-			} else {
-				_current_sample = min(floor(_frame), n)
-				_next_sample = min(floor(_frame + 1), n)
+			with _animation {
+				var n = frames
+				
+				if type % 2 {
+					_current_sample = floor(_frame) % n
+					_next_sample = floor(_frame + 1) % n
+				} else {
+					_current_sample = min(floor(_frame), n)
+					_next_sample = min(floor(_frame + 1), n)
+				}
+				
+				var _samples = samples
+				var _bind_pose = bind_pose
 			}
-			
-			var _samples = _animation.samples
 			
 			sample_blend(splice_sample, _samples[_current_sample], _samples[_next_sample], frac(_frame))
 			
-			var _bind_pose = _animation.bind_pose
 			var _bone = _bind_pose[_bone_index]
 			var _parent_index = _bone[8]
 			var _parent = _bind_pose[_parent_index]
@@ -544,8 +553,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 						_current_frame = _frame mod _frames
 						_next_frame = (_frame + 1) mod _frames
 					} else {
-						_current_frame = min(_frame, frames)
-						_next_frame = min(_frame + 1, frames)
+						_current_frame = min(_frame, _frames)
+						_next_frame = min(_frame + 1, _frames)
 					}
 					
 					_samples = samples
@@ -566,8 +575,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				}
 				
 				if stransition < transition_time {
-					sample_blend(transition_sample2, transition_sample, sample, stransition / transition_time)
 					_final_sample = transition_sample2
+					sample_blend(_final_sample, transition_sample, sample, stransition / transition_time)
 				}
 				
 				global.u_bone_dq.set(_final_sample)
