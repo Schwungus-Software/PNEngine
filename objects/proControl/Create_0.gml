@@ -287,12 +287,6 @@
 					
 					"mod_get", function (_name) {
 						return global.mods[? _name]
-					},
-					
-					"MusicInstance", MusicInstance,
-					
-					"music_get_instance", function (_priority) {
-						return global.music_instances[| _priority]
 					}
 				)
 			#endregion
@@ -533,6 +527,25 @@
 					"batch_line", batch_line,
 					"batch_set_alpha_test", batch_set_alpha_test,
 					"batch_set_bright", batch_set_bright
+				)
+			#endregion
+			
+			#region Audio
+				addFunction(
+					"MusicInstance", MusicInstance,
+					
+					"music_get_instance", function (_priority) {
+						return global.music_instances[| _priority]
+					},
+					
+					"music_stop_all", function (_fade) {
+						var _music_instances = global.music_instances
+						var i = ds_list_size(_music_instances)
+						
+						repeat i {
+							_music_instances[| --i].stop(_fade)
+						}
+					}
 				)
 			#endregion
 			
