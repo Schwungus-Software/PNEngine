@@ -185,6 +185,10 @@ function Player() constructor {
 					_player_pawn.player_respawned(_player_pawn)
 				}
 				
+				if get_state("hp") <= 0 {
+					set_state("hp", 8)
+				}
+				
 				return _player_pawn
 			}
 		}
