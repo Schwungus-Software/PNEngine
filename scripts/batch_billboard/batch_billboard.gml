@@ -1,11 +1,5 @@
 /// @desc Adds a X/Y billboard image that faces the camera to the batch.
 function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0, _color = c_white, _alpha = 1) {
-	var _camera = global.batch_camera
-	
-	if not instance_exists(_camera) {
-		return false
-	}
-	
 	var _texture = _image.GetTexture(_frame)
 	
 	if _texture != global.batch_texture {
@@ -16,6 +10,7 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 	var _x_offset = (_image.GetXOffset() / _image.GetWidth()) * _width
 	var _y_offset = (_image.GetYOffset() / _image.GetHeight()) * _height
 	
+	var _camera = global.batch_camera
 	var _yaw = _camera.syaw + 180
 	var _pitch = -_camera.spitch
 	

@@ -1,11 +1,5 @@
 /// @desc Adds a line that faces the camera to the batch.
 function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _color = c_white, _alpha = 1) {
-	var _camera = global.batch_camera
-	
-	if not instance_exists(_camera) {
-		return false
-	}
-	
 	var _blank = _image == -1
 	var _texture = _blank ? -1 : _image.GetTexture(_frame)
 	
@@ -16,7 +10,7 @@ function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _colo
 	
 	var _cx, _cy, _cz
 	
-	with _camera {
+	with global.batch_camera {
 		_cx = sx
 		_cy = sy
 		_cz = sz
