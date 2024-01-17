@@ -537,7 +537,12 @@ if async_load[? "type"] == network_type_data {
 			
 			case NetHeaders.HOST_AREA:
 				CLIENT_CHECK_PACKET
-				player_force_area(global.players[buffer_read(_buffer, buffer_u8)], buffer_read(_buffer, buffer_u8))
+				
+				var _pid = buffer_read(_buffer, buffer_u8)
+				var _aid = buffer_read(_buffer, buffer_u8)
+				var _tag = buffer_read(_buffer, buffer_u32)
+				
+				player_force_area(global.players[_pid], _aid, _tag)
 			break
 			
 			case NetHeaders.HOST_THING:

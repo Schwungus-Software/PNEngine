@@ -782,6 +782,7 @@
 #region Virtual Functions
 	player_entered = function (_self, _player) {}
 	player_left = function (_self, _player) {}
+	thing_intro = function (_self, _from) {}
 	thing_sequenced = function (_self, _sequence) {}
 	damage_dealt = function (_self, _to, _amount, _type, _result) {}
 	

@@ -1,4 +1,4 @@
-function player_force_area(_scope, _id) {
+function player_force_area(_scope, _id, _tag) {
 	/* Move away from the current area.
 	
 	   If this player was the master of the area, the smallest indexed
@@ -78,6 +78,32 @@ function player_force_area(_scope, _id) {
 					with level {
 						if area_changed != undefined {
 							area_changed(self, _newcomer, other)
+						}
+					}
+					
+					var _pawn = _newcomer.thing
+					
+					if instance_exists(_pawn) {
+						var _entrances = find_tag(_tag)
+						
+						if array_length(_entrances) {
+							var _entrance = _entrances[0]
+							
+							with _pawn {
+								x = _entrance.x
+								y = _entrance.y
+								z = _entrance.z
+								angle = _entrance.angle
+								
+								if model != undefined {
+									model.x = x
+									model.y = y
+									model.z = z
+									model.yaw = angle
+								}
+							}
+							
+							_entrance.thing_intro(_entrance, _pawn)
 						}
 					}
 				}

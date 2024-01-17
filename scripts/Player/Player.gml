@@ -196,24 +196,25 @@ function Player() constructor {
 		return noone
 	}
 	
-	static set_area = function (_id) {
+	static set_area = function (_id, _tag = ThingTags.NONE) {
 		var _netgame = global.netgame
 		
 		if _netgame != undefined {
 			with _netgame {
-				if active and master {
-					var b = net_buffer_create(true, NetHeaders.HOST_AREA)
-				
-					buffer_write(b, buffer_u8, other.slot)
-					buffer_write(b, buffer_u32, other.area.slot)
-					_netgame.send(SEND_OTHERS, b)
-				} else {
+				if not (active and master) {
 					return false
 				}
+				
+				var b = net_buffer_create(true, NetHeaders.HOST_AREA)
+				
+				buffer_write(b, buffer_u8, other.slot)
+				buffer_write(b, buffer_u32, other.area.slot)
+				buffer_write(b, buffer_u32, _tag)
+				_netgame.send(SEND_OTHERS, b)
 			}
 		}
 		
-		player_force_area(self, _id)
+		player_force_area(self, _id, _tag)
 		
 		return true
 	}
