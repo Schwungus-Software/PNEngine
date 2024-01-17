@@ -487,6 +487,7 @@ function Area() constructor {
 			if _thing.f_persistent {
 				_thing.f_new = false
 				_cant_deactivate = true
+				print($"! Area.deactivate: Cannot deactivate {_thing} ({_thing.thing_script == undefined ? object_get_name(_thing.object_index) : _thing.thing_script.name})")
 				
 				continue
 			}
