@@ -14,6 +14,17 @@
 					
 					"get_timer", get_timer
 				)
+				
+				addConstant(
+					"TYPE_NUMBER", "number",
+					"TYPE_STRING", "string",
+					"TYPE_ARRAY", "array",
+					"TYPE_BOOL", "bool",
+					"TYPE_INT32", "int32",
+					"TYPE_INT64", "int64",
+					"TYPE_UNDEFINED", "undefined",
+					"TYPE_STRUCT", "struct"
+				)
 			#endregion
 			
 			#region Math
@@ -250,7 +261,9 @@
 						show_error(_str, true)
 					},
 					
-					"show_caption", show_caption
+					"show_caption", show_caption,
+					"force_type", force_type,
+					"force_type_fallback", force_type_fallback
 				)
 			#endregion
 			
