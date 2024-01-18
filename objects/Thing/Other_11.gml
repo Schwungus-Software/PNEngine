@@ -19,6 +19,7 @@ if not (global.game_status & GameStatus.NETGAME) or not f_sync {
 		add_net_variable("x_speed", NetVarFlags.GENERIC)
 		add_net_variable("y_speed", NetVarFlags.GENERIC)
 		add_net_variable("z_speed", NetVarFlags.GENERIC)
+		add_net_variable("angle", NetVarFlags.CREATE)
 	}
 	
 	add_net_variable("tag", NetVarFlags.CREATE)
