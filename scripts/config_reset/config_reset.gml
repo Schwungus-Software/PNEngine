@@ -28,8 +28,6 @@ function config_reset() {
 		snd_background: false,
 		
 		// INPUT
-		in_auto_pan: true,
-		in_hold_target: true,
 		in_invert_x: false,
 		in_invert_y: false,
 		in_pan_x: 5,
