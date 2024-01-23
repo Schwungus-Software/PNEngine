@@ -55,6 +55,8 @@ enum NetHeaders {
 enum NetDataTypes {
 	UNDEFINED,
 	REAL,
+	NAN,
+	INFINITY,
 	STRING,
 	ARRAY,
 	BOOL,

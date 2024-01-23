@@ -1,6 +1,10 @@
 function buffer_read_dynamic(_buffer) {
 	switch buffer_read(_buffer, buffer_u8) {
+		default:
+		case NetDataTypes.UNDEFINED: return undefined
 		case NetDataTypes.REAL: return buffer_read(_buffer, buffer_f32)
+		case NetDataTypes.NAN: return NaN
+		case NetDataTypes.INFINITY: return buffer_read(_buffer, buffer_bool) ? -infinity : infinity
 		case NetDataTypes.STRING: return buffer_read(_buffer, buffer_string)
 		
 		case NetDataTypes.ARRAY:
@@ -32,6 +36,4 @@ function buffer_read_dynamic(_buffer) {
 			
 			return _struct
 	}
-	
-	return undefined
 }

@@ -8,6 +8,10 @@ function buffer_write_dynamic(_buffer, _value) {
 			buffer_write(_buffer, buffer_f32, _value)
 		break
 		
+		case NetDataTypes.INFINITY:
+			buffer_write(_buffer, buffer_bool, _value < 0)
+		break
+		
 		case NetDataTypes.STRING:
 			buffer_write(_buffer, buffer_string, _value)
 		break
