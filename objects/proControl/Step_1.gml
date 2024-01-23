@@ -929,9 +929,9 @@ if _tick >= 1 {
 		if _ui != undefined {
 			var _ui_input = global.ui_input
 			
-			_ui_input[UIInputs.UP_DOWN] = input_check_opposing_pressed("up", "down", 0, true) + input_check_opposing_repeat("up", "down", 0, true, 1, 12)
-			_ui_input[UIInputs.LEFT_RIGHT] = input_check_opposing_pressed("left", "right", 0, true) + input_check_opposing_repeat("left", "right", 0, true, 1, 12)
-			_ui_input[UIInputs.CONFIRM] = input_check_pressed("jump")
+			_ui_input[UIInputs.UP_DOWN] = input_check_opposing_pressed("ui_up", "ui_down", 0, true) + input_check_opposing_repeat("ui_up", "ui_down", 0, true, 2, 12)
+			_ui_input[UIInputs.LEFT_RIGHT] = input_check_opposing_pressed("ui_left", "ui_right", 0, true) + input_check_opposing_repeat("ui_left", "ui_right", 0, true, 2, 12)
+			_ui_input[UIInputs.CONFIRM] = input_check_pressed("ui_enter")
 			_ui_input[UIInputs.BACK] = input_check_pressed("pause")
 			
 			var _tick_target = _ui

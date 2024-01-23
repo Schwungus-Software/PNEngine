@@ -15,7 +15,7 @@ return {
 		left:  input_binding_key("A"),
         down:  input_binding_key("S"),
         right: input_binding_key("D"),
-		walk: input_binding_key(vk_control),
+		walk: input_binding_key(vk_shift),
         
         jump:     input_binding_key(vk_space),
         interact: input_binding_key("E"),
@@ -32,6 +32,12 @@ return {
         aim_down:  input_binding_key(vk_down),
         aim_right: input_binding_key(vk_right),
         
+		ui_up: input_binding_key(vk_up),
+		ui_left: input_binding_key(vk_left),
+		ui_down: input_binding_key(vk_down),
+		ui_right: input_binding_key(vk_right),
+		ui_enter: input_binding_key(vk_enter),
+		
         pause: input_binding_key(vk_escape),
 		leave: input_binding_key(vk_backspace),
 		
@@ -67,6 +73,12 @@ return {
         aim_down:  input_binding_gamepad_axis(gp_axisrv, false),
         aim_right: input_binding_gamepad_axis(gp_axisrh, false),
         
+		ui_up:    input_binding_gamepad_button(gp_padu),
+        ui_left:  input_binding_gamepad_button(gp_padl),
+		ui_down:  input_binding_gamepad_button(gp_padd),
+		ui_right: input_binding_gamepad_button(gp_padr),
+		ui_enter: input_binding_gamepad_button(gp_face1),
+		
         pause: input_binding_gamepad_button(gp_start),
 		leave: input_binding_gamepad_button(gp_select),
     },
