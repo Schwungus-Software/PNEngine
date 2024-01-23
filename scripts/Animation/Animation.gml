@@ -258,6 +258,8 @@ function Animation() : Asset() constructor {
 	}
 	
 	static destroy = function () {
-		ds_grid_destroy(keyframes)
+		if ds_exists(keyframes, ds_type_grid) {
+			ds_grid_destroy(keyframes)
+		}
 	}
 }
