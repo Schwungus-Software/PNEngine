@@ -42,6 +42,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		animation = undefined
 		animation_finished = false
 		animation_state = 0
+		animation_bind_pose_id = ""
+		animation_bind_pose = undefined
+		animation_samples = undefined
 		frame = 0
 		frame_speed = 1
 		sample = dq_build_identity()
@@ -84,6 +87,17 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			animation_finished = false
 			animation_state = 0
 			
+			var _bind_poses = _animation.bind_poses
+			var _bpid = animation_bind_pose_id
+			
+			if not ds_map_exists(_bind_poses, _bpid) {
+				print($"! ModelInstance: Bind pose '{_bpid}' not found")
+				_bpid = ""
+			}
+			
+			animation_bind_pose = _bind_poses[? _bpid]
+			animation_samples = _animation.samples[? _bpid]
+			
 			var _first = not animated
 			var _copy = _first
 			
@@ -107,13 +121,16 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			if _copy {
-				var _copy_sample
+				_frame = floor(_frame)
+				
+				var _type, _frames
 				
 				with _animation {
-					_frame = floor(_frame)
-					_copy_sample = samples[(type % 2) ? (_frame % frames) : min(_frame, frames)]
+					_type = type
+					_frames = frames
 				}
 				
+				var _copy_sample = animation_samples[(_type % 2) ? (_frame % _frames) : min(_frame, _frames)]
 				var n = array_length(_copy_sample)
 				
 				array_copy(sample, 0, _copy_sample, 0, n)
@@ -178,7 +195,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			var _sample = (transition < transition_time) ? transition_sample2 : sample
 			var b = 8 * _index
-			var s = animation.bind_pose[_index]
+			var s = animation_bind_pose[_index]
 			var r3 = _sample[b + 3]
 			var r4 = _sample[b + 4]
 			var r5 = _sample[b + 5]
@@ -222,9 +239,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			/* This script lets you modify a sample.
 			   This is useful for head turning and procedural animations.
 			   The bone will rotate around its parent's position. */
-			
-			var _bind_pose = animation.bind_pose
-			var _bone = _bind_pose[_index]
+			var _bone = animation_bind_pose[_index]
 			var _dq = get_bone_dq(_bone[8])
 			
 			/* Find the pivot position (position of the root of the bone, typically at the
@@ -314,6 +329,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			var _current_sample, _next_sample, n, _samples, _bind_pose
+			var _bpid = animation_bind_pose_id
 			
 			with _animation {
 				var n = frames
@@ -326,8 +342,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					_next_sample = min(floor(_frame + 1), n)
 				}
 				
-				var _samples = samples
-				var _bind_pose = bind_pose
+				if not ds_map_exists(bind_poses, _bpid) {
+					_bpid = ""
+				}
+				
+				_samples = samples[? _bpid]
+				_bind_pose = bind_poses[? _bpid]
 			}
 			
 			sample_blend(splice_sample, _samples[_current_sample], _samples[_next_sample], frac(_frame))
@@ -543,7 +563,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				global.u_animated.set(1)
 				
 				var _frame = sframe
-				var _frames, _loop, _current_frame, _next_frame, _samples
+				var _frames, _loop, _current_frame, _next_frame
 				
 				with animation {
 					_frames = frames
@@ -556,13 +576,11 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 						_current_frame = min(_frame, _frames)
 						_next_frame = min(_frame + 1, _frames)
 					}
-					
-					_samples = samples
 				}
 				
 				var _final_sample = sample
-				var _current_sample = _samples[floor(_current_frame)]
-				var _next_sample = _samples[floor(_next_frame)]
+				var _current_sample = animation_samples[floor(_current_frame)]
+				var _next_sample = animation_samples[floor(_next_frame)]
 				
 				sample_blend(_final_sample, _current_sample, _next_sample, frac(_current_frame))
 				

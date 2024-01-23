@@ -6,7 +6,7 @@ enum AnimationTypes {
 }
 
 function Animation() : Asset() constructor {
-	bind_pose = []
+	bind_poses = ds_map_create()
 	
 	bones_amount = 0
 	keyframes_amount = 0
@@ -14,10 +14,34 @@ function Animation() : Asset() constructor {
 	
 	type = AnimationTypes.LINEAR
 	frames = 0
-	samples = []
+	samples = ds_map_create()
+	
 	frame_speed = 1
 	
-	static create_sample = function (_time) {
+	static add_bind_pose = function (_animation, _id) {
+		if _animation == undefined or ds_map_exists(bind_poses, _id) {
+			return false
+		}
+		
+		var _bind_pose = _animation.bind_poses[? ""]
+		
+		ds_map_add(bind_poses, _id, _bind_pose)
+		
+		var n = frames + not (type % 2)
+		var _samples = array_create(n)
+		var j = 0
+		
+		repeat n {
+			_samples[j++] = create_sample(_bind_pose, j / frames)
+		}
+		
+		ds_map_add(samples, _id, _samples)
+		print($"Animation.add_bind_pose: Inherited '{_animation.name}' for '{name}' (id: '{_id}')")
+		
+		return true
+	}
+	
+	static create_sample = function (_bind_pose, _time) {
 		static _dwdq = dq_build_identity() // Delta world dual quaternion
 		static _wdq = dq_build_identity() // World dual quaternion
 		
@@ -77,8 +101,7 @@ function Animation() : Asset() constructor {
 				++i
 			}
 			
-			_wdq[0] = bind_pose[0]
-			
+			_wdq[0] = _bind_pose[0]
 			i = 0
 
 			repeat bones_amount {
@@ -95,7 +118,7 @@ function Animation() : Asset() constructor {
 					++j
 				}
 				
-				var _bdq = bind_pose[i]
+				var _bdq = _bind_pose[i]
 				var _pdq = _wdq[_bdq[8]]
 				
 				// Child dual quaternion (_cdq) = Parent dual quaternion (pdq) * Frame dual quaternion (dq)
@@ -184,7 +207,7 @@ function Animation() : Asset() constructor {
 				d = _mb == _ma ? 0 : (_time - _ma) / (_mb - _ma)
 			}
 
-			_wdq[0] = bind_pose[0]
+			_wdq[0] = _bind_pose[0]
 			
 			var _dq = dq_build_identity()
 			var i = 0
@@ -196,7 +219,7 @@ function Animation() : Asset() constructor {
 				
 				dq_lerp(_qa, _qb, d, _dq)
 				
-				var _bdq = bind_pose[i]
+				var _bdq = _bind_pose[i]
 				var _pdq = _wdq[_bdq[8]]
 				
 				// Child dual quaternion (_cdq) = Parent dual quaternion (pdq) * Frame dual quaternion (dq)
@@ -258,8 +281,8 @@ function Animation() : Asset() constructor {
 	}
 	
 	static destroy = function () {
-		if ds_exists(keyframes, ds_type_grid) {
-			ds_grid_destroy(keyframes)
-		}
+		ds_map_destroy(bind_poses)
+		ds_grid_destroy(keyframes)
+		ds_map_destroy(samples)
 	}
 }
