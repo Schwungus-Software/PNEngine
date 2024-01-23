@@ -28,11 +28,11 @@ function UI(_ui_script) constructor {
 			return false
 		}
 		
-		if parent != undefined {
+		if ui_exists(parent) {
 			parent.child = undefined
 		}
 		
-		if child != undefined {
+		if ui_exists(child) {
 			child.destroy()
 			child = undefined
 		}
@@ -53,16 +53,24 @@ function UI(_ui_script) constructor {
 	static link = function (_type) {
 		gml_pragma("forceinline")
 		
-		if child != undefined {
+		if ui_exists(child) {
 			child.destroy()
 		}
 		
-		var _ui = ui_create(_type)
+		var _ui = ui_create(_type, false)
 		
-		if _ui.exists {
+		if ui_exists(_ui) {
 			child = _ui
 			_ui.parent = self
 		}
+		
+		return _ui
+	}
+	
+	static replace = function (_type) {
+		gml_pragma("forceinline")
+		
+		return ui_exists(parent) ? parent.link(_type) : ui_create(_type, global.ui == self)
 	}
 	
 	static is_ancestor = function (_type) {

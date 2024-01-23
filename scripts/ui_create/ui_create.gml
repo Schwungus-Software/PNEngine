@@ -1,6 +1,10 @@
 function ui_create(_type, _replace = true) {
-	if _replace and global.ui != undefined {
-		global.ui.destroy()
+	if _replace {
+		var _ui = global.ui
+		
+		if _ui != undefined {
+			_ui.destroy()
+		}
 	}
 	
 	var _ui_script = global.scripts.get(_type)
@@ -17,9 +21,15 @@ function ui_create(_type, _replace = true) {
 			}
 		}
 	} else {
-		if not is_instanceof(_type, UI) {
+		var _test = new _type()
+		
+		if not is_instanceof(_test, UI) {
 			show_error($"!!! ui_create: '{_type}' is not a UI", true)
 		}
+		
+		delete _test
+		
+		_internal_parent = _type
 	}
 	
 	var _ui = new _internal_parent(_ui_script)
