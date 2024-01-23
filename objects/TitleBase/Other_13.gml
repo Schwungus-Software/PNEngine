@@ -176,6 +176,11 @@ if menu != undefined and not locked {
 					change_delete_state(id, 1)
 					global.title_delete_state = 1
 				break
+				
+				case TitleOptions.OPTIONS:
+					ui_create(proOptionsUI)
+					_exit = true
+				break
 			}
 			
 			if _exit {

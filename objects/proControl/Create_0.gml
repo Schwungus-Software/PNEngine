@@ -271,10 +271,7 @@
 				addFunction(
 					"string_localize", lexicon_text,
 					"string_rich", scribble,
-					
-					"string_input", function (_verb, _player_index = 0) {
-						return input_binding_get_name(input_binding_get(_verb, _player_index))
-					}
+					"string_input", string_input
 				)
 			#endregion
 			
@@ -615,15 +612,23 @@
 #endregion
 
 // CREATE
-ui_font = scribble_fallback_font
+global.ui_font = scribble_fallback_font
 ui_font_name = ""
 chat_font = scribble_fallback_font
 chat_font_name = ""
 chat_sound = undefined
+global.switch_sound = undefined
+global.select_sound = undefined
+global.fail_sound = undefined
+global.back_sound = undefined
 
 var _custom_ui_font = undefined
 var _custom_chat_font = undefined
 var _custom_chat_sound = undefined
+var _custom_switch_sound = undefined
+var _custom_select_sound = undefined
+var _custom_fail_sound = undefined
+var _custom_back_sound = undefined
 
 #region Mods
 	var _mods = global.mods
@@ -691,6 +696,30 @@ var _custom_chat_sound = undefined
 			if is_string(_chat_sound) {
 				_custom_chat_sound = _chat_sound
 			}
+			
+			var _switch_sound = _info[$ "switch_sound"]
+			
+			if is_string(_switch_sound) {
+				_custom_switch_sound = _switch_sound
+			}
+			
+			var _select_sound = _info[$ "select_sound"]
+			
+			if is_string(_select_sound) {
+				_custom_select_sound = _select_sound
+			}
+			
+			var _fail_sound = _info[$ "fail_sound"]
+			
+			if is_string(_fail_sound) {
+				_custom_fail_sound = _fail_sound
+			}
+			
+			var _back_sound = _info[$ "back_sound"]
+			
+			if is_string(_back_sound) {
+				_custom_back_sound = _back_sound
+			}
 		}
 		
 		_key = ds_map_find_next(_mods, _key)
@@ -712,7 +741,7 @@ var _fonts = global.fonts
 if is_string(_custom_ui_font) {
 	var _font = _fonts.fetch(_custom_ui_font)
 	
-	ui_font = _font.font
+	global.ui_font = _font.font
 	ui_font_name = _font.name
 	_font.transient = true
 }
@@ -728,6 +757,26 @@ if is_string(_custom_chat_font) {
 if is_string(_custom_chat_sound) {
 	chat_sound = global.sounds.fetch(_custom_chat_sound)
 	chat_sound.transient = true
+}
+
+if is_string(_custom_switch_sound) {
+	global.switch_sound = global.sounds.fetch(_custom_switch_sound)
+	global.switch_sound.transient = true
+}
+
+if is_string(_custom_select_sound) {
+	global.select_sound = global.sounds.fetch(_custom_select_sound)
+	global.select_sound.transient = true
+}
+
+if is_string(_custom_fail_sound) {
+	global.fail_sound = global.sounds.fetch(_custom_fail_sound)
+	global.fail_sound.transient = true
+}
+
+if is_string(_custom_back_sound) {
+	global.back_sound = global.sounds.fetch(_custom_back_sound)
+	global.back_sound.transient = true
 }
 
 caption = scribble("", "__PNENGINE_CAPTION__").starting_format(ui_font_name, c_white)

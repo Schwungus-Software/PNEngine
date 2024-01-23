@@ -567,7 +567,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				sample_blend(_final_sample, _current_sample, _next_sample, frac(_current_frame))
 				
 				if splice != undefined {
-					splice_animation(splice, splice_frame, splice_bone)
+					splice_animation(splice, ssplice_frame, splice_bone)
 				}
 				
 				if update_sample != undefined {

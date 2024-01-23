@@ -1,0 +1,1 @@
+function OUIText(_name) : OUIElement(_name, undefined, true) constructor {}
