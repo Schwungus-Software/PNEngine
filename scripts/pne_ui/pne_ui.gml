@@ -32,6 +32,7 @@ _oui_values[OUIValues.RESOLUTION] = [
 	"value.resolution.s480", "value.resolution.w480",
 	"value.resolution.s540", "value.resolution.w540",
 	"value.resolution.s720", "value.resolution.w720",
+	"value.resolution.s900", "value.resolution.w900",
 	"value.resolution.s1080", "value.resolution.w1080",
 	"value.resolution.s1440", "value.resolution.w1440",
 	"value.resolution.s2160", "value.resolution.w2160",

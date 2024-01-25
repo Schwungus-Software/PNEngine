@@ -69,10 +69,12 @@ function proOptionsUI() : UI(undefined) constructor {
 				var _aspect = (_width / _height) >= (16 / 9)
 				
 				if _height >= 2160 {
-					_resolution = 14
+					_resolution = 16
 				} else if _height >= 1440 {
-					_resolution = 12
+					_resolution = 14
 				} else if _height >= 1080 {
+					_resolution = 12
+				} else if _height >= 900 {
 					_resolution = 10
 				} else if _height >= 720 {
 					_resolution = 8
@@ -140,31 +142,41 @@ function proOptionsUI() : UI(undefined) constructor {
 					break
 					
 					case 10:
+						_width = 1200
+						_height = 900
+					break
+					
+					case 11:
+						_width = 1600
+						_height = 900
+					break
+					
+					case 12:
 						_width = 1440
 						_height = 1080
 					break
 					
-					case 11:
+					case 13:
 						_width = 1920
 						_height = 1080
 					break
 					
-					case 12:
+					case 14:
 						_width = 1920
 						_height = 1440
 					break
 					
-					case 13:
+					case 15:
 						_width = 2560
 						_height = 1440
 					break
 					
-					case 14:
+					case 16:
 						_width = 2880
 						_height = 2160
 					break
 					
-					case 15:
+					case 17:
 						_width = 3840
 						_height = 2160
 					break
