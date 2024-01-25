@@ -990,10 +990,10 @@ if _tick >= 1 {
 					
 					repeat i {
 						with _players[--i] {
-							if status != PlayerStatus.ACTIVE {
+							if status != PlayerStatus.ACTIVE or get_state("hp") <= 0 {
 								break
 							}
-						
+							
 							if not instance_exists(thing) or get_state("frozen") {
 								_paused = false
 								
