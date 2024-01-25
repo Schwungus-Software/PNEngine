@@ -254,7 +254,7 @@ void main() {
 	
 	v_color = in_Colour;
 	v_lighting = vec4(mix(total_light.rgb, vec3(1.), u_material_bright), min(total_light.a, 1.));
-	v_specular = vec2(min(mix(u_material_specular.x * total_specular, 0., u_material_bright), 1.), u_material_specular.y);
+	v_specular = vec2(mix(u_material_specular.x * total_specular, 0., u_material_bright), u_material_specular.y);
 	
 	float fog_start = u_fog_distance.x;
 	
