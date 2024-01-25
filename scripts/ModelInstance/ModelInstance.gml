@@ -50,6 +50,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		sample = dq_build_identity()
 		interp("frame", "sframe")
 		
+		splice_name = ""
 		splice = undefined
 		splice_bone = -1
 		splice_frame = 0
@@ -62,7 +63,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		transition_sample2 = dq_build_identity()
 		interp("transition", "stransition")
 		
-		static set_animation = function (_animation, _frame = 0, _time = 0) {
+		static set_animation = function (_animation = undefined, _frame = 0, _time = 0) {
 			if _animation == undefined {
 				animation_name = ""
 				animation = undefined
@@ -142,12 +143,14 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 		}
 		
-		static set_splice_animation = function (_animation, _bone, _frame = 0, _push = false) {
+		static set_splice_animation = function (_animation = undefined, _bone = 0, _frame = 0, _push = false) {
 			if _frame < 0 and _animation != undefined {
 				_frame = _animation.frames
 			}
 			
+			splice_name = _animation == undefined ? "" : _animation.name
 			splice = _animation
+			splice_finished = false
 			splice_bone = _bone
 			splice_frame = _frame
 			splice_push = _push
@@ -476,9 +479,14 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			if splice != undefined {
 				splice_frame += splice.frame_speed
+				splice_finished = false
 				
-				if splice_push and (splice.type % 2) and splice_frame >= splice.frames {
-					splice = undefined
+				if not (splice.type % 2) and splice_frame >= splice.frames {
+					splice_finished = true
+					
+					if splice_push {
+						splice = undefined
+					}
 				}
 			}
 		}
