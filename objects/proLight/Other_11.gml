@@ -3,7 +3,12 @@ event_inherited()
 
 light_data = area.light_data
 
-var _color = is_struct(special) ? special[$ "color"] : undefined
+var _color = undefined
+
+if is_struct(special) {
+	_color = special[$ "color"]
+	active = special[$ "active"] ?? active
+}
 
 if _color != undefined {
 	// integer
