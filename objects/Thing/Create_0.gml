@@ -176,7 +176,7 @@
 	}
 	
 	add_net_variable = function (_name, _flags = NetVarFlags.DEFAULT, _read = undefined, _write = undefined) {
-		if net_variables == undefined {
+		if net_variables == undefined or not f_sync or not (global.game_status & GameStatus.NETGAME) {
 			return undefined
 		}
 		

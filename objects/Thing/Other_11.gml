@@ -5,10 +5,7 @@ if create != undefined {
 	create(id)
 }
 
-if not (global.game_status & GameStatus.NETGAME) or not f_sync {
-	ds_list_destroy(net_variables)
-	net_variables = undefined
-} else {
+if f_sync and (global.game_status & GameStatus.NETGAME) {
 	if f_sync_pos {
 		add_net_variable("x", NetVarFlags.GENERIC)
 		add_net_variable("y", NetVarFlags.GENERIC)
@@ -23,6 +20,9 @@ if not (global.game_status & GameStatus.NETGAME) or not f_sync {
 	}
 	
 	add_net_variable("tag", NetVarFlags.CREATE)
+} else {
+	ds_list_destroy(net_variables)
+	net_variables = undefined
 }
 
 if f_unique {
