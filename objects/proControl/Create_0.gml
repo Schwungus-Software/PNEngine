@@ -457,7 +457,8 @@
 					"SH_WORLD", global.world_shader,
 					"SH_SKY", global.sky_shader,
 					"SH_BLOOM_PASS", global.bloom_pass_shader,
-					"SH_BLOOM", global.bloom_shader,
+					"SH_BLOOM_UP", global.bloom_up_shader,
+					"SH_BLOOM_DOWN", global.bloom_down_shader,
 					"SH_CURVE", global.curve_shader,
 					"SH_DEPTH", global.depth_shader,
 					

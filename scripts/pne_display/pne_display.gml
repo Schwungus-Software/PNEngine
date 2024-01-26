@@ -25,16 +25,15 @@
 	enum Canvases {
 		WORLD,
 		RENDER,
-		BLOOM,
 		__SIZE,
 	}
 	
-	var canvases = array_create(Canvases.__SIZE)
+	var _canvases = array_create(Canvases.__SIZE)
 	
-	canvases[Canvases.WORLD] = new Canvas(480, 270)
-	canvases[Canvases.RENDER] = (new Canvas(480, 270)).SetDepthDisabled(true)
-	canvases[Canvases.BLOOM] = (new Canvas(480, 270)).SetDepthDisabled(true)
-	global.canvases = canvases
+	_canvases[Canvases.WORLD] = new Canvas(480, 270)
+	_canvases[Canvases.RENDER] = (new Canvas(480, 270)).SetDepthDisabled(true)
+	global.canvases = _canvases
+	global.bloom = new Bloom(160, 90, 3)
 	gpu_set_cullmode(cull_counterclockwise)
 	gpu_set_ztestenable(true)
 	gpu_set_zwriteenable(true)

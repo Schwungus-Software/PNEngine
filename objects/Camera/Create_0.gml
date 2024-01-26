@@ -367,32 +367,29 @@ event_inherited()
 				
 				// Bloom
 				if _config.vid_bloom {
-					var _bloom_canvas = _canvases[Canvases.BLOOM]
-					
 					gpu_set_blendenable(false)
 					global.bloom_pass_shader.set()
-					global.u_threshold.set(0.885)
-					global.u_intensity.set(0.09)
+					global.u_threshold.set(0.85)
+					global.u_intensity.set(0.36)
 					
-					var _half_width = _width * 0.25
-					var _half_height = _height * 0.25
+					var _bloom = global.bloom
+					var _third_width = _width div 3
+					var _third_height = _height div 3
 					
-					with _bloom_canvas {
-						Resize(_half_width, _half_height)
-						Start()
-					}
+					_bloom.resize(_third_width, _third_height)
 					
+					var _surface = _bloom.get_surface()
+					
+					surface_set_target(_surface)
 					gpu_set_tex_repeat(false)
 					gpu_set_tex_filter(true)
-					_render_canvas.DrawStretched(0, 0, _half_width, _half_height)
-					_bloom_canvas.Finish()
+					_render_canvas.DrawStretched(0, 0, _third_width, _third_height)
+					surface_reset_target()
 					shader_reset()
+					_bloom.blur()
 					gpu_set_blendenable(true)
 					gpu_set_blendmode(bm_add)
-					global.bloom_shader.set()
-					global.u_resolution.set(_half_width, _half_height)
-					_bloom_canvas.DrawStretched(0, 0, _width, _height)
-					shader_reset()
+					draw_surface_stretched(_surface, 0, 0, _width, _height)
 					gpu_set_tex_filter(false)
 					gpu_set_tex_repeat(true)
 					gpu_set_blendmode(bm_normal)
