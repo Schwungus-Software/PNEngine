@@ -22,6 +22,7 @@ function UI(_ui_script) constructor {
 	input = global.ui_input
 	
 	f_blocking = true
+	f_draw_screen = true
 	
 	static destroy = function () {
 		if not exists {

@@ -229,7 +229,7 @@ event_inherited()
 			
 			with _world_canvas {
 				Resize(_width, _height)
-				Clear(c_black)
+				Clear()
 				Start()
 			}
 			
@@ -297,8 +297,6 @@ event_inherited()
 					} else {
 						_world_canvas.Clear(clear_color[4])
 					}
-				} else {
-					_world_canvas.Clear()
 				}
 				
 				_world_shader.set()

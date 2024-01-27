@@ -1,10 +1,25 @@
 draw_clear(c_black)
 
-var _players = global.players
+var _draw_target = global.ui
 
-#region Draw Active Cameras
+if _draw_target != undefined {
+	while true {
+		var _child = _draw_target.child
+		
+		if _child == undefined {
+			break
+		}
+		
+		_draw_target = _child
+	}
+}
+
+if _draw_target == undefined or _draw_target.f_draw_screen {
 	var _width = window_get_width()
 	var _height = window_get_height()
+	
+#region Draw Active Cameras
+	var _players = global.players
 	var _camera_active = global.camera_active
 	
 	if instance_exists(_camera_active) {
@@ -86,10 +101,12 @@ var _players = global.players
 		}
 	}
 #endregion
-
+	
+	var _console = global.console
+	
 #region Update Particles & Draw GUI
 	var _dead_particles = global.dead_particles
-	var _particle_step = not global.freeze_step
+	var _particle_step = not (global.freeze_step or _console)
 	var d = global.delta
 	var _drawn_areas = 0
 	var i = 0
@@ -181,32 +198,16 @@ var _players = global.players
 		gpu_set_depth(0)
 	}
 #endregion
+}
 
-#region Draw Active UI
-
-var _ui = global.ui
-
-if _ui != undefined {
-	var _draw_target = _ui
-	
-	while true {
-		var _child = _draw_target.child
-		
-		if _child == undefined {
-			break
-		}
-		
-		_draw_target = _child
-	}
-	
+// Draw UI
+if _draw_target != undefined {
 	with _draw_target {
 		if draw_gui != undefined {
 			draw_gui(_draw_target)
 		}
 	}
 }
-
-#endregion
 
 with proTransition {
 	event_user(ThingEvents.DRAW_GUI)
@@ -287,7 +288,7 @@ if _netgame != undefined and _netgame.active {
 	}
 }
 
-if global.console {
+if _console {
 	draw_set_font(scribble_fallback_font)
 	
 	var _console_bottom = 160
