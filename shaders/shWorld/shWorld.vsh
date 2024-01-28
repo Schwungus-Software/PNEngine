@@ -159,6 +159,19 @@ float snoise(vec4 v) {
                + dot(m1 * m1, vec2(dot(p3, x3), dot(p4, x4))));
 }
 
+vec3 quat_rotate(vec4 q, vec3 v) {
+	vec3 u = q.xyz;
+	
+	return (v + 2. * cross(u, cross(u, v) + q.w * v));
+}
+
+vec3 dq_transform(vec4 real, vec4 dual, vec3 v) {
+	vec3 r3 = real.xyz;
+	vec3 d3 = dual.xyz;
+	
+	return (quat_rotate(real, v) + 2. * (real.w * d3 - dual.w * r3 + cross(r3, d3)));
+}
+
 void main() {
 	// Get bone indices and weights
 	int bone = int(in_Colour2.r * 510.);
@@ -182,19 +195,14 @@ void main() {
 	// Blend bones
 	vec4 blend_real = mix(vec4(0., 0., 0., 1.), r0 * w0 + r1 * w1 + r2 * w2 + r3 * w3, u_animated);
 	vec4 blend_dual = mix(vec4(0.), d0 * w0 + d1 * w1 + d2 * w2 + d3 * w3, u_animated);
-	
-	// Normalize resulting dual quaternion
 	float blend_normal_real = 1. / length(blend_real);
 	
 	blend_real *= blend_normal_real;
 	blend_dual = (blend_dual - blend_real * dot(blend_real, blend_dual)) * blend_normal_real;
 	
 	// Vertex & normal transformation, rotation & translation
-	vec3 animation = 2. * cross(blend_real.xyz, cross(blend_real.xyz, in_Position) + blend_real.w * in_Position) + 2. * (blend_real.w * blend_dual.xyz - blend_dual.w * blend_real.xyz + cross(blend_real.xyz, blend_dual.xyz));
-	vec3 animation_normal = 2. * cross(blend_real.xyz, cross(blend_real.xyz, in_Normal) + blend_real.w * in_Normal);
 	mat4 world_matrix = gm_Matrices[MATRIX_WORLD];
-	mat4 view_matrix = gm_Matrices[MATRIX_VIEW];
-	vec4 object_space_position_vec4 = world_matrix * vec4(in_Position + animation, 1.);
+	vec4 object_space_position_vec4 = world_matrix * vec4(dq_transform(blend_real, blend_dual, in_Position), 1.);
 	
 	// Wind effect: Move vertices around using 4D simplex noise
 	if (u_material_wind.x > 0.) {
@@ -210,14 +218,14 @@ void main() {
 		object_space_position_vec4.z += u_wind.w * snoise(vec4(-vx, -vy, vz, wind_time)) * wind_weight;
 	}
 	
-	vec3 object_space_position = vec3(object_space_position_vec4);
+	mat4 view_matrix = gm_Matrices[MATRIX_VIEW];
 	
 	gl_Position = gm_Matrices[MATRIX_PROJECTION] * view_matrix * object_space_position_vec4;
 	
 	// Vertex color & lighting
-	vec3 object_space_normal = in_Normal + animation_normal;
-	vec3 world_normal = normalize(mat3(world_matrix) * object_space_normal);
+	vec3 world_normal = normalize(mat3(world_matrix) * quat_rotate(blend_real, in_Normal));
 	vec3 camera_position = -(view_matrix[3] * view_matrix).xyz;
+	vec3 object_space_position = vec3(object_space_position_vec4);
 	vec3 view_position = object_space_position - camera_position;
 	vec4 total_light = u_ambient_color;
 	float total_specular = 0.;
