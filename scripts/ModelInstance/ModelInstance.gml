@@ -48,20 +48,20 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		frame = 0
 		frame_speed = 1
 		sample = dq_build_identity()
-		interp("frame", "sframe")
+		tick_sample_previous = dq_build_identity()
+		tick_sample = dq_build_identity()
+		render_sample = dq_build_identity()
 		
 		splice_name = ""
 		splice = undefined
 		splice_bone = -1
 		splice_frame = 0
 		splice_push = false
-		interp("splice_frame", "ssplice_frame")
 		
 		transition = 0
 		transition_time = 0
 		transition_sample = dq_build_identity()
 		transition_sample2 = dq_build_identity()
-		interp("transition", "stransition")
 		
 		static set_animation = function (_animation = undefined, _frame = 0, _time = 0) {
 			if _animation == undefined {
@@ -73,12 +73,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				if _frame >= 0 {
 					frame = _frame
 					frame_speed = 1
-					interp_skip("sframe")
 				}
 				
 				transition = 0
 				transition_time = 0
-				interp_skip("stransition")
 				
 				exit
 			}
@@ -106,14 +104,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				_copy = true
 				frame = _frame
 				frame_speed = 1
-				interp_skip("sframe")
 			}
 			
 			var _transition_previous = transition < transition_time
 			
 			transition = 0
 			transition_time = _time
-			interp_skip("stransition")
 			
 			if _time > 0 {
 				var _final_sample = _transition_previous ? transition_sample2 : sample
@@ -122,8 +118,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			if _copy {
-				_frame = floor(_frame)
-				
 				var _type, _frames
 				
 				with _animation {
@@ -131,13 +125,18 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					_frames = frames
 				}
 				
+				_frame = floor(_frame)
+				
 				var _copy_sample = animation_samples[(_type % 2) ? (_frame % _frames) : min(_frame, _frames)]
 				var n = array_length(_copy_sample)
 				
 				array_copy(sample, 0, _copy_sample, 0, n)
+				array_copy(tick_sample, 0, _copy_sample, 0, n)
+				array_copy(tick_sample_previous, 0, _copy_sample, 0, n)
 				
 				if _first {
 					array_copy(transition_sample2, 0, _copy_sample, 0, n)
+					array_copy(render_sample, 0, _copy_sample, 0, n)
 					animated = true
 				}
 			}
@@ -157,7 +156,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			interp_skip("ssplice_frame")
 		}
 		
-		static get_point = function (_name) {
+		static get_point = function (_name, _interpolate = false) {
 			if points == undefined {
 				return undefined
 			}
@@ -174,7 +173,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _bone = _point[3]
 			
 			if _bone != -1 {
-				var _bone_pos = dq_get_translation(dq_add_translation(get_bone_dq(_bone), _x, _y, _z))
+				var _bone_pos = dq_get_translation(dq_add_translation(get_bone_dq(_bone, _interpolate), _x, _y, _z))
 				
 				_x = _bone_pos[0]
 				_y = _bone_pos[1]
@@ -184,7 +183,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			return matrix_transform_point(matrix, _x, _y, _z)
 		}
 		
-		static get_bone_dq = function (_index) {
+		static get_bone_dq = function (_index, _interpolate = false) {
 			static bone_dq = dq_build_identity()
 			
 			if animation == undefined {
@@ -196,7 +195,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			   existing dual quaternion.
 			   If targetQ is not provided, a new dual quaternion is created. */
 			
-			var _sample = (transition < transition_time) ? transition_sample2 : sample
+			var _sample = _interpolate ? render_sample : ((transition < transition_time) ? transition_sample2 : sample)
 			var b = 8 * _index
 			var s = animation_bind_pose[_index]
 			var r3 = _sample[b + 3]
@@ -456,14 +455,22 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		
 		static tick = function () {
 			if animation != undefined {
-				var _animation_type = animation.type
-				var _frame_step = frame_speed * animation.frame_speed
+				var _type, _frames, _frame_speed
+				
+				with animation {
+					_type = type
+					_frames = frames
+					_frame_speed = frame_speed
+				}
+				
+				var _frame_step = frame_speed * _frame_speed
+				var _loop = _type % 2
 				
 				animation_finished = false
 				
-				if _animation_type % 2 {
+				if _loop {
 					// Looping animation
-					frame += _frame_step
+					frame = (frame + _frame_step) mod _frames
 				} else {
 					// Animation plays only once
 					var _frames = animation.frames - 1
@@ -475,19 +482,46 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				if transition < transition_time {
 					++transition
 				}
-			}
-			
-			if splice != undefined {
-				splice_frame += splice.frame_speed
-				splice_finished = false
 				
-				if not (splice.type % 2) and splice_frame >= splice.frames {
-					splice_finished = true
+				if splice != undefined {
+					splice_frame += splice.frame_speed
+					splice_frame = (splice.type % 2) ? (splice_frame mod _frames) : min(splice_frame, _frames)
+					splice_finished = false
 					
-					if splice_push {
-						splice = undefined
+					if splice_frame >= splice.frames {
+						splice_finished = true
+						
+						if splice_push {
+							splice = undefined
+						}
 					}
 				}
+				
+				var _sn = array_length(tick_sample)
+				
+				array_copy(tick_sample_previous, 0, tick_sample, 0, _sn)
+				
+				var _next_frame = _loop ? (frame + 1) mod _frames : min(frame + 1, _frames)
+				var _final_sample = sample
+				var _current_sample = animation_samples[floor(frame)]
+				var _next_sample = animation_samples[floor(_next_frame)]
+				
+				sample_blend(_final_sample, _current_sample, _next_sample, frac(frame))
+				
+				if splice != undefined {
+					splice_animation(splice, splice_frame, splice_bone)
+				}
+				
+				if update_sample != undefined {
+					update_sample(self)
+				}
+				
+				if transition < transition_time {
+					_final_sample = transition_sample2
+					sample_blend(_final_sample, transition_sample, sample, transition / transition_time)
+				}
+				
+				array_copy(tick_sample, 0, _final_sample, 0, _sn)
 			}
 		}
 	#endregion
@@ -570,42 +604,15 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			} else {
 				global.u_animated.set(1)
 				
-				var _frame = sframe
-				var _frames, _loop, _current_frame, _next_frame
-				
-				with animation {
-					_frames = frames
-					_loop = type % 2
+				if global.delta >= 1 {
+					var _sn = array_length(tick_sample)
 					
-					if _loop {
-						_current_frame = _frame mod _frames
-						_next_frame = (_frame + 1) mod _frames
-					} else {
-						_current_frame = min(_frame, _frames)
-						_next_frame = min(_frame + 1, _frames)
-					}
+					array_copy(render_sample, 0, tick_sample, 0, _sn)
+				} else {
+					sample_blend(render_sample, tick_sample_previous, tick_sample, global.tick)
 				}
 				
-				var _final_sample = sample
-				var _current_sample = animation_samples[floor(_current_frame)]
-				var _next_sample = animation_samples[floor(_next_frame)]
-				
-				sample_blend(_final_sample, _current_sample, _next_sample, frac(_current_frame))
-				
-				if splice != undefined {
-					splice_animation(splice, ssplice_frame, splice_bone)
-				}
-				
-				if update_sample != undefined {
-					update_sample(self)
-				}
-				
-				if stransition < transition_time {
-					_final_sample = transition_sample2
-					sample_blend(_final_sample, transition_sample, sample, stransition / transition_time)
-				}
-				
-				global.u_bone_dq.set(_final_sample)
+				global.u_bone_dq.set(render_sample)
 			}
 			
 			var _current_shader = global.current_shader

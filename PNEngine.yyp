@@ -2313,6 +2313,8 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndPlayerKnock.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndPop.json","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndPop.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndPunch.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndPunch2.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndRespawn.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndRicochet.json","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"sndRicochet.wav","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/sounds",},
