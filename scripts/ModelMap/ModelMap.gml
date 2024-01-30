@@ -40,18 +40,8 @@ function ModelMap() : AssetMap() constructor {
 						var i = 0
 					
 						repeat array_length(_get_submodels) {
-							var _submodel_info = _get_submodels[i++]
-							
-							if not is_struct(_submodel_info) {
-								show_error($"!!! ModelMap.load: '{_name}' has an invalid submodel definition, expected struct", true)
-							}
-							
-							var _submodel_name = _submodel_info[$ "name"]
-						
-							if not is_string(_submodel_name) {
-								show_error($"!!! ModelMap.load: '{_name}' has invalid submodel name '{_submodel_name}', expected string", true)
-							}
-							
+							var _submodel_info = force_type(_get_submodels[i++], "struct")
+							var _submodel_name = force_type(_submodel_info[$ "name"], "string")
 							var _submodel_filename = _folder + _submodel_name + ".mdl"
 							
 							if not file_exists(_submodel_filename) {
@@ -109,9 +99,9 @@ function ModelMap() : AssetMap() constructor {
 								var i = 0
 							
 								repeat array_length(_get_triangles) {
-									var _batch = _get_triangles[i++]
-								
-									if is_struct(_batch) {
+									var _batch = force_type(_get_triangles[i++], "struct")
+									
+									//if is_struct(_batch) {
 										var _batch_name = _batch[$ "batch"]
 									
 										if not is_string(_batch_name) {
@@ -211,9 +201,9 @@ function ModelMap() : AssetMap() constructor {
 										}
 									
 										buffer_delete(_buffer)
-									} else {
+									/*} else {
 										show_error($"!!! ModelMap.load: '{_name}' has invalid batch definition, expected struct", true)
-									}
+									}*/
 								}
 							}
 						#endregion
@@ -328,9 +318,9 @@ function ModelMap() : AssetMap() constructor {
 				
 				#region Animations
 					with _model {
-						head_bone = _json[$ "head_bone"] ?? -1
-						torso_bone = _json[$ "torso_bone"] ?? -1
-						hold_bone = _json[$ "hold_bone"] ?? -1
+						head_bone = force_type_fallback(_json[$ "head_bone"], "number", -1)
+						torso_bone = force_type_fallback(_json[$ "torso_bone"], "number", -1)
+						hold_bone = force_type_fallback(_json[$ "hold_bone"], "number", -1)
 					}
 				#endregion
 				
