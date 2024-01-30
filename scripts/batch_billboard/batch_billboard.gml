@@ -1,14 +1,22 @@
 /// @desc Adds a X/Y billboard image that faces the camera to the batch.
 function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0, _color = c_white, _alpha = 1) {
-	var _texture = _image.GetTexture(_frame)
+	var _blank = _image == -1
+	var _texture = _blank ? -1 : _image.GetTexture(_frame)
 	
 	if _texture != global.batch_texture {
 		batch_submit()
 		global.batch_texture = _texture
 	}
 	
-	var _x_offset = (_image.GetXOffset() / _image.GetWidth()) * _width
-	var _y_offset = (_image.GetYOffset() / _image.GetHeight()) * _height
+	var _x_offset, _y_offset
+	
+	if _blank {
+		_x_offset = 0
+		_y_offset = 0
+	} else {
+		_x_offset = (_image.GetXOffset() / _image.GetWidth()) * _width
+		_y_offset = (_image.GetYOffset() / _image.GetHeight()) * _height
+	}
 	
 	var _camera = global.batch_camera
 	var _yaw = _camera.syaw + 180
@@ -44,13 +52,21 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 	var _z4 = _vert4[2]
 	
 	var _u1, _v1, _u2, _v2
-	var _uvs = _image.GetUVs(_frame)
 	
-	with _uvs {
-		_u1 = normLeft
-		_v1 = normTop
-		_u2 = _u1 + normRight
-		_v2 = _v1 + normBottom
+	if _blank {
+		_u1 = 0
+		_v1 = 0
+		_u2 = 1
+		_v2 = 1
+	} else {
+		var _uvs = _image.GetUVs(_frame)
+	
+		with _uvs {
+			_u1 = normLeft
+			_v1 = normTop
+			_u2 = _u1 + normRight
+			_v2 = _v1 + normBottom
+		}
 	}
 	
 	var _batch_vbo = global.batch_vbo
