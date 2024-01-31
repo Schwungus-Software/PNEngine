@@ -377,7 +377,7 @@
 					"M_COLLISION_NONE", MCollision.NONE,
 					"M_COLLISION_NORMAL", MCollision.NORMAL,
 					"M_COLLISION_BOUNCE", MCollision.BOUNCE,
-					"M_COLLISION_PROJECTILE", MCollision.PROJECTILE,
+					"M_COLLISION_BULLET", MCollision.BULLET,
 					
 					"M_BUMP_NONE", MBump.NONE,
 					"M_BUMP_ALL", MBump.ALL,

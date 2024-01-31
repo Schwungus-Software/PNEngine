@@ -109,7 +109,7 @@ if _held {
 			ceiling_ray[RaycastData.HIT] = false
 		break
 	
-		case MCollision.NORMAL:
+		case MCollision.NORMAL: {
 			var _half_height = height * 0.5
 			var _center_z = z + _half_height
 		
@@ -195,7 +195,54 @@ if _held {
 			}
 		
 			z += z_speed
-		break
+			
+			break
+		}
+		
+		case MCollision.BULLET: {
+			var _vector = normal_vector_3d(angle, pitch)
+			var _nx = _vector[0]
+			var _ny = _vector[1]
+			var _nz = _vector[2]
+			
+			var _x_speed = vector_speed * _nx
+			var _y_speed = vector_speed * _ny
+			var _z_speed = vector_speed * _nz
+			
+			var _x_radius = radius * _nx
+			var _y_radius = radius * _ny
+			var _z_radius = radius * _nz
+			
+			var _result
+			
+			if f_bullet_hitscan {
+				hitscan(x, y, z, x + _x_speed + _x_radius, y + _y_speed + _y_radius, z + _z_speed + _z_radius, CollisionFlags.BULLET, CollisionLayers.ALL, wall_ray)
+			} else {
+				raycast(x, y, z, x + _x_speed + _x_radius, y + _y_speed + _y_radius, z + _z_speed + _z_radius, CollisionFlags.BULLET, CollisionLayers.ALL, wall_ray)
+			}
+			
+			if wall_ray[RaycastData.HIT] {
+				x = wall_ray[RaycastData.X] - _x_radius
+				y = wall_ray[RaycastData.Y] - _y_radius
+				z = wall_ray[RaycastData.Z] - _z_radius
+				
+				var _thing = wall_ray[RaycastData.THING]
+				
+				if instance_exists(_thing) {
+					_thing.receive_damage(bullet_damage, bullet_type, id)
+				}
+				
+				receive_damage(1, "BulletCollide", _thing)
+				
+				break
+			}
+			
+			x += _x_speed
+			y += _y_speed
+			z += _z_speed
+			
+			break
+		}
 	}
 }
 

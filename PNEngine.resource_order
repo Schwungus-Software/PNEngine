@@ -691,6 +691,7 @@
     {"name":"CollageImageGetUVsArray","order":6,"path":"scripts/CollageImageGetUVsArray/CollageImageGetUVsArray.yy",},
     {"name":"batch_billboard","order":5,"path":"scripts/batch_billboard/batch_billboard.yy",},
     {"name":"__input_load_sdl2_from_file","order":7,"path":"scripts/__input_load_sdl2_from_file/__input_load_sdl2_from_file.yy",},
+    {"name":"normal_vector_3d","order":12,"path":"scripts/normal_vector_3d/normal_vector_3d.yy",},
     {"name":"__input_snap_to_json","order":11,"path":"scripts/__input_snap_to_json/__input_snap_to_json.yy",},
     {"name":"input_binding_test_collisions","order":11,"path":"scripts/input_binding_test_collisions/input_binding_test_collisions.yy",},
     {"name":"input_source_using","order":8,"path":"scripts/input_source_using/input_source_using.yy",},

@@ -3,7 +3,7 @@
 		NONE,
 		NORMAL,
 		BOUNCE,
-		PROJECTILE,
+		BULLET,
 	}
 	
 	enum MBump {
@@ -102,6 +102,9 @@
 	emitter_falloff_factor = 1
 	voice = undefined
 	
+	bullet_damage = 1
+	bullet_type = "Normal"
+	
 	f_created = false
 	f_new = false
 	f_persistent = false
@@ -125,6 +128,7 @@
 	f_bump_avoid = false
 	f_bump_intercept = false
 	f_collider_stick = true
+	f_bullet_hitscan = false
 	f_holdable = false
 	f_holdable_in_hand = false
 	f_interactive = false
@@ -429,7 +433,7 @@
 				// Check this region to see if we're intersecting any Things.
 				var _thing = _region[| --i]
 				
-				if _thing == id or _thing.holding == id or not _thing.f_bump_intercept {
+				if _thing == id or _thing.holding == id or not _thing.f_bump_intercept or (f_bullet_hitscan and master == _thing) {
 					continue
 				}
 				
