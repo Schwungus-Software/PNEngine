@@ -2,7 +2,7 @@
 x_previous = x
 y_previous = y
 z_previous = z
-collider_yaw_previous = collider_yaw
+angle_previous = angle
 
 // Source: https://github.com/YoYoGames/GameMaker-HTML5/blob/37ebef72db6b238b892bb0ccc60184d4c4ba5d12/scripts/yyInstance.js#L1157
 if fric != 0 {
@@ -166,8 +166,8 @@ if _held {
 							_z_previous = z_previous
 							_x_speed = x_speed
 							_y_speed = y_speed
-							_yaw = collider_yaw
-							_yaw_previous = collider_yaw_previous
+							_yaw = angle
+							_yaw_previous = angle_previous
 						}
 					
 						var _diff = angle_difference(_yaw, _yaw_previous)
@@ -287,7 +287,7 @@ if model != undefined {
 			_z_scale = z_scale
 		}
 		
-		collider_yaw = _yaw
+		angle = _yaw
 		collider.set_matrix(matrix_build(_x, _y, _z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale))
 	}
 }

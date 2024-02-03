@@ -38,8 +38,8 @@ if is_struct(special) {
 		var _collider = model.model.collider
 	
 		if _collider != undefined {
-			collider_yaw = _yaw
-			collider_yaw_previous = _yaw
+			angle = _yaw
+			angle_previous = _yaw
 			collider = new ColliderInstance(_collider)
 			collider.set_matrix(matrix_build(x, y, z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale))
 			ds_list_add(area.collidables, id)
@@ -56,8 +56,8 @@ if is_struct(special) {
 		}
 		
 		if collider != undefined {
-			collider_yaw = _yaw
-			collider_yaw_previous = _yaw
+			angle = _yaw
+			angle_previous = _yaw
 			collider.set_matrix(matrix_build(x, y, z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale))
 		}
 	}

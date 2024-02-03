@@ -64,6 +64,7 @@
 	y_previous = y
 	z_previous = z
 	angle = 0
+	angle_previous = 0
 	pitch = 0
 	x_speed = 0
 	y_speed = 0
@@ -93,8 +94,6 @@
 	
 	model = undefined
 	collider = undefined
-	collider_yaw = 0
-	collider_yaw_previous = 0
 	
 	emitter = undefined
 	emitter_falloff = 0
