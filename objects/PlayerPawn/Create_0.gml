@@ -40,6 +40,7 @@ event_inherited()
 		coyote = 0
 		z_speed = jump_speed
 		jumped = true
+		floor_ray[RaycastData.HIT] = false
 		player_jumped(id)
 	}
 	
