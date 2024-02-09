@@ -157,7 +157,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			interp_skip("ssplice_frame")
 		}
 		
-		static get_point = function (_name) {
+		static get_point = function (_name, _tick = false) {
 			if points == undefined {
 				return undefined
 			}
@@ -174,7 +174,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _bone = _point[3]
 			
 			if _bone != -1 {
-				var _bone_pos = dq_get_translation(dq_add_translation(get_bone_dq(_bone), _x, _y, _z))
+				var _bone_pos = dq_get_translation(dq_add_translation(get_bone_dq(_bone, _tick), _x, _y, _z))
 				
 				_x = _bone_pos[0]
 				_y = _bone_pos[1]
@@ -184,7 +184,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			return matrix_transform_point(matrix, _x, _y, _z)
 		}
 		
-		static get_bone_dq = function (_index) {
+		static get_bone_dq = function (_index, _tick = false) {
 			static bone_dq = dq_build_identity()
 			
 			if animation == undefined {
@@ -196,7 +196,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			   existing dual quaternion.
 			   If targetQ is not provided, a new dual quaternion is created. */
 			
-			var _sample = (transition < transition_time) ? transition_sample2 : sample
+			var _sample = _tick ? animation_samples[frame % animation.frames] : ((transition < transition_time) ? transition_sample2 : sample)
 			var b = 8 * _index
 			var s = animation_bind_pose[_index]
 			var r3 = _sample[b + 3]
