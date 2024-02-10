@@ -20,7 +20,7 @@ if _model != undefined and (not instance_exists(holder) or not f_holdable_in_han
 				with model {
 					var _mwp = matrix_get(matrix_world)
 					
-					matrix_build_dq(_model.get_bone_dq(_hold_bone, true), matrix)
+					matrix_build_dq(_model.get_bone_dq(_hold_bone), matrix)
 					
 					var _hold_matrix = matrix_multiply(hold_offset_matrix, matrix)
 					
