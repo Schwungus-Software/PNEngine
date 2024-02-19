@@ -636,6 +636,7 @@
     {"name":"input_accessibility_global_toggle_get","order":2,"path":"scripts/input_accessibility_global_toggle_get/input_accessibility_global_toggle_get.yy",},
     {"name":"input_motion_data_get","order":4,"path":"scripts/input_motion_data_get/input_motion_data_get.yy",},
     {"name":"input_cursor_speed_set","order":9,"path":"scripts/input_cursor_speed_set/input_cursor_speed_set.yy",},
+    {"name":"batch_trail","order":8,"path":"scripts/batch_trail/batch_trail.yy",},
     {"name":"lexicon_locale_get","order":9,"path":"scripts/lexicon_locale_get/lexicon_locale_get.yy",},
     {"name":"CollageSterlizeGPUState","order":13,"path":"scripts/CollageSterlizeGPUState/CollageSterlizeGPUState.yy",},
     {"name":"input_cursor_dy","order":3,"path":"scripts/input_cursor_dy/input_cursor_dy.yy",},

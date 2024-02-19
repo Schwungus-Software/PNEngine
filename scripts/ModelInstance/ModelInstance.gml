@@ -191,11 +191,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				return bone_dq
 			}
 			
-			/* Returns the world orientation of the node as a dual quaternion.
-			   targetQ is an optional argument, in case you'd like to output directly to an
-			   existing dual quaternion.
-			   If targetQ is not provided, a new dual quaternion is created. */
-			
 			var _sample = _tick ? animation_samples[frame % animation.frames] : ((transition < transition_time) ? transition_sample2 : sample)
 			var b = 8 * _index
 			var s = animation_bind_pose[_index]
@@ -205,8 +200,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var r6 = _sample[b + 6]
 			
 			if r3 == 1 and r4 == 0 and r5 == 0 and r6 == 0 {
-				/* An early out if this bone has not been transformed, letting us skip a dual
-				   quaternion multiplication */
+				// An early out if this bone has not been transformed, letting
+				// us skip a dual quaternion multiplication
 				array_copy(bone_dq, 0, s, 0, 8)
 		
 				return bone_dq

@@ -92,6 +92,7 @@
 			        "dot_product_3d_normalized", dot_product_3d_normalized,
 					"cross_product_3d_normalized", cross_product_3d_normalized,
 					"lengthdir_3d", lengthdir_3d,
+					"normal_vector_3d", normal_vector_3d,
 			        "matrix_build", matrix_build,
 			        "matrix_multiply", matrix_multiply,
 			        "matrix_build_identity", matrix_build_identity,
@@ -536,6 +537,7 @@
 					"batch_floor", batch_floor,
 					"batch_floor_ext", batch_floor_ext,
 					"batch_line", batch_line,
+					"batch_trail", batch_trail,
 					"batch_set_alpha_test", batch_set_alpha_test,
 					"batch_set_bright", batch_set_bright
 				)
