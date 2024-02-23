@@ -31,11 +31,12 @@ function SoundPool() constructor {
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
 		
-		var _instance = audio_play_sound(_id, 0, _loop, gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, _offset, _final_pitch)
+		//var _instance = audio_play_sound(_id, 0, _loop, gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, _offset, _final_pitch)
 		
-		ds_list_add(sounds, _instance)
+		//ds_list_add(sounds, _instance)
 		
-		return _instance
+		//return _instance
+		return undefined
 	}
 	
 	static play_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1) {
@@ -56,11 +57,12 @@ function SoundPool() constructor {
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
 		
-		var _instance = audio_play_sound_at(_id, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, 0, gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, _offset, _final_pitch)
+		//var _instance = audio_play_sound_at(_id, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, 0, gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, _offset, _final_pitch)
 		
-		ds_list_add(sounds, _instance)
+		//ds_list_add(sounds, _instance)
 		
-		return _instance
+		//return _instance
+		return undefined
 	}
 	
 	static play_on = function (_emitter, _sound, _loop = false, _offset = 0, _pitch = 1) {
@@ -81,11 +83,12 @@ function SoundPool() constructor {
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
 		
-		var _instance = audio_play_sound_on(_emitter, _id, _loop, 0, gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, _offset, _final_pitch)
+		//var _instance = audio_play_sound_on(_emitter, _id, _loop, 0, gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, _offset, _final_pitch)
 		
-		ds_list_add(sounds, _instance)
+		//ds_list_add(sounds, _instance)
 		
-		return _instance
+		//return _instance
+		return undefined
 	}
 	
 	static set_gain = function (_slot, _gain, _time = 0) {
@@ -95,11 +98,11 @@ function SoundPool() constructor {
 		if _time <= 0 {
 			gain[_slot] = _gain
 			
-			var i = 0
+			/*var i = 0
 			
 			repeat ds_list_size(sounds) {
 				audio_sound_gain(sounds[| i++], gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, 0)
-			}
+			}*/
 			
 			exit
 		}
@@ -109,10 +112,10 @@ function SoundPool() constructor {
 	}
 	
 	static clear = function () {
-		repeat ds_list_size(sounds) {
+		/*repeat ds_list_size(sounds) {
 			audio_stop_sound(sounds[| 0])
 			ds_list_delete(sounds, 0)
-		}
+		}*/
 	}
 	
 	static destroy = function () {

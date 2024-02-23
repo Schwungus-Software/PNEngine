@@ -9,7 +9,7 @@ enum MusicPriorities {
 	FANFARE = 12,
 }
 
-audio_falloff_set_model(audio_falloff_linear_distance)
+//audio_falloff_set_model(audio_falloff_linear_distance)
 
 global.master_volume = 1
 global.sound_volume = 1
@@ -28,12 +28,12 @@ call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
 		if not global.config.snd_background {
 			if window_has_focus() {
 				if not global.audio_focus {
-					audio_master_gain(global.master_volume)
+					//audio_master_gain(global.master_volume)
 					global.audio_focus = true
 				}
 			} else {
 				if global.audio_focus {
-					audio_master_gain(0)
+					//audio_master_gain(0)
 					global.audio_focus = false
 				}
 			}
@@ -46,13 +46,13 @@ call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
 		
 		repeat ds_list_size(_sound_pools) {
 			with _sound_pools[| i++] {
-				var j = ds_list_size(sounds)
+				/*var j = ds_list_size(sounds)
 				
 				repeat j {
 					if not audio_exists(sounds[| --j]) {
 						ds_list_delete(sounds, j)
 					}
-				}
+				}*/
 				
 				var _update_gain = false
 				
@@ -71,7 +71,7 @@ call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
 					++j
 				}
 				
-				if _update_gain {
+				/*if _update_gain {
 					j = 0
 					
 					var _sound_volume = global.sound_volume
@@ -79,7 +79,7 @@ call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
 					repeat ds_list_size(sounds) {
 						audio_sound_gain(sounds[| j++], gain[0] * gain[1] * gain[2] * gain[3] * _sound_volume, AUDIO_TICKRATE_MILLISECONDS)
 					}
-				}
+				}*/
 			}
 		}
 	#endregion
@@ -107,11 +107,11 @@ call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
 					++j
 				}
 				
-				if _update_gain {
+				/*if _update_gain {
 					audio_sound_gain(sound_instance, gain[0] * gain[1] * gain[2] * global.music_volume, AUDIO_TICKRATE_MILLISECONDS)
-				}
+				}*/
 				
-				if (stopping and gain[2] <= 0) or not audio_exists(sound_instance) {
+				if (stopping and gain[2] <= 0) /*or not audio_exists(sound_instance)*/ {
 					destroy()
 				}
 			}

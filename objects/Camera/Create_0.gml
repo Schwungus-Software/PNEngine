@@ -177,10 +177,10 @@ event_inherited()
 		view_matrix = matrix_build_lookat(sx, sy, sz, sx + _nx, sy + _ny, sz + _nz, 0, _yup, _zup)
 		projection_matrix = matrix_build_projection_perspective_fov(-sfov, -(_width / _height), 1, 65535)
 		
-		if _update_listener {
+		/*if _update_listener {
 			audio_listener_position(sx, sy, sz)
 			audio_listener_orientation(-_nx, -_ny, _nz, 0, _yup, _zup)
-		}
+		}*/
 	}
 	
 	world_to_screen = function (_x, _y, _z) {

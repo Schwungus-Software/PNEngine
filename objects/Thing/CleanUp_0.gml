@@ -10,13 +10,13 @@ if clean_up != undefined {
 	clean_up(id)
 }
 
-if voice != undefined and audio_exists(voice) {
+/*if voice != undefined and audio_exists(voice) {
 	audio_stop_sound(voice)
 }
 
 if emitter != undefined and audio_emitter_exists(emitter) {
 	audio_emitter_free(emitter)
-}
+}*/
 
 if area_thing != undefined {
 	area_thing.thing = noone

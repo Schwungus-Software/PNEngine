@@ -43,7 +43,7 @@ function MusicMap() : AssetMap() constructor {
 				}
 			}
 			
-			var _stream = audio_create_stream(_ogg_file)
+			/*var _stream = audio_create_stream(_ogg_file)
 			
 			if is_real(_loop_start) {
 				audio_sound_loop_start(_stream, _loop_start)
@@ -51,13 +51,13 @@ function MusicMap() : AssetMap() constructor {
 			
 			if is_real(_loop_end) {
 				audio_sound_loop_end(_stream, _loop_end)
-			}
+			}*/
 			
 			var __music = new Music()
 			
 			with __music {
 				name = _name
-				stream = _stream
+				//stream = _stream
 				cut_in = _cut_in
 				cut_out = _cut_out
 				fade_in = _fade_in

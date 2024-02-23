@@ -216,11 +216,11 @@
 	}
 	
 	play_sound_local = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
-		if emitter == undefined or not audio_emitter_exists(emitter) {
+		/*if emitter == undefined or not audio_emitter_exists(emitter) {
 			emitter = audio_emitter_create()
 			audio_emitter_falloff(emitter, emitter_falloff, emitter_falloff_max, emitter_falloff_factor)
 			audio_emitter_position(emitter, x, y, z)
-		}
+		}*/
 		
 		return area.sounds.play_on(emitter, _sound, _loop, _offset, _pitch)
 	}
@@ -234,9 +234,9 @@
 			exit
 		}
 		
-		if voice != undefined and audio_exists(voice) {
+		/*if voice != undefined and audio_exists(voice) {
 			audio_stop_sound(voice)
-		}
+		}*/
 		
 		voice = _sound
 	}

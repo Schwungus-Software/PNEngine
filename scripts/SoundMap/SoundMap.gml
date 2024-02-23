@@ -99,24 +99,24 @@ function SoundMap() : AssetMap() constructor {
 							show_error($"!!! SoundMap.load: Sound '{_name}' has invalid bits per sample", true)
 					}
 					
-					var _sound_id = audio_create_buffer_sound(_buffer, _bits_per_sample, _rate, 42 + i, _subchunk_size, _channel)
+					//var _sound_id = audio_create_buffer_sound(_buffer, _bits_per_sample, _rate, 42 + i, _subchunk_size, _channel)
 					var _sound = new Sound()
 					
 					with _sound {
 						name = _name
 						buffer = _buffer
-						asset = _sound_id
+						//asset = _sound_id
 						pitch_low = _pitch_low
 						pitch_high = _pitch_high
 					}
 					
-					if is_real(_loop_start) {
+					/*if is_real(_loop_start) {
 						audio_sound_loop_start(_sound_id, _loop_start)
 					}
 					
 					if is_real(_loop_end) {
 						audio_sound_loop_end(_sound_id, _loop_end)
-					}
+					}*/
 					
 					ds_map_add(assets, _name, _sound)
 					print($"SoundMap.load: Added '{_name}' ({_sound})")

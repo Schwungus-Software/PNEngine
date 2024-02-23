@@ -15,7 +15,7 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	
 	ds_list_add(global.music_instances, self)
 	
-	sound_instance = audio_play_sound(_music.stream, _priority, _loop, gain[0] * gain[1] * gain[2] * global.music_volume, _offset)
+	sound_instance = undefined//audio_play_sound(_music.stream, _priority, _loop, gain[0] * gain[1] * gain[2] * global.music_volume, _offset)
 	
 	static set_gain = function (_gain, _time = 0) {
 		gml_pragma("forceinline")
@@ -33,7 +33,7 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 		
 		if _time <= 0 {
 			gain[_slot] = _gain
-			audio_sound_gain(sound_instance, gain[0] * gain[1] * gain[2] * global.music_volume, 0)
+			//audio_sound_gain(sound_instance, gain[0] * gain[1] * gain[2] * global.music_volume, 0)
 			
 			exit
 		}
@@ -43,7 +43,7 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	}
 	
 	static set_position = function (_time) {
-		audio_sound_set_track_position(sound_instance, _time)
+		//audio_sound_set_track_position(sound_instance, _time)
 	}
 	
 	if _active {
@@ -114,7 +114,7 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	}
 	
 	static destroy = function () {
-		audio_stop_sound(sound_instance)
+		//audio_stop_sound(sound_instance)
 		
 		var _music_priority = global.music_priority
 		var _music_instances = global.music_instances

@@ -1,7 +1,7 @@
 /// @description Draw
-if emitter != undefined and audio_emitter_exists(emitter) {
-	audio_emitter_position(emitter, sx, sy, sz)
-}
+/*if emitter != undefined and audio_emitter_exists(emitter) {
+	//audio_emitter_position(emitter, sx, sy, sz)
+}*/
 
 var _model = model
 
