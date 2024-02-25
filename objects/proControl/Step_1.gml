@@ -85,7 +85,7 @@ if load_state != LoadStates.NONE {
 			
 			_level.name = load_level
 			
-			var _json = json_load(mod_find_file("levels/" + load_level + ".json"))
+			var _json = json_load(mod_find_file("levels/" + load_level + ".*"))
 			
 			if not is_struct(_json) {
 				show_error($"!!! proControl: '{load_level}' not found", true)

@@ -7,7 +7,7 @@ function MusicMap() : AssetMap() constructor {
 		}
 		
 		var _path = "music/" + _name
-		var _ogg_file = mod_find_file(_path + ".ogg")
+		var _ogg_file = mod_find_file(_path + ".*", ".json")
 		
 		if _ogg_file != "" {
 			var _loop_start = undefined
@@ -43,21 +43,17 @@ function MusicMap() : AssetMap() constructor {
 				}
 			}
 			
-			/*var _stream = audio_create_stream(_ogg_file)
+			var _stream = fmod_system_create_stream(_ogg_file, FMOD_MODE.ACCURATETIME)
 			
-			if is_real(_loop_start) {
-				audio_sound_loop_start(_stream, _loop_start)
+			if is_real(_loop_start) or is_real(_loop_end) {
+				fmod_sound_set_loop_points(_stream, _loop_start ?? 0, FMOD_TIMEUNIT.MS, _loop_end ?? fmod_sound_get_length(_stream, FMOD_TIMEUNIT.MS), FMOD_TIMEUNIT.MS)
 			}
-			
-			if is_real(_loop_end) {
-				audio_sound_loop_end(_stream, _loop_end)
-			}*/
 			
 			var __music = new Music()
 			
 			with __music {
 				name = _name
-				//stream = _stream
+				stream = _stream
 				cut_in = _cut_in
 				cut_out = _cut_out
 				fade_in = _fade_in

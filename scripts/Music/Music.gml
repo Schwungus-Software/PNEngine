@@ -6,7 +6,7 @@ function Music() : Asset() constructor {
 	fade_in = 0
 	fade_out = 0
 	
-	/*static destroy = function () {
-		audio_destroy_stream(stream)
-	}*/
+	static destroy = function () {
+		fmod_sound_release(stream)
+	}
 }

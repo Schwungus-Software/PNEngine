@@ -21,3 +21,7 @@ add_net_variable("yaw", NetVarFlags.GENERIC)
 add_net_variable("pitch", NetVarFlags.GENERIC)
 add_net_variable("roll", NetVarFlags.GENERIC)
 add_net_variable("fov", NetVarFlags.GENERIC)
+
+listener_pos.x = x
+listener_pos.y = y
+listener_pos.z = z

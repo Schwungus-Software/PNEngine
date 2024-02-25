@@ -1,6 +1,7 @@
 {
   "FolderOrderSettings": [
     {"name":"Extensions","order":4,"path":"folders/Extensions.yy",},
+    {"name":"FMOD","order":1,"path":"folders/Extensions/FMOD.yy",},
     {"name":"Objects","order":2,"path":"folders/Objects.yy",},
     {"name":"Lights","order":10,"path":"folders/Objects/Things/Lights.yy",},
     {"name":"Players","order":11,"path":"folders/Objects/Things/Players.yy",},
@@ -328,6 +329,7 @@
     {"name":"input_join_params_get","order":3,"path":"scripts/input_join_params_get/input_join_params_get.yy",},
     {"name":"__input_config_multiplayer","order":9,"path":"scripts/__input_config_multiplayer/__input_config_multiplayer.yy",},
     {"name":"CollageImageLoad","order":8,"path":"scripts/CollageImageLoad/CollageImageLoad.yy",},
+    {"name":"Fmod_Functions","order":3,"path":"scripts/Fmod_Functions/Fmod_Functions.yy",},
     {"name":"color_to_vec5","order":5,"path":"scripts/color_to_vec5/color_to_vec5.yy",},
     {"name":"raycast_data_create","order":2,"path":"scripts/raycast_data_create/raycast_data_create.yy",},
     {"name":"__lexicon_reset","order":16,"path":"scripts/__lexicon_reset/__lexicon_reset.yy",},
@@ -619,6 +621,7 @@
     {"name":"input_combo_params_set_top_down","order":9,"path":"scripts/input_combo_params_set_top_down/input_combo_params_set_top_down.yy",},
     {"name":"__input_class_trigger_effect_off","order":13,"path":"scripts/__input_class_trigger_effect_off/__input_class_trigger_effect_off.yy",},
     {"name":"__scribble_class_page","order":5,"path":"scripts/__scribble_class_page/__scribble_class_page.yy",},
+    {"name":"Fmod_Definitions","order":2,"path":"scripts/Fmod_Definitions/Fmod_Definitions.yy",},
     {"name":"input_binding_scan_params_get","order":3,"path":"scripts/input_binding_scan_params_get/input_binding_scan_params_get.yy",},
     {"name":"__CollageFileFromWeb","order":5,"path":"scripts/__CollageFileFromWeb/__CollageFileFromWeb.yy",},
     {"name":"input_vibrate_curve","order":2,"path":"scripts/input_vibrate_curve/input_vibrate_curve.yy",},
@@ -655,6 +658,7 @@
     {"name":"shDepth","order":5,"path":"shaders/shDepth/shDepth.yy",},
     {"name":"input_check_repeat","order":12,"path":"scripts/input_check_repeat/input_check_repeat.yy",},
     {"name":"scr_catspeak_lexer","order":2,"path":"scripts/scr_catspeak_lexer/scr_catspeak_lexer.yy",},
+    {"name":"FMOD","order":1,"path":"extensions/FMOD/FMOD.yy",},
     {"name":"string_input","order":13,"path":"scripts/string_input/string_input.yy",},
     {"name":"__input_gamepad_reset_color","order":2,"path":"scripts/__input_gamepad_reset_color/__input_gamepad_reset_color.yy",},
     {"name":"__CollageGPUStateSingleton","order":7,"path":"scripts/__CollageGPUStateSingleton/__CollageGPUStateSingleton.yy",},

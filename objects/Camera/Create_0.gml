@@ -67,6 +67,17 @@ event_inherited()
 	
 	alpha = 1
 	output = (new Canvas(480, 270)).SetDepthDisabled(true)
+	
+	listener_pos = new FmodVector()
+	listener_vel = new FmodVector()
+	listener_rot = new FmodVector()
+	listener_up = new FmodVector()
+	
+	with listener_up {
+		x = 0
+		y = 0
+		z = 1
+	}
 #endregion
 
 #region Functions
@@ -177,10 +188,20 @@ event_inherited()
 		view_matrix = matrix_build_lookat(sx, sy, sz, sx + _nx, sy + _ny, sz + _nz, 0, _yup, _zup)
 		projection_matrix = matrix_build_projection_perspective_fov(-sfov, -(_width / _height), 1, 65535)
 		
-		/*if _update_listener {
-			audio_listener_position(sx, sy, sz)
-			audio_listener_orientation(-_nx, -_ny, _nz, 0, _yup, _zup)
-		}*/
+		if _update_listener {
+			listener_pos.x = x
+			listener_pos.y = y
+			listener_pos.z = z
+			
+			with listener_rot {
+				x = _nx
+				y = _ny
+				z = _nz
+			}
+			
+			// TODO: Implement multiple listeners for splitscreen
+			fmod_system_set_3d_listener_attributes(0, listener_pos, listener_vel, listener_rot, listener_up)
+		}
 	}
 	
 	world_to_screen = function (_x, _y, _z) {

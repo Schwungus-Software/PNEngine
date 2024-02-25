@@ -1,6 +1,7 @@
 #macro AUDIO_TICKRATE 60
 #macro AUDIO_TICKRATE_SECONDS 0.0166666666666667
 #macro AUDIO_TICKRATE_MILLISECONDS 16.66666666666667
+#macro MAX_CHANNELS 256
 
 enum MusicPriorities {
 	DEFAULT = 0,
@@ -9,13 +10,20 @@ enum MusicPriorities {
 	FANFARE = 12,
 }
 
-//audio_falloff_set_model(audio_falloff_linear_distance)
+global.fmod = fmod_system_create()
+fmod_system_init(MAX_CHANNELS, FMOD_INIT.NORMAL)
+global.sound_group = fmod_system_create_sound_group("sound")
+global.music_group = fmod_system_create_sound_group("music")
+global.master_channel_group = fmod_system_get_master_channel_group()
+global.sound_channel_group = fmod_system_create_channel_group("sound")
+global.music_channel_group = fmod_system_create_channel_group("music")
 
 global.master_volume = 1
 global.sound_volume = 1
 global.music_volume = 0.6
 global.audio_focus = true
 
+global.last_sound_pool_id = 0
 global.sound_pools = ds_list_create()
 global.ui_sounds = new SoundPool()
 
@@ -28,12 +36,12 @@ call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
 		if not global.config.snd_background {
 			if window_has_focus() {
 				if not global.audio_focus {
-					//audio_master_gain(global.master_volume)
+					fmod_channel_control_set_volume(global.master_channel_group, global.master_volume)
 					global.audio_focus = true
 				}
 			} else {
 				if global.audio_focus {
-					//audio_master_gain(0)
+					fmod_channel_control_set_volume(global.master_channel_group, 0)
 					global.audio_focus = false
 				}
 			}
@@ -46,17 +54,8 @@ call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
 		
 		repeat ds_list_size(_sound_pools) {
 			with _sound_pools[| i++] {
-				/*var j = ds_list_size(sounds)
-				
-				repeat j {
-					if not audio_exists(sounds[| --j]) {
-						ds_list_delete(sounds, j)
-					}
-				}*/
-				
 				var _update_gain = false
-				
-				j = 0
+				var j = 0
 				
 				repeat SOUND_POOL_SLOTS {
 					var _gain_time = gain_time[j]
@@ -71,15 +70,9 @@ call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
 					++j
 				}
 				
-				/*if _update_gain {
-					j = 0
-					
-					var _sound_volume = global.sound_volume
-					
-					repeat ds_list_size(sounds) {
-						audio_sound_gain(sounds[| j++], gain[0] * gain[1] * gain[2] * gain[3] * _sound_volume, AUDIO_TICKRATE_MILLISECONDS)
-					}
-				}*/
+				if _update_gain {
+					fmod_channel_control_set_volume(channel_group, gain[0] * gain[1] * gain[2] * gain[3])
+				}
 			}
 		}
 	#endregion
@@ -107,11 +100,11 @@ call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
 					++j
 				}
 				
-				/*if _update_gain {
-					audio_sound_gain(sound_instance, gain[0] * gain[1] * gain[2] * global.music_volume, AUDIO_TICKRATE_MILLISECONDS)
-				}*/
+				if _update_gain {
+					fmod_channel_control_set_volume(sound_instance, gain[0] * gain[1] * gain[2])
+				}
 				
-				if (stopping and gain[2] <= 0) /*or not audio_exists(sound_instance)*/ {
+				if (stopping and gain[2] <= 0) or not fmod_channel_control_is_playing(sound_instance) {
 					destroy()
 				}
 			}

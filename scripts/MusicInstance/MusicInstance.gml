@@ -15,7 +15,15 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	
 	ds_list_add(global.music_instances, self)
 	
-	sound_instance = undefined//audio_play_sound(_music.stream, _priority, _loop, gain[0] * gain[1] * gain[2] * global.music_volume, _offset)
+	sound_instance = fmod_system_play_sound(_music.stream, true, global.music_channel_group)
+	
+	if _loop {
+		fmod_channel_control_set_mode(sound_instance, FMOD_MODE.LOOP_NORMAL)
+	}
+	
+	fmod_channel_control_set_volume(sound_instance, gain[0] * gain[1] * gain[2])
+	fmod_channel_set_position(sound_instance, _offset, FMOD_TIMEUNIT.MS)
+	fmod_channel_control_set_paused(sound_instance, false)
 	
 	static set_gain = function (_gain, _time = 0) {
 		gml_pragma("forceinline")
@@ -33,7 +41,7 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 		
 		if _time <= 0 {
 			gain[_slot] = _gain
-			//audio_sound_gain(sound_instance, gain[0] * gain[1] * gain[2] * global.music_volume, 0)
+			fmod_channel_control_set_volume(sound_instance, gain[0] * gain[1] * gain[2])
 			
 			exit
 		}
@@ -43,7 +51,7 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	}
 	
 	static set_position = function (_time) {
-		//audio_sound_set_track_position(sound_instance, _time)
+		fmod_channel_set_position(sound_instance, _time, FMOD_TIMEUNIT.MS)
 	}
 	
 	if _active {
@@ -114,7 +122,9 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	}
 	
 	static destroy = function () {
-		//audio_stop_sound(sound_instance)
+		if fmod_channel_control_is_playing(sound_instance) {
+			fmod_channel_control_stop(sound_instance)
+		}
 		
 		var _music_priority = global.music_priority
 		var _music_instances = global.music_instances

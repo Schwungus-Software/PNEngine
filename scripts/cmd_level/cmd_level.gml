@@ -18,7 +18,7 @@ function cmd_level(_args) {
 	
 	var _level = _parse_args[0]
 	
-	if mod_find_file("levels/" + _level + ".json") == "" {
+	if mod_find_file("levels/" + _level + ".*") == "" {
 		print($"! cmd_level: '{_level}' not found")
 		
 		exit

@@ -1,7 +1,8 @@
 #macro SOUND_POOL_SLOTS 4
 
 function SoundPool() constructor {
-	sounds = ds_list_create()
+	channel_group = fmod_system_create_channel_group($"soundpool{global.last_sound_pool_id++}")
+	fmod_channel_group_add_group(global.sound_channel_group, channel_group)
 	
 	gain = array_create(SOUND_POOL_SLOTS, 1)
 	
@@ -31,12 +32,17 @@ function SoundPool() constructor {
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
 		
-		//var _instance = audio_play_sound(_id, 0, _loop, gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, _offset, _final_pitch)
+		var _instance = fmod_system_play_sound(_id, true, global.sound_channel_group)
 		
-		//ds_list_add(sounds, _instance)
+		if _loop {
+			fmod_channel_control_set_mode(_instance, FMOD_MODE.LOOP_NORMAL)
+		}
 		
-		//return _instance
-		return undefined
+		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
+		fmod_channel_control_set_pitch(_instance, _final_pitch)
+		fmod_channel_control_set_paused(_instance, false)
+		
+		return _instance
 	}
 	
 	static play_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1) {
@@ -97,14 +103,7 @@ function SoundPool() constructor {
 		
 		if _time <= 0 {
 			gain[_slot] = _gain
-			
-			/*var i = 0
-			
-			repeat ds_list_size(sounds) {
-				audio_sound_gain(sounds[| i++], gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, 0)
-			}*/
-			
-			exit
+			fmod_channel_control_set_volume(channel_group, gain[0] * gain[1] * gain[2] * gain[3])
 		}
 		
 		gain_start[_slot] = gain[_slot]
@@ -112,15 +111,12 @@ function SoundPool() constructor {
 	}
 	
 	static clear = function () {
-		/*repeat ds_list_size(sounds) {
-			audio_stop_sound(sounds[| 0])
-			ds_list_delete(sounds, 0)
-		}*/
+		fmod_channel_control_stop(channel_group)
 	}
 	
 	static destroy = function () {
 		clear()
-		ds_list_destroy(sounds)
+		fmod_channel_group_release(channel_group)
 		
 		var _sound_pools = global.sound_pools
 		
