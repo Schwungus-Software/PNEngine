@@ -1,2 +1,14 @@
 /datafiles/data/*
 !/datafiles/data/main/
+
+/extensions/FMOD/*
+options/extensions/FMOD.json
+scripts/ExtBufferIO/ExtBufferIO.gml
+scripts/ExtBufferIO/ExtBufferIO.yy
+scripts/Fmod_Definitions/Fmod_Definitions.gml
+scripts/Fmod_Definitions/Fmod_Definitions.yy
+scripts/Fmod_Functions/Fmod_Functions.gml
+scripts/Fmod_Functions/Fmod_Functions.yy
+
+/extensions/NekoPresence/*
+options/extensions/NekoPresence.json
