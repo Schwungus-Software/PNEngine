@@ -25,7 +25,7 @@ function ScriptMap() : AssetMap() constructor {
 		}
 		
 		var _path = "scripts/" + _name
-		var _script_file = mod_find_file(_path + ".meow")
+		var _script_file = mod_find_file(_path + ".*")
 		
 		if _script_file == "" {
 			print($"! ScriptMap.load: '{_name}' not found")

@@ -35,7 +35,7 @@ function ImageMap() : AssetMap() constructor {
 			_y_repeat = _json[$ "y_repeat"] ?? true
 		}
 		
-		var _png_file = mod_find_file(_path + ".png")
+		var _png_file = mod_find_file(_path + ".*", ".json")
 		
 		if _png_file != "" {
 			assets.AddFile(_png_file, _name, _frames, false, false, _x_offset, _y_offset).SetTiling(_x_repeat, _y_repeat)

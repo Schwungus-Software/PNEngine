@@ -18,7 +18,7 @@ function MaterialMap() : AssetMap() constructor {
 		var _wind_lock_bottom = 1
 		var _wind_speed = 1
 		var _color = [1, 1, 1, 1, c_white]
-		var _json = json_load(mod_find_file(_path + ".json"))
+		var _json = json_load(mod_find_file(_path + ".*"))
 		
 		if is_struct(_json) {
 			var _images = global.images
