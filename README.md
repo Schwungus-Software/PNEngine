@@ -5,7 +5,8 @@ and local/online multiplayer with up to 4 players.
 
 In order to build this, you will need to import the extensions
 [GMEXT-FMOD](https://github.com/YoYoGames/GMEXT-FMOD)
-and [NekoPresence](https://github.com/nkrapivin/NekoPresence).
+and [NekoPresence](https://github.com/nkrapivin/NekoPresence) to the project's
+Extensions folder using the GameMaker IDE.
 
 ## Documentation
 
