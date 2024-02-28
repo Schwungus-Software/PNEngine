@@ -40,8 +40,8 @@ function FontMap() : AssetMap() constructor {
 				var _font_id = font_add(_font_file, _size, _bold, _italics, _first, _last)
 				var _font_name = font_get_name(_font_id)
 				
-				scribble_glyph_set(_font_name, " ", SCRIBBLE_GLYPH.WIDTH, 0.4 * _size)
-				scribble_font_rename(_font_name, _name)
+				// TODO: Forcefully shove TTF fonts down Scribble's throat
+				//		 without crashing it.
 				
 				if _sdf {
 					font_enable_sdf(_font_id, true)
