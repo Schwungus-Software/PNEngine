@@ -248,7 +248,9 @@
 					"draw_vertex", draw_vertex,
 					"draw_vertex_color", draw_vertex_color,
 					
-					"shader_reset", shader_reset
+					"shader_reset", shader_reset,
+					"draw_clear", draw_clear,
+					"draw_clear_alpha", draw_clear_alpha
 				)
 			#endregion
 		#endregion
@@ -649,7 +651,7 @@ var _custom_back_sound = undefined
 		var _info = json_load(_path + "mod.json")
 		
 		if is_struct(_info) {
-			var _title = string(_info[$ "title"])
+			var _title = _info[$ "title"]
 			
 			if is_string(_title) {
 				window_set_caption(_title)
