@@ -43,7 +43,9 @@ function Bloom(_width, _height, _max_iterations) constructor {
     	var i = 0
 		
     	repeat -~_iterations {
-    	    check_surface(surfaces[i++])
+    	    if not surface_exists(check_surface(surfaces[i++])) {
+				return false
+			}
     	}
 		
     	var _blendenable = gpu_get_blendenable()
@@ -107,6 +109,8 @@ function Bloom(_width, _height, _max_iterations) constructor {
     	gpu_set_tex_filter(_tex_filter)
     	shader_set(_shader)
         gpu_set_blendmode_ext(_blendmode_src, _blendmode_dest)
+		
+		return true
     }
     
     static check_surface = function (_struct) {
@@ -124,19 +128,18 @@ function Bloom(_width, _height, _max_iterations) constructor {
 			var _depth = surface_get_depth_disable()
 			
 			surface_depth_disable(true)
+			
+			if _width <= 0 or _height <= 0 {
+				return -1
+			}
+			
     	    _surface = surface_create(_width, _height)
 			surface_depth_disable(_depth)
     	    _update = true
 		}
 		
     	if surface_get_width(_surface) != _width or surface_get_height(_surface) != _height {
-			var _depth = surface_get_depth_disable()
-			
-			surface_free(_surface)
-			surface_depth_disable(true)
-			_surface = surface_create(_width, _height)
-			surface_depth_disable(_depth)
-			//surface_resize(_surface, _width, _height)
+			surface_resize(_surface, _width, _height)
     	    _update = true
     	}
 		
