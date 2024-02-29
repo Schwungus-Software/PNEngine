@@ -32,12 +32,9 @@ function SoundPool() constructor {
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
 		
-		var _instance = fmod_system_play_sound(_id, true, global.sound_channel_group)
+		var _instance = fmod_system_play_sound(_id, true, channel_group)
 		
-		if _loop {
-			fmod_channel_control_set_mode(_instance, FMOD_MODE.LOOP_NORMAL)
-		}
-		
+		fmod_channel_control_set_mode(_instance, _loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF)
 		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
 		fmod_channel_control_set_pitch(_instance, _final_pitch)
 		fmod_channel_control_set_paused(_instance, false)
@@ -46,6 +43,9 @@ function SoundPool() constructor {
 	}
 	
 	static play_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1) {
+		static _dummy_pos = new FmodVector()
+		static _dummy_vel = new FmodVector()
+		
 		if _sound == undefined {
 			return undefined
 		}
@@ -63,12 +63,23 @@ function SoundPool() constructor {
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
 		
-		//var _instance = audio_play_sound_at(_id, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, 0, gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, _offset, _final_pitch)
+		var _instance = fmod_system_play_sound(_id, true, channel_group)
 		
-		//ds_list_add(sounds, _instance)
+		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
+		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
+		fmod_channel_control_set_pitch(_instance, _final_pitch)
 		
-		//return _instance
-		return undefined
+		with _dummy_pos {
+			x = _x
+			y = _y
+			z = _z
+		}
+		
+		fmod_channel_control_set_3d_attributes(_instance, _dummy_pos, _dummy_vel)
+		fmod_channel_control_set_3d_min_max_distance(_instance, _falloff_ref_dist, _falloff_max_dist)
+		fmod_channel_control_set_paused(_instance, false)
+		
+		return _instance
 	}
 	
 	static play_on = function (_emitter, _sound, _loop = false, _offset = 0, _pitch = 1) {
@@ -89,12 +100,14 @@ function SoundPool() constructor {
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
 		
-		//var _instance = audio_play_sound_on(_emitter, _id, _loop, 0, gain[0] * gain[1] * gain[2] * gain[3] * global.sound_volume, _offset, _final_pitch)
+		var _instance = fmod_system_play_sound(_id, true, _emitter)
 		
-		//ds_list_add(sounds, _instance)
+		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
+		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
+		fmod_channel_control_set_pitch(_instance, _final_pitch)
+		fmod_channel_control_set_paused(_instance, false)
 		
-		//return _instance
-		return undefined
+		return _instance
 	}
 	
 	static set_gain = function (_slot, _gain, _time = 0) {

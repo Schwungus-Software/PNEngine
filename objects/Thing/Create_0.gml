@@ -99,6 +99,11 @@
 	emitter_falloff = 0
 	emitter_falloff_max = 360
 	emitter_falloff_factor = 1
+	emitter_pos = undefined
+	emitter_vel = undefined
+	global_sounds = []
+	local_sounds = []
+	emitter_sounds = []
 	voice = undefined
 	
 	bullet_damage = 1
@@ -216,13 +221,21 @@
 	}
 	
 	play_sound_local = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
-		/*if emitter == undefined or not audio_emitter_exists(emitter) {
-			emitter = audio_emitter_create()
-			audio_emitter_falloff(emitter, emitter_falloff, emitter_falloff_max, emitter_falloff_factor)
-			audio_emitter_position(emitter, x, y, z)
-		}*/
+		var _pool = area.sounds
 		
-		return area.sounds.play_on(emitter, _sound, _loop, _offset, _pitch)
+		if emitter == undefined {
+			emitter = fmod_system_create_channel_group(string(id))
+			emitter_pos = new FmodVector()
+			emitter_pos.x = x
+			emitter_pos.y = y
+			emitter_pos.z = z
+			emitter_vel = new FmodVector()
+			fmod_channel_group_add_group(_pool.channel_group, emitter)
+			fmod_channel_control_set_3d_attributes(emitter, emitter_pos, emitter_vel)
+			fmod_channel_control_set_3d_min_max_distance(emitter, emitter_falloff, emitter_falloff_max)
+		}
+		
+		return _pool.play_on(emitter, _sound, _loop, _offset, _pitch)
 	}
 	
 	play_sound_ui = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
@@ -234,11 +247,16 @@
 			exit
 		}
 		
-		/*if voice != undefined and audio_exists(voice) {
-			audio_stop_sound(voice)
-		}*/
+		if voice != undefined and fmod_channel_control_is_playing(voice) {
+			fmod_channel_control_stop(voice)
+		}
 		
 		voice = _sound
+	}
+	
+	jump = function (_spd) {
+		z_speed = _spd
+		floor_ray[RaycastData.HIT] = false
 	}
 	
 	set_speed = function (_spd) {

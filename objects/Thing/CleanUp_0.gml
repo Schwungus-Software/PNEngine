@@ -10,13 +10,14 @@ if clean_up != undefined {
 	clean_up(id)
 }
 
-/*if voice != undefined and audio_exists(voice) {
-	audio_stop_sound(voice)
+if voice != undefined and fmod_channel_control_is_playing(voice) {
+	fmod_channel_control_stop(voice)
 }
 
-if emitter != undefined and audio_emitter_exists(emitter) {
-	audio_emitter_free(emitter)
-}*/
+if emitter != undefined {
+	fmod_channel_control_stop(emitter)
+	fmod_channel_group_release(emitter)
+}
 
 if area_thing != undefined {
 	area_thing.thing = noone

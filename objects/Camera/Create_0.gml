@@ -189,14 +189,20 @@ event_inherited()
 		projection_matrix = matrix_build_projection_perspective_fov(-sfov, -(_width / _height), 1, 65535)
 		
 		if _update_listener {
-			listener_pos.x = x
-			listener_pos.y = y
-			listener_pos.z = z
+			listener_pos.x = sx
+			listener_pos.y = sy
+			listener_pos.z = sz
 			
 			with listener_rot {
 				x = _nx
 				y = _ny
 				z = _nz
+			}
+			
+			with listener_up {
+				x = 0
+				y = _yup
+				z = _zup
 			}
 			
 			// TODO: Implement multiple listeners for splitscreen

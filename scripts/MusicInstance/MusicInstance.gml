@@ -16,11 +16,7 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	ds_list_add(global.music_instances, self)
 	
 	sound_instance = fmod_system_play_sound(_music.stream, true, global.music_channel_group)
-	
-	if _loop {
-		fmod_channel_control_set_mode(sound_instance, FMOD_MODE.LOOP_NORMAL)
-	}
-	
+	fmod_channel_control_set_mode(sound_instance, _loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF)
 	fmod_channel_control_set_volume(sound_instance, gain[0] * gain[1] * gain[2])
 	fmod_channel_set_position(sound_instance, _offset, FMOD_TIMEUNIT.MS)
 	fmod_channel_control_set_paused(sound_instance, false)
