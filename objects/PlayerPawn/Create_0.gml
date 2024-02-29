@@ -36,11 +36,19 @@ event_inherited()
 #endregion
 
 #region Functions
-	do_jump = function () {
-		coyote = 0
-		z_speed = jump_speed
-		jumped = true
+	jump = function (_spd) {
+		// GROSS HACK: Override the jump function so player input doesn't
+		//			   affect the specified speed
+		z_speed = _spd
 		floor_ray[RaycastData.HIT] = false
+		jumped = false
+	}
+	
+	do_jump = function () {
+		z_speed = jump_speed
+		floor_ray[RaycastData.HIT] = false
+		coyote = 0
+		jumped = true
 		player_jumped(id)
 	}
 	
