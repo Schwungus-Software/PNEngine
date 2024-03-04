@@ -1096,26 +1096,32 @@ if _tick >= 1 {
 					}
 					
 					var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
+					var _input_aim_left_right
 					
 					if is_nan(_input_force_left_right) {
 						var _dx = round(((_dx_factor * _dx_angle) * 0.0027777777777778) * 32768)
 						
-						input[PlayerInputs.AIM_LEFT_RIGHT] = (input[PlayerInputs.AIM_LEFT_RIGHT] - _dx) % 32768
+						_input_aim_left_right = (input[PlayerInputs.AIM_LEFT_RIGHT] - _dx) % 32768
 					} else {
-						input[PlayerInputs.AIM_LEFT_RIGHT] = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
+						_input_aim_left_right = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
 						input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
 					}
 					
+					input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
+					
 					var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
+					var _input_aim_up_down
 					
 					if is_nan(_input_force_up_down) {
 						var _dy = round(((_dy_factor * _dy_angle) * 0.0027777777777778) * 32768)
 						
-						input[PlayerInputs.AIM_UP_DOWN] = (input[PlayerInputs.AIM_UP_DOWN] - _dy) % 32768
+						_input_aim_up_down = (input[PlayerInputs.AIM_UP_DOWN] - _dy) % 32768
 					} else {
-						input[PlayerInputs.AIM_UP_DOWN] = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
+						_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
 						input[PlayerInputs.FORCE_UP_DOWN] = NaN
 					}
+					
+					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
 					
 					if _game_status & GameStatus.NETGAME and not array_equals(input, input_previous) {
 						// Send input data to the server
@@ -1131,8 +1137,8 @@ if _tick >= 1 {
 						buffer_write(b, buffer_bool, _input_inventory_down)
 						buffer_write(b, buffer_bool, _input_inventory_right)
 						buffer_write(b, buffer_bool, _input_aim)
-						buffer_write(b, buffer_s16, input[PlayerInputs.AIM_UP_DOWN])
-						buffer_write(b, buffer_s16, input[PlayerInputs.AIM_LEFT_RIGHT])
+						buffer_write(b, buffer_s16, _input_aim_up_down)
+						buffer_write(b, buffer_s16, _input_aim_left_right)
 						_netgame.send(SEND_OTHERS, b)
 					}
 				} else {
@@ -1267,13 +1273,11 @@ if _tick >= 1 {
 									}
 								}
 #region Thing Syncing
-								if not (_game_status & GameStatus.NETGAME) or not f_sync or not _netgame.master {
+								if not (_game_status & GameStatus.NETGAME) or not f_sync or not _netgame.master or not instance_exists(id) {
 									break
 								}
 								
-								++_syncables[# sync_id, 1]
-								
-								if _syncables[# sync_id, 1] >= SYNC_INTERVAL {
+								if ++_syncables[# sync_id, 1] >= SYNC_INTERVAL {
 									var b = net_buffer_create(false, NetHeaders.HOST_THING)
 									
 									buffer_write(b, buffer_u16, sync_id)

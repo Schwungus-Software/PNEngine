@@ -16,7 +16,8 @@ if f_sync and (global.game_status & GameStatus.NETGAME) {
 		add_net_variable("x_speed", NetVarFlags.GENERIC)
 		add_net_variable("y_speed", NetVarFlags.GENERIC)
 		add_net_variable("z_speed", NetVarFlags.GENERIC)
-		add_net_variable("angle", NetVarFlags.CREATE)
+		add_net_variable("angle", NetVarFlags.GENERIC)
+		add_net_variable("pitch", NetVarFlags.GENERIC)
 	}
 	
 	add_net_variable("tag", NetVarFlags.CREATE)
