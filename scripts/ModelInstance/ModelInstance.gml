@@ -181,7 +181,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				_z = _bone_pos[2]
 			}
 			
-			return matrix_transform_point(matrix, _x, _y, _z)
+			return matrix_transform_point(_tick ? matrix_build(x, y, z, roll, pitch, yaw, scale * x_scale, scale * y_scale, scale * z_scale) : matrix, _x, _y, _z)
 		}
 		
 		static get_bone_dq = function (_index, _tick = false) {
