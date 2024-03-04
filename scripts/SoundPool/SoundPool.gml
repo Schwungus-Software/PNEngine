@@ -64,7 +64,7 @@ function SoundPool() constructor {
 		
 		var _instance = fmod_system_play_sound(_id, true, channel_group)
 		
-		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | FMOD_MODE.AS_3D_LINEARROLLOFF | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
+		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | FMOD_MODE.AS_3D_WORLDRELATIVE | FMOD_MODE.AS_3D_LINEARROLLOFF | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
 		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
 		fmod_channel_control_set_pitch(_instance, _final_pitch)
 		fmod_channel_control_set_3d_attributes(_instance, { x: _x, y: _y, z: _z }, _dummy_vel)
@@ -94,7 +94,7 @@ function SoundPool() constructor {
 		
 		var _instance = fmod_system_play_sound(_id, true, _emitter)
 		
-		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | FMOD_MODE.AS_3D_LINEARROLLOFF | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
+		fmod_channel_control_set_mode(_instance, _loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF)
 		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
 		fmod_channel_control_set_pitch(_instance, _final_pitch)
 		fmod_channel_control_set_paused(_instance, false)

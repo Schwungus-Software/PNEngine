@@ -228,6 +228,7 @@
 			emitter_pos = { x, y, z }
 			emitter_vel = new FmodVector()
 			fmod_channel_group_add_group(_pool.channel_group, emitter)
+			fmod_channel_control_set_mode(emitter, FMOD_MODE.AS_3D | FMOD_MODE.AS_3D_WORLDRELATIVE | FMOD_MODE.AS_3D_LINEARROLLOFF)
 			fmod_channel_control_set_3d_attributes(emitter, emitter_pos, emitter_vel)
 			fmod_channel_control_set_3d_min_max_distance(emitter, emitter_falloff, emitter_falloff_max)
 		}
