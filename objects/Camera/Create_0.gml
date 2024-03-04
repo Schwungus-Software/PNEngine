@@ -47,6 +47,10 @@ event_inherited()
 	parent = noone
 	f_raycast = true
 	
+	angle_quat = quat_build()
+	angle_matrix = matrix_build_identity()
+	forward_axis = matrix_build(1, 0, 0, 0, 0, 0, 1, 1, 1)
+	up_axis = matrix_build(0, 0, 1, 0, 0, 0, 1, 1, 1)
 	view_matrix = undefined
 	projection_matrix = undefined
 	
@@ -179,34 +183,44 @@ event_inherited()
 	}
 	
 	update_matrices = function (_width = window_get_width(), _height = window_get_height(), _update_listener = false) {
-		var _n = normal_vector_3d(syaw, clamp(spitch, -89.95, 89.95))
-		var _nx = _n[0]
-		var _ny = _n[1]
-		var _nz = _n[2]
-		var _yup = dsin(sroll)
-		var _zup = dcos(sroll)
+		angle_quat[0] = 1
+		angle_quat[1] = 0
+		angle_quat[2] = 0
+		angle_quat[3] = 0
+		quat_rotate_world_z(angle_quat, -syaw, angle_quat)
+		quat_rotate_local_z(angle_quat, -spitch, angle_quat)
+		quat_rotate_local_x(angle_quat, sroll, angle_quat)
 		
-		view_matrix = matrix_build_lookat(sx, sy, sz, sx + _nx, sy + _ny, sz + _nz, 0, _yup, _zup)
+		var _matrix = quat_to_matrix(angle_quat, angle_matrix)
+		
+		var _forward = matrix_multiply(forward_axis, _matrix)
+		var _fx = _forward[12]
+		var _fy = _forward[13]
+		var _fz = _forward[14]
+		
+		var _up = matrix_multiply(up_axis, _matrix)
+		var _ux = _up[12]
+		var _uy = _up[13]
+		var _uz = _up[14]
+		
+		view_matrix = matrix_build_lookat(sx, sy, sz, sx + _fx, sy + _fy, sz + _fz, _ux, _uy, _uz)
 		projection_matrix = matrix_build_projection_perspective_fov(-sfov, -(_width / _height), 1, 65535)
 		
 		if _update_listener {
 			listener_pos.x = sx
 			listener_pos.y = sy
 			listener_pos.z = sz
-			_n = normal_vector_3d(syaw, spitch)
 			
 			with listener_rot {
-				x = _n[0]
-				y = _n[1]
-				z = _n[2]
+				x = _fx
+				y = _fy
+				z = _fz
 			}
 			
-			_n = normal_vector_3d(syaw, spitch + 90)
-			
 			with listener_up {
-				x = _n[0]
-				y = _n[1]
-				z = _n[2]
+				x = _ux
+				y = _uy
+				z = _uz
 			}
 			
 			// TODO: Implement multiple listeners for splitscreen
