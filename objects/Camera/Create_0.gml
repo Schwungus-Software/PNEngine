@@ -179,9 +179,10 @@ event_inherited()
 	}
 	
 	update_matrices = function (_width = window_get_width(), _height = window_get_height(), _update_listener = false) {
-		var _nx = dcos(syaw)
-		var _ny = -dsin(syaw)
-		var _nz = dtan(clamp(spitch, -89.95, 89.95))
+		var _n = normal_vector_3d(syaw, clamp(spitch, -89.95, 89.95))
+		var _nx = _n[0]
+		var _ny = _n[1]
+		var _nz = _n[2]
 		var _yup = dsin(sroll)
 		var _zup = dcos(sroll)
 		
@@ -192,17 +193,20 @@ event_inherited()
 			listener_pos.x = sx
 			listener_pos.y = sy
 			listener_pos.z = sz
+			_n = normal_vector_3d(syaw, spitch)
 			
 			with listener_rot {
-				x = _nx
-				y = _ny
-				z = _nz
+				x = _n[0]
+				y = _n[1]
+				z = _n[2]
 			}
 			
+			_n = normal_vector_3d(syaw, spitch + 90)
+			
 			with listener_up {
-				x = 0
-				y = _yup
-				z = _zup
+				x = _n[0]
+				y = _n[1]
+				z = _n[2]
 			}
 			
 			// TODO: Implement multiple listeners for splitscreen

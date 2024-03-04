@@ -225,10 +225,7 @@
 		
 		if emitter == undefined {
 			emitter = fmod_system_create_channel_group(string(id))
-			emitter_pos = new FmodVector()
-			emitter_pos.x = x
-			emitter_pos.y = y
-			emitter_pos.z = z
+			emitter_pos = { x, y, z }
 			emitter_vel = new FmodVector()
 			fmod_channel_group_add_group(_pool.channel_group, emitter)
 			fmod_channel_control_set_3d_attributes(emitter, emitter_pos, emitter_vel)

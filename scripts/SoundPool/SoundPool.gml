@@ -43,7 +43,6 @@ function SoundPool() constructor {
 	}
 	
 	static play_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1) {
-		static _dummy_pos = new FmodVector()
 		static _dummy_vel = new FmodVector()
 		
 		if _sound == undefined {
@@ -65,17 +64,10 @@ function SoundPool() constructor {
 		
 		var _instance = fmod_system_play_sound(_id, true, channel_group)
 		
-		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
+		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | FMOD_MODE.AS_3D_LINEARROLLOFF | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
 		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
 		fmod_channel_control_set_pitch(_instance, _final_pitch)
-		
-		with _dummy_pos {
-			x = _x
-			y = _y
-			z = _z
-		}
-		
-		fmod_channel_control_set_3d_attributes(_instance, _dummy_pos, _dummy_vel)
+		fmod_channel_control_set_3d_attributes(_instance, { x: _x, y: _y, z: _z }, _dummy_vel)
 		fmod_channel_control_set_3d_min_max_distance(_instance, _falloff_ref_dist, _falloff_max_dist)
 		fmod_channel_control_set_paused(_instance, false)
 		
@@ -102,7 +94,7 @@ function SoundPool() constructor {
 		
 		var _instance = fmod_system_play_sound(_id, true, _emitter)
 		
-		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
+		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | FMOD_MODE.AS_3D_LINEARROLLOFF | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
 		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
 		fmod_channel_control_set_pitch(_instance, _final_pitch)
 		fmod_channel_control_set_paused(_instance, false)

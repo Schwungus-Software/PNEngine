@@ -12,7 +12,6 @@ enum MusicPriorities {
 
 global.fmod = fmod_system_create()
 fmod_system_init(MAX_CHANNELS, FMOD_INIT.NORMAL)
-//fmod_system_set_3d_settings(1, 16, 1)
 global.sound_group = fmod_system_create_sound_group("sound")
 global.music_group = fmod_system_create_sound_group("music")
 global.master_channel_group = fmod_system_get_master_channel_group()
@@ -33,8 +32,6 @@ global.music_priority = ds_priority_create()
 
 /// @feather ignore GM2022
 call_later(AUDIO_TICKRATE_SECONDS, time_source_units_seconds, function () {
-	fmod_system_update()
-	
 	#region Play Sound When Focused
 		if not global.config.snd_background {
 			if window_has_focus() {

@@ -335,3 +335,5 @@ if _console {
 if load_state != LoadStates.NONE and load_level != undefined {
 	scribble($"[{ui_font_name}][wave][fa_center][fa_middle]{lexicon_text("loading")}", "__PNENGINE_LOADING__").draw(240, 135)
 }
+
+fmod_system_update()
