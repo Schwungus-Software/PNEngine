@@ -208,8 +208,8 @@ function Player() constructor {
 				var b = net_buffer_create(true, NetHeaders.HOST_AREA)
 				
 				buffer_write(b, buffer_u8, other.slot)
-				buffer_write(b, buffer_u32, other.area.slot)
-				buffer_write(b, buffer_u32, _tag)
+				buffer_write(b, buffer_u32, _id)
+				buffer_write(b, buffer_s32, _tag)
 				_netgame.send(SEND_OTHERS, b)
 			}
 		}

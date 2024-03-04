@@ -540,7 +540,7 @@ if async_load[? "type"] == network_type_data {
 				
 				var _pid = buffer_read(_buffer, buffer_u8)
 				var _aid = buffer_read(_buffer, buffer_u32)
-				var _tag = buffer_read(_buffer, buffer_u32)
+				var _tag = buffer_read(_buffer, buffer_s32)
 				
 				player_force_area(global.players[_pid], _aid, _tag)
 			break
