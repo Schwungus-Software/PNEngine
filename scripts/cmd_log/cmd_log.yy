@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "cmd_log",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Commands",
-    "path": "folders/Scripts/PNEngine/Debug/Commands.yy",
+  "$GMScript":"",
+  "%Name":"cmd_log",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cmd_log",
+  "parent":{
+    "name":"Commands",
+    "path":"folders/Scripts/PNEngine/Debug/Commands.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

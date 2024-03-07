@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "flags_force_copy",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Flags",
-    "path": "folders/Scripts/PNEngine/Game/Flags.yy",
+  "$GMScript":"",
+  "%Name":"flags_force_copy",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"flags_force_copy",
+  "parent":{
+    "name":"Flags",
+    "path":"folders/Scripts/PNEngine/Game/Flags.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

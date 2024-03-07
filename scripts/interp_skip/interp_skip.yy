@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "interp_skip",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Interpolation",
-    "path": "folders/Scripts/PNEngine/Display/Interpolation.yy",
+  "$GMScript":"",
+  "%Name":"interp_skip",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"interp_skip",
+  "parent":{
+    "name":"Interpolation",
+    "path":"folders/Scripts/PNEngine/Display/Interpolation.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "ColliderInstance",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Collision",
-    "path": "folders/Scripts/PNEngine/Game/Collision.yy",
+  "$GMScript":"",
+  "%Name":"ColliderInstance",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ColliderInstance",
+  "parent":{
+    "name":"Collision",
+    "path":"folders/Scripts/PNEngine/Game/Collision.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

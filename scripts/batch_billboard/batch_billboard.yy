@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "batch_billboard",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Batch",
-    "path": "folders/Scripts/PNEngine/Display/Batch.yy",
+  "$GMScript":"",
+  "%Name":"batch_billboard",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"batch_billboard",
+  "parent":{
+    "name":"Batch",
+    "path":"folders/Scripts/PNEngine/Display/Batch.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

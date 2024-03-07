@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "pne_game",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Game",
-    "path": "folders/Scripts/PNEngine/Game.yy",
+  "$GMScript":"",
+  "%Name":"pne_game",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pne_game",
+  "parent":{
+    "name":"Game",
+    "path":"folders/Scripts/PNEngine/Game.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

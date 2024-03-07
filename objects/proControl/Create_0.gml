@@ -637,6 +637,46 @@ var _custom_back_sound = undefined
 
 #region Mods
 	var _mods = global.mods
+	var _disabled_mods = json_load(DATA_PATH + "disabled.json")
+	
+	if is_array(_disabled_mods) {
+		var n = array_length(_disabled_mods)
+		var _load_mods = []
+		var _loaded = 0
+		var _mod = file_find_first(DATA_PATH + "*", fa_directory)
+
+		while _mod != "" {
+			if directory_exists(DATA_PATH + _mod) {
+				var _enabled = true
+				var i = 0
+		
+				repeat n {
+					if _disabled_mods[i++] == _mod {
+						print($"proControl: Mod '{_mod}' is disabled, skipping")
+						_enabled = false
+				
+						break
+					}
+				}
+		
+				if _enabled {
+					array_push(_load_mods, _mod);
+					++_loaded
+				}
+			}
+	
+			_mod = file_find_next()
+		}
+
+		file_find_close()
+
+		var i = 0
+
+		repeat _loaded {
+			var _mod = new Mod(_load_mods[i++])
+		}
+	}
+	
 	var _key = ds_map_find_first(_mods)
 
 	repeat ds_map_size(_mods) {

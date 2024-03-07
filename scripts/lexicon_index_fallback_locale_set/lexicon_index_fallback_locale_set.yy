@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "lexicon_index_fallback_locale_set",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Index",
-    "path": "folders/Scripts/Libraries/Lexicon/Index.yy",
+  "$GMScript":"",
+  "%Name":"lexicon_index_fallback_locale_set",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"lexicon_index_fallback_locale_set",
+  "parent":{
+    "name":"Index",
+    "path":"folders/Scripts/Libraries/Lexicon/Index.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

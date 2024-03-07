@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "Submodel",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Model",
-    "path": "folders/Scripts/PNEngine/Assets/Asset Types/Model.yy",
+  "$GMScript":"",
+  "%Name":"Submodel",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Submodel",
+  "parent":{
+    "name":"Model",
+    "path":"folders/Scripts/PNEngine/Assets/Asset Types/Model.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

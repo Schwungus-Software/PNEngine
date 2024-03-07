@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "pne_display",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Display",
-    "path": "folders/Scripts/PNEngine/Display.yy",
+  "$GMScript":"",
+  "%Name":"pne_display",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pne_display",
+  "parent":{
+    "name":"Display",
+    "path":"folders/Scripts/PNEngine/Display.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

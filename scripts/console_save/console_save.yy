@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "console_save",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Debug",
-    "path": "folders/Scripts/PNEngine/Debug.yy",
+  "$GMScript":"",
+  "%Name":"console_save",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"console_save",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/Scripts/PNEngine/Debug.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

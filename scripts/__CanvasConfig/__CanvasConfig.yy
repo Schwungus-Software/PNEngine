@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__CanvasConfig",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Canvas",
-    "path": "folders/Scripts/Libraries/Canvas.yy",
+  "$GMScript":"",
+  "%Name":"__CanvasConfig",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__CanvasConfig",
+  "parent":{
+    "name":"Canvas",
+    "path":"folders/Scripts/Libraries/Canvas.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

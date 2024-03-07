@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "MusicInstance",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Music",
-    "path": "folders/Scripts/PNEngine/Audio/Music.yy",
+  "$GMScript":"",
+  "%Name":"MusicInstance",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"MusicInstance",
+  "parent":{
+    "name":"Music",
+    "path":"folders/Scripts/PNEngine/Audio/Music.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

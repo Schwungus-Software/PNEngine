@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "Sound",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Asset Types",
-    "path": "folders/Scripts/PNEngine/Assets/Asset Types.yy",
+  "$GMScript":"",
+  "%Name":"Sound",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Sound",
+  "parent":{
+    "name":"Asset Types",
+    "path":"folders/Scripts/PNEngine/Assets/Asset Types.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

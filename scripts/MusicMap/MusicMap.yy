@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "MusicMap",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Asset Maps",
-    "path": "folders/Scripts/PNEngine/Assets/Asset Maps.yy",
+  "$GMScript":"",
+  "%Name":"MusicMap",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"MusicMap",
+  "parent":{
+    "name":"Asset Maps",
+    "path":"folders/Scripts/PNEngine/Assets/Asset Maps.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

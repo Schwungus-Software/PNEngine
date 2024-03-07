@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "lexicon_get_os_locale",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "General",
-    "path": "folders/Scripts/Libraries/Lexicon/General.yy",
+  "$GMScript":"",
+  "%Name":"lexicon_get_os_locale",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"lexicon_get_os_locale",
+  "parent":{
+    "name":"General",
+    "path":"folders/Scripts/Libraries/Lexicon/General.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "Bloom",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Shaders",
-    "path": "folders/Scripts/PNEngine/Display/Shaders.yy",
+  "$GMScript":"",
+  "%Name":"Bloom",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Bloom",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/Scripts/PNEngine/Display/Shaders.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -645,7 +645,6 @@ var _tick = global.tick
 var _tick_inc = (delta_time * TICKRATE_DELTA) * global.tick_scale
 
 global.delta = _tick_inc
-_tick += _tick_inc
 
 // Cache a lot of things into local variables
 var _console = global.console

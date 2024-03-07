@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "lines_intersect",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Math",
-    "path": "folders/Scripts/PNEngine/Math.yy",
+  "$GMScript":"",
+  "%Name":"lines_intersect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"lines_intersect",
+  "parent":{
+    "name":"Math",
+    "path":"folders/Scripts/PNEngine/Math.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

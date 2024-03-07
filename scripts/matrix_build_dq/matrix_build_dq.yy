@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "matrix_build_dq",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Matrices",
-    "path": "folders/Scripts/PNEngine/Math/Matrices.yy",
+  "$GMScript":"",
+  "%Name":"matrix_build_dq",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"matrix_build_dq",
+  "parent":{
+    "name":"Matrices",
+    "path":"folders/Scripts/PNEngine/Math/Matrices.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

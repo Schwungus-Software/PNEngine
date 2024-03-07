@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "OUIOption",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Options",
-    "path": "folders/Scripts/PNEngine/Game/UI/Options.yy",
+  "$GMScript":"",
+  "%Name":"OUIOption",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"OUIOption",
+  "parent":{
+    "name":"Options",
+    "path":"folders/Scripts/PNEngine/Game/UI/Options.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

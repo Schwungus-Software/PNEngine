@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "game_update_status",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Game",
-    "path": "folders/Scripts/PNEngine/Game.yy",
+  "$GMScript":"",
+  "%Name":"game_update_status",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"game_update_status",
+  "parent":{
+    "name":"Game",
+    "path":"folders/Scripts/PNEngine/Game.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

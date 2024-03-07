@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "Player",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Players",
-    "path": "folders/Scripts/PNEngine/Game/Players.yy",
+  "$GMScript":"",
+  "%Name":"Player",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Player",
+  "parent":{
+    "name":"Players",
+    "path":"folders/Scripts/PNEngine/Game/Players.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

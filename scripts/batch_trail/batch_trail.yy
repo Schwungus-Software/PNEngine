@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "batch_trail",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Batch",
-    "path": "folders/Scripts/PNEngine/Display/Batch.yy",
+  "$GMScript":"",
+  "%Name":"batch_trail",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"batch_trail",
+  "parent":{
+    "name":"Batch",
+    "path":"folders/Scripts/PNEngine/Display/Batch.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "ui_load",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Assets",
-    "path": "folders/Scripts/PNEngine/Assets.yy",
+  "$GMScript":"",
+  "%Name":"ui_load",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ui_load",
+  "parent":{
+    "name":"Assets",
+    "path":"folders/Scripts/PNEngine/Assets.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

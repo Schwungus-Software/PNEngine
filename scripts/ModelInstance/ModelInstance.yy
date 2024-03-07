@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "ModelInstance",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Models",
-    "path": "folders/Scripts/PNEngine/Display/Models.yy",
+  "$GMScript":"",
+  "%Name":"ModelInstance",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ModelInstance",
+  "parent":{
+    "name":"Models",
+    "path":"folders/Scripts/PNEngine/Display/Models.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

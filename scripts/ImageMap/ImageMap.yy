@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "ImageMap",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Asset Maps",
-    "path": "folders/Scripts/PNEngine/Assets/Asset Maps.yy",
+  "$GMScript":"",
+  "%Name":"ImageMap",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ImageMap",
+  "parent":{
+    "name":"Asset Maps",
+    "path":"folders/Scripts/PNEngine/Assets/Asset Maps.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

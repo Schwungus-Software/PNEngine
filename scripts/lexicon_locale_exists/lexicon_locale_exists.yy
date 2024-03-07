@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "lexicon_locale_exists",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Language",
-    "path": "folders/Scripts/Libraries/Lexicon/Language.yy",
+  "$GMScript":"",
+  "%Name":"lexicon_locale_exists",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"lexicon_locale_exists",
+  "parent":{
+    "name":"Language",
+    "path":"folders/Scripts/Libraries/Lexicon/Language.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

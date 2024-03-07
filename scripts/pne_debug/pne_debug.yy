@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "pne_debug",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Debug",
-    "path": "folders/Scripts/PNEngine/Debug.yy",
+  "$GMScript":"",
+  "%Name":"pne_debug",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pne_debug",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/Scripts/PNEngine/Debug.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

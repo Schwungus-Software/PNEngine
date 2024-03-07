@@ -26,6 +26,7 @@
 			
 			"code": {
 				"NET_UNKNOWN": "Unknown error",
+				"NET_INVALID": "Invalid context",
 				"NET_TIMEOUT": "Timed out",
 				"NET_FULL": "Server is full",
 				"NET_VERSION": "Version mismatch",

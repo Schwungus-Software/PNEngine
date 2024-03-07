@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "pne_config",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Configuration",
-    "path": "folders/Scripts/PNEngine/Configuration.yy",
+  "$GMScript":"",
+  "%Name":"pne_config",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pne_config",
+  "parent":{
+    "name":"Configuration",
+    "path":"folders/Scripts/PNEngine/Configuration.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

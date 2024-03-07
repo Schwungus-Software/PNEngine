@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "dq_get_translation",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Dual Quaternions",
-    "path": "folders/Scripts/PNEngine/Math/Dual Quaternions.yy",
+  "$GMScript":"",
+  "%Name":"dq_get_translation",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dq_get_translation",
+  "parent":{
+    "name":"Dual Quaternions",
+    "path":"folders/Scripts/PNEngine/Math/Dual Quaternions.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

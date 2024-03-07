@@ -39,24 +39,13 @@ function cmd_connect(_args) {
 		proControl.load_state = LoadStates.NETGAME_FINISH
 		show_caption($"[c_lime]{lexicon_text("netgame.connected")}")
 	}, function () {
-		input_join_params_set(1, INPUT_MAX_PLAYERS, "leave", undefined, false)
-		
-		if not global.console {
-			input_source_mode_set(INPUT_SOURCE_MODE.JOIN)
-		}
-		
-		var _netgame = global.netgame
-		
-		if _netgame.was_connected_before {
-			global.level.goto("lvlTitle")
-		} else {
+		if not global.netgame.was_connected_before {
 			proControl.load_state = LoadStates.NONE
 		}
 		
-		global.game_status = GameStatus.DEFAULT
-		show_caption($"[c_red]{lexicon_text("netgame.lost_connection")} ({lexicon_text("netgame.code." + _netgame.code)})")
-		_netgame.destroy()
-		global.netgame = undefined
+		var _code = cmd_disconnect("")
+		
+		show_caption($"[c_red]{lexicon_text("netgame.lost_connection")} ({lexicon_text("netgame.code." + _code)})")
 	}) {
 		show_caption($"[c_red]{lexicon_text("netgame.no_connection")}")
 		

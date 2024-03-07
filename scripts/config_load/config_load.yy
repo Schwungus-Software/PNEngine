@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "config_load",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "User",
-    "path": "folders/Scripts/PNEngine/Configuration/User.yy",
+  "$GMScript":"",
+  "%Name":"config_load",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"config_load",
+  "parent":{
+    "name":"User",
+    "path":"folders/Scripts/PNEngine/Configuration/User.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

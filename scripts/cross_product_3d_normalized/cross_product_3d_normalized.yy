@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "cross_product_3d_normalized",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Math",
-    "path": "folders/Scripts/PNEngine/Math.yy",
+  "$GMScript":"",
+  "%Name":"cross_product_3d_normalized",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cross_product_3d_normalized",
+  "parent":{
+    "name":"Math",
+    "path":"folders/Scripts/PNEngine/Math.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "Level",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Levels",
-    "path": "folders/Scripts/PNEngine/Game/Levels.yy",
+  "$GMScript":"",
+  "%Name":"Level",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Level",
+  "parent":{
+    "name":"Levels",
+    "path":"folders/Scripts/PNEngine/Game/Levels.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

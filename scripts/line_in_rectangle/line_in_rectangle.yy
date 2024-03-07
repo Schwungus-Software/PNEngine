@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "line_in_rectangle",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Math",
-    "path": "folders/Scripts/PNEngine/Math.yy",
+  "$GMScript":"",
+  "%Name":"line_in_rectangle",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"line_in_rectangle",
+  "parent":{
+    "name":"Math",
+    "path":"folders/Scripts/PNEngine/Math.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

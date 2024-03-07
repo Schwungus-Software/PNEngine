@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "force_type_fallback",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Debug",
-    "path": "folders/Scripts/PNEngine/Debug.yy",
+  "$GMScript":"",
+  "%Name":"force_type_fallback",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"force_type_fallback",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/Scripts/PNEngine/Debug.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

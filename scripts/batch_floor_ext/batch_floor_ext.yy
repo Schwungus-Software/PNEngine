@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "batch_floor_ext",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Batch",
-    "path": "folders/Scripts/PNEngine/Display/Batch.yy",
+  "$GMScript":"",
+  "%Name":"batch_floor_ext",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"batch_floor_ext",
+  "parent":{
+    "name":"Batch",
+    "path":"folders/Scripts/PNEngine/Display/Batch.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

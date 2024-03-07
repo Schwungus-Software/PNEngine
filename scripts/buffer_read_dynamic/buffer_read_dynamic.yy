@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "buffer_read_dynamic",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Buffers",
-    "path": "folders/Scripts/PNEngine/Netgame/Buffers.yy",
+  "$GMScript":"",
+  "%Name":"buffer_read_dynamic",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"buffer_read_dynamic",
+  "parent":{
+    "name":"Buffers",
+    "path":"folders/Scripts/PNEngine/Netgame/Buffers.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

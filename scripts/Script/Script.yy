@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "Script",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Script",
-    "path": "folders/Scripts/PNEngine/Assets/Asset Types/Script.yy",
+  "$GMScript":"",
+  "%Name":"Script",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Script",
+  "parent":{
+    "name":"Script",
+    "path":"folders/Scripts/PNEngine/Assets/Asset Types/Script.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

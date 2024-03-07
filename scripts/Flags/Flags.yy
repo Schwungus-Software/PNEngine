@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "Flags",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Flags",
-    "path": "folders/Scripts/PNEngine/Game/Flags.yy",
+  "$GMScript":"",
+  "%Name":"Flags",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Flags",
+  "parent":{
+    "name":"Flags",
+    "path":"folders/Scripts/PNEngine/Game/Flags.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__lexicon_load_entries",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Loading",
-    "path": "folders/Scripts/Libraries/Lexicon/Internal/Loading.yy",
+  "$GMScript":"",
+  "%Name":"__lexicon_load_entries",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__lexicon_load_entries",
+  "parent":{
+    "name":"Loading",
+    "path":"folders/Scripts/Libraries/Lexicon/Internal/Loading.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

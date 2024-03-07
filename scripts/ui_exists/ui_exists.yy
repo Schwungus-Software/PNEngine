@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "ui_exists",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "UI",
-    "path": "folders/Scripts/PNEngine/Game/UI.yy",
+  "$GMScript":"",
+  "%Name":"ui_exists",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ui_exists",
+  "parent":{
+    "name":"UI",
+    "path":"folders/Scripts/PNEngine/Game/UI.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

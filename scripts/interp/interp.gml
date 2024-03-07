@@ -15,7 +15,7 @@ function interp(_in, _out, _angle = false, _scope = undefined) {
 		
 		var _weak_ref
 		
-		if instance_exists(_scope) and not object_exists(_scope) {
+		if instance_exists(_scope) and struct_exists(_scope, "id") {
 			_weak_ref = _scope.id
 		} else if is_struct(_scope) {
 			_weak_ref = weak_ref_create(_scope)

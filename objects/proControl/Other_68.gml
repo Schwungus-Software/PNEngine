@@ -365,7 +365,7 @@ if async_load[? "type"] == network_type_data {
 				var _players = global.players
 				var i = INPUT_MAX_PLAYERS
 				
-				repeat i - 1 {
+				repeat INPUT_MAX_PLAYERS - 1 {
 					_players[--i].deactivate()
 				}
 				

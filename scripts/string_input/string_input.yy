@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "string_input",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Display",
-    "path": "folders/Scripts/PNEngine/Display.yy",
+  "$GMScript":"",
+  "%Name":"string_input",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"string_input",
+  "parent":{
+    "name":"Display",
+    "path":"folders/Scripts/PNEngine/Display.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "player_force_clear_states",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Players",
-    "path": "folders/Scripts/PNEngine/Game/Players.yy",
+  "$GMScript":"",
+  "%Name":"player_force_clear_states",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"player_force_clear_states",
+  "parent":{
+    "name":"Players",
+    "path":"folders/Scripts/PNEngine/Game/Players.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

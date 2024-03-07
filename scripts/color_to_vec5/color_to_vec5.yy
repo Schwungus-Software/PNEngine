@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "color_to_vec5",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Display",
-    "path": "folders/Scripts/PNEngine/Display.yy",
+  "$GMScript":"",
+  "%Name":"color_to_vec5",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"color_to_vec5",
+  "parent":{
+    "name":"Display",
+    "path":"folders/Scripts/PNEngine/Display.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

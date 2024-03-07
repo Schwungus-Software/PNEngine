@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "NetPlayer",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Netgame",
-    "path": "folders/Scripts/PNEngine/Netgame.yy",
+  "$GMScript":"",
+  "%Name":"NetPlayer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"NetPlayer",
+  "parent":{
+    "name":"Netgame",
+    "path":"folders/Scripts/PNEngine/Netgame.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }
