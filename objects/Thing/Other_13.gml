@@ -262,22 +262,18 @@ if instance_exists(holding) {
 	}
 }
 
-if model != undefined {
+var _model = model
+
+if _model != undefined and (not instance_exists(holder) or not f_holdable_in_hand) {
 	var _x = x
 	var _y = y
 	var _z = z
-	
-	with model {
-		tick()
-		x = _x
-		y = _y
-		z = _z
-	}
+	var _update_collider = false
 	
 	if collider != undefined {
 		var _yaw, _pitch, _roll, _scale, _x_scale, _y_scale, _z_scale
 		
-		with model {
+		with _model {
 			_yaw = yaw
 			_pitch = pitch
 			_roll = roll
@@ -288,7 +284,39 @@ if model != undefined {
 		}
 		
 		angle = _yaw
-		collider.set_matrix(matrix_build(_x, _y, _z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale))
+		_update_collider = true
+	}
+	
+	with _model {
+		tick()
+		x = _x
+		y = _y
+		z = _z
+	}
+	
+	if _update_collider {
+		collider.set_matrix(_model.tick_matrix)
+	}
+	
+	if instance_exists(holding) and holding.f_holdable_in_hand {
+		var _hold_bone = _model.hold_bone
+		
+		if _hold_bone != -1 {
+			with holding {
+				if model == undefined {
+					break
+				}
+				
+				with model {
+					matrix_build_dq(_model.get_bone_dq(_hold_bone), tick_matrix)
+					tick_matrix = matrix_multiply(matrix_multiply(hold_offset_matrix, tick_matrix), _model.tick_matrix)
+					tick(false)
+					x = _x
+					y = _y
+					z = _z
+				}
+			}
+		}
 	}
 }
 

@@ -47,21 +47,24 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		animation_samples = undefined
 		frame = 0
 		frame_speed = 1
-		sample = dq_build_identity()
-		interp("frame", "sframe")
+		//interp("frame", "sframe")
+		
+		tick_sample = dq_build_identity()
+		from_sample = dq_build_identity()
+		draw_sample = dq_build_identity()
 		
 		splice_name = ""
 		splice = undefined
 		splice_bone = -1
 		splice_frame = 0
 		splice_push = false
-		interp("splice_frame", "ssplice_frame")
+		//interp("splice_frame", "ssplice_frame")
 		
-		transition = 0
+		/*transition = 0
 		transition_time = 0
 		transition_sample = dq_build_identity()
 		transition_sample2 = dq_build_identity()
-		interp("transition", "stransition")
+		interp("transition", "stransition")*/
 		
 		static set_animation = function (_animation = undefined, _frame = 0, _time = 0) {
 			if _animation == undefined {
@@ -76,9 +79,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					interp_skip("sframe")
 				}
 				
-				transition = 0
+				/*transition = 0
 				transition_time = 0
-				interp_skip("stransition")
+				interp_skip("stransition")*/
 				
 				exit
 			}
@@ -106,24 +109,24 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				_copy = true
 				frame = _frame
 				frame_speed = 1
-				interp_skip("sframe")
+				//interp_skip("sframe")
 			}
 			
-			var _transition_previous = transition < transition_time
+			/*var _transition_previous = transition < transition_time
 			
 			transition = 0
 			transition_time = _time
-			interp_skip("stransition")
+			interp_skip("stransition")*/
 			
-			if _time > 0 {
+			/*if _time > 0 {
 				var _final_sample = _transition_previous ? transition_sample2 : sample
 				
 				array_copy(transition_sample, 0, _final_sample, 0, array_length(_final_sample))
-			}
+			}*/
 			
 			if _copy {
-				_frame = floor(_frame)
-				
+				var _frame1 = floor(_frame)
+				var _frame2 = -~_frame1
 				var _type, _frames
 				
 				with _animation {
@@ -131,15 +134,36 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					_frames = frames
 				}
 				
-				var _copy_sample = animation_samples[(_type % 2) ? (_frame % _frames) : min(_frame, _frames)]
-				var n = array_length(_copy_sample)
+				if _type % 2 {
+					_frame1 = _frame1 % _frames
+					_frame2 = _frame2 % _frames
+				} else {
+					_frame1 = min(_frame1, _frames)
+					_frame2 = min(_frame2, _frames)
+				}
 				
-				array_copy(sample, 0, _copy_sample, 0, n)
+				var _copy_sample1 = animation_samples[_frame1]
+				var _copy_sample2 = animation_samples[_frame2]
+				
+				sample_blend(tick_sample, _copy_sample1, _copy_sample2, frac(_frame))
 				
 				if _first {
-					array_copy(transition_sample2, 0, _copy_sample, 0, n)
+					//array_copy(transition_sample2, 0, _copy_sample, 0, n)
 					animated = true
+				} else {
+					if splice != undefined {
+						splice_animation(splice, splice_frame, splice_bone)
+					}
+					
+					if update_sample != undefined {
+						update_sample(self)
+					}
 				}
+				
+				var n = array_length(tick_sample)
+				
+				array_copy(from_sample, 0, tick_sample, 0, n)
+				array_copy(draw_sample, 0, tick_sample, 0, n)
 			}
 		}
 		
@@ -157,7 +181,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			interp_skip("ssplice_frame")
 		}
 		
-		static get_point = function (_name, _tick = false) {
+		static get_point = function (_name, _visual = false) {
 			if points == undefined {
 				return undefined
 			}
@@ -174,24 +198,24 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _bone = _point[3]
 			
 			if _bone != -1 {
-				var _bone_pos = dq_get_translation(dq_add_translation(get_bone_dq(_bone, _tick), _x, _y, _z))
+				var _bone_pos = dq_get_translation(dq_add_translation(get_bone_dq(_bone, _visual), _x, _y, _z))
 				
 				_x = _bone_pos[0]
 				_y = _bone_pos[1]
 				_z = _bone_pos[2]
 			}
 			
-			return matrix_transform_point(_tick ? matrix_build(x, y, z, roll, pitch, yaw, scale * x_scale, scale * y_scale, scale * z_scale) : matrix, _x, _y, _z)
+			return matrix_transform_point(_visual ? draw_matrix : tick_matrix, _x, _y, _z)
 		}
 		
-		static get_bone_dq = function (_index, _tick = false) {
+		static get_bone_dq = function (_index, _visual = false) {
 			static bone_dq = dq_build_identity()
 			
 			if animation == undefined {
 				return bone_dq
 			}
 			
-			var _sample = _tick ? animation_samples[frame % animation.frames] : ((transition < transition_time) ? transition_sample2 : sample)
+			var _sample = _visual ? draw_sample : tick_sample
 			var b = 8 * _index
 			var s = animation_bind_pose[_index]
 			var r3 = _sample[b + 3]
@@ -292,23 +316,23 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					var _b6 = b + 6
 					var _b7 = b + 7
 					
-					var _s0 = sample[b]
-					var _s1 = sample[_b1]
-					var _s2 = sample[_b2]
-					var _s3 = sample[_b3]
-					var _s4 = sample[_b4]
-					var _s5 = sample[_b5]
-					var _s6 = sample[_b6]
-					var _s7 = sample[_b7]
+					var _s0 = tick_sample[b]
+					var _s1 = tick_sample[_b1]
+					var _s2 = tick_sample[_b2]
+					var _s3 = tick_sample[_b3]
+					var _s4 = tick_sample[_b4]
+					var _s5 = tick_sample[_b5]
+					var _s6 = tick_sample[_b6]
+					var _s7 = tick_sample[_b7]
 					
-					sample[b] = _r3 * _s0 + _r0 * _s3 + _r1 * _s2 - _r2 * _s1
-					sample[_b1] = _r3 * _s1 - _r0 * _s2 + _r1 * _s3 + _r2 * _s0
-					sample[_b2] = _r3 * _s2 + _r0 * _s1 - _r1 * _s0 + _r2 * _s3
-					sample[_b3] = _r3 * _s3 - _r0 * _s0 - _r1 * _s1 - _r2 * _s2
-					sample[_b4] = _r3 * _s4 + _r0 * _s7 + _r1 * _s6 - _r2 * _s5 + _r4 * _s3 + _r5 * _s2 - _r6 * _s1
-					sample[_b5] = _r3 * _s5 - _r0 * _s6 + _r1 * _s7 + _r2 * _s4 - _r4 * _s2 + _r5 * _s3 + _r6 * _s0
-					sample[_b6] = _r3 * _s6 + _r0 * _s5 - _r1 * _s4 + _r2 * _s7 + _r4 * _s1 - _r5 * _s0 + _r6 * _s3
-					sample[_b7] = _r3 * _s7 - _r0 * _s4 - _r1 * _s5 - _r2 * _s6 - _r4 * _s0 - _r5 * _s1 - _r6 * _s2
+					tick_sample[b] = _r3 * _s0 + _r0 * _s3 + _r1 * _s2 - _r2 * _s1
+					tick_sample[_b1] = _r3 * _s1 - _r0 * _s2 + _r1 * _s3 + _r2 * _s0
+					tick_sample[_b2] = _r3 * _s2 + _r0 * _s1 - _r1 * _s0 + _r2 * _s3
+					tick_sample[_b3] = _r3 * _s3 - _r0 * _s0 - _r1 * _s1 - _r2 * _s2
+					tick_sample[_b4] = _r3 * _s4 + _r0 * _s7 + _r1 * _s6 - _r2 * _s5 + _r4 * _s3 + _r5 * _s2 - _r6 * _s1
+					tick_sample[_b5] = _r3 * _s5 - _r0 * _s6 + _r1 * _s7 + _r2 * _s4 - _r4 * _s2 + _r5 * _s3 + _r6 * _s0
+					tick_sample[_b6] = _r3 * _s6 + _r0 * _s5 - _r1 * _s4 + _r2 * _s7 + _r4 * _s1 - _r5 * _s0 + _r6 * _s3
+					tick_sample[_b7] = _r3 * _s7 - _r0 * _s4 - _r1 * _s5 - _r2 * _s6 - _r4 * _s0 - _r5 * _s1 - _r6 * _s2
 				}
 				
 				if i <= 0 {
@@ -374,14 +398,14 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var s6 = splice_sample[b6]
 			var s7 = splice_sample[b7]
 			
-			var d0 = sample[b]
-			var d1 = sample[b1]
-			var d2 = sample[b2]
-			var d3 = sample[b3]
-			var d4 = sample[b4]
-			var d5 = sample[b5]
-			var d6 = sample[b6]
-			var d7 = sample[b7]
+			var d0 = tick_sample[b]
+			var d1 = tick_sample[b1]
+			var d2 = tick_sample[b2]
+			var d3 = tick_sample[b3]
+			var d4 = tick_sample[b4]
+			var d5 = tick_sample[b5]
+			var d6 = tick_sample[b6]
+			var d7 = tick_sample[b7]
 			
 			var r0 = -d3 * s0 + d0 * s3 - d1 * s2 + d2 * s1
 			var r1 = -d3 * s1 + d1 * s3 - d2 * s0 + d0 * s2
@@ -420,23 +444,23 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					s6 = splice_sample[b6]
 					s7 = splice_sample[b7]
 					
-					var d0 = sample[b]
-					var d1 = sample[b1]
-					var d2 = sample[b2]
-					var d3 = sample[b3]
-					var d4 = sample[b4]
-					var d5 = sample[b5]
-					var d6 = sample[b6]
-					var d7 = sample[b7]
+					var d0 = tick_sample[b]
+					var d1 = tick_sample[b1]
+					var d2 = tick_sample[b2]
+					var d3 = tick_sample[b3]
+					var d4 = tick_sample[b4]
+					var d5 = tick_sample[b5]
+					var d6 = tick_sample[b6]
+					var d7 = tick_sample[b7]
 					
-					sample[b]   += _weight * (r3 * s0 + r0 * s3 + r1 * s2 - r2 * s1 - d0)
-					sample[b1] += _weight * (r3 * s1 + r1 * s3 + r2 * s0 - r0 * s2 - d1)
-					sample[b2] += _weight * (r3 * s2 + r2 * s3 + r0 * s1 - r1 * s0 - d2)
-					sample[b3] += _weight * (r3 * s3 - r0 * s0 - r1 * s1 - r2 * s2 - d3)
-					sample[b4] += _weight * (r3 * s4 + r0 * s7 + r1 * s6 - r2 * s5 + r7 * s0 + r4 * s3 + r5 * s2 - r6 * s1 - d4)
-					sample[b5] += _weight * (r3 * s5 + r1 * s7 + r2 * s4 - r0 * s6 + r7 * s1 + r5 * s3 + r6 * s0 - r4 * s2 - d5)
-					sample[b6] += _weight * (r3 * s6 + r2 * s7 + r0 * s5 - r1 * s4 + r7 * s2 + r6 * s3 + r4 * s1 - r5 * s0 - d6)
-					sample[b7] += _weight * (r3 * s7 - r0 * s4 - r1 * s5 - r2 * s6 + r7 * s2 - r4 * s0 - r5 * s1 - r6 * s2 - d7)
+					tick_sample[b] += _weight * (r3 * s0 + r0 * s3 + r1 * s2 - r2 * s1 - d0)
+					tick_sample[b1] += _weight * (r3 * s1 + r1 * s3 + r2 * s0 - r0 * s2 - d1)
+					tick_sample[b2] += _weight * (r3 * s2 + r2 * s3 + r0 * s1 - r1 * s0 - d2)
+					tick_sample[b3] += _weight * (r3 * s3 - r0 * s0 - r1 * s1 - r2 * s2 - d3)
+					tick_sample[b4] += _weight * (r3 * s4 + r0 * s7 + r1 * s6 - r2 * s5 + r7 * s0 + r4 * s3 + r5 * s2 - r6 * s1 - d4)
+					tick_sample[b5] += _weight * (r3 * s5 + r1 * s7 + r2 * s4 - r0 * s6 + r7 * s1 + r5 * s3 + r6 * s0 - r4 * s2 - d5)
+					tick_sample[b6] += _weight * (r3 * s6 + r2 * s7 + r0 * s5 - r1 * s4 + r7 * s2 + r6 * s3 + r4 * s1 - r5 * s0 - d6)
+					tick_sample[b7] += _weight * (r3 * s7 - r0 * s4 - r1 * s5 - r2 * s6 + r7 * s2 - r4 * s0 - r5 * s1 - r6 * s2 - d7)
 				}
 				
 				if i < n {
@@ -449,7 +473,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		
 		update_sample = undefined
 		
-		static tick = function () {
+		static tick = function (_update_matrix = true) {
+			var _update_sample = false
+			
 			if animation != undefined {
 				var _animation_type = animation.type
 				var _frame_step = frame_speed * animation.frame_speed
@@ -467,9 +493,11 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					animation_finished = frame >= _frames
 				}
 				
-				if transition < transition_time {
+				/*if transition < transition_time {
 					++transition
-				}
+				}*/
+				
+				_update_sample = true
 			}
 			
 			if splice != undefined {
@@ -482,13 +510,57 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					if splice_push {
 						splice = undefined
 					}
+				} else {
+					_update_sample = true
 				}
+			}
+			
+			if _update_sample {
+				var _frame = frame
+				var _frames, _loop, _current_frame, _next_frame
+				
+				with animation {
+					_frames = frames
+					_loop = type % 2
+					
+					if _loop {
+						_current_frame = _frame mod _frames
+						_next_frame = (_frame + 1) mod _frames
+					} else {
+						_current_frame = min(_frame, _frames)
+						_next_frame = min(_frame + 1, _frames)
+					}
+				}
+				
+				var _current_sample = animation_samples[floor(_current_frame)]
+				var _next_sample = animation_samples[floor(_next_frame)]
+				
+				array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
+				sample_blend(tick_sample, _current_sample, _next_sample, frac(_current_frame))
+				
+				if splice != undefined {
+					splice_animation(splice, splice_frame, splice_bone)
+				}
+				
+				if update_sample != undefined {
+					update_sample(self)
+				}
+				
+				/*if stransition < transition_time {
+					_final_sample = transition_sample2
+					sample_blend(_final_sample, transition_sample, sample, stransition / transition_time)
+				}*/
+			}
+			
+			if _update_matrix {
+				tick_matrix = matrix_build(x, y, z, roll, pitch, yaw, scale * x_scale, scale * y_scale, scale * z_scale)
 			}
 		}
 	#endregion
 	
 	#region Transform
-		matrix = matrix_build(_x, _y, _z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale)
+		tick_matrix = matrix_build(_x, _y, _z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale)
+		draw_matrix = matrix_build(_x, _y, _z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale)
 		
 		x = _x
 		y = _y
@@ -564,43 +636,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				global.u_animated.set(0)
 			} else {
 				global.u_animated.set(1)
-				
-				var _frame = sframe
-				var _frames, _loop, _current_frame, _next_frame
-				
-				with animation {
-					_frames = frames
-					_loop = type % 2
-					
-					if _loop {
-						_current_frame = _frame mod _frames
-						_next_frame = (_frame + 1) mod _frames
-					} else {
-						_current_frame = min(_frame, _frames)
-						_next_frame = min(_frame + 1, _frames)
-					}
-				}
-				
-				var _final_sample = sample
-				var _current_sample = animation_samples[floor(_current_frame)]
-				var _next_sample = animation_samples[floor(_next_frame)]
-				
-				sample_blend(_final_sample, _current_sample, _next_sample, frac(_current_frame))
-				
-				if splice != undefined {
-					splice_animation(splice, ssplice_frame, splice_bone)
-				}
-				
-				if update_sample != undefined {
-					update_sample(self)
-				}
-				
-				if stransition < transition_time {
-					_final_sample = transition_sample2
-					sample_blend(_final_sample, transition_sample, sample, stransition / transition_time)
-				}
-				
-				global.u_bone_dq.set(_final_sample)
+				sample_blend(draw_sample, from_sample, tick_sample, global.tick)
+				global.u_bone_dq.set(draw_sample)
 			}
 			
 			var _current_shader = global.current_shader
@@ -704,8 +741,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		static draw = function () {
 			var _mwp = matrix_get(matrix_world)
 			
-			matrix = matrix_build(sx, sy, sz, sroll, spitch, syaw, sscale * sx_scale, sscale * sy_scale, sscale * sz_scale)
-			matrix_set(matrix_world, matrix)
+			draw_matrix = matrix_build(sx, sy, sz, sroll, spitch, syaw, sscale * sx_scale, sscale * sy_scale, sscale * sz_scale)
+			matrix_set(matrix_world, draw_matrix)
 			submit()
 			matrix_set(matrix_world, _mwp)
 		}
