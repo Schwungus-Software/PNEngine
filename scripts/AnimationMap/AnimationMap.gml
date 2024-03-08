@@ -100,7 +100,8 @@ function AnimationMap() : AssetMap() constructor {
 			var j = 0
 			
 			repeat n {
-				_samples[j++] = create_sample(_bind_pose, j / frames)
+				_samples[j] = create_sample(_bind_pose, j / frames);
+				++j
 			}
 			
 			ds_map_add(samples, "", _samples)
