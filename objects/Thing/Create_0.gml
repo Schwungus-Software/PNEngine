@@ -534,7 +534,7 @@
 		thing_sequenced(id, _sequence)
 	}
 	
-	receive_damage = function (_amount, _type = "Normal", _from = noone) {
+	receive_damage = function (_amount, _type = "Normal", _from = noone, _source = _from) {
 		var _to = id
 		
 		if f_sync {
@@ -551,15 +551,21 @@
 					buffer_write(b, buffer_u16, _to.sync_id) // Victim
 					
 					var _from_exists = instance_exists(_from)
+					var _source_exists = instance_exists(_source)
 					
 					buffer_write(b, buffer_u16, _from_exists ? -~_from.sync_id : 0) // Attacker
+					buffer_write(b, buffer_u16, _source_exists ? -~_source.sync_id : 0) // Source
 					buffer_write(b, buffer_f32, _amount)
 					buffer_write(b, buffer_string, _type)
 					
-					var _result = _to.damage_received(_to, _from, _amount, _type)
+					var _result = _to.damage_received(_to, _from, _source, _amount, _type)
 					
 					if _from_exists {
-						_from.damage_dealt(_from, _to, _amount, _type, _result)
+						_from.damage_dealt(_from, _to, _source, _amount, _type, _result)
+					}
+					
+					if _source_exists {
+						_source.damage_dealt(_from, _to, _source, _amount, _type, _result)
 					}
 					
 					buffer_write(b, buffer_u8, _result)
@@ -570,10 +576,10 @@
 			}
 		}
 		
-		var _result = damage_received(_to, _from, _amount, _type)
+		var _result = damage_received(_to, _from, _source, _amount, _type)
 		
 		if instance_exists(_from) {
-			_from.damage_dealt(_from, _to, _amount, _type, _result)
+			_from.damage_dealt(_from, _to, _source, _amount, _type, _result)
 		}
 		
 		return _result
@@ -803,9 +809,9 @@
 	player_left = function (_self, _player) {}
 	thing_intro = function (_self, _from) {}
 	thing_sequenced = function (_self, _sequence) {}
-	damage_dealt = function (_self, _to, _amount, _type, _result) {}
+	damage_dealt = function (_self, _to, _source, _amount, _type, _result) {}
 	
-	damage_received = function (_self, _from, _amount, _type) {
+	damage_received = function (_self, _from, _source, _amount, _type) {
 		return DamageResults.NONE
 	}
 	
