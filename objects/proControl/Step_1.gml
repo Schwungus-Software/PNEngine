@@ -845,7 +845,6 @@ if _tick >= 1 {
 	
 #region Start Interpolation
 	var i = ds_list_size(_interps)
-	var _gc = false
 	
 	repeat i {
 		var _scope = _interps[| --i]
@@ -860,7 +859,6 @@ if _tick >= 1 {
 			if instance_exists(_scope) {
 				_ref = _scope
 			} else {
-				_gc = true
 				_interps[| i] = undefined
 				
 				continue
@@ -869,7 +867,6 @@ if _tick >= 1 {
 			if weak_ref_alive(_scope) {
 				_ref = _scope.ref
 			} else {
-				_gc = true
 				_interps[| i] = undefined
 				
 				continue
@@ -885,15 +882,6 @@ if _tick >= 1 {
 				_element[InterpData.PREVIOUS_VALUE] = struct_get_from_hash(self, _element[InterpData.IN_HASH])
 			}
 		}
-	}
-	
-	/* GROSS HACKS: There are memory leaks because structs are never being
-					dereferenced for some reason. Not sure if this is
-					related to Catspeak or the interpolator in general.
-					Whenever a dead instance or struct is removed from the
-					interpolator, call the GC just in case. */
-	if _gc {
-		gc_collect()
 	}
 #endregion
 	
@@ -1347,7 +1335,6 @@ if _tick >= 1 {
 global.tick = _tick
 
 #region End Interpolation
-var _gc = false
 var i = ds_list_size(_interps)
 
 if _tick_inc >= 1 {
@@ -1365,7 +1352,6 @@ if _tick_inc >= 1 {
 			if instance_exists(_scope) {
 				_ref = _scope
 			} else {
-				_gc = true
 				_interps[| i] = undefined
 				
 				continue
@@ -1374,7 +1360,6 @@ if _tick_inc >= 1 {
 			if weak_ref_alive(_scope) {
 				_ref = _scope.ref
 			} else {
-				_gc = true
 				_interps[| i] = undefined
 				
 				continue
@@ -1407,7 +1392,6 @@ if _tick_inc >= 1 {
 			if instance_exists(_scope) {
 				_ref = _scope
 			} else {
-				_gc = true
 				_interps[| i] = undefined
 				
 				continue
@@ -1416,7 +1400,6 @@ if _tick_inc >= 1 {
 			if weak_ref_alive(_scope) {
 				_ref = _scope.ref
 			} else {
-				_gc = true
 				_interps[| i] = undefined
 				
 				continue
@@ -1434,14 +1417,5 @@ if _tick_inc >= 1 {
 		}
 	}
 #endregion
-}
-
-/* GROSS HACKS: There are memory leaks because structs are never being
-				dereferenced for some reason. Not sure if this is
-				related to Catspeak or the interpolator in general.
-				Whenever a dead instance or struct is removed from the
-				interpolator, call the GC just in case. */
-if _gc {
-	gc_collect()
 }
 #endregion
