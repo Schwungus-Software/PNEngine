@@ -47,8 +47,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		animation_samples = undefined
 		frame = 0
 		frame_speed = 1
-		//interp("frame", "sframe")
 		
+		transition = 0
+		transition_time = 0
+		transition_sample = dq_build_identity()
 		tick_sample = dq_build_identity()
 		from_sample = dq_build_identity()
 		draw_sample = dq_build_identity()
@@ -58,13 +60,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		splice_bone = -1
 		splice_frame = 0
 		splice_push = false
-		//interp("splice_frame", "ssplice_frame")
-		
-		/*transition = 0
-		transition_time = 0
-		transition_sample = dq_build_identity()
-		transition_sample2 = dq_build_identity()
-		interp("transition", "stransition")*/
 		
 		static set_animation = function (_animation = undefined, _frame = 0, _time = 0) {
 			if _animation == undefined {
@@ -76,12 +71,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				if _frame >= 0 {
 					frame = _frame
 					frame_speed = 1
-					interp_skip("sframe")
 				}
 				
-				/*transition = 0
+				transition = 0
 				transition_time = 0
-				interp_skip("stransition")*/
 				
 				exit
 			}
@@ -107,22 +100,21 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			if _frame >= 0 {
 				_copy = true
+				
+				if _frame == 0 and not (_animation.type % 2) {
+					_frame = 1
+				}
+				
 				frame = _frame
 				frame_speed = 1
-				//interp_skip("sframe")
 			}
-			
-			/*var _transition_previous = transition < transition_time
 			
 			transition = 0
 			transition_time = _time
-			interp_skip("stransition")*/
 			
-			/*if _time > 0 {
-				var _final_sample = _transition_previous ? transition_sample2 : sample
-				
-				array_copy(transition_sample, 0, _final_sample, 0, array_length(_final_sample))
-			}*/
+			if _time > 0 {
+				array_copy(transition_sample, 0, tick_sample, 0, array_length(tick_sample))
+			}
 			
 			if _copy {
 				var _frame1 = floor(_frame)
@@ -148,7 +140,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				sample_blend(tick_sample, _copy_sample1, _copy_sample2, frac(_frame))
 				
 				if _first {
-					//array_copy(transition_sample2, 0, _copy_sample, 0, n)
 					animated = true
 				} else {
 					if splice != undefined {
@@ -493,9 +484,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					animation_finished = frame >= _frames
 				}
 				
-				/*if transition < transition_time {
+				if transition < transition_time {
 					++transition
-				}*/
+				}
 				
 				_update_sample = true
 			}
@@ -546,10 +537,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					update_sample(self)
 				}
 				
-				/*if stransition < transition_time {
-					_final_sample = transition_sample2
-					sample_blend(_final_sample, transition_sample, sample, stransition / transition_time)
-				}*/
+				if transition < transition_time {
+					sample_blend(tick_sample, transition_sample, tick_sample, transition / transition_time)
+				}
 			}
 			
 			if _update_matrix {
