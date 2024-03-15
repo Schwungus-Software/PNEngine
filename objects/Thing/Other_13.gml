@@ -229,7 +229,7 @@ if _held {
 				var _thing = wall_ray[RaycastData.THING]
 				
 				if instance_exists(_thing) {
-					_thing.receive_damage(bullet_damage, bullet_type, id)
+					_thing.receive_damage(bullet_damage, bullet_type, id, instance_exists(master) ? master : id)
 				}
 				
 				receive_damage(1, "BulletCollide", _thing)
