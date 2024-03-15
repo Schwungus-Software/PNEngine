@@ -20,7 +20,7 @@ global.music_channel_group = fmod_system_create_channel_group("music")
 
 global.master_volume = 1
 global.sound_volume = 1
-global.music_volume = 0.6
+global.music_volume = 0.5
 global.audio_focus = true
 
 global.last_sound_pool_id = 0

@@ -24,7 +24,7 @@ function config_reset() {
 		// AUDIO
 		snd_volume: 1,
 		snd_sound_volume: 1,
-		snd_music_volume: 0.6,
+		snd_music_volume: 0.5,
 		snd_background: false,
 		
 		// INPUT
