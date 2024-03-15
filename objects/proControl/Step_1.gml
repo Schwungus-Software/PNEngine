@@ -750,7 +750,7 @@ if _tick >= 1 {
 			global.chat_typing = false
 		}
 	} else {
-		if input_check_pressed("chat") and _netgame != undefined and _netgame.active {
+		if input_check_pressed("chat") and _netgame != undefined and _netgame.active and global.config.chat {
 			global.chat_typing = true
 			keyboard_string = ""
 		}

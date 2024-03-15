@@ -480,7 +480,7 @@ if async_load[? "type"] == network_type_data {
 			break
 			
 			case NetHeaders.CHAT:
-				if _from == _to {
+				if _from == _to or not global.config.chat {
 					break
 				}
 				
