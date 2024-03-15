@@ -100,11 +100,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			if _frame >= 0 {
 				_copy = true
-				
-				if _frame == 0 and not (_animation.type % 2) {
-					_frame = 1
-				}
-				
 				frame = _frame
 				frame_speed = 1
 			}
