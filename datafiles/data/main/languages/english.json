@@ -42,6 +42,7 @@
 			"confirm": "Confirm",
 			"cancel": "Cancel",
 			"player": "Player {0}",
+			"leave": "Leave",
 		},
 		
 		"options": {
@@ -169,9 +170,10 @@
 			},
 			
 			"press_any_key": "Press any key",
-			"not_ready": "Not Ready",
 			"disconnected": "Disconnected",
+			"inactive": "Inactive",
 			"ready": "Ready",
+			"active": "Active",
 		},
 		
 		"paused": "Paused",
