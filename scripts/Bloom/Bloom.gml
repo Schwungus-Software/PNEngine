@@ -117,8 +117,8 @@ function Bloom(_width, _height, _max_iterations) constructor {
 		var _width, _height, _surface
 		
 		with _struct {
-			_width = width
-			_height = height
+			_width = max(width, 1)
+			_height = max(height, 1)
 			_surface = surface
 		}
 		
@@ -128,11 +128,6 @@ function Bloom(_width, _height, _max_iterations) constructor {
 			var _depth = surface_get_depth_disable()
 			
 			surface_depth_disable(true)
-			
-			if _width <= 0 or _height <= 0 {
-				return -1
-			}
-			
     	    _surface = surface_create(_width, _height)
 			surface_depth_disable(_depth)
     	    _update = true
