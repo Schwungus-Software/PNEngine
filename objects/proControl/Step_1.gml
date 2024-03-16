@@ -939,6 +939,12 @@ if _tick >= 1 {
 					tick(_tick_target)
 				}
 				
+				if not exists and parent != undefined {
+					_tick_target = parent
+				}
+			}
+			
+			with _tick_target {
 				if exists and f_blocking {
 					if _game_status & GameStatus.NETGAME {
 						// Gross hack, will clean up later
