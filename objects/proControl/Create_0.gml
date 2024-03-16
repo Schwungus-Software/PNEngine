@@ -637,7 +637,7 @@ var _custom_back_sound = undefined
 
 #region Mods
 	var _mods = global.mods
-	var _disabled_mods = json_load(DATA_PATH + "disabled.json")
+	var _disabled_mods = force_type_fallback(json_load(DATA_PATH + "disabled.json"), "array", [])
 	
 	if is_array(_disabled_mods) {
 		var n = array_length(_disabled_mods)
@@ -679,12 +679,13 @@ var _custom_back_sound = undefined
 	
 	var _key = ds_map_find_first(_mods)
 
-	repeat ds_map_size(_mods) {
+	repeat n {
 		var _mod = _mods[? _key]
 		var _path = _mod.path
 		var _languages = _path + "languages/languages.json"
-	
+		
 		if file_exists(_languages) {
+			print($"proControl: Loading languages from '{_mod.name}'")
 			lexicon_index_definitions(_languages)
 		}
 		
