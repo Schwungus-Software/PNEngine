@@ -85,4 +85,21 @@ function UI(_ui_script) constructor {
 		
 		return global.ui_sounds.play(_sound, _loop, _offset, _pitch)
 	}
+	
+	static open_options = function () {
+		gml_pragma("forceinline")
+		
+		return link(proOptionsUI)
+	}
+	
+	static exit_game = function (_level, _transition = noone) {
+		if global.game_status == GameStatus.NETGAME {
+			cmd_disconnect("")
+			destroy()
+			
+			exit
+		}
+		
+		global.level.goto(_level, 0, ThingTags.NONE, _transition)
+	}
 }
