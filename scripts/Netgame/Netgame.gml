@@ -34,6 +34,7 @@ function Netgame() constructor {
 			local = true
 		}
 		
+		was_connected_before = true
 		time_source_start(ping_time_source)
 		
 		return true
