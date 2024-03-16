@@ -638,54 +638,54 @@ var _custom_back_sound = undefined
 #region Mods
 	var _mods = global.mods
 	var _disabled_mods = force_type_fallback(json_load(DATA_PATH + "disabled.json"), "array", [])
+	var n = array_length(_disabled_mods)
+	var _load_mods = []
+	var _loaded = 0
+	var _mod = file_find_first(DATA_PATH + "*", fa_directory)
 	
-	if is_array(_disabled_mods) {
-		var n = array_length(_disabled_mods)
-		var _load_mods = []
-		var _loaded = 0
-		var _mod = file_find_first(DATA_PATH + "*", fa_directory)
-
-		while _mod != "" {
-			if directory_exists(DATA_PATH + _mod) {
-				var _enabled = true
-				var i = 0
-		
-				repeat n {
-					if _disabled_mods[i++] == _mod {
-						print($"proControl: Mod '{_mod}' is disabled, skipping")
-						_enabled = false
-				
-						break
-					}
-				}
-		
-				if _enabled {
-					array_push(_load_mods, _mod);
-					++_loaded
+	while _mod != "" {
+		if directory_exists(DATA_PATH + _mod) {
+			var _enabled = true
+			var i = 0
+			
+			repeat n {
+				if _disabled_mods[i++] == _mod {
+					print($"proControl: Mod '{_mod}' is disabled, skipping")
+					_enabled = false
+					
+					break
 				}
 			}
+			
+			if _enabled {
+				array_push(_load_mods, _mod);
+				++_loaded
+			}
+		}
+		
+		_mod = file_find_next()
+	}
 	
-			_mod = file_find_next()
-		}
-
-		file_find_close()
-
-		var i = 0
-
-		repeat _loaded {
-			var _mod = new Mod(_load_mods[i++])
-		}
+	file_find_close()
+	
+	var i = 0
+	
+	repeat _loaded {
+		new Mod(_load_mods[i++])
 	}
 	
 	var _key = ds_map_find_first(_mods)
 
-	repeat n {
+	repeat ds_map_size(_mods) {
 		var _mod = _mods[? _key]
+		
+		print($"proControl: Initializing '{_mod.name}'")
+		
 		var _path = _mod.path
 		var _languages = _path + "languages/languages.json"
 		
 		if file_exists(_languages) {
-			print($"proControl: Loading languages from '{_mod.name}'")
+			print($"proControl: Loading languages from '{_languages}'")
 			lexicon_index_definitions(_languages)
 		}
 		
