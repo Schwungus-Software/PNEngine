@@ -44,12 +44,15 @@ event_inherited()
 		jumped = false
 	}
 	
-	do_jump = function () {
+	do_jump = function (_predict = false) {
 		z_speed = jump_speed
 		floor_ray[RaycastData.HIT] = false
 		coyote = 0
 		jumped = true
-		player_jumped(id)
+		
+		if not _predict {
+			player_jumped(id)
+		}
 	}
 	
 	do_maneuver = function () {

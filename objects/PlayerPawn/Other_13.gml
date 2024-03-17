@@ -104,10 +104,12 @@ if jumped {
 } else {
 	if (_on_ground or coyote-- > 0)
 	   and z_speed <= 0 and _can_move
-	   and input[PlayerInputs.JUMP] and not input_previous[PlayerInputs.JUMP] {
-		if try_jump(id) and (sync_jump == undefined or sync_jump.update()) {
-			do_jump()
-		}
+	   and input[PlayerInputs.JUMP] and not input_previous[PlayerInputs.JUMP]
+	   and try_jump(id) {
+		// Don't do user-defined jumping sequences if we are a client. Instead,
+		// client-side prediction is performed and the signal for actual jumps
+		// is sent by the host itself.
+		do_jump(sync_jump != undefined and not sync_jump.update())
 	}
 }
 
