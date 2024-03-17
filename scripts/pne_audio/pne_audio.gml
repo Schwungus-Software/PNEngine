@@ -12,7 +12,7 @@ enum MusicPriorities {
 
 print("pne_audio: =====[FMOD SYSTEM TEST]=====")
 
-var _test = fmod_debug_initialize(FMOD_DEBUG_FLAGS.LEVEL_LOG)
+var _test = fmod_debug_initialize(FMOD_DEBUG_FLAGS.LEVEL_LOG, FMOD_DEBUG_MODE.CALLBACK)
 var _result = fmod_last_result()
 
 print($"pne_audio: fmod_debug_initialize() -> value: '{_test}', result: '{_result}' ({fmod_error_string(_result)})")
