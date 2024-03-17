@@ -13,12 +13,15 @@ enum MusicPriorities {
 print("pne_audio: =====[FMOD SYSTEM TEST]=====")
 
 var _test = fmod_debug_initialize(FMOD_DEBUG_FLAGS.LEVEL_LOG)
+var _result = fmod_last_result()
 
-print($"pne_audio: fmod_debug_initialize() -> value: '{_test}', result: '{fmod_last_result()}'")
+print($"pne_audio: fmod_debug_initialize() -> value: '{_test}', result: '{_result}' ({fmod_error_string(_result)})")
 global.fmod = fmod_system_create()
-print($"pne_audio: fmod_system_create() -> value: '{global.fmod}', result: '{fmod_last_result()}'")
+_result = fmod_last_result()
+print($"pne_audio: fmod_system_create() -> value: '{global.fmod}', result: '{_result}' ({fmod_error_string(_result)})")
 _test = fmod_system_init(MAX_CHANNELS, FMOD_INIT.NORMAL)
-print($"pne_audio: fmod_system_init() -> value: '{_test}', result: '{fmod_last_result()}'")
+_result = fmod_last_result()
+print($"pne_audio: fmod_system_init() -> value: '{_test}', result: '{_result}' ({fmod_error_string(_result)})")
 print("pne_audio: ============================")
 
 global.sound_group = fmod_system_create_sound_group("sound")
