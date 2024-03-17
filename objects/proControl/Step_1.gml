@@ -1425,3 +1425,5 @@ if _tick_inc >= 1 {
 #endregion
 }
 #endregion
+
+fmod_system_update()
