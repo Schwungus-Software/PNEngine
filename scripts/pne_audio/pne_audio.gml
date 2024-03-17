@@ -10,8 +10,15 @@ enum MusicPriorities {
 	FANFARE = 12,
 }
 
+print("pne_audio: =====[FMOD SYSTEM TEST]=====")
 global.fmod = fmod_system_create()
-fmod_system_init(MAX_CHANNELS, FMOD_INIT.NORMAL)
+print($"pne_audio: fmod_system_create() -> value: '{global.fmod}', result: '{fmod_last_result()}'")
+
+var _test = fmod_system_init(MAX_CHANNELS, FMOD_INIT.NORMAL)
+
+print($"pne_audio: fmod_system_init() -> value: '{_test}', result: '{fmod_last_result()}'")
+print("pne_audio: ============================")
+
 global.sound_group = fmod_system_create_sound_group("sound")
 global.music_group = fmod_system_create_sound_group("music")
 global.master_channel_group = fmod_system_get_master_channel_group()
