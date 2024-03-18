@@ -1,7 +1,7 @@
 global.shaders = ds_list_create()
 global.uniforms_amount = 0
 
-global.world_shader = new Shader(shWorld)
+global.world_shader = new Shader(os_type == os_linux ? shWorldBlend : shWorld)
 global.sky_shader = new Shader(shSky)
 global.bloom_pass_shader = new Shader(shBloomPass)
 global.bloom_up_shader = new Shader(shBloomUp)
