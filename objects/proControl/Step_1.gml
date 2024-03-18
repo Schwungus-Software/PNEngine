@@ -653,8 +653,9 @@ var _chat_typing = global.chat_typing
 var _interps = global.interps
 var _players = global.players
 var _config = global.config
-var _game_status = global.game_status
 var _netgame = global.netgame
+var _netgame_active = _netgame != undefined and _netgame.active
+var _netgame_master = _netgame_active and _netgame.master
 var _syncables = global.level.syncables
 
 if _tick >= 1 {
@@ -807,7 +808,7 @@ if _tick >= 1 {
 			global.console_input = keyboard_string
 		}
 		
-		if _game_status & GameStatus.NETGAME {
+		if _netgame_active {
 			// Gross hack, will clean up later
 			input_verb_consume("up")
 			input_verb_consume("left")
@@ -946,7 +947,7 @@ if _tick >= 1 {
 			
 			with _tick_target {
 				if exists and f_blocking {
-					if _game_status & GameStatus.NETGAME {
+					if _netgame_active {
 						// Gross hack, will clean up later
 						input_verb_consume("up")
 						input_verb_consume("left")
@@ -979,7 +980,7 @@ if _tick >= 1 {
 			if input_check_pressed("pause") {
 				_paused = true
 				
-				if not (_game_status & GameStatus.NETGAME) {
+				if not _netgame_active {
 					var i = INPUT_MAX_PLAYERS
 					
 					repeat i {
@@ -1033,7 +1034,7 @@ if _tick >= 1 {
 				var _index = i
 				var _mouse = false
 				
-				if _game_status & GameStatus.NETGAME {
+				if _netgame_active {
 					if _netgame.local_slot == i {
 						_get_input = true
 						_index = 0
@@ -1117,7 +1118,7 @@ if _tick >= 1 {
 					
 					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
 					
-					if _game_status & GameStatus.NETGAME and not array_equals(input, input_previous) {
+					if _netgame_active and not array_equals(input, input_previous) {
 						// Send input data to the server
 						var b = net_buffer_create(false, NetHeaders.INPUT)
 						
@@ -1136,7 +1137,7 @@ if _tick >= 1 {
 						_netgame.send(SEND_OTHERS, b)
 					}
 				} else {
-					if _game_status & GameStatus.NETGAME {
+					if _netgame_active {
 						while ds_queue_size(input_queue) {
 							input[PlayerInputs.UP_DOWN] = ds_queue_dequeue(input_queue)
 							input[PlayerInputs.LEFT_RIGHT] = ds_queue_dequeue(input_queue)
@@ -1267,7 +1268,7 @@ if _tick >= 1 {
 									}
 								}
 #region Thing Syncing
-								if not (_game_status & GameStatus.NETGAME) or not f_sync or not _netgame.master or not instance_exists(id) {
+								if not _netgame_master or not instance_exists(id) or not f_sync or f_culled {
 									break
 								}
 								
