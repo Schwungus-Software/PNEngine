@@ -14,6 +14,9 @@ if _draw_target != undefined {
 	}
 }
 
+var _netgame = global.netgame
+var _netgame_active = _netgame != undefined and _netgame.active
+
 if _draw_target == undefined or _draw_target.f_draw_screen {
 	var _width = window_get_width()
 	var _height = window_get_height()
@@ -25,9 +28,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 	if instance_exists(_camera_active) {
 		_camera_active.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 	} else {
-		var _netgame = global.netgame
-		
-		if _netgame != undefined {
+		if _netgame_active {
 			with _netgame {
 				if active {
 					with _players[local_slot] {
@@ -106,7 +107,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 	
 #region Update Particles & Draw GUI
 	var _dead_particles = global.dead_particles
-	var _particle_step = not (global.freeze_step or _console or (_draw_target != undefined and _draw_target.f_blocking))
+	var _particle_step = not (global.freeze_step or _console or (_draw_target != undefined and _draw_target.f_blocking and not _netgame_active))
 	var d = global.delta
 	var _drawn_areas = 0
 	var i = 0
@@ -213,9 +214,7 @@ with proTransition {
 	event_user(ThingEvents.DRAW_GUI)
 }
 
-var _netgame = global.netgame
-
-if _netgame != undefined and _netgame.active {
+if _netgame_active {
 	draw_set_font(chat_font)
 	draw_set_valign(fa_bottom)
 	
