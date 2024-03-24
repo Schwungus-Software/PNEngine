@@ -92,9 +92,11 @@ function Player() constructor {
 		}
 		
 		var _flags = global.flags
-		var _type = (_flags[0].get("player_class") ?? _flags[1].get("player_class")) ?? get_state("player_class")
+		var _type = get_state("player_class") ?? (_flags[1].get("player_class") ?? _flags[0].get("player_class"))
 			
-		if _type == undefined {
+		if not is_string(_type) {
+			show_error($"! Player.respawn: Got '{typeof(_type)}' as player class, expected string", true)
+			
 			return noone
 		}
 		
