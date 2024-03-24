@@ -827,6 +827,22 @@
 		return true
 	}
 	
+	holder_attach_holdable = function (_self, _holding) {
+		var _x, _y, _z
+		
+		with _self {
+			_x = x
+			_y = y
+			_z = z + height
+		}
+		
+		with _holding {
+			x = _x
+			y = _y
+			z = _z
+		}
+	}
+	
 	holdable_held = function (_self, _from, _forced) {
 		return true
 	}

@@ -250,18 +250,6 @@ if tick != undefined {
 	tick(id)
 }
 
-if instance_exists(holding) {
-	holding.x = x
-	holding.y = y
-	holding.z = z + height
-	holding.angle = angle
-	
-	with holding {
-		set_speed(0)
-		z_speed = 0
-	}
-}
-
 var _model = model
 
 if _model != undefined and (not instance_exists(holder) or not f_holdable_in_hand) {
@@ -317,6 +305,16 @@ if _model != undefined and (not instance_exists(holder) or not f_holdable_in_han
 				}
 			}
 		}
+	}
+}
+
+if instance_exists(holding) {
+	holder_attach_holdable(id, holding)
+	holding.angle = angle
+	
+	with holding {
+		set_speed(0)
+		z_speed = 0
 	}
 }
 
