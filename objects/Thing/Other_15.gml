@@ -7,33 +7,35 @@ if emitter != undefined {
 	fmod_channel_control_set_3d_min_max_distance(emitter, emitter_falloff, emitter_falloff_max)
 }
 
-var _model = model
-
-if _model != undefined and (not instance_exists(holder) or not f_holdable_in_hand) {
-	_model.draw()
+if not instance_exists(holder) or not f_holdable_in_hand {
+	var _model = model
 	
-	if instance_exists(holding) and holding.f_holdable_in_hand {
-		var _hold_bone = _model.hold_bone
+	if _model != undefined {
+		_model.draw()
+	
+		if instance_exists(holding) and holding.f_holdable_in_hand {
+			var _hold_bone = _model.hold_bone
 		
-		if _hold_bone != -1 {
-			with holding {
-				if model != undefined {
-					with model {
-						var _mwp = matrix_get(matrix_world)
+			if _hold_bone != -1 {
+				with holding {
+					if model != undefined {
+						with model {
+							var _mwp = matrix_get(matrix_world)
 						
-						matrix_build_dq(_model.get_bone_dq(_hold_bone, true), draw_matrix)
+							matrix_build_dq(_model.get_bone_dq(_hold_bone, true), draw_matrix)
 						
-						var _hold_matrix = matrix_multiply(hold_offset_matrix, draw_matrix)
+							var _hold_matrix = matrix_multiply(hold_offset_matrix, draw_matrix)
 						
-						draw_matrix = matrix_multiply(_hold_matrix, _model.draw_matrix)
-						matrix_set(matrix_world, draw_matrix)
-						submit()
-						matrix_set(matrix_world, _mwp)
+							draw_matrix = matrix_multiply(_hold_matrix, _model.draw_matrix)
+							matrix_set(matrix_world, draw_matrix)
+							submit()
+							matrix_set(matrix_world, _mwp)
+						}
 					}
-				}
 				
-				if draw != undefined {
-					draw(id)
+					if draw != undefined {
+						draw(id)
+					}
 				}
 			}
 		}
