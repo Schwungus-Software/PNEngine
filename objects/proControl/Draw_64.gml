@@ -1,3 +1,4 @@
+#region Rendering
 draw_clear(c_black)
 
 var _draw_target = global.ui
@@ -334,5 +335,88 @@ if _console {
 if load_state != LoadStates.NONE and load_level != undefined {
 	scribble($"[{ui_font_name}][wave][fa_center][fa_middle]{lexicon_text("loading")}", "__PNENGINE_LOADING__").draw(240, 135)
 }
+#endregion
+
+#region Audio
+
+#region Play Sound When Focused
+if not global.config.snd_background {
+	if window_has_focus() {
+		if not global.audio_focus {
+			fmod_channel_control_set_volume(global.master_channel_group, global.master_volume)
+			global.audio_focus = true
+		}
+	} else {
+		if global.audio_focus {
+			fmod_channel_control_set_volume(global.master_channel_group, 0)
+			global.audio_focus = false
+		}
+	}
+}
+#endregion
+	
+#region Update Sound Pools
+var _sound_pools = global.sound_pools
+var i = 0
+
+repeat ds_list_size(_sound_pools) {
+	with _sound_pools[| i++] {
+		var _update_gain = false
+		var j = 0
+		
+		repeat SOUND_POOL_SLOTS {
+			var _gain_time = gain_time[j]
+			var _gain_duration = gain_duration[j]
+			
+			if _gain_time < _gain_duration {
+				gain_time[j] = min(_gain_time + (AUDIO_TICKRATE_MILLISECONDS * d), _gain_duration)
+				gain[j] = lerp(gain_start[j], gain_end[j], gain_time[j] / _gain_duration)
+				_update_gain = true
+			}
+			
+			++j
+		}
+		
+		if _update_gain {
+			fmod_channel_control_set_volume(channel_group, gain[0] * gain[1] * gain[2] * gain[3])
+		}
+	}
+}
+#endregion
+
+#region Update Music Instances
+var _music_instances = global.music_instances
+
+i = ds_list_size(_music_instances)
+
+repeat i {
+	with _music_instances[| --i] {
+		var _update_gain = false
+		var j = 0
+				
+		repeat 3 {
+			var _gain_time = gain_time[j]
+			var _gain_duration = gain_duration[j]
+					
+			if _gain_time < _gain_duration {
+				gain_time[j] = min(_gain_time + (AUDIO_TICKRATE_MILLISECONDS * d), _gain_duration)
+				gain[j] = lerp(gain_start[j], gain_end[j], gain_time[j] / _gain_duration)
+				_update_gain = true
+			}
+					
+			++j
+		}
+				
+		if _update_gain {
+			fmod_channel_control_set_volume(sound_instance, gain[0] * gain[1] * gain[2])
+		}
+				
+		if (stopping and gain[2] <= 0) or not fmod_channel_control_is_playing(sound_instance) {
+			destroy()
+		}
+	}
+}
+#endregion
 
 fmod_system_update()
+#endregion
