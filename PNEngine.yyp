@@ -2058,6 +2058,7 @@
     {"$GMIncludedFile":"","%Name":"imgHUDHealth.png","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/images","name":"imgHUDHealth.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"imgHUDMario.png","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/images","name":"imgHUDMario.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"imgHUDScore.png","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/images","name":"imgHUDScore.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"imgHUDZapper.json","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/images","name":"imgHUDZapper.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"imgHUDZapper.png","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/images","name":"imgHUDZapper.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"imgLetter.png","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/images","name":"imgLetter.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"imgLightplunger.png","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/images","name":"imgLightplunger.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
