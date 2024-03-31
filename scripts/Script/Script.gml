@@ -29,8 +29,6 @@ function Script() : Asset() constructor {
 				locals[i++] = undefined
 			}
 		}
-		
-		_func.setSelf(undefined)
 	}
 	
 	static flush = function () {
