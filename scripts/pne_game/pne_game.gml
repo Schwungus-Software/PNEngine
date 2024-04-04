@@ -15,9 +15,6 @@
 		UNLOAD,
 		LOAD,
 		FINISH,
-		NETGAME_START,
-		NETGAME_FINISH,
-		NETGAME_LEVEL,
 	}
 	
 	enum InterpData {

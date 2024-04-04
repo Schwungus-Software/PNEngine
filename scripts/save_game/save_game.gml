@@ -1,12 +1,4 @@
 function save_game() {
-	var _netgame = global.netgame
-	
-	if _netgame != undefined and not _netgame.master {
-		print("! save_game: Cannot save as client")
-		
-		return false
-	}
-	
 	var _checkpoint = global.checkpoint
 	var _cp_level = _checkpoint[0]
 	

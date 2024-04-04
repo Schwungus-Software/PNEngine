@@ -6,7 +6,7 @@
   "name":"buffer_write_dynamic",
   "parent":{
     "name":"Buffers",
-    "path":"folders/Scripts/PNEngine/Netgame/Buffers.yy",
+    "path":"folders/Scripts/PNEngine/Debug/Buffers.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

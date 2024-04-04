@@ -6,26 +6,7 @@ function Flags(_id) constructor {
 		return flags[? _key]
 	}
 	
-	static set = function (_key, _value, _sync = true) {
-		if _sync {
-			var _netgame = global.netgame
-			
-			if _netgame != undefined {
-				with _netgame {
-					if active and master {
-						var b = net_buffer_create(true, NetHeaders.HOST_FLAG)
-					
-						buffer_write(b, buffer_u8, other.slot)
-						buffer_write(b, buffer_string, _key)
-						buffer_write_dynamic(b, _value)
-						send(SEND_OTHERS, b)
-					} else {
-						return false
-					}
-				}
-			}
-		}
-		
+	static set = function (_key, _value) {
 		flags[? _key] = _value
 		
 		return true
@@ -43,21 +24,6 @@ function Flags(_id) constructor {
 	}
 	
 	static clear = function () {
-		var _netgame = global.netgame
-		
-		if _netgame != undefined {
-			with _netgame {
-				if active and master {
-					var b = net_buffer_create(true, NetHeaders.HOST_RESET_FLAGS)
-					
-					buffer_write(b, buffer_u8, other.slot)
-					send(SEND_OTHERS, b)
-				} else {
-					return false
-				}
-			}
-		}
-		
 		flags_force_clear(self)
 		
 		return true

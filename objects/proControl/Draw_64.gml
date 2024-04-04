@@ -15,9 +15,6 @@ if _draw_target != undefined {
 	}
 }
 
-var _netgame = global.netgame
-var _netgame_active = _netgame != undefined and _netgame.active
-
 if _draw_target == undefined or _draw_target.f_draw_screen {
 	var _width = window_get_width()
 	var _height = window_get_height()
@@ -29,77 +26,65 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 	if instance_exists(_camera_active) {
 		_camera_active.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 	} else {
-		if _netgame_active {
-			with _netgame {
-				if active {
-					with _players[local_slot] {
-						if instance_exists(camera) {
+		switch global.players_active {
+			case 1:
+				var i = 0
+				
+				repeat INPUT_MAX_PLAYERS {
+					with _players[i++] {
+						if status == PlayerStatus.ACTIVE and instance_exists(camera) {
 							camera.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
+							
+							break
 						}
 					}
 				}
-			}
-		} else {
-			switch global.players_active {
-				case 1:
-					var i = 0
-				
-					repeat INPUT_MAX_PLAYERS {
-						with _players[i++] {
-							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
-							
-								break
-							}
-						}
-					}
-				break
+			break
 			
-				case 2:
-					_height *= 0.5
+			case 2:
+				_height *= 0.5
 					
-					var _y = 0
-					var i = 0
+				var _y = 0
+				var i = 0
 				
-					repeat INPUT_MAX_PLAYERS {
-						with _players[i] {
-							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height, i == 0).DrawStretched(0, _y, 480, 135)
-							}
+				repeat INPUT_MAX_PLAYERS {
+					with _players[i] {
+						if status == PlayerStatus.ACTIVE and instance_exists(camera) {
+							camera.render(_width, _height, i == 0).DrawStretched(0, _y, 480, 135)
 						}
-						
-						_y += 135;
-						++i
 					}
-				break
+						
+					_y += 135;
+					++i
+				}
+			break
 			
-				case 3:
-				case 4:
-					_width *= 0.5
-					_height *= 0.5
+			case 3:
+			case 4:
+				_width *= 0.5
+				_height *= 0.5
 					
-					var _x = 0
-					var _y = 0
-					var i = 0
+				var _x = 0
+				var _y = 0
+				var i = 0
 				
-					repeat INPUT_MAX_PLAYERS {
-						with _players[i] {
-							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height, i == 0).DrawStretched(_x, _y, 240, 135)
-							}
+				repeat INPUT_MAX_PLAYERS {
+					with _players[i] {
+						if status == PlayerStatus.ACTIVE and instance_exists(camera) {
+							camera.render(_width, _height, i == 0).DrawStretched(_x, _y, 240, 135)
 						}
-						
-						_x += 240
-						
-						if _x > 240 {
-							_x = 0
-							_y += 135
-						}
-						
-						++i
 					}
-				break
-			}
+						
+					_x += 240
+						
+					if _x > 240 {
+						_x = 0
+						_y += 135
+					}
+						
+					++i
+				}
+			break
 		}
 	}
 #endregion
@@ -108,7 +93,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 	
 #region Update Particles & Draw GUI
 	var _dead_particles = global.dead_particles
-	var _particle_step = not (global.freeze_step or _console or (_draw_target != undefined and _draw_target.f_blocking and not _netgame_active))
+	var _particle_step = not (global.freeze_step or _console or (_draw_target != undefined and _draw_target.f_blocking))
 	var d = global.delta
 	var _drawn_areas = 0
 	var i = 0
@@ -215,77 +200,9 @@ with proTransition {
 	event_user(ThingEvents.DRAW_GUI)
 }
 
-if _netgame_active {
-	draw_set_font(chat_font)
-	draw_set_valign(fa_bottom)
-	
-	var _lines = MAX_CHAT_LINES
-	var _typing = global.chat_typing
-	var _y = 262
-	
-	if _typing {
-		var _input = ">" + keyboard_string + (current_time % 1000 < 500 ? "_" : " ")
-		var _width = string_width(_input)
-		var _height = string_height(_input)
-		var _x = _width > 464 ? 8 - (_width - 464) : 8
-		
-		draw_set_alpha(0.5)
-		draw_rectangle_color(_x - 1, 262 - _height, _x + _width, 262, c_black, c_black, c_black, c_black, false)
-		draw_set_alpha(1)
-		draw_text(_x, 262, _input)
-		_y -= _height + 1
-		_lines *= 2
-	}
-	
-	var _chat = global.chat
-	var _chat_line_times = global.chat_line_times
-	var i = ds_list_size(_chat)
-	var j = 0
-	
-	if i {
-		repeat _lines {
-			if not _typing {
-				if _chat_line_times[j] > 0 {
-					_chat_line_times[j] -= d
-				} else {
-					++j
-					
-					continue
-				}
-				
-				++j
-			}
-			
-			i -= 2
-			
-			var _message = _chat[| i]
-			var _color = _chat[| -~i]
-			var _height = string_height_ext(_message, -1, 464)
-			
-			draw_set_alpha(0.5)
-			draw_rectangle_color(7, _y - _height, 8 + string_width_ext(_message, -1, 464), _y, c_black, c_black, c_black, c_black, false)
-			draw_set_alpha(1)
-			draw_text_color(8, _y, _message, _color, _color, _color, _color, 1)
-			_y -= _height + 1
-			
-			if i <= 0 {
-				break
-			}
-		}
-	}
-	
-	draw_set_valign(fa_top)
-	draw_set_font(-1)
-	
-	if caption_time > 0 {
-		caption.align(fa_right, fa_bottom).draw(450, 240)
-		caption_time -= d
-	}
-} else {
-	if caption_time > 0 {
-		caption.align(fa_center, fa_bottom).draw(240, 240)
-		caption_time -= d
-	}
+if caption_time > 0 {
+	caption.align(fa_center, fa_bottom).draw(240, 240)
+	caption_time -= d
 }
 
 if _console {
@@ -315,7 +232,7 @@ if _console {
 			break
 		}
 		
-		_y += string_height_ext(_str, -1, 960) * 0.5
+		_y += string_height_ext(_str, -1, 960) >> 1
 		draw_text_ext_transformed(0, _console_bottom - _y, _str, -1, 960, 0.5, 0.5, 0)
 	}
 	
@@ -325,7 +242,7 @@ if _console {
 		_input += "_"
 	}
 	
-	var _x = string_width(_input) * 0.5
+	var _x = string_width(_input) >> 1
 	
 	_x = _x > 480 ? 480 - _x : 0
 	draw_text_transformed(_x, _console_bottom, _input, 0.5, 0.5, 0)

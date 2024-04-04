@@ -1,3 +1,15 @@
+enum NetDataTypes {
+	UNDEFINED,
+	REAL,
+	NAN,
+	INFINITY,
+	STRING,
+	ARRAY,
+	BOOL,
+	INT32,
+	STRUCT,
+}
+
 function net_typeof(_value) {
 	switch typeof(_value) {
 		default:

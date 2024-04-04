@@ -1,7 +1,7 @@
 /// @description Create
 event_inherited()
 
-f_sync = false
+//f_sync = false
 
 if not is_struct(special) {
 	print("! Ambience.create: Special properties invalid or not found")

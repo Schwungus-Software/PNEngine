@@ -395,12 +395,7 @@
 					"DMG_MISSED", DamageResults.MISSED,
 					"DMG_BLOCKED", DamageResults.BLOCKED,
 					"DMG_DAMAGED", DamageResults.DAMAGED,
-					"DMG_FATAL", DamageResults.FATAL,
-					
-					"NVAR_DEFAULT", NetVarFlags.DEFAULT,
-					"NVAR_CREATE", NetVarFlags.CREATE,
-					"NVAR_TICK", NetVarFlags.TICK,
-					"NVAR_GENERIC", NetVarFlags.GENERIC
+					"DMG_FATAL", DamageResults.FATAL
 				)
 				
 				addFunction("thing_exists", instance_exists)
@@ -584,12 +579,6 @@
 					},
 					
 					"game_master", function () {
-						var _netgame = global.netgame
-						
-						if _netgame != undefined {
-							return _netgame.master
-						}
-						
 						return true
 					},
 					
@@ -619,17 +608,12 @@
 // CREATE
 global.ui_font = scribble_fallback_font
 ui_font_name = ""
-chat_font = scribble_fallback_font
-chat_font_name = ""
-chat_sound = undefined
 global.switch_sound = undefined
 global.select_sound = undefined
 global.fail_sound = undefined
 global.back_sound = undefined
 
 var _custom_ui_font = undefined
-var _custom_chat_font = undefined
-var _custom_chat_sound = undefined
 var _custom_switch_sound = undefined
 var _custom_select_sound = undefined
 var _custom_fail_sound = undefined
@@ -731,18 +715,6 @@ var _custom_back_sound = undefined
 				_custom_ui_font = _ui_font
 			}
 			
-			var _chat_font = _info[$ "chat_font"]
-			
-			if is_string(_chat_font) {
-				_custom_chat_font = _chat_font
-			}
-			
-			var _chat_sound = _info[$ "chat_sound"]
-			
-			if is_string(_chat_sound) {
-				_custom_chat_sound = _chat_sound
-			}
-			
 			var _switch_sound = _info[$ "switch_sound"]
 			
 			if is_string(_switch_sound) {
@@ -790,19 +762,6 @@ if is_string(_custom_ui_font) {
 	global.ui_font = _font.font
 	ui_font_name = _font.name
 	_font.transient = true
-}
-
-if is_string(_custom_chat_font) {
-	var _font = _fonts.fetch(_custom_chat_font)
-	
-	chat_font = _font.font
-	chat_font_name = _font.name
-	_font.transient = true
-}
-
-if is_string(_custom_chat_sound) {
-	chat_sound = global.sounds.fetch(_custom_chat_sound)
-	chat_sound.transient = true
 }
 
 if is_string(_custom_switch_sound) {

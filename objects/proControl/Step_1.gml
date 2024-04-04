@@ -47,7 +47,7 @@ if load_state != LoadStates.NONE {
 			global.models.clear()
 			global.animations.clear()
 			//global.fonts.clear()
-			//global.sounds.clear()
+			global.sounds.clear()
 			global.music.clear()
 			global.scripts.flush()
 			//global.scripts.clear()
@@ -558,50 +558,6 @@ if load_state != LoadStates.NONE {
 			}
 #endregion
 		break
-		
-		case LoadStates.NETGAME_START: break
-		
-		case LoadStates.NETGAME_FINISH:
-			load_state = LoadStates.NONE
-		break
-		
-		case LoadStates.NETGAME_LEVEL:
-#region Wait For Players
-			// During this state, the host will wait until every player has
-			// received a level change packet then change the level.
-			var _netgame = global.netgame
-			
-			if _netgame == undefined {
-				load_state = LoadStates.START
-				
-				break
-			}
-			
-			var _ready = true
-			
-			with _netgame {
-				var i = 0
-				
-				repeat ds_list_size(players) {
-					var _player = players[| i++]
-					
-					if _player == undefined {
-						continue
-					}
-					
-					if not _player.ready {
-						_ready = false
-						
-						break
-					}
-				}
-			}
-			
-			if _ready {
-				load_state = LoadStates.START
-			}
-#endregion
-		break
 	}
 	
 	// Don't tick while loading
@@ -649,14 +605,9 @@ _tick += _tick_inc
 
 // Cache a lot of things into local variables
 var _console = global.console
-var _chat_typing = global.chat_typing
 var _interps = global.interps
 var _players = global.players
 var _config = global.config
-var _netgame = global.netgame
-var _netgame_active = _netgame != undefined and _netgame.active
-var _netgame_master = _netgame_active and _netgame.master
-var _syncables = global.level.syncables
 
 if _tick >= 1 {
 	__input_system_tick()
@@ -704,59 +655,6 @@ if _tick >= 1 {
 		show_debug_overlay(global.debug_overlay)
 	}
 	
-	if _chat_typing {
-		// Boring list of inputs we have to block while typing...
-		input_verb_consume("up")
-		input_verb_consume("left")
-		input_verb_consume("down")
-		input_verb_consume("right")
-		input_verb_consume("jump")
-		input_verb_consume("interact")
-		input_verb_consume("attack")
-		input_verb_consume("inventory_up")
-		input_verb_consume("inventory_left")
-		input_verb_consume("inventory_down")
-		input_verb_consume("inventory_right")
-		input_verb_consume("aim")
-		input_verb_consume("aim_up")
-		input_verb_consume("aim_left")
-		input_verb_consume("aim_down")
-		input_verb_consume("aim_right")
-		input_verb_consume("leave")
-		input_verb_consume("chat")
-		input_verb_consume("voice")
-		input_verb_consume("debug_console")
-		_mouse_dx = 0
-		_mouse_dy = 0
-		
-		if input_check_pressed("chat_previous") {
-			keyboard_string = global.chat_input_previous
-		}
-		
-		if input_check_pressed("chat_submit") {
-			global.chat_typing = false
-			
-			var _input = string_trim(keyboard_string)
-			
-			if _input != "" {
-				cmd_say(_input)
-				global.chat_input_previous = _input
-			}
-			
-			keyboard_string = ""
-		}
-		
-		if input_check_pressed("pause") {
-			input_verb_consume("pause")
-			global.chat_typing = false
-		}
-	} else {
-		if input_check_pressed("chat") and _netgame != undefined and _netgame.active and global.config.chat {
-			global.chat_typing = true
-			keyboard_string = ""
-		}
-	}
-	
 	if _console {
 		input_verb_consume("leave")
 		
@@ -799,42 +697,13 @@ if _tick >= 1 {
 		}
 		
 		if input_check_pressed("pause") {
-			if _netgame == undefined {
-				input_source_mode_set(INPUT_SOURCE_MODE.JOIN)
-			}
-			
+			input_source_mode_set(INPUT_SOURCE_MODE.JOIN)
 			input_verb_consume("pause")
 			global.console = false
 			global.console_input = keyboard_string
 		}
 		
-		if _netgame_active {
-			// Gross hack, will clean up later
-			input_verb_consume("up")
-			input_verb_consume("left")
-			input_verb_consume("down")
-			input_verb_consume("right")
-			input_verb_consume("jump")
-			input_verb_consume("interact")
-			input_verb_consume("attack")
-			input_verb_consume("inventory_up")
-			input_verb_consume("inventory_left")
-			input_verb_consume("inventory_down")
-			input_verb_consume("inventory_right")
-			input_verb_consume("aim")
-			input_verb_consume("aim_up")
-			input_verb_consume("aim_left")
-			input_verb_consume("aim_down")
-			input_verb_consume("aim_right")
-			input_verb_consume("leave")
-			input_verb_consume("chat")
-			input_verb_consume("chat_submit")
-			input_verb_consume("voice")
-			_mouse_dx = 0
-			_mouse_dy = 0
-		} else {
-			_tick = 0
-		}
+		_tick = 0
 	} else {
 		if input_check_pressed("debug_console") {
 			input_source_mode_set(INPUT_SOURCE_MODE.FIXED)
@@ -947,31 +816,7 @@ if _tick >= 1 {
 			
 			with _tick_target {
 				if exists and f_blocking {
-					if _netgame_active {
-						// Gross hack, will clean up later
-						input_verb_consume("up")
-						input_verb_consume("left")
-						input_verb_consume("down")
-						input_verb_consume("right")
-						input_verb_consume("jump")
-						input_verb_consume("interact")
-						input_verb_consume("attack")
-						input_verb_consume("inventory_up")
-						input_verb_consume("inventory_left")
-						input_verb_consume("inventory_down")
-						input_verb_consume("inventory_right")
-						input_verb_consume("aim")
-						input_verb_consume("aim_up")
-						input_verb_consume("aim_left")
-						input_verb_consume("aim_down")
-						input_verb_consume("aim_right")
-						//input_verb_consume("leave")
-						input_verb_consume("chat")
-						input_verb_consume("chat_submit")
-						input_verb_consume("voice")
-					} else {
-						_skip_tick = true
-					}
+					_skip_tick = true
 				}
 			}
 		} else {
@@ -980,25 +825,23 @@ if _tick >= 1 {
 			if input_check_pressed("pause") {
 				_paused = true
 				
-				if not _netgame_active {
-					var i = INPUT_MAX_PLAYERS
-					
-					repeat i {
-						with _players[--i] {
-							if status != PlayerStatus.ACTIVE or get_state("hp") <= 0 {
-								break
-							}
-							
-							if not instance_exists(thing) or get_state("frozen") {
-								_paused = false
-								
-								break
-							}
-						}
-						
-						if not _paused {
+				var i = INPUT_MAX_PLAYERS
+				
+				repeat i {
+					with _players[--i] {
+						if status != PlayerStatus.ACTIVE or get_state("hp") <= 0 {
 							break
 						}
+						
+						if not instance_exists(thing) or get_state("frozen") {
+							_paused = false
+							
+							break
+						}
+					}
+					
+					if not _paused {
+						break
 					}
 				}
 			}
@@ -1034,16 +877,8 @@ if _tick >= 1 {
 				var _index = i
 				var _mouse = false
 				
-				if _netgame_active {
-					if _netgame.local_slot == i {
-						_get_input = true
-						_index = 0
-						_mouse = _mouse_focused
-					}
-				} else {
-					_get_input = true
-					_mouse = _index == 0 and _mouse_focused
-				}
+				_get_input = true
+				_mouse = _index == 0 and _mouse_focused
 				
 				if _get_input {
 					// Main
@@ -1117,42 +952,6 @@ if _tick >= 1 {
 					}
 					
 					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
-					
-					if _netgame_active and not array_equals(input, input_previous) {
-						// Send input data to the server
-						var b = net_buffer_create(false, NetHeaders.INPUT)
-						
-						buffer_write(b, buffer_s8, _input_up_down)
-						buffer_write(b, buffer_s8, _input_left_right)
-						buffer_write(b, buffer_bool, _input_jump)
-						buffer_write(b, buffer_bool, _input_interact)
-						buffer_write(b, buffer_bool, _input_attack)
-						buffer_write(b, buffer_bool, _input_inventory_up)
-						buffer_write(b, buffer_bool, _input_inventory_left)
-						buffer_write(b, buffer_bool, _input_inventory_down)
-						buffer_write(b, buffer_bool, _input_inventory_right)
-						buffer_write(b, buffer_bool, _input_aim)
-						buffer_write(b, buffer_s16, _input_aim_up_down)
-						buffer_write(b, buffer_s16, _input_aim_left_right)
-						_netgame.send(SEND_OTHERS, b)
-					}
-				} else {
-					if _netgame_active {
-						while ds_queue_size(input_queue) {
-							input[PlayerInputs.UP_DOWN] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.LEFT_RIGHT] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.JUMP] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.INTERACT] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.ATTACK] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.INVENTORY_UP] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.INVENTORY_LEFT] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.INVENTORY_DOWN] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.INVENTORY_RIGHT] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.AIM] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.AIM_UP_DOWN] = ds_queue_dequeue(input_queue)
-							input[PlayerInputs.AIM_LEFT_RIGHT] = ds_queue_dequeue(input_queue)
-						}
-					}
 				}
 #endregion
 				
@@ -1263,63 +1062,8 @@ if _tick >= 1 {
 									
 									if f_cull_destroy {
 										destroy(false)
-										
-										break
 									}
 								}
-#region Thing Syncing
-								if not _netgame_master or not instance_exists(id) or not f_sync or f_culled {
-									break
-								}
-								
-								if ++_syncables[# sync_id, 1] >= SYNC_INTERVAL {
-									var b = net_buffer_create(false, NetHeaders.HOST_THING)
-									
-									buffer_write(b, buffer_u16, sync_id)
-									buffer_write(b, buffer_u32, area.slot)
-									buffer_write(b, buffer_string, thing_script != undefined ? thing_script.name : object_get_name(object_index))
-									
-									var _n_pos = buffer_tell(b)
-									
-									buffer_write(b, buffer_u8, 0)
-									
-									var n = ds_list_size(net_variables)
-									
-									if n {
-										var k = 0
-										var l = 0
-										
-										repeat n {
-											var _netvar = net_variables[| k]
-											
-											with _netvar {
-												if not (flags & NetVarFlags.TICK) {
-													break
-												}
-												
-												var _value
-												
-												if write != undefined {
-													_value = write(scope)
-												} else {
-													_value = struct_get_from_hash(scope, hash)
-												}
-												
-												value = _value
-												buffer_write(b, buffer_u8, k)
-												buffer_write_dynamic(b, _value);
-												++l
-											}
-											
-											++k
-										}
-										
-										buffer_poke(b, _n_pos, buffer_u8, l)
-									}
-									
-									_netgame.send(SEND_OTHERS, b)
-								}
-#endregion
 							}
 						}
 					}

@@ -23,9 +23,6 @@
 #region Variables
 	thing_script = undefined
 	
-	sync_id = noone
-	net_variables = ds_list_create()
-	
 	create = undefined
 	on_destroy = undefined
 	clean_up = undefined
@@ -114,9 +111,9 @@
 	f_persistent = false
 	f_disposable = false
 	f_unique = false
-	f_sync = true
-	f_sync_pos = true
-	f_sync_vel = true
+	//f_sync = true
+	//f_sync_pos = true
+	//f_sync_vel = true
 	f_visible = true
 	f_lookable = false
 	f_targetable = false
@@ -160,56 +157,9 @@
 	}
 	
 	destroy = function (_natural = true) {
-		if f_sync {
-			var _netgame = global.netgame
-			
-			if _netgame != undefined {
-				with _netgame {
-					if not active or not master {
-						return false
-					}
-					
-					var b = net_buffer_create(true, NetHeaders.HOST_DESTROY_THING)
-					
-					buffer_write(b, buffer_u16, other.sync_id)
-					buffer_write(b, buffer_bool, _natural)
-					send(SEND_OTHERS, b)
-				}
-			}
-		}
-		
 		instance_destroy(id, _natural)
 		
 		return true
-	}
-	
-	add_net_variable = function (_name, _flags = NetVarFlags.DEFAULT, _read = undefined, _write = undefined) {
-		if net_variables == undefined or not f_sync or not (global.game_status & GameStatus.NETGAME) {
-			return undefined
-		}
-		
-		var i = ds_list_size(net_variables)
-		
-		if i >= 256 {
-			show_error($"!!! Thing.add_net_variable: '{thing_script == undefined ? object_get_name(object_index) : thing_script.name}' exceeds limit of 256 NetVariables", true)
-			
-			return undefined
-		}
-		
-		var _net_variable = new NetVariable(_name, _flags, _read, _write)
-		
-		with _net_variable {
-			slot = i
-			scope = other.id
-			
-			if _write != undefined {
-				value = _write(scope)
-			}
-		}
-		
-		ds_list_add(net_variables, _net_variable)
-		
-		return _net_variable
 	}
 	
 	play_sound = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
@@ -537,45 +487,6 @@
 	receive_damage = function (_amount, _type = "Normal", _from = noone, _source = _from) {
 		var _to = id
 		
-		if f_sync {
-			var _netgame = global.netgame
-			
-			if _netgame != undefined {
-				with _netgame {
-					if not active or not master {
-						return DamageResults.NONE
-					}
-					
-					var b = net_buffer_create(true, NetHeaders.HOST_DAMAGE_THING)
-					
-					buffer_write(b, buffer_u16, _to.sync_id) // Victim
-					
-					var _from_exists = instance_exists(_from)
-					var _source_exists = instance_exists(_source)
-					
-					buffer_write(b, buffer_u16, _from_exists ? -~_from.sync_id : 0) // Attacker
-					buffer_write(b, buffer_u16, _source_exists ? -~_source.sync_id : 0) // Source
-					buffer_write(b, buffer_f32, _amount)
-					buffer_write(b, buffer_string, _type)
-					
-					var _result = _to.damage_received(_to, _from, _source, _amount, _type)
-					
-					if _from_exists {
-						_from.damage_dealt(_from, _to, _source, _amount, _type, _result)
-					}
-					
-					if _source_exists {
-						_source.damage_dealt(_from, _to, _source, _amount, _type, _result)
-					}
-					
-					buffer_write(b, buffer_u8, _result)
-					send(SEND_OTHERS, b)
-					
-					return _result
-				}
-			}
-		}
-		
 		var _result = damage_received(_to, _from, _source, _amount, _type)
 		
 		if instance_exists(_from) {
@@ -674,41 +585,18 @@
 		return results
 	}
 	
-	do_hold = function (_thing, _forced = false, _sync = true) {
+	do_hold = function (_thing, _forced = false) {
 		if not instance_exists(_thing) {
 			return false
 		}
 		
-		if _sync and f_sync {
-			var _netgame = global.netgame
-			
-			if _netgame != undefined {
-				with _netgame {
-					if not _thing.f_sync {
-						break
-					}
-					
-					if not active or not master {
-						return false
-					}
-					
-					var b = net_buffer_create(true, NetHeaders.HOST_HOLD_THING)
-					
-					buffer_write(b, buffer_u16, other.sync_id) // Holder
-					buffer_write(b, buffer_u16, _thing.sync_id) // Holding
-					buffer_write(b, buffer_bool, _forced)
-					send(SEND_OTHERS, b)
-				}
-			}
-		}
-		
-		if not do_unhold(false, _forced, false) and not _forced {
+		if not do_unhold(false, _forced) and not _forced {
 			return false
 		}
 		
 		var _holder = _thing.holder
 		
-		if instance_exists(_holder) and (not _holder.do_unhold(false, _forced, false) and not _forced) {
+		if instance_exists(_holder) and (not _holder.do_unhold(false, _forced) and not _forced) {
 			return false
 		}
 		
@@ -726,35 +614,9 @@
 		return true
 	}
 	
-	do_unhold = function (_tossed = false, _forced = false, _sync = true) {
+	do_unhold = function (_tossed = false, _forced = false) {
 		if not instance_exists(holding) {
 			return true
-		}
-		
-		if _sync and f_sync {
-			var _netgame = global.netgame
-			
-			if _netgame != undefined {
-				var _holding = holding
-				
-				with _netgame {
-					if not _holding.f_sync {
-						break
-					}
-					
-					if not active or not master {
-						return false
-					}
-					
-					var b = net_buffer_create(true, NetHeaders.HOST_UNHOLD_THING)
-					
-					buffer_write(b, buffer_u16, other.sync_id) // Holder
-					buffer_write(b, buffer_u16, _holding.sync_id) // Holding
-					buffer_write(b, buffer_bool, _tossed)
-					buffer_write(b, buffer_bool, _forced)
-					send(SEND_OTHERS, b)
-				}
-			}
 		}
 		
 		if (not holding.holdable_unheld(holding, id, _tossed, _forced) or not holder_unheld(id, holding, _tossed, _forced)) and not _forced {
@@ -771,33 +633,9 @@
 		return true
 	}
 	
-	do_interact = function (_thing, _sync = true) {
+	do_interact = function (_thing) {
 		if not instance_exists(_thing) {
 			return false
-		}
-		
-		if _sync and f_sync {
-			var _netgame = global.netgame
-			
-			if _netgame != undefined {
-				var _holding = holding
-				
-				with _netgame {
-					if not _thing.f_sync {
-						break
-					}
-					
-					if not active or not master {
-						return false
-					}
-					
-					var b = net_buffer_create(true, NetHeaders.HOST_INTERACT_THING)
-					
-					buffer_write(b, buffer_u16, other.sync_id) // Interactor
-					buffer_write(b, buffer_u16, _thing.sync_id) // Interactive
-					send(SEND_OTHERS, b)
-				}
-			}
 		}
 		
 		return _thing.interactive_triggered(_thing, id) and interactor_triggered(id, _thing)

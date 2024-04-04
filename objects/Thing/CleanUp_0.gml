@@ -1,9 +1,9 @@
 if instance_exists(holding) {
-	do_unhold(false, true, false)
+	do_unhold(false, true)
 }
 
 if instance_exists(holder) {
-	holder.do_unhold(false, true, false)
+	holder.do_unhold(false, true)
 }
 
 if clean_up != undefined {
@@ -33,27 +33,6 @@ if area != undefined {
 		
 		ds_list_delete(_collidables, ds_list_find_index(_collidables, id))
 	}
-}
-
-if level != undefined and sync_id != noone {
-	var _syncables = level.syncables
-	
-	_syncables[# sync_id, 0] = noone
-	_syncables[# sync_id, 1] = 0
-	
-	var i = ds_grid_width(_syncables)
-	
-	repeat i {
-		if _syncables[# --i, 0] != noone {
-			break
-		}
-		
-		ds_grid_resize(_syncables, -~i, 2)
-	}
-}
-
-if net_variables != undefined {
-	ds_list_destroy(net_variables)
 }
 
 if model != undefined {

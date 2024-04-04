@@ -53,12 +53,6 @@ if menu != undefined and not locked {
 						break
 					}
 					
-					var _netgame = global.netgame
-					
-					if _netgame != undefined and not _netgame.master {
-						break
-					}
-					
 					var i = 1
 					
 					while file_exists(SAVES_PATH + $"File {i}.sav") {
@@ -106,12 +100,6 @@ if menu != undefined and not locked {
 						change_delete_state(id, _title_delete_state)
 						global.title_delete_state = _title_delete_state
 						
-						break
-					}
-					
-					var _netgame = global.netgame
-					
-					if _netgame != undefined and not _netgame.master {
 						break
 					}
 					

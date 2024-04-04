@@ -4,5 +4,5 @@ event_inherited()
 	global.last_player = noone
 	
 	f_visible = false
-	f_sync = false
+	//f_sync = false
 #endregion

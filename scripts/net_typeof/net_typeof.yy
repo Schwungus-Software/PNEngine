@@ -6,7 +6,7 @@
   "name":"net_typeof",
   "parent":{
     "name":"Buffers",
-    "path":"folders/Scripts/PNEngine/Netgame/Buffers.yy",
+    "path":"folders/Scripts/PNEngine/Debug/Buffers.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

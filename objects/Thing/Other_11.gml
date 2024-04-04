@@ -5,27 +5,6 @@ if create != undefined {
 	create(id)
 }
 
-if f_sync and (global.game_status & GameStatus.NETGAME) {
-	if f_sync_pos {
-		add_net_variable("x", NetVarFlags.GENERIC)
-		add_net_variable("y", NetVarFlags.GENERIC)
-		add_net_variable("z", NetVarFlags.GENERIC)
-	}
-	
-	if f_sync_vel {
-		add_net_variable("x_speed", NetVarFlags.GENERIC)
-		add_net_variable("y_speed", NetVarFlags.GENERIC)
-		add_net_variable("z_speed", NetVarFlags.GENERIC)
-		add_net_variable("angle", NetVarFlags.GENERIC)
-		add_net_variable("pitch", NetVarFlags.GENERIC)
-	}
-	
-	add_net_variable("tag", NetVarFlags.CREATE)
-} else {
-	ds_list_destroy(net_variables)
-	net_variables = undefined
-}
-
 if f_unique {
 	var _type = object_index
 	

@@ -8,14 +8,6 @@ function cmd_level(_args) {
 		exit
 	}
 	
-	var _netgame = global.netgame
-	
-	if _netgame != undefined and not _netgame.master {
-		print("! cmd_level: Can't change levels as client!")
-		
-		exit
-	}
-	
 	var _level = _parse_args[0]
 	
 	if mod_find_file("levels/" + _level + ".*") == "" {

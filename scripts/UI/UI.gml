@@ -93,13 +93,6 @@ function UI(_ui_script) constructor {
 	}
 	
 	static exit_game = function (_level, _transition = noone) {
-		if global.game_status == GameStatus.NETGAME {
-			cmd_disconnect("")
-			destroy()
-			
-			exit
-		}
-		
 		global.level.goto(_level, 0, ThingTags.NONE, _transition)
 	}
 }

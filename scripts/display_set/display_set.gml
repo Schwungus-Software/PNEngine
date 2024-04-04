@@ -21,7 +21,7 @@ function display_set(fullscreen, width, height) {
 		width = min(width, dw)
 		height = min(height, dh)
 		
-		window_set_rectangle((dw * 0.5) - (width * 0.5), (dh * 0.5) - (height * 0.5), width, height)
+		window_set_rectangle((dw >> 1) - (width >> 1), (dh >> 1) - (height >> 1), width, height)
 	}
 	
 	global.freeze_step = true

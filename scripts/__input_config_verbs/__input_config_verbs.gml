@@ -45,11 +45,6 @@ function __input_config_verbs()
 	        pause: input_binding_key(vk_escape),
 			leave: input_binding_key(vk_backspace),
 		
-			chat: input_binding_key("T"),
-			chat_submit: input_binding_key(vk_enter),
-			chat_previous: input_binding_key(vk_up),
-			voice: input_binding_key("V"),
-		
 			debug_overlay: input_binding_key(vk_f1),
 			debug_console: input_binding_key(192),
 			debug_console_submit: input_binding_key(vk_enter),

@@ -8,7 +8,7 @@ enum TitleOptions {
 event_inherited()
 
 f_unique = true
-f_sync = false
+//f_sync = false
 
 title_start = global.title_start
 menu = undefined

@@ -44,8 +44,6 @@ function proOptionsUI() : UI(undefined) constructor {
 			new OUIBinding("options.controls.inventory_left", "inventory_left"),
 			new OUIBinding("options.controls.inventory_down", "inventory_down"),
 			new OUIBinding("options.controls.inventory_right", "inventory_right"),
-			undefined,
-			new OUIBinding("options.controls.chat", "chat"),
 		]),
 		
 		new OUIMenu("options.video.title", [
@@ -346,18 +344,6 @@ function proOptionsUI() : UI(undefined) constructor {
 			
 			new OUIOption("options.audio.snd_background", OUIValues.NO_YES, 0, global.config.snd_background, function (_value) {
 				global.config.snd_background = _value
-			}),
-		]),
-		
-		new OUIMenu("options.multiplayer.title", [
-			new OUIInput("options.multiplayer.name", "Player", global.config.name, function (_value) {
-				global.config.name = _value
-				
-				return _value
-			}),
-			
-			new OUIOption("options.multiplayer.chat", OUIValues.OFF_ON, 0, global.config.chat, function (_value) {
-				global.config.chat = _value
 			}),
 		]),
 		

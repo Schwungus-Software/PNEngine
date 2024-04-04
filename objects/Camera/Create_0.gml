@@ -29,7 +29,7 @@ enum CameraPathData {
 event_inherited()
 
 #region Variables
-	f_sync_vel = false
+	//f_sync_vel = false
 	
 	yaw = 0
 	roll = 0

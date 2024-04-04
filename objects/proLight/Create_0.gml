@@ -1,6 +1,6 @@
 event_inherited()
 
-f_sync = false
+//f_sync = false
 
 light_data = undefined
 

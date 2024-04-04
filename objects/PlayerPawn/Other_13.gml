@@ -106,10 +106,7 @@ if jumped {
 	   and z_speed <= 0 and _can_move
 	   and input[PlayerInputs.JUMP] and not input_previous[PlayerInputs.JUMP]
 	   and try_jump(id) {
-		// Don't do user-defined jumping sequences if we are a client. Instead,
-		// client-side prediction is performed and the signal for actual jumps
-		// is sent by the host itself.
-		do_jump(sync_jump != undefined and not sync_jump.update())
+		do_jump()
 	}
 }
 
@@ -147,10 +144,8 @@ nearest_holdable = noone
 nearest_interactive = noone
 
 if _can_move {
-	if input[PlayerInputs.ATTACK] and not input_previous[PlayerInputs.ATTACK] {
-		if try_attack(id) and (sync_attack == undefined or sync_attack.update()) {
-			do_attack()
-		}
+	if input[PlayerInputs.ATTACK] and not input_previous[PlayerInputs.ATTACK] and try_attack(id) {
+		do_attack()
 	}
 	
 	var _moving = input_length >= 0.1

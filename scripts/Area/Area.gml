@@ -139,12 +139,7 @@ function Area() constructor {
 		}
 		
 		
-		var _thing_amount, _syncables
-		
-		with level {
-			_thing_amount = ds_list_size(area_things)
-			_syncables = syncables
-		}
+		var _thing_amount = ds_list_size(level.area_things)
 		
 		var i = ds_list_size(active_things)
 		
@@ -153,21 +148,6 @@ function Area() constructor {
 				if f_new and not f_created {
 					event_user(ThingEvents.CREATE)
 					f_created = true
-					
-					if f_sync and area_thing != undefined {
-						sync_id = area_thing.slot
-						
-						while ds_grid_width(_syncables) <= sync_id {
-							var n = ds_grid_width(_syncables)
-							
-							ds_grid_resize(_syncables, -~n, 2)
-							_syncables[# n, 0] = noone
-							_syncables[# n, 1] = 0
-						}
-						
-						_syncables[# sync_id, 0] = id
-						_syncables[# sync_id, 1] = irandom(SYNC_INTERVAL)
-					}
 				}
 			}
 		}
@@ -252,80 +232,6 @@ function Area() constructor {
 			f_new = true
 			event_user(ThingEvents.CREATE)
 			f_created = true
-			
-			if f_sync {
-				var _netgame = global.netgame
-				
-				if _netgame != undefined {
-					with _netgame {
-						if not active or not master {
-							instance_destroy(other.id, false)
-							
-							return noone
-						}
-					}
-					
-					var _syncables = level.syncables
-					
-					sync_id = max(ds_list_size(level.area_things), ds_grid_width(_syncables))
-					
-					while ds_grid_width(_syncables) <= sync_id {
-						var n = ds_grid_width(_syncables)
-						
-						ds_grid_resize(_syncables, -~n, 2)
-						_syncables[# n, 0] = noone
-						_syncables[# n, 1] = 0
-					}
-					
-					_syncables[# sync_id, 0] = id
-					_syncables[# sync_id, 1] = irandom(SYNC_INTERVAL)
-					
-					var b = net_buffer_create(true, NetHeaders.HOST_THING)
-					
-					buffer_write(b, buffer_u16, sync_id)
-					buffer_write(b, buffer_u32, other.slot)
-					buffer_write(b, buffer_string, _thing_script != undefined ? _thing_script.name : object_get_name(object_index))
-					
-					var _n_pos = buffer_tell(b)
-					var n = ds_list_size(net_variables)
-					var j = 0
-					
-					buffer_write(b, buffer_u8, 0)
-					
-					if n {
-						var i = 0
-						
-						repeat n {
-							var _netvar = net_variables[| i]
-							
-							with _netvar {
-								if not (flags & NetVarFlags.CREATE) {
-									break
-								}
-								
-								var _value
-								
-								if write != undefined {
-									_value = write(scope)
-								} else {
-									_value = struct_get_from_hash(scope, hash)
-								}
-								
-								value = _value
-								buffer_write(b, buffer_u8, i)
-								buffer_write_dynamic(b, _value);
-								++j
-							}
-							
-							++i
-						}
-					}
-					
-					buffer_poke(b, _n_pos, buffer_u8, j)
-					print($"Area.add: Sent new syncable {sync_id} for processing ({n} variables)")
-					_netgame.send(SEND_OTHERS, b)
-				}
-			}
 		}
 		
 		// Failsafe, Things can get destroyed while being created

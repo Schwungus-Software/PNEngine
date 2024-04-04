@@ -2,9 +2,6 @@ function Player() constructor {
 	slot = noone
 	status = PlayerStatus.INACTIVE
 	
-	// Netgame
-	net = undefined
-	
 	// Area
 	level = undefined
 	area = undefined
@@ -82,12 +79,6 @@ function Player() constructor {
 	
 	static respawn = function () {
 		if status != PlayerStatus.ACTIVE or area == undefined {
-			return noone
-		}
-		
-		var _netgame = global.netgame
-		
-		if _netgame != undefined and not _netgame.master {
 			return noone
 		}
 		
@@ -199,23 +190,6 @@ function Player() constructor {
 	}
 	
 	static set_area = function (_id, _tag = ThingTags.NONE) {
-		var _netgame = global.netgame
-		
-		if _netgame != undefined {
-			with _netgame {
-				if not (active and master) {
-					return false
-				}
-				
-				var b = net_buffer_create(true, NetHeaders.HOST_AREA)
-				
-				buffer_write(b, buffer_u8, other.slot)
-				buffer_write(b, buffer_u32, _id)
-				buffer_write(b, buffer_s32, _tag)
-				_netgame.send(SEND_OTHERS, b)
-			}
-		}
-		
 		player_force_area(self, _id, _tag)
 		
 		return true
@@ -225,47 +199,13 @@ function Player() constructor {
 		return states[? _key]
 	}
 	
-	static set_state = function (_key, _value, _sync = true) {
-		if _sync {
-			var _netgame = global.netgame
-		
-			if _netgame != undefined {
-				with _netgame {
-					if active and master {
-						var b = net_buffer_create(true, NetHeaders.HOST_PLAYER_STATE)
-					
-						buffer_write(b, buffer_u8, other.slot)
-						buffer_write(b, buffer_string, _key)
-						buffer_write_dynamic(b, _value)
-						send(SEND_OTHERS, b)
-					} else {
-						return false
-					}
-				}
-			}
-		}
-		
+	static set_state = function (_key, _value) {
 		states[? _key] = _value
 		
 		return true
 	}
 	
 	static clear_states = function () {
-		var _netgame = global.netgame
-		
-		if _netgame != undefined {
-			with _netgame {
-				if active and master {
-					var b = net_buffer_create(true, NetHeaders.HOST_RESET_PLAYER_STATES)
-					
-					buffer_write(b, buffer_u8, other.slot)
-					send(SEND_OTHERS, b)
-				} else {
-					return false
-				}
-			}
-		}
-		
 		player_force_clear_states(self)
 		
 		return true
@@ -274,7 +214,7 @@ function Player() constructor {
 	static is_local = function () {
 		gml_pragma("forceinline")
 		
-		return net == undefined or net.local
+		return true
 	}
 	
 	player_force_clear_states(self)
