@@ -151,7 +151,6 @@
     {"$GMIncludedFile":"","%Name":"disabled.json","CopyToMask":-1,"filePath":"datafiles/data","name":"disabled.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"english.json","CopyToMask":-1,"filePath":"datafiles/data/main/languages","name":"english.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"languages.json","CopyToMask":-1,"filePath":"datafiles/data/main/languages","name":"languages.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"mod.json","CopyToMask":-1,"filePath":"datafiles/data/main","name":"mod.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Pause.meow","CopyToMask":-1,"filePath":"datafiles/data/main/scripts","name":"Pause.meow","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sndChat.wav","CopyToMask":-1,"filePath":"datafiles/data/main/sounds","name":"sndChat.wav","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"PNEngine v0.0.3 Changelog.txt","CopyToMask":-1,"filePath":"datafiles/data","name":"PNEngine v0.0.3 Changelog.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

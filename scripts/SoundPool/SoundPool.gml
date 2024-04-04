@@ -73,7 +73,6 @@ function SoundPool() constructor {
 		fmod_channel_control_set_3d_attributes(_instance, _pos, _dummy_vel)
 		fmod_channel_control_set_3d_min_max_distance(_instance, _falloff_ref_dist, _falloff_max_dist)
 		fmod_channel_control_set_paused(_instance, false)
-		print(_pos)
 		
 		return _instance
 	}
