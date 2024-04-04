@@ -14,29 +14,6 @@
 			},
 		},
 		
-		"netgame": {
-			"no_connection": "Network connection not found",
-			"hosting": "Hosting on port {0}",
-			"connecting": "Connecting to {0}...",
-			"lost_connection": "Connection lost",
-			"connected": "Connected",
-			"disconnected": "Disconnected",
-			"player_joined": "{0} joined",
-			"player_left": "{0} left",
-			
-			"code": {
-				"NET_UNKNOWN": "Unknown error",
-				"NET_INVALID": "Invalid context",
-				"NET_TIMEOUT": "Timed out",
-				"NET_FULL": "Server is full",
-				"NET_VERSION": "Version mismatch",
-				"NET_MODS": "Mod mismatch",
-				"NET_KICK": "Kicked",
-				"NET_ACTIVE": "Game in progress",
-				"NET_CLOSE": "Server closed",
-			}
-		},
-		
 		"hud": {
 			"back": "Back",
 			"confirm": "Confirm",
@@ -72,7 +49,6 @@
 				"aim_left": "Look Left",
 				"aim_down": "Look Down",
 				"aim_right": "Look Right",
-				"chat": "Chat",
 			},
 			
 			"video": {
@@ -93,12 +69,6 @@
 				"snd_sound_volume": "Sound Volume",
 				"snd_music_volume": "Music Volume",
 				"snd_background": "Play in Background",
-			},
-			
-			"multiplayer": {
-				"title": "Multiplayer",
-				"name": "Name",
-				"chat": "Chat",
 			},
 			
 			"confirm": {
