@@ -32,8 +32,6 @@ function SoundPool() constructor {
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
 		
-		print($"SND Playing {_id} on {channel_group}")
-		
 		var _instance = fmod_system_play_sound(_id, true, channel_group)
 		
 		fmod_channel_control_set_mode(_instance, _loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF)
@@ -63,8 +61,6 @@ function SoundPool() constructor {
 			_id = asset
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
-		
-		print($"SND Playing {_id} on {channel_group} at")
 		
 		var _instance = fmod_system_play_sound(_id, true, channel_group)
 		
@@ -100,8 +96,6 @@ function SoundPool() constructor {
 			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
 		}
 		
-		print($"SND Playing {_id} on {channel_group} on {_emitter}")
-		
 		var _instance = fmod_system_play_sound(_id, true, _emitter)
 		
 		fmod_channel_control_set_mode(_instance, _loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF)
@@ -126,12 +120,10 @@ function SoundPool() constructor {
 	}
 	
 	static clear = function () {
-		print($"SND Clearing {channel_group}")
 		fmod_channel_control_stop(channel_group)
 	}
 	
 	static destroy = function () {
-		print($"SND Destroying {channel_group}")
 		clear()
 		fmod_channel_group_release(channel_group)
 		

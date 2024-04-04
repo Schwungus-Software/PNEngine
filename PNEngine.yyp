@@ -2455,6 +2455,7 @@
     {"$GMIncludedFile":"","%Name":"smThwomp.mdl","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/models/mdlThwomp","name":"smThwomp.mdl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"model.json","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/models/mdlZapper","name":"model.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"smZapper.mdl","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/models/mdlZapper","name":"smZapper.mdl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"musArenaDraw.mid","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music","name":"musArenaDraw.mid","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"musBackup.ogg","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music","name":"musBackup.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"musCredits.ogg","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music","name":"musCredits.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"musFile.json","CopyToMask":-1,"filePath":"datafiles/data/ProjectNightmare/music","name":"musFile.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

@@ -21,8 +21,6 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	fmod_channel_set_position(sound_instance, _offset, FMOD_TIMEUNIT.MS)
 	fmod_channel_control_set_paused(sound_instance, false)
 	
-	print($"MUS Playing {sound_instance}")
-	
 	static set_gain = function (_gain, _time = 0) {
 		gml_pragma("forceinline")
 		
@@ -120,8 +118,6 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	}
 	
 	static destroy = function () {
-		print($"MUS Destroying {sound_instance}")
-		
 		if fmod_channel_control_is_playing(sound_instance) {
 			fmod_channel_control_stop(sound_instance)
 		}
