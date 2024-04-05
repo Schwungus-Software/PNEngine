@@ -97,6 +97,7 @@
     {"name":"Configuration","order":2,"path":"folders/Scripts/PNEngine/Configuration.yy",},
     {"name":"User","order":2,"path":"folders/Scripts/PNEngine/Configuration/User.yy",},
     {"name":"Debug","order":1,"path":"folders/Scripts/PNEngine/Debug.yy",},
+    {"name":"Buffers","order":8,"path":"folders/Scripts/PNEngine/Debug/Buffers.yy",},
     {"name":"Commands","order":3,"path":"folders/Scripts/PNEngine/Debug/Commands.yy",},
     {"name":"Display","order":6,"path":"folders/Scripts/PNEngine/Display.yy",},
     {"name":"Batch","order":8,"path":"folders/Scripts/PNEngine/Display/Batch.yy",},
@@ -114,7 +115,6 @@
     {"name":"Dual Quaternions","order":5,"path":"folders/Scripts/PNEngine/Math/Dual Quaternions.yy",},
     {"name":"Matrices","order":6,"path":"folders/Scripts/PNEngine/Math/Matrices.yy",},
     {"name":"Quaternions","order":13,"path":"folders/Scripts/PNEngine/Math/Quaternions.yy",},
-    {"name":"Buffers","order":8,"path":"folders/Scripts/PNEngine/Debug/Buffers.yy",},
     {"name":"Shaders","order":1,"path":"folders/Shaders.yy",},
   ],
   "ResourceOrderSettings":[
