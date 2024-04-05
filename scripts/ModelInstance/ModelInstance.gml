@@ -243,6 +243,13 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			return bone_dq
 		}
 		
+		static get_bone_pos = function (_index, _visual = false) {
+			var _dq = get_bone_dq(_index, _visual)
+			var _pos = dq_get_translation(_dq)
+			
+			return matrix_transform_point(_visual ? draw_matrix : tick_matrix, _pos[0], _pos[1], _pos[2])
+		}
+		
 		static rotate_bone = function (_index, _x, _y, _z) {
 			/* This script lets you modify a sample.
 			   This is useful for head turning and procedural animations.

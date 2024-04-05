@@ -341,14 +341,11 @@ if _held {
 					break
 				}
 				
-				var _bone_pos = dq_get_translation(get_bone_dq(torso_bone))
-				var _bone_x = _bone_pos[0]
-				var _bone_y = _bone_pos[1]
-				var _yaw_y = yaw - 90
+				var _bone_pos = get_bone_pos(torso_bone)
 				
-				_x = x + lengthdir_x(_bone_x, yaw) + lengthdir_x(_bone_y, _yaw_y)
-				_y = y + lengthdir_y(_bone_x, yaw) + lengthdir_y(_bone_y, _yaw_y)
-				_z = z + _bone_pos[2]
+				_x = _bone_pos[0]
+				_y = _bone_pos[1]
+				_z = _bone_pos[2]
 			}
 		} else {
 			_x = x
