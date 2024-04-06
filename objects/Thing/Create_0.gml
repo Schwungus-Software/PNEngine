@@ -608,10 +608,13 @@
 			holder = other.id
 		}
 		
-		holding = _thing
-		holder_held(id, _thing)
+		if holder_held(id, _thing, _forced) {
+			holding = _thing
+			
+			return true
+		}
 		
-		return true
+		return false
 	}
 	
 	do_unhold = function (_tossed = false, _forced = false) {
@@ -666,18 +669,10 @@
 	}
 	
 	holder_attach_holdable = function (_self, _holding) {
-		var _x, _y, _z
-		
 		with _self {
-			_x = x
-			_y = y
-			_z = z + height
-		}
-		
-		with _holding {
-			x = _x
-			y = _y
-			z = _z
+			_holding.x = x
+			_holding.y = y
+			_holding.z = z + height
 		}
 	}
 	

@@ -250,9 +250,23 @@ if tick != undefined {
 	tick(id)
 }
 
+var _is_holding = instance_exists(holding) 
+
+if _is_holding {
+	holding.x = x
+	holding.y = y
+	holding.z = z + height
+	holding.angle = angle
+	
+	with holding {
+		set_speed(0)
+		z_speed = 0
+	}
+}
+
 var _model = model
 
-if _model != undefined and (not instance_exists(holder) or not f_holdable_in_hand) {
+if _model != undefined and not _held {
 	var _x = x
 	var _y = y
 	var _z = z
@@ -276,51 +290,61 @@ if _model != undefined and (not instance_exists(holder) or not f_holdable_in_han
 	}
 	
 	with _model {
-		tick()
 		x = _x
 		y = _y
 		z = _z
+		tick()
 	}
 	
 	if _update_collider {
 		collider.set_matrix(_model.tick_matrix)
 	}
 	
-	if instance_exists(holding) and holding.f_holdable_in_hand {
-		var _hold_bone = _model.hold_bone
+	if _is_holding {
+		if holding.f_holdable_in_hand {
+			var _hold_bone = _model.hold_bone
 		
-		if _hold_bone != -1 {
-			with holding {
-				if model == undefined {
-					break
+			if _hold_bone != -1 {
+				with holding {
+					if model != undefined {
+						with model {
+							x = _x
+							y = _y
+							z = _z
+							matrix_build_dq(_model.get_bone_dq(_hold_bone), tick_matrix)
+							tick_matrix = matrix_multiply(matrix_multiply(hold_offset_matrix, tick_matrix), _model.tick_matrix)
+							tick(false)
+						}
+					}
 				}
-				
-				with model {
-					matrix_build_dq(_model.get_bone_dq(_hold_bone), tick_matrix)
-					tick_matrix = matrix_multiply(matrix_multiply(hold_offset_matrix, tick_matrix), _model.tick_matrix)
-					tick(false)
-					x = _x
-					y = _y
-					z = _z
+			}
+		} else {
+			holder_attach_holdable(id, holding)
+			
+			with holding {
+				if model != undefined {
+					_x = x
+					_y = y
+					_z = z
+					
+					with model {
+						x = _x
+						y = _y
+						z = _z
+						yaw = _model.yaw
+						tick()
+					}
 				}
 			}
 		}
 	}
 }
 
-if instance_exists(holding) {
-	holder_attach_holdable(id, holding)
-	holding.angle = angle
-	
-	with holding {
-		set_speed(0)
-		z_speed = 0
-	}
-}
-
 if _held {
 	shadow_ray[RaycastData.HIT] = false
 } else {
+	
+	
 	switch m_shadow {
 	default:
 	case MShadow.NONE:
