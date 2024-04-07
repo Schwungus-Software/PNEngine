@@ -111,6 +111,7 @@
     {"name":"Players","order":3,"path":"folders/Scripts/PNEngine/Game/Players.yy",},
     {"name":"UI","order":9,"path":"folders/Scripts/PNEngine/Game/UI.yy",},
     {"name":"Options","order":5,"path":"folders/Scripts/PNEngine/Game/UI/Options.yy",},
+    {"name":"Input","order":7,"path":"folders/Scripts/PNEngine/Input.yy",},
     {"name":"Math","order":4,"path":"folders/Scripts/PNEngine/Math.yy",},
     {"name":"Dual Quaternions","order":5,"path":"folders/Scripts/PNEngine/Math/Dual Quaternions.yy",},
     {"name":"Matrices","order":6,"path":"folders/Scripts/PNEngine/Math/Matrices.yy",},
