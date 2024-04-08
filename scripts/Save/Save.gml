@@ -4,7 +4,7 @@ function Save(_filename) constructor {
 	code = ""
 	date = 0
 	
-	states = array_create_ext(MAX_PLAYERS, function (_index) {
+	states = array_create_ext(INPUT_MAX_PLAYERS, function (_index) {
 		return {}
 	})
 	
