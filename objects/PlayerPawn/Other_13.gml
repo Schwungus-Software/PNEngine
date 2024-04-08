@@ -107,6 +107,7 @@ if jumped {
 	   and input[PlayerInputs.JUMP] and not input_previous[PlayerInputs.JUMP]
 	   and try_jump(id) {
 		do_jump()
+		_on_ground = false
 	}
 }
 

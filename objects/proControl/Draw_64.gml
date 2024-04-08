@@ -336,7 +336,6 @@ repeat i {
 #endregion
 
 if load_state == LoadStates.NONE {
-	print("FMOD update")
 	fmod_system_update()
 }
 #endregion
