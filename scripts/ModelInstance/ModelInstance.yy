@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ModelInstance",
   "parent":{
-    "name":"Models",
-    "path":"folders/Scripts/PNEngine/Display/Models.yy",
+    "name":"Display",
+    "path":"folders/Scripts/PNEngine/Display.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

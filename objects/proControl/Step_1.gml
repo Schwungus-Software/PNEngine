@@ -65,7 +65,7 @@ if load_state != LoadStates.NONE {
 				exit
 			}
 			
-			flags_force_clear(global.flags[1])
+			global.flags[1].clear()
 			global.level = new Level()
 			gc_collect()
 			load_state = LoadStates.LOAD
@@ -453,13 +453,13 @@ if load_state != LoadStates.NONE {
 					var _copy_global = _copy_flags[$ "global"]
 					
 					if is_struct(_copy_global) {
-						flags_force_copy(_flags[0], _copy_global)
+						_flags[0].copy(_copy_global)
 					}
 					
 					var _copy_local = _copy_flags[$ "local"]
 					
 					if is_struct(_copy_local) {
-						flags_force_copy(_flags[1], _copy_local)
+						_flags[1].copy(_copy_local)
 					}
 				}
 				
@@ -539,7 +539,7 @@ if load_state != LoadStates.NONE {
 					}
 					
 					if status == PlayerStatus.ACTIVE {
-						player_force_area(_player, _load_area, _load_tag)
+						set_area(_load_area, _load_tag)
 					}
 				}
 			}

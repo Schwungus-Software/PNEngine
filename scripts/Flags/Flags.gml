@@ -24,7 +24,11 @@ function Flags(_id) constructor {
 	}
 	
 	static clear = function () {
-		flags_force_clear(self)
+		if slot == 0 {
+			ds_map_copy(flags, global.default_flags)
+		} else {
+			ds_map_clear(flags)
+		}
 		
 		return true
 	}

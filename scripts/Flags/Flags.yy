@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"Flags",
   "parent":{
-    "name":"Flags",
-    "path":"folders/Scripts/PNEngine/Game/Flags.yy",
+    "name":"Game",
+    "path":"folders/Scripts/PNEngine/Game.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"pne_lights",
   "parent":{
-    "name":"Lights",
-    "path":"folders/Scripts/PNEngine/Display/Lights.yy",
+    "name":"Display",
+    "path":"folders/Scripts/PNEngine/Display.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
