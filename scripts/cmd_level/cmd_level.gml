@@ -17,7 +17,7 @@ function cmd_level(_args) {
 	}
 	
 	var _area = n >= 2 ? real(_parse_args[1]) : 0
-	var _tag = n >= 3 ? real(_parse_args[2]) : noone
+	var _tag = n >= 3 ? real(_parse_args[2]) : ThingTags.NONE
 	
 	global.level.goto(_level, _area, _tag)
 }

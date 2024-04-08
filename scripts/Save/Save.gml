@@ -4,14 +4,14 @@ function Save(_filename) constructor {
 	code = ""
 	date = 0
 	
-	states = array_create_ext(INPUT_MAX_PLAYERS, function (_index) {
+	states = array_create_ext(MAX_PLAYERS, function (_index) {
 		return {}
 	})
 	
 	flags = {}
 	level = ""
 	area = 0
-	tag = noone
+	tag = ThingTags.NONE
 	
 #region Valid Check
 	var _buffer = buffer_load(SAVES_PATH + filename)

@@ -8,7 +8,7 @@ draw_gui = undefined
 state = 0
 to_level = undefined
 to_area = 0
-to_tag = noone
+to_tag = ThingTags.NONE
 
 #region Functions
 	is_ancestor = function (_type) {

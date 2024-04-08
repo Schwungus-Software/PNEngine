@@ -34,6 +34,7 @@
 	global.tick_scale = 1
 	global.delta = 1
 	global.mouse_focused = false
+	global.mouse_start = false
 	
 	global.interps = ds_list_create()
 	
@@ -44,7 +45,7 @@
 #endregion
 
 #region Levels
-	global.checkpoint = ["", 0, noone]
+	global.checkpoint = ["", 0, ThingTags.NONE]
 	global.level = new Level()
 	global.flags = [new Flags(0), new Flags(1)]
 	global.default_flags = ds_map_create()

@@ -795,7 +795,7 @@ caption_time = -1
 // LEVEL
 load_level = "lvlLogo"
 load_area = 0
-load_tag = noone
+load_tag = ThingTags.NONE
 load_state = LoadStates.START
 
 // DISCORD

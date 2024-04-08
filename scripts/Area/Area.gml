@@ -1,6 +1,6 @@
 function Area() constructor {
 	level = undefined
-	slot = noone
+	slot = -1
 	active = false
 	master = undefined
 	players = ds_list_create()

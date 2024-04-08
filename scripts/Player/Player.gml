@@ -1,5 +1,5 @@
 function Player() constructor {
-	slot = noone
+	slot = -1
 	status = PlayerStatus.INACTIVE
 	
 	// Area

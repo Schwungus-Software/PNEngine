@@ -41,7 +41,7 @@ function Level() constructor {
 		ds_map_destroy(areas)
 	}
 	
-	static goto = function (_level, _area = 0, _tag = noone, _transition = noone) {
+	static goto = function (_level, _area = 0, _tag = ThingTags.NONE, _transition = noone) {
 		with proTransition {
 			if state < 3 {
 				exit

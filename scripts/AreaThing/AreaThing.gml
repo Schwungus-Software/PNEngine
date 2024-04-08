@@ -1,7 +1,7 @@
 function AreaThing() constructor {
 	level = undefined
 	area = undefined
-	slot = noone
+	slot = -1
 	thing = noone
 	
 	type = undefined
