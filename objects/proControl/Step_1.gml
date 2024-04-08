@@ -499,6 +499,7 @@ if load_state != LoadStates.NONE {
 			var _players = global.players
 			var i = 0
 			var _load_area = load_area
+			var _load_tag = load_tag
 			
 			with _level {
 				repeat array_length(music) {
@@ -538,7 +539,7 @@ if load_state != LoadStates.NONE {
 					}
 					
 					if status == PlayerStatus.ACTIVE {
-						player_force_area(_player, _load_area)
+						player_force_area(_player, _load_area, _load_tag)
 					}
 				}
 			}
@@ -587,7 +588,14 @@ if _mouse_focused {
 		_mouse_dy = 0
 	}
 } else {
-	if window_has_focus() and _ui == undefined {
+	var _mouse_start = global.mouse_start
+	
+	if not _mouse_start and mouse_check_button(mb_any) {
+		global.mouse_start = true
+		_mouse_start = true
+	}
+	
+	if window_has_focus() and _ui == undefined and _mouse_start {
 		window_mouse_set_locked(true)
 		global.mouse_focused = true
 		_mouse_focused = true
