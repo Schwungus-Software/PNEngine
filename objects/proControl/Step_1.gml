@@ -566,7 +566,7 @@ if load_state != LoadStates.NONE {
 }
 
 if global.freeze_step {
-	// Don't tick for this frame
+	// Don't do any ticking on this frame
 	global.freeze_step = false
 	
 	exit
@@ -590,7 +590,7 @@ if _mouse_focused {
 } else {
 	var _mouse_start = global.mouse_start
 	
-	if not _mouse_start and mouse_check_button(mb_any) {
+	if not _mouse_start and (mouse_check_button(mb_any) or window_get_fullscreen()) {
 		global.mouse_start = true
 		_mouse_start = true
 	}
