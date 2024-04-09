@@ -1,3 +1,4 @@
+// Feather disable all
 // Default font is set by scribble_font_set_default()
 
 #macro SCRIBBLE_DEFAULT_COLOR               c_white  //Default vertex colour when drawing text models. This can be overwritten by the .starting_format() text element method. This will not affect draw_text_scribble() which instead uses draw_get_color()
@@ -39,4 +40,4 @@
 
 #macro SCRIBBLE_DEFAULT_BLINK_ON_DURATION   50       //Default duration that blinking text should stay on for, in milliseconds
 #macro SCRIBBLE_DEFAULT_BLINK_OFF_DURATION  50       //Default duration that blinking text should turn off for, in milliseconds
-#macro SCRIBBLE_DEFAULT_BLINK_TIME_OFFSET   0
+#macro SCRIBBLE_DEFAULT_BLINK_TIME_OFFSET   0        //Default blink time offset, in milliseconds
