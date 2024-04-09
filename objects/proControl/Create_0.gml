@@ -546,6 +546,13 @@
 			#endregion
 			
 			#region Audio
+				addConstant(
+					"MUSP_DEFAULT", MusicPriorities.DEFAULT,
+					"MUSP_POWER", MusicPriorities.POWER,
+					"MUSP_SCENE", MusicPriorities.SCENE,
+					"MUSP_FANFARE", MusicPriorities.FANFARE,
+				)
+				
 				addFunction(
 					"MusicInstance", MusicInstance,
 					
