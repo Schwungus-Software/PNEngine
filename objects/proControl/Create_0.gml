@@ -300,7 +300,7 @@
 					"MUSIC", global.music,
 					
 					"ANI_LINEAR", AnimationTypes.LINEAR,
-					"ANI_LINEAR", AnimationTypes.LINEAR_LOOP,
+					"ANI_LINEAR_LOOP", AnimationTypes.LINEAR_LOOP,
 					"ANI_QUADRATIC", AnimationTypes.QUADRATIC,
 					"ANI_QUADRATIC_LOOP", AnimationTypes.QUADRATIC_LOOP
 				)
