@@ -241,10 +241,16 @@ if path_active {
 if quake > 0 {
 	quake -= 1
 	
-	var a = -quake
-	var b = quake
+	if quake <= 0 {
+		quake_x = 0
+		quake_y = 0
+		quake_z = 0
+	} else {
+		var a = -quake
+		var b = quake
 	
-	quake_x = random_range(a, b)
-	quake_y = random_range(a, b)
-	quake_z = random_range(a, b)
+		quake_x = random_range(a, b)
+		quake_y = random_range(a, b)
+		quake_z = random_range(a, b)
+	}
 }
