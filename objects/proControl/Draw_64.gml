@@ -20,6 +20,8 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 	var _height = window_get_height()
 	
 #region Draw Active Cameras
+	gpu_set_cullmode(cull_counterclockwise)
+	
 	var _players = global.players
 	var _camera_active = global.camera_active
 	
@@ -87,6 +89,8 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 			break
 		}
 	}
+	
+	gpu_set_cullmode(cull_noculling)
 #endregion
 	
 	var _console = global.console

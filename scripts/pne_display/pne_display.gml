@@ -34,7 +34,6 @@
 	_canvases[Canvases.RENDER] = (new Canvas(480, 270)).SetDepthDisabled(true)
 	global.canvases = _canvases
 	global.bloom = new Bloom(160, 90, 3)
-	gpu_set_cullmode(cull_counterclockwise)
 	gpu_set_ztestenable(true)
 	gpu_set_zwriteenable(true)
 	global.current_shader = undefined
