@@ -19,7 +19,7 @@ print($"pne_audio: fmod_debug_initialize() -> value: '{_test}', result: '{_resul
 global.fmod = fmod_system_create()
 _result = fmod_last_result()
 print($"pne_audio: fmod_system_create() -> value: '{global.fmod}', result: '{_result}' ({fmod_error_string(_result)})")
-_test = fmod_system_init(MAX_CHANNELS, FMOD_INIT.NORMAL)
+_test = fmod_system_init(MAX_CHANNELS, FMOD_INIT.NORMAL | FMOD_INIT.STREAM_FROM_UPDATE | FMOD_INIT.MIX_FROM_UPDATE)
 _result = fmod_last_result()
 print($"pne_audio: fmod_system_init() -> value: '{_test}', result: '{_result}' ({fmod_error_string(_result)})")
 print("pne_audio: ============================")
