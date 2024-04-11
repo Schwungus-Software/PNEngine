@@ -470,6 +470,7 @@
 					"SH_BLOOM_DOWN", global.bloom_down_shader,
 					"SH_CURVE", global.curve_shader,
 					"SH_DEPTH", global.depth_shader,
+					"SH_DITHER", global.dither_shader,
 					
 					"U_AMBIENT_COLOR", global.u_ambient_color,
 					"U_COLOR", global.u_color,

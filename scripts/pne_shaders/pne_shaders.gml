@@ -8,6 +8,7 @@ global.bloom_up_shader = new Shader(shBloomUp)
 global.bloom_down_shader = new Shader(shBloomDown)
 global.curve_shader = new Shader(shCurve)
 global.depth_shader = new Shader(shDepth)
+global.dither_shader = new Shader(os_type == os_linux ? shDitherBlend : shDither)
 
 global.u_ambient_color = new Uniform("u_ambient_color", UniformTypes.FLOAT)
 global.u_animated = new Uniform("u_animated", UniformTypes.FLOAT)

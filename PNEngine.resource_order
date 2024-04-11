@@ -762,6 +762,8 @@
     {"name":"shBloomUp","order":6,"path":"shaders/shBloomUp/shBloomUp.yy",},
     {"name":"shCurve","order":2,"path":"shaders/shCurve/shCurve.yy",},
     {"name":"shDepth","order":5,"path":"shaders/shDepth/shDepth.yy",},
+    {"name":"shDither","order":9,"path":"shaders/shDither/shDither.yy",},
+    {"name":"shDitherBlend","order":10,"path":"shaders/shDitherBlend/shDitherBlend.yy",},
     {"name":"shSky","order":1,"path":"shaders/shSky/shSky.yy",},
     {"name":"shWorldBlend","order":8,"path":"shaders/shWorldBlend/shWorldBlend.yy",},
     {"name":"scribble_fallback_bulletpoint","order":11,"path":"sprites/scribble_fallback_bulletpoint/scribble_fallback_bulletpoint.yy",},
