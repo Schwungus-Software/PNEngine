@@ -571,12 +571,13 @@ if global.freeze_step {
 	exit
 }
 
+var _console = global.console
 var _ui = global.ui
 var _mouse_focused = global.mouse_focused
 var _mouse_dx, _mouse_dy
 
 if _mouse_focused {
-	if window_has_focus() and _ui == undefined {
+	if not _console and not global.debug_overlay and window_has_focus() and _ui == undefined {
 		_mouse_dx = window_mouse_get_delta_x()
 		_mouse_dy = window_mouse_get_delta_y()
 	} else {
@@ -594,7 +595,7 @@ if _mouse_focused {
 		_mouse_start = true
 	}
 	
-	if window_has_focus() and _ui == undefined and _mouse_start {
+	if not _console and not global.debug_overlay and window_has_focus() and _ui == undefined and _mouse_start {
 		window_mouse_set_locked(true)
 		global.mouse_focused = true
 		_mouse_focused = true
@@ -611,7 +612,6 @@ global.delta = _tick_inc
 _tick += _tick_inc
 
 // Cache a lot of things into local variables
-var _console = global.console
 var _interps = global.interps
 var _players = global.players
 var _config = global.config
