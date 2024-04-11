@@ -27,13 +27,13 @@ function FontMap() : AssetMap() constructor {
 				var _json = json_load(mod_find_file(_path + ".json"))
 				
 				if is_struct(_json) {
-					_size = _json[$ "size"] ?? 8
-					_bold = _json[$ "bold"] ?? false
-					_italics = _json[$ "italics"] ?? false
-					_first = _json[$ "first"] ?? 32
-					_last = _json[$ "last"] ?? 128
-					_sdf = _json[$ "sdf"] ?? false
-					_sdf_spread = _json[$ "sdf_spread"] ?? 8
+					_size = force_type_fallback(_json[$ "size"], "number", 8)
+					_bold = force_type_fallback(_json[$ "bold"], "bool", false)
+					_italics = force_type_fallback(_json[$ "italics"], "bool", false)
+					_first = force_type_fallback(_json[$ "first"], "number", 32)
+					_last = force_type_fallback(_json[$ "last"], "number", 128)
+					_sdf = force_type_fallback(_json[$ "sdf"], "bool", false)
+					_sdf_spread = force_type_fallback(_json[$ "sdf_spread"], "number", 8)
 				}
 				
 				var _font = new Font()
@@ -58,20 +58,29 @@ function FontMap() : AssetMap() constructor {
 				var _frames = 1
 				var _proportional = true
 				var _space = 1
+				var _first = 32
+				var _map = undefined
 				
 				var _json = json_load(mod_find_file(_path + ".json"))
 				
 				if is_struct(_json) {
-					_frames = _json[$ "frames"] ?? 1
-					_proportional = _json[$ "proportional"] ?? true
-					_space = _json[$ "space"] ?? 1
+					_frames = force_type_fallback(_json[$ "frames"], "number", 1)
+					_proportional = force_type_fallback(_json[$ "proportional"], "bool", true)
+					_space = force_type_fallback(_json[$ "space"], "number", 1)
+					_first = force_type_fallback(_json[$ "first"], "string", 32)
+					
+					if is_string(_first) {
+						_first = ord(_first)
+					}
+					
+					_map = force_type_fallback(_json[$ "map"], "string")
 				}
 				
 				_sprite = sprite_add(_font_file, _frames, false, false, 0, 0)
 				sprite_collision_mask(_sprite, true, 0, 0, 0, 0, 0, bboxkind_precise, 255)
 				
 				var _font = new Font()
-				var _font_id = font_add_sprite(_sprite, 32, _proportional, _space)
+				var _font_id = _map != undefined ? font_add_sprite_ext(_sprite, _map, _proportional, _space) : font_add_sprite(_sprite, _first, _proportional, _space)
 				var _font_name = font_get_name(_font_id)
 				
 				scribble_font_rename(_font_name, _name)
