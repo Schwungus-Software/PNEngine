@@ -309,8 +309,14 @@
 					"thing_load", thing_load,
 					"transition_load", transition_load,
 					
-					"mod_get", function (_name) {
-						return global.mods[? _name]
+					"mod_get_version", function (_name) {
+						var _mod = global.mods[? _name]
+						
+						if _mod == undefined {
+							return undefined
+						}
+						
+						return _mod.version
 					}
 				)
 			#endregion
