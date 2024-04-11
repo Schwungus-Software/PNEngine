@@ -11,8 +11,11 @@ while _name != "" {
 	
 	var _save = new Save(_name)
 	
-	ds_list_add(_saves, _save)
-	array_push(save_data, new TitleSave(_save))
+	if _save.code != "SAVE_MODS" {
+		ds_list_add(_saves, _save)
+		array_push(save_data, new TitleSave(_save))
+	}
+	
 	_name = file_find_next()
 }
 
