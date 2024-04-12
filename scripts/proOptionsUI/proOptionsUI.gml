@@ -572,7 +572,7 @@ function proOptionsUI() : UI(undefined) constructor {
 					continue
 				}
 				
-				var _color = is_instanceof(_element, OUIText) ? c_white : (option == i ? C_PN_YELLOW : C_PN_RED)
+				var _color = is_instanceof(_element, OUIText) ? c_white : (option == i ? c_yellow : c_lime)
 				
 				with _element {
 					var _name = lexicon_text(name)
@@ -627,7 +627,7 @@ function proOptionsUI() : UI(undefined) constructor {
 		}
 		
 		draw_set_valign(fa_middle)
-		draw_text_color(448, 135, _indicator, c_ltgray, c_ltgray, c_gray, c_gray, 0.64)
+		draw_text_color(448, 135, _indicator, c_ltgray, c_ltgray, c_ltgray, c_ltgray, 0.64)
 		draw_set_halign(fa_left)
 		draw_set_valign(fa_top)
 		draw_set_font(-1)
