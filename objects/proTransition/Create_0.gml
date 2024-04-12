@@ -1,5 +1,6 @@
 transition_script = undefined
 
+reload = undefined
 create = undefined
 clean_up = undefined
 tick = undefined
@@ -29,5 +30,9 @@ to_tag = ThingTags.NONE
 	
 	destroy = function () {
 		instance_destroy()
+	}
+	
+	play_sound_ui = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
+		return global.ui_sounds.play(_sound, _loop, _offset, _pitch)
 	}
 #endregion

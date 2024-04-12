@@ -6,6 +6,12 @@ if load_state != LoadStates.NONE {
 		
 		case LoadStates.UNLOAD:
 #region Unload Previous Level
+			with proTransition {
+				if state == 3 {
+					instance_destroy()
+				}
+			}
+			
 			var _ui = global.ui
 			
 			if _ui != undefined {
@@ -467,6 +473,10 @@ if load_state != LoadStates.NONE {
 			
 			ui_load("Pause")
 			
+			with proTransition {
+				transition_load(transition_script != undefined ? transition_script.name : object_index)
+			}
+			
 			_images.end_batch()
 			
 			var _materials_map = global.materials.assets
@@ -546,6 +556,7 @@ if load_state != LoadStates.NONE {
 			with proTransition {
 				if state == 2 {
 					state = 3
+					reload()
 				}
 			}
 			

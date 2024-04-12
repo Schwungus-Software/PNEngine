@@ -189,6 +189,7 @@ function ScriptMap() : AssetMap() constructor {
 								if parent != undefined {
 									main = _parent.main
 									load = _parent.load
+									reload = _parent.reload
 									create = _parent.create
 									clean_up = _parent.clean_up
 									tick = _parent.tick
@@ -390,6 +391,7 @@ function ScriptMap() : AssetMap() constructor {
 				area_activated = _globals[$ "area_activated"]
 				area_deactivated = _globals[$ "area_deactivated"]
 			} else if is_instanceof(self, TransitionScript) {
+				reload = _globals[$ "reload"]
 				create = _globals[$ "create"]
 				clean_up = _globals[$ "clean_up"]
 				tick = _globals[$ "tick"]

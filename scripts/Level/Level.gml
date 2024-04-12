@@ -75,6 +75,7 @@ function Level() constructor {
 			with instance_create_depth(0, 0, 0, _transition) {
 				if _script != undefined {
 					transition_script = _script
+					reload = _script.reload
 					create = _script.create
 					clean_up = _script.clean_up
 					tick = _script.tick
