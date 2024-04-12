@@ -200,6 +200,7 @@
 				
 				addFunction(
 					"gpu_get_tex_filter", gpu_get_tex_filter,
+					"gpu_get_tex_repeat", gpu_get_tex_repeat,
 					"gpu_get_blendmode", gpu_get_blendmode,
 					"gpu_get_blendmode_ext", gpu_get_blendmode_ext,
 					"gpu_get_blendmode_ext_sepalpha", gpu_get_blendmode_ext_sepalpha,
@@ -209,6 +210,7 @@
 					"gpu_get_blendmode_destalpha", gpu_get_blendmode_destalpha,
 					
 					"gpu_set_tex_filter", gpu_set_tex_filter,
+					"gpu_set_tex_repeat", gpu_set_tex_repeat,
 					"gpu_set_blendmode", gpu_set_blendmode,
 					"gpu_set_blendmode_ext", gpu_set_blendmode_ext,
 					"gpu_set_blendmode_ext_sepalpha", gpu_set_blendmode_ext_sepalpha,
