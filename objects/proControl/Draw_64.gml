@@ -1,3 +1,7 @@
+if load_state != LoadStates.NONE and instance_exists(proTransition) {
+	exit
+}
+
 #region Rendering
 draw_clear(c_black)
 
