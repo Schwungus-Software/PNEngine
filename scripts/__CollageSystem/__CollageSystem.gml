@@ -1,5 +1,5 @@
 /// @ignore
-/* Feather ignore all */
+/// feather ignore all
 enum CollageBuildStates {
 	NORMAL,
 	BATCHING
@@ -25,7 +25,7 @@ enum CollageRPStatus {
 }
 
 #macro __COLLAGE_CREDITS "@TabularElf - https://tabelf.link/"
-#macro __COLLAGE_VERSION "v0.3.1 (PNEngine Fork)"
+#macro __COLLAGE_VERSION "v0.4.0"
 show_debug_message("Collage " + __COLLAGE_VERSION + " Initalized! Created by " + __COLLAGE_CREDITS);
 
 /// @ignore
@@ -45,10 +45,11 @@ function __CollageSystem() {
 				var _i = 0;
 				while(sprite_exists(_i)) {
 					// Skip sprites created/added on the fly
-					if (string_count("__newsprite", sprite_get_name(_i)) == 0) {
-						__CollageGMSpriteCount = _i;
+					if (string_count("__newsprite", sprite_get_name(_i)) > 0) {
+						break;
 					}
-					++_i;
+					
+					__CollageGMSpriteCount = _i++;
 				}
 				_init = true;
 				try {
