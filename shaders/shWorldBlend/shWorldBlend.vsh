@@ -7,7 +7,7 @@
        for PNEngine
    --------------------- */
 
-#define MAX_BONES 64
+#define MAX_BONES 128
 
 #define LIGHT_SIZE 12
 #define MAX_LIGHTS 16
