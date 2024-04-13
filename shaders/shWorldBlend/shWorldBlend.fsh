@@ -58,9 +58,9 @@ void main() {
 		sample.a = 1.;
 	}
 	
-	vec4 starting_color = sample * u_material_color * vec4(v_color.rgb, v_alpha) * v_lighting;
+	vec4 starting_color = (sample * u_material_color * vec4(v_color.rgb, v_alpha) * v_lighting) + pow(v_specular.x, v_specular.y);
 	
-	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, v_fog) + pow(v_specular.x, v_specular.y);
+	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, v_fog);
 	starting_color.a *= mix(1., u_fog_color.a, v_fog);
     gl_FragColor = starting_color * u_color;
 }
