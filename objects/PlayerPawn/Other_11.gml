@@ -14,5 +14,3 @@ if instance_exists(camera) {
 	camera.add_target(playcam, 128, 0, 0, height + 4)
 	camera.pitch = -15
 }
-
-targets = ds_priority_create()
