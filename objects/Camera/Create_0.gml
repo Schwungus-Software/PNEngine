@@ -313,8 +313,10 @@ event_inherited()
 			var _z = sz
 			
 			with _area {
+				_world_shader.set()
+				
 				if _allow_sky {
-					_world_canvas.Clear(clear_color[4], 1)
+					draw_clear(clear_color[4])
 					
 					if instance_exists(sky) and sky.model != undefined {
 						gpu_set_blendenable(false)
@@ -342,10 +344,9 @@ event_inherited()
 						gpu_set_blendenable(true)
 					}
 				} else {
-					_world_canvas.Clear(c_black, 1)
+					draw_clear(c_black)
 				}
 				
-				_world_shader.set()
 				global.u_ambient_color.set(_ambient_color[0], _ambient_color[1], _ambient_color[2], _ambient_color[3])
 				global.u_fog_distance.set(_fog_distance[0], _fog_distance[1])
 				global.u_fog_color.set(_fog_color[0], _fog_color[1], _fog_color[2], _fog_color[3])
