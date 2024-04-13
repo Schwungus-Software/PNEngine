@@ -215,6 +215,9 @@
 					"gpu_set_blendmode_ext", gpu_set_blendmode_ext,
 					"gpu_set_blendmode_ext_sepalpha", gpu_set_blendmode_ext_sepalpha,
 					
+					"draw_clear", draw_clear,
+					"draw_clear_alpha", draw_clear_alpha,
+					
 					"draw_get_color", draw_get_color,
 					"draw_get_alpha", draw_get_alpha,
 					"draw_get_font", draw_get_font,
