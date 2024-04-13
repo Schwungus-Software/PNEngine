@@ -1316,8 +1316,8 @@ function __catspeak_expr_struct__() {
     repeat (n_) {
         // not sure if this is even fast
         // but people will cry if I don't do it
-        var key = values_[i + 0];
-        var value = values_[i + 1];
+        var key = values_[i];
+        var value = values_[-~i];
         obj[$ key()] = value();
         i += 2;
     }
