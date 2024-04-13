@@ -274,7 +274,6 @@ event_inherited()
 			
 			with _world_canvas {
 				Resize(_width, _height)
-				Clear()
 				Start()
 			}
 			
@@ -315,6 +314,8 @@ event_inherited()
 			
 			with _area {
 				if _allow_sky {
+					_world_canvas.Clear(clear_color[4], 1)
+					
 					if instance_exists(sky) and sky.model != undefined {
 						gpu_set_blendenable(false)
 						gpu_set_zwriteenable(false)
@@ -339,9 +340,9 @@ event_inherited()
 						shader_reset()
 						gpu_set_zwriteenable(true)
 						gpu_set_blendenable(true)
-					} else {
-						_world_canvas.Clear(clear_color[4])
 					}
+				} else {
+					_world_canvas.Clear(c_black, 1)
 				}
 				
 				_world_shader.set()
