@@ -556,7 +556,10 @@ if load_state != LoadStates.NONE {
 			with proTransition {
 				if state == 2 {
 					state = 3
-					reload()
+					
+					if reload != undefined {
+						reload()
+					}
 				}
 			}
 			
