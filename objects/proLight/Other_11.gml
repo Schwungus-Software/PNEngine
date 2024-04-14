@@ -59,24 +59,23 @@ if _color != undefined {
 
 var _lights = area.lights
 
-handle = array_find_index(_lights, function (_element, _index) {
-    return _element == false
-})
+handle = ds_list_find_index(_lights, false)
 
 if handle != -1 {
-	_lights[handle] = true
+	_lights[| handle] = true
 	offset = handle * LightData.__SIZE
 	
-	light_data[offset + LightData.TYPE] = type
-	light_data[offset + LightData.ACTIVE] = active
-	light_data[offset + LightData.X] = x
-	light_data[offset + LightData.Y] = y
-	light_data[offset + LightData.Z] = z
-	light_data[offset + LightData.ARG0] = arg0
-	light_data[offset + LightData.ARG1] = arg1
-	light_data[offset + LightData.ARG2] = arg2
-	light_data[offset + LightData.RED] = color_get_red(color) * COLOR_INVERSE
-	light_data[offset + LightData.GREEN] = color_get_green(color) * COLOR_INVERSE
-	light_data[offset + LightData.BLUE] = color_get_blue(color) * COLOR_INVERSE
-	light_data[offset + LightData.ALPHA] = alpha
+	buffer_seek(light_data, buffer_seek_start, offset)
+	buffer_write(light_data, buffer_f32, type)
+	buffer_write(light_data, buffer_f32, active)
+	buffer_write(light_data, buffer_f32, x)
+	buffer_write(light_data, buffer_f32, y)
+	buffer_write(light_data, buffer_f32, z)
+	buffer_write(light_data, buffer_f32, arg0)
+	buffer_write(light_data, buffer_f32, arg1)
+	buffer_write(light_data, buffer_f32, arg2)
+	buffer_write(light_data, buffer_f32, color_get_red(color) * COLOR_INVERSE)
+	buffer_write(light_data, buffer_f32, color_get_green(color) * COLOR_INVERSE)
+	buffer_write(light_data, buffer_f32, color_get_blue(color) * COLOR_INVERSE)
+	buffer_write(light_data, buffer_f32, alpha)
 }

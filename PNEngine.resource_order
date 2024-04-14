@@ -1,9 +1,5 @@
 {
   "FolderOrderSettings":[
-    {"name":"Catspeak","order":5,"path":"folders/Scripts/Libraries/Catspeak.yy",},
-    {"name":"common","order":1,"path":"folders/Scripts/Libraries/Catspeak/common.yy",},
-    {"name":"compiler","order":2,"path":"folders/Scripts/Libraries/Catspeak/compiler.yy",},
-    {"name":"runtime","order":3,"path":"folders/Scripts/Libraries/Catspeak/runtime.yy",},
     {"name":"Extensions","order":4,"path":"folders/Extensions.yy",},
     {"name":"FMOD","order":1,"path":"folders/Extensions/FMOD.yy",},
     {"name":"Objects","order":2,"path":"folders/Objects.yy",},
@@ -14,6 +10,10 @@
     {"name":"Rooms","order":3,"path":"folders/Rooms.yy",},
     {"name":"Canvas","order":1,"path":"folders/Scripts/Libraries/Canvas.yy",},
     {"name":"System","order":1,"path":"folders/Scripts/Libraries/Canvas/System.yy",},
+    {"name":"Catspeak","order":5,"path":"folders/Scripts/Libraries/Catspeak.yy",},
+    {"name":"common","order":1,"path":"folders/Scripts/Libraries/Catspeak/common.yy",},
+    {"name":"compiler","order":2,"path":"folders/Scripts/Libraries/Catspeak/compiler.yy",},
+    {"name":"runtime","order":3,"path":"folders/Scripts/Libraries/Catspeak/runtime.yy",},
     {"name":"Collage","order":4,"path":"folders/Scripts/Libraries/Collage.yy",},
     {"name":"General","order":1,"path":"folders/Scripts/Libraries/Collage/General.yy",},
     {"name":"GM-Collage Compatibility","order":2,"path":"folders/Scripts/Libraries/Collage/GM-Collage Compatibility.yy",},

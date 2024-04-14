@@ -351,7 +351,7 @@ event_inherited()
 				global.u_fog_distance.set(_fog_distance[0], _fog_distance[1])
 				global.u_fog_color.set(_fog_color[0], _fog_color[1], _fog_color[2], _fog_color[3])
 				global.u_wind.set(_wind_strength, _wind_direction[0], _wind_direction[1], _wind_direction[2])
-				global.u_light_data.set(_light_data)
+				global.u_light_data.set(_light_data, 0, MAX_LIGHTS)
 				global.u_time.set(_time * 0.001)
 				
 				if model != undefined {
