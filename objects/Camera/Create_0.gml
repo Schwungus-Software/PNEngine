@@ -288,17 +288,6 @@ event_inherited()
 			camera_set_proj_mat(_render_camera, _projection_matrix)
 			camera_apply(_render_camera)
 			
-			var _ambient_color, _fog_distance, _fog_color, _wind_strength, _wind_direction, _light_data
-			
-			with _area {
-				_ambient_color = ambient_color
-				_fog_distance = fog_distance
-				_fog_color = fog_color
-				_wind_strength = wind_strength
-				_wind_direction = wind_direction
-				_light_data = light_data
-			}
-			
 			var _time = current_time
 			var _gpu_tex_filter = gpu_get_tex_filter()
 			var _config = global.config
@@ -313,8 +302,6 @@ event_inherited()
 			var _z = sz
 			
 			with _area {
-				_world_shader.set()
-				
 				if _allow_sky {
 					draw_clear(clear_color[4])
 					
@@ -347,11 +334,12 @@ event_inherited()
 					draw_clear(c_black)
 				}
 				
-				global.u_ambient_color.set(_ambient_color[0], _ambient_color[1], _ambient_color[2], _ambient_color[3])
-				global.u_fog_distance.set(_fog_distance[0], _fog_distance[1])
-				global.u_fog_color.set(_fog_color[0], _fog_color[1], _fog_color[2], _fog_color[3])
-				global.u_wind.set(_wind_strength, _wind_direction[0], _wind_direction[1], _wind_direction[2])
-				global.u_light_data.set(_light_data, 0, MAX_LIGHTS)
+				_world_shader.set()
+				global.u_ambient_color.set(ambient_color[0], ambient_color[1], ambient_color[2], ambient_color[3])
+				global.u_fog_distance.set(fog_distance[0], fog_distance[1])
+				global.u_fog_color.set(fog_color[0], fog_color[1], fog_color[2], fog_color[3])
+				global.u_wind.set(wind_strength, wind_direction[0], wind_direction[1], wind_direction[2])
+				global.u_light_data.set(light_data)
 				global.u_time.set(_time * 0.001)
 				
 				if model != undefined {
