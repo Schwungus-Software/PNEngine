@@ -1,7 +1,7 @@
 /*
 	Whether newly created Canvas instances should automatically write to cache upon calling .Finish()
 */
-#macro __CANVAS_AUTO_WRITE_TO_CACHE true
+#macro __CANVAS_AUTO_WRITE_TO_CACHE false
 
 /*
 	The mode of operation for how Canvas surface depth is determined upon creation
