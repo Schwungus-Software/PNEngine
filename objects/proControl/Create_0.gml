@@ -693,6 +693,13 @@ var _custom_back_sound = undefined
 	repeat ds_map_size(_mods) {
 		var _mod = _mods[? _key]
 		
+		// Failsafe for Linux
+		if _mod == undefined {
+			_key = ds_map_find_next(_mods, _key)
+			
+			continue
+		}
+		
 		print($"proControl: Initializing '{_mod.name}'")
 		
 		var _path = _mod.path
