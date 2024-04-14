@@ -62,20 +62,24 @@ function line_in_rectangle(_lx1, _ly1, _lx2, _ly2, _x1, _y1, _x2, _y2) {
 			   y = _ly1 + slope * (xm - _lx1), where xm is _x1 or _x2
 		   No need to worry about divide-by-zero because, in each case, the outcode
 		   bit being tested guarantees the denominator is non-zero */
+		var d = 1 / (_ly2 - _ly1)
+		
 		if _out & LineBoxClip.TOP { // point is above the clip window
-			_x = _lx1 + (_lx2 - _lx1) * (_y2 - _ly1) / (_ly2 - _ly1)
+			_x = _lx1 + (_lx2 - _lx1) * (_y2 - _ly1) * d
 			_y = _y2
 		} else {
 			if _out & LineBoxClip.BOTTOM { // point is below the clip window
-				_x = _lx1 + (_lx2 - _lx1) * (_y1 - _ly1) / (_ly2 - _ly1)
+				_x = _lx1 + (_lx2 - _lx1) * (_y1 - _ly1) * d
 				_y = _y1
 			} else {
+				d = 1 / (_lx2 - _lx1)
+				
 				if _out & LineBoxClip.RIGHT { // point is to the right of clip window
-					_y = _ly1 + (_ly2 - _ly1) * (_x2 - _lx1) / (_lx2 - _lx1)
+					_y = _ly1 + (_ly2 - _ly1) * (_x2 - _lx1) * d
 					_x = _x2
 				} else {
 					if _out & LineBoxClip.LEFT { // point is to the left of clip window
-						_y = _ly1 + (_ly2 - _ly1) * (_x1 - _lx1) / (_lx2 - _lx1)
+						_y = _ly1 + (_ly2 - _ly1) * (_x1 - _lx1) * d
 						_x = _x1
 					}
 				}
