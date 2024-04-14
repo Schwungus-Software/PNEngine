@@ -1,5 +1,5 @@
 /datafiles/data/*
-!/datafiles/data/_main/
+!/datafiles/data/0main/
 
 /extensions/FMOD/*
 options/extensions/FMOD.json
