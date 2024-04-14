@@ -1,22 +1,23 @@
 #region Profiling
-	global.debug_overlay = false
+global.debug_overlay = false
 #endregion
 
 #region Console
-	global.console = false
-	global.console_buffer = false
+global.console = false
+global.console_buffer = false
 	
-	// Initialize the console log now if anything prior to this script hasn't sent
-	// any debug messages
-	if not variable_global_exists("console_log") {
-		global.console_log = ds_list_create()
-	}
+// Initialize the console log now if anything prior to this script hasn't sent
+// any debug messages
+if not variable_global_exists("console_log") {
+	global.console_log = ds_list_create()
+}
 	
-	global.console_input = ""
-	global.console_input_previous = ""
+global.console_input = ""
+global.console_input_previous = ""
 #endregion
 
 #region Exception Handling
+if os_type != os_linux {
 	exception_unhandled_handler(function (e) {
 		var exception_json = json_stringify(e, true)
 	
@@ -37,7 +38,8 @@
 			clipboard_set_text(exception_json)
 			show_message("The error has been copied to the clipboard.")
 		}
-	
+		
 	    return 0
 	})
+}
 #endregion
