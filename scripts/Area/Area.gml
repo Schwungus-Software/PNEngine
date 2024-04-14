@@ -19,7 +19,7 @@ function Area() constructor {
 		ds_list_add(lights, false)
 	}
 	
-	light_data = buffer_create(MAX_LIGHTS * LightData.__SIZE, buffer_fixed, 1)
+	light_data = array_create(MAX_LIGHTS * LightData.__SIZE)
 	sounds = new SoundPool()
 	
 	bump_x = 0
@@ -457,7 +457,6 @@ function Area() constructor {
 		
 		ds_grid_destroy(bump_lists)
 		ds_list_destroy(lights)
-		buffer_delete(light_data)
 	}
 	
 	static find_tag = function (_tag) {
