@@ -52,7 +52,7 @@ if load_state != LoadStates.NONE {
 			global.materials.clear()
 			global.models.clear()
 			global.animations.clear()
-			global.fonts.clear()
+			//global.fonts.clear()
 			global.sounds.clear()
 			global.music.clear()
 			global.scripts.flush()
