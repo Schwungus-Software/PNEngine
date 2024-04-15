@@ -290,6 +290,7 @@
 				addFunction(
 					"string_localize", lexicon_text,
 					"string_rich", scribble,
+					"string_typíst", scribble_typist,
 					"string_input", string_input
 				)
 			#endregion
