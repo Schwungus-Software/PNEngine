@@ -46,6 +46,7 @@ function __input_config_verbs()
 			leave: input_binding_key(vk_backspace),
 		
 			debug_overlay: input_binding_key(vk_f1),
+			debug_fps: input_binding_key(vk_f2),
 			debug_console: input_binding_key(192),
 			debug_console_submit: input_binding_key(vk_enter),
 			debug_console_previous: input_binding_key(vk_up),

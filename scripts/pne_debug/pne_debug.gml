@@ -1,5 +1,6 @@
 #region Profiling
 global.debug_overlay = false
+global.debug_fps = false
 #endregion
 
 #region Console

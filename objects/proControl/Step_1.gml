@@ -676,6 +676,10 @@ if _tick >= 1 {
 		show_debug_overlay(global.debug_overlay)
 	}
 	
+	if input_check_pressed("debug_fps") {
+		global.debug_fps = not global.debug_fps
+	}
+	
 	if _console {
 		input_verb_consume("leave")
 		
