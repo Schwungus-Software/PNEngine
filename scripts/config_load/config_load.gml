@@ -9,7 +9,7 @@ function config_load() {
 		var i = 0
 		
 		repeat array_length(_cvars) {
-			var _cvar = _cvars[i]
+			var _cvar = _cvars[i++]
 			
 			if variable_struct_exists(_config, _cvar) {
 				var _value = _json[$ _cvar]
@@ -18,14 +18,13 @@ function config_load() {
 					_config[$ _cvar] = _value
 				}
 			}
-			
-			++i
 		}
 	}
 	
-	_json = json_load(CONTROLS_PATH)
-	
-	if is_struct(_json) {
+	try {
+		_json = json_load(CONTROLS_PATH)
 		input_player_import(_json)
+	} catch (e) {
+		print($"! config_load: Failed to import controls ({e})")
 	}
 }
