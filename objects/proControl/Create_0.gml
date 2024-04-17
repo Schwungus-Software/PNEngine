@@ -336,6 +336,7 @@
 					"PS_ACTIVE", PlayerStatus.ACTIVE,
 					
 					"INPUT_INVERSE", PLAYER_INPUT_INVERSE,
+					"INPUT_AIM_INVERSE", PLAYER_AIM_INVERSE,
 					"INPUT_UP_DOWN", PlayerInputs.UP_DOWN,
 					"INPUT_LEFT_RIGHT", PlayerInputs.LEFT_RIGHT,
 					"INPUT_JUMP", PlayerInputs.JUMP,

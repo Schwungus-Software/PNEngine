@@ -482,6 +482,7 @@
     {"$GMIncludedFile":"","%Name":"languages.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/languages","name":"languages.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"lvlLogo.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/levels","name":"lvlLogo.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"lvlMap.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/levels","name":"lvlMap.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"lvlTest.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/levels","name":"lvlTest.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"lvlTitle.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/levels","name":"lvlTitle.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mtlVideo.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/materials","name":"mtlVideo.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mtlVideoEyes.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/materials","name":"mtlVideoEyes.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
