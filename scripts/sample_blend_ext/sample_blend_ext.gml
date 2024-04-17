@@ -1,10 +1,17 @@
-function sample_blend(_sample, _sample1, _sample2, _amount) {
+function sample_blend_ext(_sample, _sample1, _sample2, _amount, _mask) {
 	gml_pragma("forceinline")
 	
 	var i = 0
+	var j = 0
 	var n = array_length(_sample1)
 	
 	while i < n {
+		if not _mask[j++] {
+			i += 8
+			
+			continue
+		}
+		
 		var _i1 = -~i
 		var _i2 = i + 2
 		var _i3 = i + 3

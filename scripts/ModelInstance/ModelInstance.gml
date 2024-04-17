@@ -51,6 +51,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		transition = 0
 		transition_time = 0
 		transition_sample = dq_build_identity()
+		transition_exclude = undefined
 		tick_sample = dq_build_identity()
 		from_sample = dq_build_identity()
 		draw_sample = dq_build_identity()
@@ -116,7 +117,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			if _copy {
-				var _frame1 = floor(_frame)
+				var _frame1 = floor(frame)
 				var _frame2 = -~_frame1
 				var _type, _frames
 				
@@ -136,7 +137,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				var _copy_sample1 = animation_samples[_frame1]
 				var _copy_sample2 = animation_samples[_frame2]
 				
-				sample_blend(tick_sample, _copy_sample1, _copy_sample2, frac(_frame))
+				sample_blend(tick_sample, _copy_sample1, _copy_sample2, frac(frame))
+				
+				var n = array_length(tick_sample)
 				
 				if _first {
 					animated = true
@@ -149,8 +152,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 						update_sample(self)
 					}
 				}
-				
-				var n = array_length(tick_sample)
 				
 				array_copy(from_sample, 0, tick_sample, 0, n)
 				array_copy(draw_sample, 0, tick_sample, 0, n)
@@ -341,7 +342,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		}
 		
 		static splice_animation = function (_animation, _frame, _bone_index, _weight = 1) {
-			static splice_sample = []
+			static _splice_sample = []
 			
 			if _animation == undefined {
 				exit
@@ -369,11 +370,15 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				_bind_pose = bind_poses[? _bpid]
 			}
 			
-			sample_blend(splice_sample, _samples[_current_sample], _samples[_next_sample], frac(_frame))
+			sample_blend(_splice_sample, _samples[_current_sample], _samples[_next_sample], frac(_frame))
 			
-			var _bone = _bind_pose[_bone_index]
+			splice_sample(_splice_sample, _bone_index, _weight)
+		}
+		
+		static splice_sample = function (_sample, _bone_index, _weight = 1, _target_sample = tick_sample) {
+			var _bone = animation_bind_pose[_bone_index]
 			var _parent_index = _bone[8]
-			var _parent = _bind_pose[_parent_index]
+			var _parent = animation_bind_pose[_parent_index]
 			
 			// Find the change in orientation from the source sample to the
 			// destination sample. Same as dq_multiply(D, dq_get_conjugate(S))
@@ -386,23 +391,23 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var b6 = b + 6
 			var b7 = b + 7
 			
-			var s0 = splice_sample[b]
-			var s1 = splice_sample[b1]
-			var s2 = splice_sample[b2]
-			var s3 = splice_sample[b3]
-			var s4 = splice_sample[b4]
-			var s5 = splice_sample[b5]
-			var s6 = splice_sample[b6]
-			var s7 = splice_sample[b7]
+			var s0 = _sample[b]
+			var s1 = _sample[b1]
+			var s2 = _sample[b2]
+			var s3 = _sample[b3]
+			var s4 = _sample[b4]
+			var s5 = _sample[b5]
+			var s6 = _sample[b6]
+			var s7 = _sample[b7]
 			
-			var d0 = tick_sample[b]
-			var d1 = tick_sample[b1]
-			var d2 = tick_sample[b2]
-			var d3 = tick_sample[b3]
-			var d4 = tick_sample[b4]
-			var d5 = tick_sample[b5]
-			var d6 = tick_sample[b6]
-			var d7 = tick_sample[b7]
+			var d0 = _target_sample[b]
+			var d1 = _target_sample[b1]
+			var d2 = _target_sample[b2]
+			var d3 = _target_sample[b3]
+			var d4 = _target_sample[b4]
+			var d5 = _target_sample[b5]
+			var d6 = _target_sample[b6]
+			var d7 = _target_sample[b7]
 			
 			var r0 = -d3 * s0 + d0 * s3 - d1 * s2 + d2 * s1
 			var r1 = -d3 * s1 + d1 * s3 - d2 * s0 + d0 * s2
@@ -418,8 +423,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			   source and destination samples. */
 			var _descendants = _bone[10]
 			var i = 0
+			var n = array_length(_descendants)
 			
-			n = array_length(_descendants)
 			b = _bone_index * 8
 			
 			repeat -~n {
@@ -432,32 +437,32 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					b6 = b + 6
 					b7 = b + 7
 					
-					s0 = splice_sample[b]
-					s1 = splice_sample[b1]
-					s2 = splice_sample[b2]
-					s3 = splice_sample[b3]
-					s4 = splice_sample[b4]
-					s5 = splice_sample[b5]
-					s6 = splice_sample[b6]
-					s7 = splice_sample[b7]
+					s0 = _sample[b]
+					s1 = _sample[b1]
+					s2 = _sample[b2]
+					s3 = _sample[b3]
+					s4 = _sample[b4]
+					s5 = _sample[b5]
+					s6 = _sample[b6]
+					s7 = _sample[b7]
 					
-					var d0 = tick_sample[b]
-					var d1 = tick_sample[b1]
-					var d2 = tick_sample[b2]
-					var d3 = tick_sample[b3]
-					var d4 = tick_sample[b4]
-					var d5 = tick_sample[b5]
-					var d6 = tick_sample[b6]
-					var d7 = tick_sample[b7]
+					var d0 = _target_sample[b]
+					var d1 = _target_sample[b1]
+					var d2 = _target_sample[b2]
+					var d3 = _target_sample[b3]
+					var d4 = _target_sample[b4]
+					var d5 = _target_sample[b5]
+					var d6 = _target_sample[b6]
+					var d7 = _target_sample[b7]
 					
-					tick_sample[b] += _weight * (r3 * s0 + r0 * s3 + r1 * s2 - r2 * s1 - d0)
-					tick_sample[b1] += _weight * (r3 * s1 + r1 * s3 + r2 * s0 - r0 * s2 - d1)
-					tick_sample[b2] += _weight * (r3 * s2 + r2 * s3 + r0 * s1 - r1 * s0 - d2)
-					tick_sample[b3] += _weight * (r3 * s3 - r0 * s0 - r1 * s1 - r2 * s2 - d3)
-					tick_sample[b4] += _weight * (r3 * s4 + r0 * s7 + r1 * s6 - r2 * s5 + r7 * s0 + r4 * s3 + r5 * s2 - r6 * s1 - d4)
-					tick_sample[b5] += _weight * (r3 * s5 + r1 * s7 + r2 * s4 - r0 * s6 + r7 * s1 + r5 * s3 + r6 * s0 - r4 * s2 - d5)
-					tick_sample[b6] += _weight * (r3 * s6 + r2 * s7 + r0 * s5 - r1 * s4 + r7 * s2 + r6 * s3 + r4 * s1 - r5 * s0 - d6)
-					tick_sample[b7] += _weight * (r3 * s7 - r0 * s4 - r1 * s5 - r2 * s6 + r7 * s2 - r4 * s0 - r5 * s1 - r6 * s2 - d7)
+					_target_sample[b] += _weight * (r3 * s0 + r0 * s3 + r1 * s2 - r2 * s1 - d0)
+					_target_sample[b1] += _weight * (r3 * s1 + r1 * s3 + r2 * s0 - r0 * s2 - d1)
+					_target_sample[b2] += _weight * (r3 * s2 + r2 * s3 + r0 * s1 - r1 * s0 - d2)
+					_target_sample[b3] += _weight * (r3 * s3 - r0 * s0 - r1 * s1 - r2 * s2 - d3)
+					_target_sample[b4] += _weight * (r3 * s4 + r0 * s7 + r1 * s6 - r2 * s5 + r7 * s0 + r4 * s3 + r5 * s2 - r6 * s1 - d4)
+					_target_sample[b5] += _weight * (r3 * s5 + r1 * s7 + r2 * s4 - r0 * s6 + r7 * s1 + r5 * s3 + r6 * s0 - r4 * s2 - d5)
+					_target_sample[b6] += _weight * (r3 * s6 + r2 * s7 + r0 * s5 - r1 * s4 + r7 * s2 + r6 * s3 + r4 * s1 - r5 * s0 - d6)
+					_target_sample[b7] += _weight * (r3 * s7 - r0 * s4 - r1 * s5 - r2 * s6 + r7 * s2 - r4 * s0 - r5 * s1 - r6 * s2 - d7)
 				}
 				
 				if i < n {
@@ -471,6 +476,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		update_sample = undefined
 		
 		static tick = function (_update_matrix = true) {
+			static _exclude_sample = []
+			
 			var _update_sample = false
 			
 			if animation != undefined {
@@ -531,8 +538,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				
 				var _current_sample = animation_samples[floor(_current_frame)]
 				var _next_sample = animation_samples[floor(_next_frame)]
+				var n = array_length(tick_sample)
 				
-				array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
+				array_copy(from_sample, 0, tick_sample, 0, n)
 				sample_blend(tick_sample, _current_sample, _next_sample, frac(_current_frame))
 				
 				if splice != undefined {
@@ -544,7 +552,25 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				}
 				
 				if transition < transition_time {
+					var _has_exclude = transition_exclude != undefined
+					
+					if _has_exclude {
+						array_copy(_exclude_sample, 0, tick_sample, 0, n)
+					}
+					
 					sample_blend(tick_sample, transition_sample, tick_sample, transition / transition_time)
+					
+					if _has_exclude {
+						var i = 0
+						
+						repeat array_length(transition_exclude) {
+							var _bone = transition_exclude[i++]
+							
+							splice_sample(_exclude_sample, _bone)
+							splice_sample(_exclude_sample, _bone, 1, from_sample)
+							splice_sample(_exclude_sample, _bone, 1, draw_sample)
+						}
+					}
 				}
 			}
 			
