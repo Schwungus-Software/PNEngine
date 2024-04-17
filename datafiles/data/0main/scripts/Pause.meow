@@ -1,12 +1,12 @@
 #ui
 
-tick = fun {
-	if self.input[UINP_BACK] {
-		self.destroy()
+tick = fun (_self) {
+	if _self.input[UINP_BACK] {
+		_self.destroy()
 	}
 }
 
-draw_gui = fun {
+draw_gui = fun (_self) {
 	draw_set_alpha(0.5)
 	draw_rectangle_color(0, 0, 480, 270, BLACK, BLACK, BLACK, BLACK, false)
 	draw_set_alpha(1)
