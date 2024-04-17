@@ -28,6 +28,10 @@ event_inherited()
 	
 	lock_animation = false
 	
+	playcam_range = 128
+	playcam_x_origin = 0
+	playcam_y_origin = 0
+	playcam_z_origin = 4
 	playcam_x_offset = 0
 	playcam_y_offset = 0
 	playcam_z_lerp = 0.25
