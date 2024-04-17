@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"cmd_drec",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cmd_drec",
+  "parent":{
+    "name":"Demos",
+    "path":"folders/Scripts/PNEngine/Debug/Commands/Demos.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

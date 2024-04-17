@@ -1,4 +1,10 @@
 function save_game() {
+	if global.game_status & GameStatus.DEMO {
+		print("! save_game: Cannot save during a demo")
+		
+		return false
+	}
+	
 	var _checkpoint = global.checkpoint
 	var _cp_level = _checkpoint[0]
 	

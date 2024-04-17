@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"pne_demos",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pne_demos",
+  "parent":{
+    "name":"Game",
+    "path":"folders/Scripts/PNEngine/Game.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

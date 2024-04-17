@@ -4,6 +4,7 @@
 #macro DATA_PATH global.config.data_path
 #macro LOGS_PATH game_save_id + "logs/"
 #macro SAVES_PATH game_save_id + "saves/"
+#macro DEMOS_PATH game_save_id + "demos/"
 #macro CONFIG_PATH game_save_id + "config.json"
 #macro CONTROLS_PATH game_save_id + "controls.json"
 

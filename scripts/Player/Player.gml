@@ -14,7 +14,6 @@ function Player() constructor {
 	// Input
 	input = array_create(PlayerInputs.__SIZE)
 	input_previous = array_create(PlayerInputs.__SIZE)
-	input_queue = ds_queue_create()
 	__show_reconnect_caption = true
 	
 	static activate = function () {
@@ -29,6 +28,17 @@ function Player() constructor {
 			
 			++global.players_ready;
 			show_caption($"[c_lime]Player {-~slot} readied! ({_device})")
+			
+			if global.demo_write {
+				var _demo_buffer = global.demo_buffer
+				
+				if _demo_buffer != undefined {
+					buffer_write(_demo_buffer, buffer_u32, global.demo_time)
+					buffer_write(_demo_buffer, buffer_u8, DemoPackets.PLAYER_ACTIVATE)
+					buffer_write(_demo_buffer, buffer_u8, slot)
+					buffer_write(_demo_buffer, buffer_u8, DemoPackets.TERMINATE)
+				}
+			}
 			
 			return true
 		}
@@ -62,11 +72,21 @@ function Player() constructor {
 				show_caption($"[c_red]Player {-~slot} unreadied!")
 			}
 			
-			ds_queue_clear(input_queue)
 			status = PlayerStatus.INACTIVE
 			
 			if _in_area {
 				set_area(undefined)
+			}
+			
+			if global.demo_write {
+				var _demo_buffer = global.demo_buffer
+				
+				if _demo_buffer != undefined {
+					buffer_write(_demo_buffer, buffer_u32, global.demo_time)
+					buffer_write(_demo_buffer, buffer_u8, DemoPackets.PLAYER_DEACTIVATE)
+					buffer_write(_demo_buffer, buffer_u8, slot)
+					buffer_write(_demo_buffer, buffer_u8, DemoPackets.TERMINATE)
+				}
 			}
 			
 			return true

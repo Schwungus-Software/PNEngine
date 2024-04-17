@@ -8,6 +8,10 @@ function cmd_level(_args) {
 		exit
 	}
 	
+	if global.game_status & GameStatus.DEMO {
+		print("! cmd_level: Cannot change levels during a demo")
+	}
+	
 	var _level = _parse_args[0]
 	
 	if mod_find_file("levels/" + _level + ".*") == "" {

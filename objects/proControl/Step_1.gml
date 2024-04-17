@@ -95,6 +95,25 @@ if load_state != LoadStates.NONE {
 			if not is_struct(_json) {
 				show_error($"!!! proControl: '{load_level}' not found", true)
 			} else {
+				if not (_json[$ "allow_demos"] ?? true) {
+					if global.demo_write {
+						if global.demo_buffer != undefined {
+							var _filename = "demo_" + string_replace_all(date_datetime_string(date_current_datetime()), "/", ".")
+							
+							cmd_dend(_filename)
+							show_caption($"[c_red]Recording ended on a protected level.\nSaved as '{_filename}.pnd'.")
+						} else {
+							cmd_dend("")
+							show_caption("[c_red]Recording cancelled by a protected level.")
+						}
+					} else {
+						if global.demo_buffer != undefined {
+							cmd_dend("")
+							show_caption("[c_red]Demo ended on a protected level.")
+						}
+					}
+				}
+				
 #region Discord Rich Presence
 				_level.rp_name = _json[$ "rp_name"] ?? ""
 				_level.rp_icon = _json[$ "rp_icon"] ?? ""
@@ -570,6 +589,80 @@ if load_state != LoadStates.NONE {
 					start(_level)
 				}
 			}
+			
+			if global.demo_write and global.demo_buffer == undefined {
+				var _demo_buffer = buffer_create(1, buffer_grow, 1)
+				
+				// Header
+				buffer_write(_demo_buffer, buffer_string, "PNEDEMO")
+				buffer_write(_demo_buffer, buffer_string, GM_version)
+				
+				// Mods
+				var _mods = global.mods
+				var n = ds_map_size(_mods)
+				
+				buffer_write(_demo_buffer, buffer_u32, n)
+				
+				var _key = ds_map_find_first(_mods)
+				
+				repeat n {
+					buffer_write(_demo_buffer, buffer_string, _key)
+					buffer_write(_demo_buffer, buffer_string, _mods[? _key].version)
+					_key = ds_map_find_next(_mods, _key)
+				}
+				
+				// States
+				buffer_write(_demo_buffer, buffer_u8, INPUT_MAX_PLAYERS)
+				
+				var _players = global.players
+				var i = 0
+				
+				repeat INPUT_MAX_PLAYERS {
+					buffer_write(_demo_buffer, buffer_u8, i)
+					
+					with _players[i] {
+						buffer_write(_demo_buffer, buffer_u8, status)
+						
+						var n = ds_map_size(states)
+						
+						buffer_write(_demo_buffer, buffer_u32, n)
+						
+						var _key = ds_map_find_first(states)
+						
+						repeat n {
+							buffer_write(_demo_buffer, buffer_string, _key)
+							buffer_write_dynamic(_demo_buffer, states[? _key])
+							_key = ds_map_find_next(states, _key)
+						}
+					}
+					
+					++i
+				}
+				
+				// Level
+				buffer_write(_demo_buffer, buffer_string, load_level)
+				buffer_write(_demo_buffer, buffer_u32, load_area)
+				buffer_write(_demo_buffer, buffer_s32, load_tag)
+				
+				// Flags
+				var _global_flags = global.flags[0].flags
+				var n = ds_map_size(_global_flags)
+				
+				buffer_write(_demo_buffer, buffer_u32, n)
+				
+				var _key = ds_map_find_first(_global_flags)
+				
+				repeat n {
+					buffer_write(_demo_buffer, buffer_string, _key)
+					buffer_write_dynamic(_demo_buffer, _global_flags[? _key])
+					_key = ds_map_find_next(_global_flags, _key)
+				}
+				
+				global.demo_buffer = _demo_buffer
+				global.demo_time = 0
+				global.demo_next = 0
+				print("proControl: Recording demo")
+			}
 #endregion
 		break
 	}
@@ -629,40 +722,48 @@ _tick += _tick_inc
 var _interps = global.interps
 var _players = global.players
 var _config = global.config
+var _demo_write = global.demo_write
+var _demo_buffer = global.demo_buffer
+var _demo_input = global.demo_input
+var _has_demo = _demo_buffer != undefined
+var _playing_demo = not _demo_write and _has_demo
+var _recording_demo = _demo_write and _has_demo
 
 if _tick >= 1 {
 	__input_system_tick()
 	
 #region New Players
-	with input_players_get_status() {
-		if any_changed {
-			print($"proControl: Player input status updated ({new_connections}, {new_disconnections})")
-			var i = 0
+	if not _has_demo {
+		with input_players_get_status() {
+			if any_changed {
+				print($"proControl: Player input status updated ({new_connections}, {new_disconnections})")
+				var i = 0
 		
-			repeat array_length(new_connections) {
-				with _players[new_connections[i++]] {
-					if not activate() {
-						if __show_reconnect_caption {
-							var _device = input_player_get_gamepad_type(slot)
+				repeat array_length(new_connections) {
+					with _players[new_connections[i++]] {
+						if not activate() {
+							if __show_reconnect_caption {
+								var _device = input_player_get_gamepad_type(slot)
 						
-							if _device == "unknown" {
-								_device = "no controller"
+								if _device == "unknown" {
+									_device = "no controller"
+								}
+						
+								show_caption($"[c_lime]Player {-~slot} reconnected! ({_device})")
+							} else {
+								__show_reconnect_caption = true
 							}
-						
-							show_caption($"[c_lime]Player {-~slot} reconnected! ({_device})")
-						} else {
-							__show_reconnect_caption = true
 						}
 					}
 				}
-			}
 			
-			i = 0
+				i = 0
 			
-			repeat array_length(new_disconnections) {
-				with _players[new_disconnections[i++]] {
-					if not deactivate() {
-						show_caption($"[c_red]Player {-~slot} disconnected. Press any key to reconnect.")
+				repeat array_length(new_disconnections) {
+					with _players[new_disconnections[i++]] {
+						if not deactivate() {
+							show_caption($"[c_red]Player {-~slot} disconnected. Press any key to reconnect.")
+						}
 					}
 				}
 			}
@@ -887,6 +988,74 @@ if _tick >= 1 {
 		}
 #endregion
 		
+		if _playing_demo {
+			var _demo_time = global.demo_time
+			
+			while _demo_time >= global.demo_next {
+				var _break = false
+				
+				while true {
+					switch buffer_read(_demo_buffer, buffer_u8) {
+						case DemoPackets.TERMINATE:
+							_break = true
+						break
+						
+						case DemoPackets.PLAYER_ACTIVATE:
+							var _slot = buffer_read(_demo_buffer, buffer_u8)
+							
+							_players[_slot].activate()
+						break
+						
+						case DemoPackets.PLAYER_DEACTIVATE:
+							var _slot = buffer_read(_demo_buffer, buffer_u8)
+							
+							_players[_slot].deactivate()
+						break
+						
+						case DemoPackets.PLAYER_INPUT:
+							var _slot = buffer_read(_demo_buffer, buffer_u8)
+							var _input = global.demo_input[_slot]
+							
+							_input[PlayerInputs.UP_DOWN] = buffer_read(_demo_buffer, buffer_s8)
+							_input[PlayerInputs.LEFT_RIGHT] = buffer_read(_demo_buffer, buffer_s8)
+							_input[PlayerInputs.JUMP] = buffer_read(_demo_buffer, buffer_bool)
+							_input[PlayerInputs.INTERACT] = buffer_read(_demo_buffer, buffer_bool)
+							_input[PlayerInputs.ATTACK] = buffer_read(_demo_buffer, buffer_bool)
+							_input[PlayerInputs.INVENTORY_UP] = buffer_read(_demo_buffer, buffer_bool)
+							_input[PlayerInputs.INVENTORY_LEFT] = buffer_read(_demo_buffer, buffer_bool)
+							_input[PlayerInputs.INVENTORY_DOWN] = buffer_read(_demo_buffer, buffer_bool)
+							_input[PlayerInputs.INVENTORY_RIGHT] = buffer_read(_demo_buffer, buffer_bool)
+							_input[PlayerInputs.AIM] = buffer_read(_demo_buffer, buffer_bool)
+							_input[PlayerInputs.AIM_UP_DOWN] = buffer_read(_demo_buffer, buffer_s16)
+							_input[PlayerInputs.AIM_LEFT_RIGHT] = buffer_read(_demo_buffer, buffer_s16)
+						break
+						
+						case DemoPackets.END:
+							cmd_dend("")
+							_demo_buffer = undefined
+							_has_demo = false
+							_playing_demo = false
+							_break = true
+						break
+					}
+					
+					if _break {
+						break
+					}
+				}
+				
+				if _has_demo {
+					global.demo_next = buffer_read(_demo_buffer, buffer_u32)
+				} else {
+					break
+				}
+			}
+		}
+		
+		if _recording_demo {
+			buffer_write(_demo_buffer, buffer_u32, global.demo_time)
+		}
+		
 #region Players
 		var i = 0
 		
@@ -898,30 +1067,58 @@ if _tick >= 1 {
 #region Input
 				array_copy(input_previous, 0, input, 0, PlayerInputs.__SIZE)
 				
-				var _get_input = false
-				var _index = i
-				var _mouse = false
-				
-				_get_input = true
-				_mouse = _index == 0 and _mouse_focused
-				
-				if _get_input {
+				if _playing_demo {
+					var _input = _demo_input[i]
+					
+					input[PlayerInputs.UP_DOWN] = _input[PlayerInputs.UP_DOWN]
+					input[PlayerInputs.LEFT_RIGHT] = _input[PlayerInputs.LEFT_RIGHT]
+					input[PlayerInputs.JUMP] = _input[PlayerInputs.JUMP]
+					input[PlayerInputs.INTERACT] = _input[PlayerInputs.INTERACT]
+					input[PlayerInputs.ATTACK] = _input[PlayerInputs.ATTACK]
+					input[PlayerInputs.INVENTORY_UP] = _input[PlayerInputs.INVENTORY_UP]
+					input[PlayerInputs.INVENTORY_LEFT] = _input[PlayerInputs.INVENTORY_LEFT]
+					input[PlayerInputs.INVENTORY_DOWN] = _input[PlayerInputs.INVENTORY_DOWN]
+					input[PlayerInputs.INVENTORY_RIGHT] = _input[PlayerInputs.INVENTORY_RIGHT]
+					input[PlayerInputs.AIM] = _input[PlayerInputs.AIM]
+					
+					var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
+					var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
+					var _input_aim_up_down, _input_aim_left_right
+					
+					if is_nan(_input_force_up_down) {
+						_input_aim_up_down = _input[PlayerInputs.AIM_UP_DOWN]
+					} else {
+						_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
+						input[PlayerInputs.FORCE_UP_DOWN] = NaN
+					}
+					
+					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
+					
+					if is_nan(_input_force_left_right) {
+						_input_aim_left_right = _input[PlayerInputs.AIM_LEFT_RIGHT]
+					} else {
+						_input_aim_left_right = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
+						input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
+					}
+					
+					input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
+				} else {
 					// Main
-					var _move_range = input_check("walk", _index) ? 64 : 127
-					var _input_up_down = floor(input_check_opposing("up", "down", _index, true) * _move_range)
-					var _input_left_right = floor(input_check_opposing("left", "right", _index, true) * _move_range)
-					var _input_jump = input_check("jump", _index)
-					var _input_interact = input_check("interact", _index)
-					var _input_attack = input_check("attack", _index)
+					var _move_range = input_check("walk", i) ? 64 : 127
+					var _input_up_down = floor(input_check_opposing("up", "down", i, true) * _move_range)
+					var _input_left_right = floor(input_check_opposing("left", "right", i, true) * _move_range)
+					var _input_jump = input_check("jump", i)
+					var _input_interact = input_check("interact", i)
+					var _input_attack = input_check("attack", i)
 					
 					// Inventory
-					var _input_inventory_up = input_check("inventory_up", _index)
-					var _input_inventory_left = input_check("inventory_left", _index)
-					var _input_inventory_down = input_check("inventory_down", _index)
-					var _input_inventory_right = input_check("inventory_right", _index)
+					var _input_inventory_up = input_check("inventory_up", i)
+					var _input_inventory_left = input_check("inventory_left", i)
+					var _input_inventory_down = input_check("inventory_down", i)
+					var _input_inventory_right = input_check("inventory_right", i)
 					
 					// Camera
-					var _input_aim = input_check("aim", _index)
+					var _input_aim = input_check("aim", i)
 					
 					// Write to input array
 					input[PlayerInputs.UP_DOWN] = _input_up_down
@@ -936,15 +1133,15 @@ if _tick >= 1 {
 					input[PlayerInputs.AIM] = _input_aim
 					
 					// This one kinda sucks...
-					var _dx_factor = input_check_opposing("aim_left", "aim_right", _index, true)
-					var _dy_factor = input_check_opposing("aim_up", "aim_down", _index, true)
+					var _dx_factor = input_check_opposing("aim_left", "aim_right", i, true)
+					var _dy_factor = input_check_opposing("aim_up", "aim_down", i, true)
 					var _dx_angle, _dy_angle
 					
 					with _config {
 						_dx_angle = in_pan_x * (in_invert_x ? -1 : 1)
 						_dy_angle = in_pan_y * (in_invert_y ? -1 : 1)
 						
-						if _mouse {
+						if i == 0 and _mouse_focused {
 							_dx_factor += _mouse_dx * in_mouse_x
 							_dy_factor += _mouse_dy * in_mouse_y
 						}
@@ -977,6 +1174,23 @@ if _tick >= 1 {
 					}
 					
 					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
+					
+					if _recording_demo and not array_equals(input, input_previous) {
+						buffer_write(_demo_buffer, buffer_u8, DemoPackets.PLAYER_INPUT)
+						buffer_write(_demo_buffer, buffer_u8, i)
+						buffer_write(_demo_buffer, buffer_s8, _input_up_down)
+						buffer_write(_demo_buffer, buffer_s8, _input_left_right)
+						buffer_write(_demo_buffer, buffer_bool, _input_jump)
+						buffer_write(_demo_buffer, buffer_bool, _input_interact)
+						buffer_write(_demo_buffer, buffer_bool, _input_attack)
+						buffer_write(_demo_buffer, buffer_bool, _input_inventory_up)
+						buffer_write(_demo_buffer, buffer_bool, _input_inventory_left)
+						buffer_write(_demo_buffer, buffer_bool, _input_inventory_down)
+						buffer_write(_demo_buffer, buffer_bool, _input_inventory_right)
+						buffer_write(_demo_buffer, buffer_bool, _input_aim)
+						buffer_write(_demo_buffer, buffer_s16, _input_aim_up_down)
+						buffer_write(_demo_buffer, buffer_s16, _input_aim_left_right)
+					}
 				}
 #endregion
 				
@@ -1094,6 +1308,7 @@ if _tick >= 1 {
 					}
 				}
 			}
+#endregion
 			
 			++i
 		}
@@ -1101,10 +1316,18 @@ if _tick >= 1 {
 		
 		_mouse_dx = 0
 		_mouse_dy = 0
-		input_clear_momentary(true);
+		input_clear_momentary(true)
+		
+		if _has_demo {
+			++global.demo_time
+		}
+		
+		if _recording_demo {
+			buffer_write(_demo_buffer, buffer_u8, DemoPackets.TERMINATE)
+		}
+		
 		--_tick
 	}
-#endregion
 #endregion
 }
 
