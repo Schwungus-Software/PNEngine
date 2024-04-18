@@ -41,6 +41,7 @@
 
 #region Cameras
 	global.camera_active = noone
+	global.camera_demo = noone
 #endregion
 
 #region Vertex Buffers

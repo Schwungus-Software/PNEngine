@@ -3380,6 +3380,7 @@
     {"id":{"name":"scribble_fallback_font","path":"fonts/scribble_fallback_font/scribble_fallback_font.yy",},},
     {"id":{"name":"Ambience","path":"objects/Ambience/Ambience.yy",},},
     {"id":{"name":"Camera","path":"objects/Camera/Camera.yy",},},
+    {"id":{"name":"DemoCamera","path":"objects/DemoCamera/DemoCamera.yy",},},
     {"id":{"name":"DirectionalLight","path":"objects/DirectionalLight/DirectionalLight.yy",},},
     {"id":{"name":"LogoBase","path":"objects/LogoBase/LogoBase.yy",},},
     {"id":{"name":"PlayerCamera","path":"objects/PlayerCamera/PlayerCamera.yy",},},

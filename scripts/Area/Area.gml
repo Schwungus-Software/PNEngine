@@ -459,6 +459,20 @@ function Area() constructor {
 		ds_list_destroy(lights)
 	}
 	
+	static find = function (_type) {
+		var i = ds_list_size(active_things)
+		
+		repeat i {
+			with active_things[| --i] {
+				if is_ancestor(_type) {
+					return id
+				}
+			}
+		}
+		
+		return noone
+	}
+	
 	static find_tag = function (_tag) {
 		static things = []
 		

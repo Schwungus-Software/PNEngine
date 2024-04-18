@@ -120,6 +120,7 @@
     {"name":"scribble_fallback_font","order":12,"path":"fonts/scribble_fallback_font/scribble_fallback_font.yy",},
     {"name":"Ambience","order":5,"path":"objects/Ambience/Ambience.yy",},
     {"name":"Camera","order":1,"path":"objects/Camera/Camera.yy",},
+    {"name":"DemoCamera","order":8,"path":"objects/DemoCamera/DemoCamera.yy",},
     {"name":"PlayerCamera","order":2,"path":"objects/PlayerCamera/PlayerCamera.yy",},
     {"name":"PlayerPawn","order":1,"path":"objects/PlayerPawn/PlayerPawn.yy",},
     {"name":"PointLight","order":2,"path":"objects/PointLight/PointLight.yy",},

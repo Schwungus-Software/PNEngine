@@ -989,6 +989,45 @@ if _tick >= 1 {
 #endregion
 		
 		if _playing_demo {
+			var _switch_camera = 0
+			
+			if input_check_pressed("inventory_up") {
+				_switch_camera = 1
+			} else if input_check_pressed("inventory_left") {
+				_switch_camera = 2
+			} else if input_check_pressed("inventory_down") {
+				_switch_camera = 3
+			} else if input_check_pressed("inventory_right") {
+				_switch_camera = 4
+			} else if input_check_pressed("interact") {
+				_switch_camera = 5
+			}
+			
+			switch _switch_camera {
+				case 0: break
+				
+				case 5:
+					global.camera_demo = noone
+				break
+				
+				default:
+					with _players[_switch_camera - 1] {
+						if status == PlayerStatus.ACTIVE and area != undefined {
+							var _attach
+							
+							if instance_exists(thing) {
+								with thing {
+									_attach = area.nearest(x, y, z, DemoCamera)
+								}
+							} else {
+								_attach = area.find(DemoCamera)
+							}
+							
+							global.camera_demo = _attach
+						}
+					}
+			}
+			
 			var _demo_time = global.demo_time
 			
 			while _demo_time >= global.demo_next {
