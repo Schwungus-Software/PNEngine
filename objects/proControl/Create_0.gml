@@ -114,7 +114,9 @@
 					"dq_add_translation", dq_add_translation,
 					"dq_get_x", dq_get_x,
 					"dq_get_y", dq_get_y,
-					"dq_get_z", dq_get_z
+					"dq_get_z", dq_get_z,
+					"dq_multiply", dq_multiply,
+					"dq_conjugate", dq_conjugate
 			    )
 			#endregion
 			
