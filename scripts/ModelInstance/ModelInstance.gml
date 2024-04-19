@@ -71,9 +71,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				
 				if _frame >= 0 {
 					frame = _frame
-					frame_speed = 1
 				}
 				
+				frame_speed = 1
 				transition = 0
 				transition_time = 0
 				
