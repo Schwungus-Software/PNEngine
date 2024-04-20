@@ -23,6 +23,8 @@ function cmd_demo(_args) {
 		exit
 	}
 	
+	cmd_dend("")
+	
 	var _demo_buffer = buffer_load(_path)
 	
 	// Header
