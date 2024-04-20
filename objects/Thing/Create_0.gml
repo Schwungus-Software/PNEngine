@@ -17,6 +17,7 @@
 		NONE,
 		NORMAL,
 		BONE,
+		MODEL,
 	}
 #endregion
 
@@ -88,6 +89,7 @@
 	shadow_z = 0
 	shadow_radius = undefined
 	shadow_ray = raycast_data_create()
+	shadow_matrix = matrix_build_identity()
 	
 	model = undefined
 	collider = undefined

@@ -353,6 +353,7 @@ if _held {
 	
 	case MShadow.NORMAL:
 	case MShadow.BONE:
+	case MShadow.MODEL:
 		var _x, _y, _z
 		
 		if m_shadow == MShadow.BONE and model != undefined {

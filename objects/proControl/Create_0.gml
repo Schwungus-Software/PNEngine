@@ -416,6 +416,7 @@
 					"M_SHADOW_NONE", MShadow.NONE,
 					"M_SHADOW_NORMAL", MShadow.NORMAL,
 					"M_SHADOW_BONE", MShadow.BONE,
+					"M_SHADOW_MODEL", MShadow.MODEL,
 					
 					"DMG_NONE", DamageResults.NONE,
 					"DMG_MISSED", DamageResults.MISSED,
