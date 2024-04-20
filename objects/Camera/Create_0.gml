@@ -288,7 +288,7 @@ event_inherited()
 			camera_set_proj_mat(_render_camera, _projection_matrix)
 			camera_apply(_render_camera)
 			
-			var _time = current_time
+			var _time = current_time * 0.001
 			var _gpu_tex_filter = gpu_get_tex_filter()
 			var _config = global.config
 			var _vid_texture_filter = _config.vid_texture_filter
@@ -306,29 +306,24 @@ event_inherited()
 					draw_clear(clear_color[4])
 					
 					if instance_exists(sky) and sky.model != undefined {
-						gpu_set_blendenable(false)
 						gpu_set_zwriteenable(false)
+						gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one)
 						global.sky_shader.set()
+						global.u_time.set(_time)
 					
 						with sky {
 							with model {
 								sx = _x
 								sy = _y
 								sz = _z
-							
-								var _material = other.material
-								var _scroll = _time * SKY_SCROLL_FACTOR
-							
-								syaw = _scroll * _material.x_scroll
-								spitch = _scroll * _material.y_scroll
 							}
-						
+							
 							event_user(ThingEvents.DRAW)
 						}
 					
 						shader_reset()
+						gpu_set_blendenable(bm_normal)
 						gpu_set_zwriteenable(true)
-						gpu_set_blendenable(true)
 					}
 				} else {
 					draw_clear(c_black)
@@ -340,7 +335,7 @@ event_inherited()
 				global.u_fog_color.set(fog_color[0], fog_color[1], fog_color[2], fog_color[3])
 				global.u_wind.set(wind_strength, wind_direction[0], wind_direction[1], wind_direction[2])
 				global.u_light_data.set(light_data)
-				global.u_time.set(_time * 0.001)
+				global.u_time.set(_time)
 				
 				if model != undefined {
 					model.draw()
@@ -374,23 +369,17 @@ event_inherited()
 				_world_canvas.Finish()
 			}
 			
+			gpu_set_blendenable(false)
+			_world_canvas.Draw(0, 0)
+			gpu_set_blendenable(true)
+			_render_canvas.Finish()
+			
 			if not _allow_screen or alpha >= 1 {
 				gpu_set_blendenable(false)
-				_world_canvas.Draw(0, 0)
+				_render_canvas.Draw(0, 0)
 				gpu_set_blendenable(true)
 			} else {
-				// Do some weird stuff with blendmodes to ensure that the
-				// motion blur displays correctly both with and without bloom.
-				gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one)
-				_world_canvas.DrawExt(0, 0, 1, 1, 0, c_white, clamp(global.delta * alpha, 0, 1))
-				gpu_set_blendmode(bm_normal)
-			}
-			
-			with _render_canvas {
-				Finish()
-				gpu_set_blendenable(false)
-				Draw(0, 0)
-				gpu_set_blendenable(true)
+				_render_canvas.DrawExt(0, 0, 1, 1, 0, c_white, clamp(global.delta * alpha, 0, 1))
 			}
 			
 			output.Finish()
