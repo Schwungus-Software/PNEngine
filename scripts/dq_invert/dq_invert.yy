@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"sample_blend_ext",
+  "%Name":"dq_invert",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"sample_blend_ext",
+  "name":"dq_invert",
   "parent":{
     "name":"Dual Quaternions",
     "path":"folders/Scripts/PNEngine/Math/Dual Quaternions.yy",

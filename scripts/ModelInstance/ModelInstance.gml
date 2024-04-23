@@ -62,6 +62,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		splice_frame = 0
 		splice_push = false
 		
+		static _exclude_sample = []
+		
 		static set_animation = function (_animation = undefined, _frame = 0, _time = 0) {
 			if _animation == undefined {
 				animation_name = ""
@@ -108,12 +110,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			transition = 0
 			transition_time = _time
 			
-			if _time > 0 {
+			var _transitioning = _time > 0
+			
+			if _transitioning {
 				array_copy(transition_sample, 0, tick_sample, 0, array_length(tick_sample))
-				
-				if not _first {
-					_copy = false
-				}
 			}
 			
 			if _copy {
@@ -153,8 +153,22 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					}
 				}
 				
-				array_copy(from_sample, 0, tick_sample, 0, n)
-				array_copy(draw_sample, 0, tick_sample, 0, n)
+				if _transitioning {
+					if transition_exclude != undefined {
+						var i = 0
+						
+						repeat array_length(transition_exclude) {
+							var _bone_index = transition_exclude[i++]
+							
+							splice_sample(tick_sample, _bone_index, 1, transition_sample)
+							splice_sample(tick_sample, _bone_index, 1, from_sample)
+						}
+					}
+					
+					array_copy(tick_sample, 0, transition_sample, 0, n)
+				} else {
+					array_copy(from_sample, 0, tick_sample, 0, n)
+				}
 			}
 		}
 		
@@ -381,7 +395,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _parent = animation_bind_pose[_parent_index]
 			
 			// Find the change in orientation from the source sample to the
-			// destination sample. Same as dq_multiply(D, dq_get_conjugate(S))
+			// destination sample. Same as dq_multiply(D, dq_conjugate(S))
 			var b = _parent_index * 8
 			var b1 = -~b
 			var b2 = b + 2
@@ -476,8 +490,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		update_sample = undefined
 		
 		static tick = function (_update_matrix = true) {
-			static _exclude_sample = []
-			
 			var _update_sample = false
 			
 			if animation != undefined {
@@ -568,7 +580,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 							
 							splice_sample(_exclude_sample, _bone)
 							splice_sample(_exclude_sample, _bone, 1, from_sample)
-							splice_sample(_exclude_sample, _bone, 1, draw_sample)
 						}
 					}
 				}

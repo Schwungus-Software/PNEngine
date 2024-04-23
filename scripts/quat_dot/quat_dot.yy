@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"quat_dot",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"quat_dot",
+  "parent":{
+    "name":"Quaternions",
+    "path":"folders/Scripts/PNEngine/Math/Quaternions.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

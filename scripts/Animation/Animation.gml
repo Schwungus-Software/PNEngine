@@ -103,13 +103,23 @@ function Animation() : Asset() constructor {
 			
 			_wdq[0] = _bind_pose[0]
 			i = 0
+			
+			var _dq = dq_build_identity()
 
 			repeat bones_amount {
 				var _ii = -~i
 			    var _qa = keyframes[# a, _ii]
 			    var _qb = keyframes[# b, _ii]
 			    var _qc = keyframes[# c, _ii]
-				var _dq = dq_build_identity()
+				
+				if quat_dot(_qa, _qb) < 0 {
+					dq_invert(_qa, _qa)
+				}
+				
+				if quat_dot(_qb, _qc) < 0 {
+					dq_invert(_qc, _qc)
+				}
+				
 				var j = 0
 				
 			    repeat 8 {
@@ -117,6 +127,8 @@ function Animation() : Asset() constructor {
 					_dq[j] = sqr(1 - d) * ((_qa[j] + _qb[j]) * 0.5) + 2 * d * (1 - d) * _qb[j] + sqr(d) * ((_qc[j] + _qb[j]) * 0.5);
 					++j
 				}
+				
+				dq_normalize(_dq, _dq)
 				
 				var _bdq = _bind_pose[i]
 				var _pdq = _wdq[_bdq[8]]
@@ -217,7 +229,12 @@ function Animation() : Asset() constructor {
 				var _qa = keyframes[# a, _ii]
 			    var _qb = keyframes[# b, _ii]
 				
+				if quat_dot(_qa, _qb) < 0 {
+					smf_dq_invert(_qa, _qa)
+				}
+				
 				dq_lerp(_qa, _qb, d, _dq)
+				dq_normalize(_dq, _dq)
 				
 				var _bdq = _bind_pose[i]
 				var _pdq = _wdq[_bdq[8]]
@@ -234,7 +251,7 @@ function Animation() : Asset() constructor {
 					_pdq[3] * _dq[7] - _pdq[0] * _dq[4] - _pdq[1] * _dq[5] - _pdq[2] * _dq[6] + _pdq[7] * _dq[3] - _pdq[4] * _dq[0] - _pdq[5] * _dq[1] - _pdq[6] * _dq[2],
 				]
 				
-			    _wdq[@ i] = _cdq
+			    _wdq[i] = _cdq
 				
 				// Delta world dual quaternion (dwdq) = Child dual quaternion (_cdq) * Bind dual quaternion (bdq)
 				_dwdq[0] = -_cdq[3] * _bdq[0] + _cdq[0] * _bdq[3] - _cdq[1] * _bdq[2] + _cdq[2] * _bdq[1]
@@ -266,10 +283,10 @@ function Animation() : Asset() constructor {
 				
 				var _ld = _dwdq[0] * _dwdq[4] + _dwdq[1] * _dwdq[5] + _dwdq[2] * _dwdq[6] + _dwdq[3] * _dwdq[7]
 				
-				_dwdq[@ 4] = (_dwdq[4] - _dwdq[0] * _ld) * _lr
-				_dwdq[@ 5] = (_dwdq[5] - _dwdq[1] * _ld) * _lr
-				_dwdq[@ 6] = (_dwdq[6] - _dwdq[2] * _ld) * _lr
-				_dwdq[@ 7] = (_dwdq[7] - _dwdq[3] * _ld) * _lr
+				_dwdq[4] = (_dwdq[4] - _dwdq[0] * _ld) * _lr
+				_dwdq[5] = (_dwdq[5] - _dwdq[1] * _ld) * _lr
+				_dwdq[6] = (_dwdq[6] - _dwdq[2] * _ld) * _lr
+				_dwdq[7] = (_dwdq[7] - _dwdq[3] * _ld) * _lr
 				
 				// Generate sample
 				array_copy(_sample, i * 8, _dwdq, 0, 8);
