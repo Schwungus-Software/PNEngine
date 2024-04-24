@@ -17,6 +17,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 	}
 	
 	skins_updated = true
+	override_textures = array_create(n, undefined)
 	cache = []
 	cache_amount = 0
 	
@@ -32,6 +33,15 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		
 		if skins[_submodel] != _skin {
 			skins[_submodel] = _skin
+			skins_updated = true
+		}
+	}
+	
+	static override_texture = function (_submodel, _textures) {
+		gml_pragma("forceinline")
+		
+		if override_textures[_submodel] != _textures {
+			override_textures[_submodel] = _textures
 			skins_updated = true
 		}
 	}
@@ -690,6 +700,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				var j = 0
 				var k = 0
 				
+				var _cache = cache
+				var _override_textures = override_textures
+				
 				repeat submodels_amount {
 					var _skin = skins[i]
 					
@@ -699,15 +712,28 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 						continue
 					}
 					
-					var _submodel = submodels[i++]
+					with submodels[i] {
+						_cache[j] = vbo
+						
+						var _material = materials[_skin]
+						
+						_cache[-~j] = _material
+						
+						var _textures = _override_textures[i]
+						
+						if _textures == undefined {
+							_textures = _material.textures
+						}
+						
+						_cache[j + 2] = _textures
+					}
 					
-					cache[j] = _submodel.vbo
-					cache[-~j] = _submodel.materials[_skin]
-					j += 2;
+					++i
+					j += 3;
 					++k
 				}
 				
-				array_resize(cache, j)
+				array_resize(_cache, j)
 				cache_amount = k
 				skins_updated = false
 			}
@@ -715,21 +741,22 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var i = 0
 			
 			repeat cache_amount {
+				var _vbo = cache[i]
 				var _material = cache[-~i]
-				var _image
+				var _textures = cache[i + 2]
+				
+				var _idx = _material.frame_speed * current_time
 				
 				with _material {
-					_image = image
-					
 					if image2 != undefined {
 						_u_material_can_blend.set(1)
 						
 						if image2 == -1 {
 							_u_material_blend.set(-1)
 						} else {
-							_u_material_blend.set(image2.GetTexture(0))
+							_u_material_blend.set(image2.GetTexture(_idx))
 							
-							var _uvs = image2.GetUVs(0)
+							var _uvs = image2.GetUVs(_idx)
 							
 							with _uvs {
 								_u_material_blend_uvs.set(normLeft, normTop, normRight, normBottom)
@@ -745,29 +772,17 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					_u_material_color.set(color[0], color[1], color[2], color[3])
 				}
 				
-				var _vbo = cache[i]
-				
-				if _image == -1 {
-					vertex_submit(_vbo, pr_trianglelist, -1)
-				} else {
-					var _idx
-					
-					with _material {
-						_idx = frame_speed * current_time
-						_u_material_alpha_test.set(alpha_test)
-						_u_material_scroll.set(x_scroll, y_scroll)
-					}
-					
-					var _uvs = _image.GetUVs(_idx)
-					
-					with _uvs {
-						_u_uvs.set(normLeft, normTop, normRight, normBottom)
-					}
-					
-					vertex_submit(_vbo, pr_trianglelist, _image.GetTexture(_idx))
+				with _material {
+					_u_material_alpha_test.set(alpha_test)
+					_u_material_scroll.set(x_scroll, y_scroll)
 				}
 				
-				i += 2
+				var _texdata = _textures[_idx % array_length(_textures)]
+				var _texture = _texdata[0]
+				
+				_u_uvs.set(_texdata[1], _texdata[2], _texdata[3], _texdata[4])
+				vertex_submit(_vbo, pr_trianglelist, _texdata[0])
+				i += 3
 			}
 		}
 		

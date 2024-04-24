@@ -505,6 +505,18 @@ if load_state != LoadStates.NONE {
 				with _materials_map[? _key] {
 					if image != -1 {
 						image = CollageImageGetInfo(image)
+						
+						var i = 0
+						var n = image.GetCount()
+						
+						textures = array_create(n)
+						
+						repeat n {
+							var _texture = image.GetTexture(i)
+							var _uvs = image.GetUVs(i)
+							
+							textures[i++] = [_texture, _uvs.normLeft, _uvs.normTop, _uvs.normRight, _uvs.normBottom]
+						}
 					}
 					
 					if image2 != undefined and image2 != -1 {
