@@ -248,6 +248,12 @@ event_inherited()
 	}
 	
 	render = function (_width, _height, _update_listener = false, _allow_sky = true, _allow_screen = true, _world_shader = global.world_shader) {
+		++global.camera_layer
+		
+		if global.camera_layer == 1 {
+			gpu_set_cullmode(cull_counterclockwise)
+		}
+		
 		if instance_exists(child) {
 			return child.render(_width, _height, _update_listener, _allow_sky, _allow_screen, _world_shader)
 		}
@@ -382,7 +388,12 @@ event_inherited()
 				_render_canvas.DrawExt(0, 0, 1, 1, 0, c_white, clamp(global.delta * alpha, 0, 1))
 			}
 			
-			output.Finish()
+			output.Finish();
+			--global.camera_layer
+			
+			if global.camera_layer == 0 {
+				gpu_set_cullmode(cull_noculling)
+			}
 			
 			if _allow_screen {
 				output.Start()
