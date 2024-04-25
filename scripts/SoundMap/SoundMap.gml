@@ -5,9 +5,9 @@ function SoundMap() : AssetMap() constructor {
 		}
 		
 		var _path = "sounds/" + _name
-		var _wav_file = mod_find_file(_path + ".*", ".json")
+		var _sound_file = mod_find_file(_path + ".*", ".json")
 		
-		if file_exists(_wav_file) {
+		if file_exists(_sound_file) {
 			var _pitch_low = 1
 			var _pitch_high = 1
 			var _loop_start = undefined
@@ -30,7 +30,7 @@ function SoundMap() : AssetMap() constructor {
 				_loop_end = _json[$ "loop_end"]
 			}
 			
-			var _sound_id = fmod_system_create_sound(_wav_file, FMOD_MODE.CREATESAMPLE)
+			var _sound_id = fmod_system_create_sound(_sound_file, FMOD_MODE.CREATESAMPLE)
 			var _sound = new Sound()
 			
 			with _sound {

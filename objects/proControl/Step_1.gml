@@ -1,685 +1,680 @@
-if load_state != LoadStates.NONE {
-	switch load_state {
-		case LoadStates.START:
-			load_state = LoadStates.UNLOAD
-		break
+switch load_state {
+	case LoadStates.START:
+		load_state = LoadStates.UNLOAD
+	exit
 		
-		case LoadStates.UNLOAD:
+	case LoadStates.UNLOAD:
 #region Unload Previous Level
-			with proTransition {
-				if state == 3 {
-					instance_destroy()
-				}
+		with proTransition {
+			if state == 3 {
+				instance_destroy()
 			}
+		}
 			
-			var _ui = global.ui
+		var _ui = global.ui
 			
-			if _ui != undefined {
-				_ui.destroy()
+		if _ui != undefined {
+			_ui.destroy()
+		}
+			
+		var _canvases = global.canvases
+		var i = 0
+			
+		repeat array_length(_canvases) {
+			_canvases[i++].Flush()
+		}
+			
+		global.ui_sounds.clear()
+			
+		var _music_instances = global.music_instances
+			
+		repeat ds_list_size(_music_instances) {
+			_music_instances[| 0].destroy()
+		}
+			
+		global.level.destroy()
+			
+		var _players = global.players
+			
+		i = 0
+			
+		repeat INPUT_MAX_PLAYERS {
+			with _players[i++] {
+				level = undefined
+				area = undefined
+				thing = noone
+				camera = noone
 			}
+		}
 			
-			var _canvases = global.canvases
-			var i = 0
+		global.images.clear()
+		global.materials.clear()
+		global.models.clear()
+		global.animations.clear()
+		//global.fonts.clear()
+		global.sounds.clear()
+		global.music.clear()
+		global.scripts.flush()
 			
-			repeat array_length(_canvases) {
-				_canvases[i++].Flush()
-			}
+		var _indices = RNG.indices
+		var i = 0
 			
-			global.ui_sounds.clear()
+		repeat array_length(_indices) {
+			_indices[i++] = 0
+		}
 			
-			var _music_instances = global.music_instances
-			
-			repeat ds_list_size(_music_instances) {
-				_music_instances[| 0].destroy()
-			}
-			
-			global.level.destroy()
-			
-			var _players = global.players
-			
-			i = 0
-			
-			repeat INPUT_MAX_PLAYERS {
-				with _players[i++] {
-					level = undefined
-					area = undefined
-					thing = noone
-					camera = noone
-				}
-			}
-			
-			global.images.clear()
-			global.materials.clear()
-			global.models.clear()
-			global.animations.clear()
-			//global.fonts.clear()
-			global.sounds.clear()
-			global.music.clear()
-			global.scripts.flush()
-			
-			var _indices = RNG.indices
-			var i = 0
-			
-			repeat array_length(_indices) {
-				_indices[i++] = 0
-			}
-			
-			if load_level == undefined {
-				game_end()
+		if load_level == undefined {
+			game_end()
 				
-				exit
-			}
+			exit
+		}
 			
-			global.flags[1].clear()
-			global.level = new Level()
-			gc_collect()
-			load_state = LoadStates.LOAD
+		global.flags[1].clear()
+		global.level = new Level()
+		gc_collect()
+		load_state = LoadStates.LOAD
 #endregion
-		break
+	exit
 		
-		case LoadStates.LOAD:
+	case LoadStates.LOAD:
 #region Load New Level
-			print($"\n========== {load_level} ({lexicon_text("level." + load_level)}) ==========")
-			print($"(Entering area {load_area} from {load_tag})")
+		print($"\n========== {load_level} ({lexicon_text("level." + load_level)}) ==========")
+		print($"(Entering area {load_area} from {load_tag})")
 			
-			var _images = global.images
+		var _images = global.images
 			
-			_images.start_batch()
+		_images.start_batch()
 			
-			var _level = global.level
+		var _level = global.level
 			
-			_level.name = load_level
+		_level.name = load_level
 			
-			var _json = json_load(mod_find_file("levels/" + load_level + ".*"))
+		var _json = json_load(mod_find_file("levels/" + load_level + ".*"))
 			
-			if not is_struct(_json) {
-				show_error($"!!! proControl: '{load_level}' not found", true)
-			} else {
-				if not (_json[$ "allow_demos"] ?? true) {
-					if global.demo_write {
-						if global.demo_buffer != undefined {
-							var _filename = "demo_" + string_replace_all(date_datetime_string(date_current_datetime()), "/", ".")
+		if not is_struct(_json) {
+			show_error($"!!! proControl: '{load_level}' not found", true)
+		} else {
+			if not force_type_fallback(_json[$ "allow_demos"], "bool", true) {
+				if global.demo_write {
+					if global.demo_buffer != undefined {
+						var _filename = "demo_" + string_replace_all(date_datetime_string(date_current_datetime()), "/", ".")
 							
-							cmd_dend(_filename)
-							show_caption($"[c_red]Recording ended on a protected level.\nSaved as '{_filename}.pnd'.")
-						} else {
-							cmd_dend("")
-							show_caption("[c_red]Recording cancelled by a protected level.")
-						}
+						cmd_dend(_filename)
+						show_caption($"[c_red]Recording ended on a protected level.\nSaved as '{_filename}.pnd'.")
 					} else {
-						if global.demo_buffer != undefined {
-							cmd_dend("")
-							show_caption("[c_red]Demo ended on a protected level.")
-						}
+						cmd_dend("")
+						show_caption("[c_red]Recording cancelled by a protected level.")
+					}
+				} else {
+					if global.demo_buffer != undefined {
+						cmd_dend("")
+						show_caption("[c_red]Demo ended on a protected level.")
 					}
 				}
+			}
 				
 #region Discord Rich Presence
-				_level.rp_name = _json[$ "rp_name"] ?? ""
-				_level.rp_icon = _json[$ "rp_icon"] ?? ""
+			_level.rp_name = force_type_fallback(_json[$ "rp_name"], "string", "")
+			_level.rp_icon = force_type_fallback(_json[$ "rp_icon"], "string", "")
 #endregion
 				
 #region Default Properties
-				if _json[$ "checkpoint"] {
-					var _checkpoint = global.checkpoint
+			if force_type_fallback(_json[$ "checkpoint"], "bool", false) {
+				var _checkpoint = global.checkpoint
 					
-					_checkpoint[0] = load_level
-					_checkpoint[1] = load_area
-					_checkpoint[2] = load_tag
-					save_game()
-				}
+				_checkpoint[0] = load_level
+				_checkpoint[1] = load_area
+				_checkpoint[2] = load_tag
+				save_game()
+			}
 				
-				var _script = _json[$ "script"]
+			var _script = _json[$ "script"]
 				
-				if is_string(_script) {
-					with _level {
-						level_script = global.scripts.fetch(_script)
+			if is_string(_script) {
+				with _level {
+					level_script = global.scripts.fetch(_script)
 						
-						if level_script != undefined {
-							start = level_script.start
-							area_changed = level_script.area_changed
-							area_activated = level_script.area_activated
-							area_deactivated = level_script.area_deactivated
-						}
+					if level_script != undefined {
+						start = level_script.start
+						area_changed = level_script.area_changed
+						area_activated = level_script.area_activated
+						area_deactivated = level_script.area_deactivated
 					}
 				}
+			}
 				
-				var _music_tracks = _json[$ "music"]
+			var _music_tracks = _json[$ "music"]
 				
-				if _music_tracks != undefined {
-					var _music = global.music
+			if _music_tracks != undefined {
+				var _music = global.music
 					
-					if is_string(_music_tracks) {
-						_music.load(_music_tracks)
-						_level.music = [_music_tracks]
-					} else {
-						if is_array(_music_tracks) {
-							var i = 0
+				if is_string(_music_tracks) {
+					_level.music = [_music_tracks]
+				} else {
+					if is_array(_music_tracks) {
+						var i = 0
 							
-							repeat array_length(_music_tracks) {
-								var _track = _music_tracks[i]
-								var _name
+						repeat array_length(_music_tracks) {
+							var _track = _music_tracks[i]
+							var _name
 								
-								if is_string(_track) {
-									_name = _track
-								} else {
-									if is_struct(_track) {
-										_name = _track[$ "name"]
+							if is_string(_track) {
+								_name = _track
+							} else {
+								if is_struct(_track) {
+									_name = _track[$ "name"]
 										
-										if not is_string(_name) {
-											show_error($"!!! proControl: Level has invalid info for music track {i}, struct must have a 'name' member with string", true)
-										}
-									} else {
-										show_error($"!!! proControl: Level has invalid info for music track {i}, expected string or struct", true)
+									if not is_string(_name) {
+										show_error($"!!! proControl: Level has invalid info for music track {i}, struct must have a 'name' member with string", true)
 									}
+								} else {
+									show_error($"!!! proControl: Level has invalid info for music track {i}, expected string or struct", true)
 								}
-								
-								_music.load(_name);
-								++i
 							}
 							
-							_level.music = _music_tracks
-						} else {
-							show_error($"!!! proControl: Level has invalid info for music, expected string or array", true)
+							++i
 						}
+							
+						_level.music = _music_tracks
+					} else {
+						show_error($"!!! proControl: Level has invalid info for music, expected string or array", true)
 					}
-				} else {
-					_level.music = []
 				}
+			} else {
+				_level.music = []
+			}
 				
-				with _level {
-					clear_color = color_to_vec5(_json[$ "clear_color"], c_black)
+			with _level {
+				clear_color = color_to_vec5(_json[$ "clear_color"], c_black)
 					
-					var _fog_distance = _json[$ "fog_distance"]
+				var _fog_distance = _json[$ "fog_distance"]
 					
-					fog_distance = is_array(_fog_distance) ? [real(_fog_distance[0]), real(_fog_distance[1])] : [0, 65535]
-					fog_color = color_to_vec5(_json[$ "fog_color"])
-					ambient_color = color_to_vec5(_json[$ "ambient_color"])
-					wind_strength = _json[$ "wind_strength"] ?? 1
+				fog_distance = is_array(_fog_distance) ? [real(_fog_distance[0]), real(_fog_distance[1])] : [0, 65535]
+				fog_color = color_to_vec5(_json[$ "fog_color"])
+				ambient_color = color_to_vec5(_json[$ "ambient_color"])
+				wind_strength = force_type_fallback(_json[$ "wind_strength"], "number", 1)
 					
-					var _wind_direction = _json[$ "wind_direction"]
+				var _wind_direction = _json[$ "wind_direction"]
 					
-					wind_direction = is_array(_wind_direction) ? [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])] : [1, 1, 1]
-					gravity = _json[$ "gravity"] ?? 0.6
-				}
+				wind_direction = is_array(_wind_direction) ? [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])] : [1, 1, 1]
+				gravity = force_type_fallback(_json[$ "gravity"], "number", 0.6)
+			}
 #endregion
 				
 #region Assets
-				var _assets = _json[$ "assets"]
+			var _assets = force_type_fallback(_json[$ "assets"], "struct")
 				
-				if _assets != undefined {
-					// Images
-					var __images = _assets[$ "images"]
+			if _assets != undefined {
+				// Images
+				var __images = _assets[$ "images"]
 					
-					if __images != undefined {
-						repeat array_length(__images) {
-							_images.load(array_pop(__images))
-						}
+				if __images != undefined {
+					repeat array_length(__images) {
+						_images.load(array_pop(__images))
 					}
+				}
 					
-					// Materials
-					var __materials = _assets[$ "materials"]
+				// Materials
+				var __materials = _assets[$ "materials"]
 					
-					if __materials != undefined {
-						var _materials = global.materials
+				if __materials != undefined {
+					var _materials = global.materials
 						
-						repeat array_length(__materials) {
-							_materials.load(array_pop(__materials))
-						}
+					repeat array_length(__materials) {
+						_materials.load(array_pop(__materials))
 					}
+				}
 					
-					// Models
-					var __models = _assets[$ "models"]
+				// Models
+				var __models = _assets[$ "models"]
 					
-					if __models != undefined {
-						var _models = global.models
+				if __models != undefined {
+					var _models = global.models
 						
-						repeat array_length(__models) {
-							_models.load(array_pop(__models))
-						}
+					repeat array_length(__models) {
+						_models.load(array_pop(__models))
 					}
+				}
 					
-					// Fonts
-					var __fonts = _assets[$ "fonts"]
+				// Fonts
+				var __fonts = _assets[$ "fonts"]
 					
-					if __fonts != undefined {
-						var _fonts = global.fonts
+				if __fonts != undefined {
+					var _fonts = global.fonts
 						
-						repeat array_length(__fonts) {
-							_fonts.load(array_pop(__fonts))
-						}
+					repeat array_length(__fonts) {
+						_fonts.load(array_pop(__fonts))
 					}
+				}
 					
-					// Sounds
-					var __sounds = _assets[$ "sounds"]
+				// Sounds
+				var __sounds = _assets[$ "sounds"]
 					
-					if __sounds != undefined {
-						var _sounds = global.sounds
+				if __sounds != undefined {
+					var _sounds = global.sounds
 						
-						repeat array_length(__sounds) {
-							_sounds.load(array_pop(__sounds))
-						}
+					repeat array_length(__sounds) {
+						_sounds.load(array_pop(__sounds))
 					}
+				}
 					
-					// Music
-					var __music = _assets[$ "music"]
+				// Music
+				var __music = _assets[$ "music"]
 					
-					if __music != undefined {
-						var _music = global.music
+				if __music != undefined {
+					var _music = global.music
 						
-						repeat array_length(__music) {
-							_music.load(array_pop(__music))
-						}
+					repeat array_length(__music) {
+						_music.load(array_pop(__music))
 					}
+				}
 					
-					// Things
-					var _things = _assets[$ "things"]
+				// Things
+				var _things = _assets[$ "things"]
 					
-					if _things != undefined {
-						repeat array_length(_things) {
-							var _thing = array_pop(_things)
-							var _thing_index = asset_get_index(_thing)
+				if _things != undefined {
+					repeat array_length(_things) {
+						var _thing = array_pop(_things)
+						var _thing_index = asset_get_index(_thing)
 							
-							if _thing_index != -1 {
-								if string_starts_with(_thing, "pro") {
-									print($"! proControl: Can't load protected Thing '{_thing}'!")
+						if _thing_index != -1 {
+							if string_starts_with(_thing, "pro") {
+								print($"! proControl: Can't load protected Thing '{_thing}'!")
 									
-									continue
-								}
-								
-								thing_load(_thing_index)
-							} else {
-								thing_load(_thing)
+								continue
 							}
+								
+							thing_load(_thing_index)
+						} else {
+							thing_load(_thing)
 						}
 					}
 				}
+			}
 #endregion
 				
 #region Areas
-				var _add_areas = _json[$ "areas"]
+			var _add_areas = _json[$ "areas"]
 				
-				if not is_array(_add_areas) {
-					show_error($"!!! proControl: Level '{load_level}' has no areas", true)
-				} else {
-					var _thing_slot = 0
+			if not is_array(_add_areas) {
+				show_error($"!!! proControl: Level '{load_level}' has no areas", true)
+			} else {
+				var _thing_slot = 0
 					
-					var _areas = _level.areas
-					var _images = global.images
-					var _models = global.models
-					var _scripts = global.scripts
+				var _areas = _level.areas
+				var _images = global.images
+				var _models = global.models
+				var _scripts = global.scripts
 					
-					var _current_area_pos = 0
+				var _current_area_pos = 0
 					
-					repeat array_length(_add_areas) {
-						var _area = new Area()
-						var _area_info = _add_areas[_current_area_pos++]
+				repeat array_length(_add_areas) {
+					var _area = new Area()
+					var _area_info = _add_areas[_current_area_pos++]
 						
-						// Check for valid ID
-						var _id = _area_info[$ "id"] ?? undefined
+					// Check for valid ID
+					var _id = _area_info[$ "id"] ?? undefined
 						
-						if is_real(_id) {
-							with _area {
-								level = _level
-								slot = _id
-								ds_map_add(_areas, _id, _area)
+					if is_real(_id) {
+						with _area {
+							level = _level
+							slot = _id
+							ds_map_add(_areas, _id, _area)
 								
-								var _clear_color = _area_info[$ "clear_color"]
-								var _ambient_color = _area_info[$ "ambient_color"]
-								var _fog_distance = _area_info[$ "fog_distance"]
-								var _fog_color = _area_info[$ "fog_color"]
-								var _wind_direction = _area_info[$ "wind_direction"]
+							var _clear_color = _area_info[$ "clear_color"]
+							var _ambient_color = _area_info[$ "ambient_color"]
+							var _fog_distance = _area_info[$ "fog_distance"]
+							var _fog_color = _area_info[$ "fog_color"]
+							var _wind_direction = _area_info[$ "wind_direction"]
 								
-								clear_color = _clear_color == undefined ? _level.clear_color : color_to_vec5(_clear_color)
-								ambient_color = _ambient_color == undefined ? _level.ambient_color : color_to_vec5(_ambient_color)
-								fog_distance = is_array(_fog_distance) ? [real(_fog_distance[0]), real(_fog_distance[1])] : _level.fog_distance
-								fog_color = _fog_color == undefined ? _level.fog_color : color_to_vec5(_fog_color)
-								wind_strength = _area_info[$ "wind_strength"] ?? _level.wind_strength
-								wind_direction = _wind_direction == undefined ? _level.wind_direction : [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])]
-								gravity = _area_info[$ "gravity"] ?? _level.gravity
-							}
+							clear_color = _clear_color == undefined ? _level.clear_color : color_to_vec5(_clear_color)
+							ambient_color = _ambient_color == undefined ? _level.ambient_color : color_to_vec5(_ambient_color)
+							fog_distance = is_array(_fog_distance) ? [real(_fog_distance[0]), real(_fog_distance[1])] : _level.fog_distance
+							fog_color = _fog_color == undefined ? _level.fog_color : color_to_vec5(_fog_color)
+							wind_strength = _area_info[$ "wind_strength"] ?? _level.wind_strength
+							wind_direction = _wind_direction == undefined ? _level.wind_direction : [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])]
+							gravity = _area_info[$ "gravity"] ?? _level.gravity
+						}
 							
-							// Check for model
-							var _model_name = _area_info[$ "model"]
+						// Check for model
+						var _model_name = _area_info[$ "model"]
 							
-							if is_string(_model_name) {
-								var _model = _models.fetch(_model_name)
+						if is_string(_model_name) {
+							var _model = _models.fetch(_model_name)
 								
-								if _model != undefined {
-									with _area {
-										model = new ModelInstance(_model)
+							if _model != undefined {
+								with _area {
+									model = new ModelInstance(_model)
 										
-										var _collider = _model.collider
+									var _collider = _model.collider
 										
-										if _collider != undefined {
-											collider = new ColliderInstance(_collider)
-										}
+									if _collider != undefined {
+										collider = new ColliderInstance(_collider)
 									}
 								}
 							}
+						}
 							
-							// Check for things
-							var _things = _area.things
-							var _add_things = _area_info[$ "things"]
-							var _bump_x1 = infinity
-							var _bump_y1 = infinity
-							var _bump_x2 = -infinity
-							var _bump_y2 = -infinity
+						// Check for things
+						var _things = _area.things
+						var _add_things = _area_info[$ "things"]
+						var _bump_x1 = infinity
+						var _bump_y1 = infinity
+						var _bump_x2 = -infinity
+						var _bump_y2 = -infinity
 							
-							if is_array(_add_things) {
-								_images.load("imgShadow")
+						if is_array(_add_things) {
+							_images.load("imgShadow")
 								
-								var _area_things = _level.area_things
+							var _area_things = _level.area_things
+							var i = 0
+								
+							repeat array_length(_add_things) {
+								var _area_thing = new AreaThing()
+								var _thing_info = _add_things[i]
+									
+								with _area_thing {
+									level = _level
+									area = _area
+									slot = _thing_slot
+										
+									var _type_name = _thing_info[$ "type"]
+										
+									type = asset_get_index(_type_name)
+										
+									if type == -1 {
+										type = _type_name
+									}
+										
+									if string_starts_with(_type_name, "pro") {
+										print($"! proControl: Can't load protected Thing '{_type_name}' in area {_id}!")
+											
+										delete _area_thing
+									} else {
+										var _special = _thing_info[$ "special"]
+											
+										if thing_load(type, _special) {
+											x = _thing_info[$ "x"] ?? 0
+											y = _thing_info[$ "y"] ?? 0
+											z = _thing_info[$ "z"] ?? 0
+												
+											_bump_x1 = min(_bump_x1, x - COLLIDER_REGION_RADIUS)
+											_bump_y1 = min(_bump_y1, y - COLLIDER_REGION_RADIUS)
+											_bump_x2 = max(_bump_x2, x + COLLIDER_REGION_RADIUS)
+											_bump_y2 = max(_bump_y2, y + COLLIDER_REGION_RADIUS)
+												
+											angle = _thing_info[$ "angle"] ?? 0
+											tag = _thing_info[$ "tag"] ?? 0
+											special = _special
+											persistent = _thing_info[$ "persistent"] ?? false
+											disposable = _thing_info[$ "disposable"] ?? false
+											array_push(_things, _area_thing)
+										} else {
+											print($"! proControl: Unknown Thing '{_type_name}' in area {_id}")
+												
+											delete _area_thing
+										}
+									}
+										
+									++_thing_slot
+									ds_list_add(_area_things, _area_thing)
+								}
+									
+								++i
+							}
+						}
+							
+						with _area {
+							var n = array_length(_things)
+							
+							if n {
+								/* The size of the bump grid is based on the leftmost and rightmost
+									area thing positions. Any Things outside of this grid will have
+									their region clamped accordingly. */
+								var _width = ceil(abs(_bump_x2 - _bump_x1) * COLLIDER_REGION_SIZE_INVERSE)
+								var _height = ceil(abs(_bump_y2 - _bump_y1) * COLLIDER_REGION_SIZE_INVERSE)
+								
+								ds_grid_resize(bump_grid, _width, _height)
+								ds_grid_resize(bump_lists, _width, _height)
+								
 								var i = 0
 								
-								repeat array_length(_add_things) {
-									var _area_thing = new AreaThing()
-									var _thing_info = _add_things[i]
+								repeat ds_grid_width(bump_lists) {
+									var j = 0
 									
-									with _area_thing {
-										level = _level
-										area = _area
-										slot = _thing_slot
-										
-										var _type_name = _thing_info[$ "type"]
-										
-										type = asset_get_index(_type_name)
-										
-										if type == -1 {
-											type = _type_name
-										}
-										
-										if string_starts_with(_type_name, "pro") {
-											print($"! proControl: Can't load protected Thing '{_type_name}' in area {_id}!")
-											
-											delete _area_thing
-										} else {
-											var _special = _thing_info[$ "special"]
-											
-											if thing_load(type, _special) {
-												x = _thing_info[$ "x"] ?? 0
-												y = _thing_info[$ "y"] ?? 0
-												z = _thing_info[$ "z"] ?? 0
-												
-												_bump_x1 = min(_bump_x1, x - COLLIDER_REGION_RADIUS)
-												_bump_y1 = min(_bump_y1, y - COLLIDER_REGION_RADIUS)
-												_bump_x2 = max(_bump_x2, x + COLLIDER_REGION_RADIUS)
-												_bump_y2 = max(_bump_y2, y + COLLIDER_REGION_RADIUS)
-												
-												angle = _thing_info[$ "angle"] ?? 0
-												tag = _thing_info[$ "tag"] ?? 0
-												special = _special
-												persistent = _thing_info[$ "persistent"] ?? false
-												disposable = _thing_info[$ "disposable"] ?? false
-												array_push(_things, _area_thing)
-											} else {
-												print($"! proControl: Unknown Thing '{_type_name}' in area {_id}")
-												
-												delete _area_thing
-											}
-										}
-										
-										++_thing_slot
-										ds_list_add(_area_things, _area_thing)
+									repeat ds_grid_height(bump_lists) {
+										bump_lists[# i, j++] = ds_list_create()
 									}
 									
 									++i
 								}
+								
+								bump_x = _bump_x1
+								bump_y = _bump_y1
+							} else {
+								// This level has no area actors, set defaults
+								bump_lists[# 0, 0] = ds_list_create()
 							}
-							
-							with _area {
-								var n = array_length(_things)
-							
-								if n {
-									/* The size of the bump grid is based on the leftmost and rightmost
-									   area thing positions. Any Things outside of this grid will have
-									   their region clamped accordingly. */
-									var _width = ceil(abs(_bump_x2 - _bump_x1) * COLLIDER_REGION_SIZE_INVERSE)
-									var _height = ceil(abs(_bump_y2 - _bump_y1) * COLLIDER_REGION_SIZE_INVERSE)
-								
-									ds_grid_resize(bump_grid, _width, _height)
-									ds_grid_resize(bump_lists, _width, _height)
-								
-									var i = 0
-								
-									repeat ds_grid_width(bump_lists) {
-										var j = 0
-									
-										repeat ds_grid_height(bump_lists) {
-											bump_lists[# i, j++] = ds_list_create()
-										}
-									
-										++i
-									}
-								
-									bump_x = _bump_x1
-									bump_y = _bump_y1
-								} else {
-									// This level has no area actors, set defaults
-									bump_lists[# 0, 0] = ds_list_create()
-								}
-							}
-						} else {
-							print($"! proControl: Invalid area ID '{_id}', expected real")
-							
-							delete _area
 						}
-						
-						delete _area_info
+					} else {
+						print($"! proControl: Invalid area ID '{_id}', expected real")
+							
+						delete _area
 					}
+						
+					delete _area_info
 				}
+			}
 #endregion
 				
-				var _copy_flags = _json[$ "flags"]
+			var _copy_flags = force_type_fallback(_json[$ "flags"], "struct")
 				
-				if is_struct(_copy_flags) {
-					var _flags = global.flags
-					var _copy_global = _copy_flags[$ "global"]
+			if _copy_flags != undefined {
+				var _flags = global.flags
+				var _copy_global = force_type_fallback(_copy_flags[$ "global"], "struct")
 					
-					if is_struct(_copy_global) {
-						_flags[0].copy(_copy_global)
-					}
-					
-					var _copy_local = _copy_flags[$ "local"]
-					
-					if is_struct(_copy_local) {
-						_flags[1].copy(_copy_local)
-					}
+				if _copy_global != undefined {
+					_flags[0].copy(_copy_global)
 				}
+					
+				var _copy_local = force_type_fallback(_copy_flags[$ "local"], "struct")
+					
+				if _copy_local != undefined {
+					_flags[1].copy(_copy_local)
+				}
+			}
 				
-				delete _json
-			}
+			delete _json
+		}
 			
-			ui_load("Pause")
+		ui_load("Pause")
 			
-			with proTransition {
-				transition_load(transition_script != undefined ? transition_script.name : object_index)
-			}
+		with proTransition {
+			transition_load(transition_script != undefined ? transition_script.name : object_index)
+		}
 			
-			_images.end_batch()
+		_images.end_batch()
 			
-			var _materials_map = global.materials.assets
-			var _key = ds_map_find_first(_materials_map)
+		var _materials_map = global.materials.assets
+		var _key = ds_map_find_first(_materials_map)
 			
-			repeat ds_map_size(_materials_map) {
-				with _materials_map[? _key] {
-					if image != -1 {
-						image = CollageImageGetInfo(image)
+		repeat ds_map_size(_materials_map) {
+			with _materials_map[? _key] {
+				if image != -1 {
+					image = CollageImageGetInfo(image)
 						
-						var i = 0
-						var n = image.GetCount()
+					var i = 0
+					var n = image.GetCount()
 						
-						textures = array_create(n)
+					textures = array_create(n)
 						
-						repeat n {
-							var _texture = image.GetTexture(i)
-							var _uvs = image.GetUVs(i)
+					repeat n {
+						var _texture = image.GetTexture(i)
+						var _uvs = image.GetUVs(i)
 							
-							textures[i++] = [_texture, _uvs.normLeft, _uvs.normTop, _uvs.normRight, _uvs.normBottom]
-						}
-					}
-					
-					if image2 != undefined and image2 != -1 {
-						image2 = CollageImageGetInfo(image2)
+						textures[i++] = [_texture, _uvs.normLeft, _uvs.normTop, _uvs.normRight, _uvs.normBottom]
 					}
 				}
-				
-				_key = ds_map_find_next(_materials_map, _key)
+					
+				if image2 != undefined and image2 != -1 {
+					image2 = CollageImageGetInfo(image2)
+				}
 			}
+				
+			_key = ds_map_find_next(_materials_map, _key)
+		}
 			
-			load_state = LoadStates.FINISH
+		load_state = LoadStates.FINISH
 #endregion
-		break
+	exit
 		
-		case LoadStates.FINISH:
+	case LoadStates.FINISH:
 #region Finish Loading
-			game_update_status()
+		game_update_status()
 			
-			var _level = global.level
+		var _level = global.level
+		var _players = global.players
+		var i = 0
+		var _load_area = load_area
+		var _load_tag = load_tag
+			
+		repeat INPUT_MAX_PLAYERS {
+			var _player = _players[i++]
+				
+			with _player {
+				level = _level
+					
+				// Bring new players in-game
+				if status == PlayerStatus.PENDING {
+					status = PlayerStatus.ACTIVE;
+					++global.players_active;
+					--global.players_ready
+				}
+					
+				if status == PlayerStatus.ACTIVE {
+					set_area(_load_area, _load_tag)
+				}
+			}
+		}
+			
+		with proTransition {
+			if state == 2 {
+				state = 3
+					
+				if reload != undefined {
+					reload()
+				}
+			}
+		}
+			
+		load_state = LoadStates.NONE
+		i = 0
+			
+		with _level {
+			repeat array_length(music) {
+				var _track = music[i]
+				var _asset
+					
+				if is_string(_track) {
+					_asset = global.music.fetch(_track)
+						
+					var _inst = new MusicInstance(_asset, i)
+				} else {
+					if is_struct(_track) {
+						_asset = global.music.fetch(force_type(_track[$ "name"], "string"))
+							
+						var _priority = force_type_fallback(_track[$ "priority"], "number", i)
+						var _loop = force_type_fallback(_track[$ "loop"], "bool", true)
+						var _active = force_type_fallback(_track[$ "active"], "bool", true)
+						var _inst = new MusicInstance(_asset, _priority, _loop, 1, 0, _active)
+					}
+				}
+					
+				music[i] = _asset;
+				++i
+			}
+		}
+			
+		with _level {
+			if start != undefined {
+				start(_level)
+			}
+		}
+			
+		if global.demo_write and global.demo_buffer == undefined {
+			var _demo_buffer = buffer_create(1, buffer_grow, 1)
+				
+			// Header
+			buffer_write(_demo_buffer, buffer_string, "PNEDEMO")
+			buffer_write(_demo_buffer, buffer_string, GM_version)
+				
+			// Mods
+			var _mods = global.mods
+			var n = ds_map_size(_mods)
+				
+			buffer_write(_demo_buffer, buffer_u32, n)
+				
+			var _key = ds_map_find_first(_mods)
+				
+			repeat n {
+				buffer_write(_demo_buffer, buffer_string, _key)
+				buffer_write(_demo_buffer, buffer_string, _mods[? _key].version)
+				_key = ds_map_find_next(_mods, _key)
+			}
+				
+			// States
+			buffer_write(_demo_buffer, buffer_u8, INPUT_MAX_PLAYERS)
+				
 			var _players = global.players
 			var i = 0
-			var _load_area = load_area
-			var _load_tag = load_tag
-			
-			with _level {
-				repeat array_length(music) {
-					var _track = music[i]
-					var _asset
-					
-					if is_string(_track) {
-						_asset = global.music.get(_track)
-						
-						var _inst = new MusicInstance(_asset, i)
-					} else {
-						if is_struct(_track) {
-							_asset = global.music.get(_track[$ "name"])
-							
-							var _inst = new MusicInstance(_asset, _track[$ "priority"] ?? i, _track[$ "loop"] ?? true, 1, 0, _track[$ "active"] ?? true)
-						}
-					}
-					
-					music[i] = _asset;
-					++i
-				}
-			}
-			
-			i = 0
-			
+				
 			repeat INPUT_MAX_PLAYERS {
-				var _player = _players[i++]
-				
-				with _player {
-					level = _level
+				buffer_write(_demo_buffer, buffer_u8, i)
 					
-					// Bring new players in-game
-					if status == PlayerStatus.PENDING {
-						status = PlayerStatus.ACTIVE;
-						++global.players_active;
-						--global.players_ready
-					}
-					
-					if status == PlayerStatus.ACTIVE {
-						set_area(_load_area, _load_tag)
-					}
-				}
-			}
-			
-			with proTransition {
-				if state == 2 {
-					state = 3
-					
-					if reload != undefined {
-						reload()
+				with _players[i] {
+					buffer_write(_demo_buffer, buffer_u8, status)
+						
+					var n = ds_map_size(states)
+						
+					buffer_write(_demo_buffer, buffer_u32, n)
+						
+					var _key = ds_map_find_first(states)
+						
+					repeat n {
+						buffer_write(_demo_buffer, buffer_string, _key)
+						buffer_write_dynamic(_demo_buffer, states[? _key])
+						_key = ds_map_find_next(states, _key)
 					}
 				}
-			}
-			
-			load_state = LoadStates.NONE
-			
-			with _level {
-				if start != undefined {
-					start(_level)
-				}
-			}
-			
-			if global.demo_write and global.demo_buffer == undefined {
-				var _demo_buffer = buffer_create(1, buffer_grow, 1)
-				
-				// Header
-				buffer_write(_demo_buffer, buffer_string, "PNEDEMO")
-				buffer_write(_demo_buffer, buffer_string, GM_version)
-				
-				// Mods
-				var _mods = global.mods
-				var n = ds_map_size(_mods)
-				
-				buffer_write(_demo_buffer, buffer_u32, n)
-				
-				var _key = ds_map_find_first(_mods)
-				
-				repeat n {
-					buffer_write(_demo_buffer, buffer_string, _key)
-					buffer_write(_demo_buffer, buffer_string, _mods[? _key].version)
-					_key = ds_map_find_next(_mods, _key)
-				}
-				
-				// States
-				buffer_write(_demo_buffer, buffer_u8, INPUT_MAX_PLAYERS)
-				
-				var _players = global.players
-				var i = 0
-				
-				repeat INPUT_MAX_PLAYERS {
-					buffer_write(_demo_buffer, buffer_u8, i)
 					
-					with _players[i] {
-						buffer_write(_demo_buffer, buffer_u8, status)
-						
-						var n = ds_map_size(states)
-						
-						buffer_write(_demo_buffer, buffer_u32, n)
-						
-						var _key = ds_map_find_first(states)
-						
-						repeat n {
-							buffer_write(_demo_buffer, buffer_string, _key)
-							buffer_write_dynamic(_demo_buffer, states[? _key])
-							_key = ds_map_find_next(states, _key)
-						}
-					}
-					
-					++i
-				}
-				
-				// Level
-				buffer_write(_demo_buffer, buffer_string, load_level)
-				buffer_write(_demo_buffer, buffer_u32, load_area)
-				buffer_write(_demo_buffer, buffer_s32, load_tag)
-				
-				// Flags
-				var _global_flags = global.flags[0].flags
-				var n = ds_map_size(_global_flags)
-				
-				buffer_write(_demo_buffer, buffer_u32, n)
-				
-				var _key = ds_map_find_first(_global_flags)
-				
-				repeat n {
-					buffer_write(_demo_buffer, buffer_string, _key)
-					buffer_write_dynamic(_demo_buffer, _global_flags[? _key])
-					_key = ds_map_find_next(_global_flags, _key)
-				}
-				
-				global.demo_buffer = _demo_buffer
-				global.demo_time = 0
-				global.demo_next = 0
-				print("proControl: Recording demo")
+				++i
 			}
+				
+			// Level
+			buffer_write(_demo_buffer, buffer_string, load_level)
+			buffer_write(_demo_buffer, buffer_u32, load_area)
+			buffer_write(_demo_buffer, buffer_s32, load_tag)
+				
+			// Flags
+			var _global_flags = global.flags[0].flags
+			var n = ds_map_size(_global_flags)
+				
+			buffer_write(_demo_buffer, buffer_u32, n)
+				
+			var _key = ds_map_find_first(_global_flags)
+				
+			repeat n {
+				buffer_write(_demo_buffer, buffer_string, _key)
+				buffer_write_dynamic(_demo_buffer, _global_flags[? _key])
+				_key = ds_map_find_next(_global_flags, _key)
+			}
+				
+			global.demo_buffer = _demo_buffer
+			global.demo_time = 0
+			global.demo_next = 0
+			print("proControl: Recording demo")
+		}
 #endregion
-		break
-	}
-	
-	// Don't tick while loading
 	exit
 }
 
