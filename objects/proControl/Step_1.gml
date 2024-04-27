@@ -836,6 +836,7 @@ if _tick >= 1 {
 			global.console_input = keyboard_string
 		}
 		
+		global.tick_complete = false
 		_tick = 0
 	} else {
 		if input_check_pressed("debug_console") {
@@ -988,7 +989,8 @@ if _tick >= 1 {
 		if _skip_tick {
 			_mouse_dx = 0
 			_mouse_dy = 0
-			input_clear_momentary(true);
+			input_clear_momentary(true)
+			global.tick_complete = false;
 			--_tick
 			
 			continue
@@ -1372,9 +1374,14 @@ if _tick >= 1 {
 			buffer_write(_demo_buffer, buffer_u8, DemoPackets.TERMINATE)
 		}
 		
+		global.tick_complete = true;
 		--_tick
 	}
 #endregion
+}
+
+if global.tick_complete {
+	global.tick_draw = _tick
 }
 
 global.tick = _tick

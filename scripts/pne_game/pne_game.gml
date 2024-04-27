@@ -31,7 +31,9 @@
 	
 	global.freeze_step = true
 	global.tick = 0
+	global.tick_draw = 0
 	global.tick_scale = 1
+	global.tick_complete = false
 	global.delta = 1
 	global.mouse_focused = false
 	global.mouse_start = false

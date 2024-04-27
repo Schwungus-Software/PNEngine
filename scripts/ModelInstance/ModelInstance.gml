@@ -679,7 +679,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				global.u_animated.set(0)
 			} else {
 				global.u_animated.set(1)
-				sample_blend(draw_sample, from_sample, tick_sample, global.tick)
+				sample_blend(draw_sample, from_sample, tick_sample, global.tick_draw)
 				global.u_bone_dq.set(draw_sample)
 			}
 			
