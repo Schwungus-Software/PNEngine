@@ -1,4 +1,4 @@
-function ui_create(_type, _replace = true) {
+function ui_create(_type, _special = undefined, _replace = true) {
 	if _replace {
 		var _ui = global.ui
 		
@@ -35,6 +35,8 @@ function ui_create(_type, _replace = true) {
 	var _ui = new _internal_parent(_ui_script)
 	
 	with _ui {
+		special = _special
+		
 		if create != undefined {
 			create(_ui)
 		}
