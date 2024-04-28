@@ -292,7 +292,7 @@
 				addFunction(
 					"string_localize", lexicon_text,
 					"string_rich", scribble,
-					"string_typíst", scribble_typist,
+					"string_typist", scribble_typist,
 					"string_input", string_input
 				)
 			#endregion
@@ -314,6 +314,7 @@
 				)
 				
 				addFunction(
+					"ui_load", ui_load,
 					"thing_load", thing_load,
 					"transition_load", transition_load,
 					
@@ -632,7 +633,10 @@
 				)
 				
 				addFunction(
-					"ui_create", ui_create,
+					"ui_create", function (_type, _special = undefined) {
+						return ui_create(_type, _special, true)
+					},
+					
 					"ui_exists", ui_exists
 				)
 			#endregion
