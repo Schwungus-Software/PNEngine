@@ -14,3 +14,23 @@ scripts/Fmod_Functions/Fmod_Functions.yy
 options/extensions/NekoPresence.json
 
 /Build/*
+scripts/dual_quaternions/dual_quaternions.gml
+scripts/dual_quaternions/dual_quaternions.yy
+scripts/matrices/matrices.gml
+scripts/matrices/matrices.yy
+scripts/quaternions/quaternions.gml
+scripts/quaternions/quaternions.yy
+scripts/smf_anim/smf_anim.gml
+scripts/smf_anim/smf_anim.yy
+scripts/smf_instance/smf_instance.gml
+scripts/smf_instance/smf_instance.yy
+scripts/smf_model/smf_model.gml
+scripts/smf_model/smf_model.yy
+scripts/smf_rig/smf_rig.gml
+scripts/smf_rig/smf_rig.yy
+scripts/smf_sample/smf_sample.gml
+scripts/smf_sample/smf_sample.yy
+scripts/smf_system/smf_system.gml
+scripts/smf_system/smf_system.yy
+scripts/vectors/vectors.gml
+scripts/vectors/vectors.yy
