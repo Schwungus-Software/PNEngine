@@ -13,7 +13,7 @@
 #macro SCRIBBLE_TAB_WIDTH                     4      //Width of a horizontal tab, as a number of spaces
 #macro SCRIBBLE_FLEXIBLE_WHITESPACE_WIDTH     true   //Controls if spaces and tabs have a fixed, unchanging size. Setting this to <false> will ensure that spaces are always the same size, which is useful for monospaced fonts
 #macro SCRIBBLE_PIN_ALIGNMENT_USES_PAGE_SIZE  false  //Sets whether pin alignments use the size of the page for positioning, or the size of the text element (the bounding box across all pages)
-#macro SCRIBBLE_ALLOW_TEXT_GETTER             false  //Set to <true> to enable the .get_text() method on text elements. This will apply to all text elements and carries a performance penalty
+#macro SCRIBBLE_ALLOW_TEXT_GETTER             true  //Set to <true> to enable the .get_text() method on text elements. This will apply to all text elements and carries a performance penalty
 #macro SCRIBBLE_ALLOW_GLYPH_DATA_GETTER       false  //Set to <true> to enable the .get_glyph_data() method on text elements (and a few other features too). This will apply to all text elements and carries a performance penalty
 #macro SCRIBBLE_AUTOFIT_INLINE_SPRITES        false  //Whether to automatically scale sprites to fit into the line of text. This is based on the font height of the current font
 #macro SCRIBBLE_AUTOFIT_INLINE_SURFACES       false  //Whether to automatically scale surfaces to fit into the line of text. This is based on the font height of the current font
@@ -25,7 +25,7 @@
 
 #region Advanced Features
 
-#macro SCRIBBLE_TICK_SIZE                      (delta_time / 16666) //Animation tick size per step. The default macro (delta_time / 16666) ensures that animations are smooth and consistent at all framerates
+#macro SCRIBBLE_TICK_SIZE                      (delta_time * TICKRATE_DELTA) //Animation tick size per step. The default macro (delta_time / 16666) ensures that animations are smooth and consistent at all framerates
 #macro SCRIBBLE_DEFAULT_UNIQUE_ID              ":default" //Default value to use for text element unique IDs. This is used when no unique ID is specified. This value must be a string, and must start with a colon (:)
 #macro SCRIBBLE_VERBOSE                        false      //Enables verbose console output to aid with debugging
 #macro SCRIBBLE_BEZIER_ACCURACY                20         //Controls how accurately text fits Beziér curves. Higher is more accurate but slower

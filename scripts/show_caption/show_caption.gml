@@ -6,6 +6,7 @@ function show_caption(_text, _time = -1) {
 	with proControl {
 		caption.overwrite(_text)
 		caption_time = _time
+		_text = caption.get_text()
 	}
 	
 	print($"show_caption: {_text}")
