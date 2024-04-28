@@ -381,6 +381,7 @@
 				addConstant(
 					"GLOBAL", _flags[0],
 					"LOCAL", _flags[1],
+					"STATIC", _flags[2],
 					
 					"CP_LEVEL", 0,
 					"CP_AREA", 1,
@@ -722,36 +723,46 @@ var _custom_back_sound = undefined
 		var _info = json_load(_path + "mod.json")
 		
 		if is_struct(_info) {
-			var _title = _info[$ "title"]
+			var _title = force_type_fallback(_info[$ "title"], "string")
 			
 			if is_string(_title) {
 				window_set_caption(_title)
 			}
 			
-			var _version = _info[$ "version"]
+			var _version = force_type_fallback(_info[$ "version"], "string")
 			
 			if is_string(_version) {
 				_mod.version = _version
 			}
 			
-			var _rpc_id = _info[$ "rpc"]
+			var _rpc_id = force_type_fallback(_info[$ "rpc"], "string")
 			
 			if is_string(_rpc_id) {
 				global.game_rpc_id = _rpc_id
 			}
 			
-			var _flags = _info[$ "flags"]
+			var _flags = force_type_fallback(_info[$ "flags"], "struct")
 			
 			if is_struct(_flags) {
-				var _default_flags = global.default_flags
-				var _names = struct_get_names(_flags)
-				var i = 0
+				var _global = force_type_fallback(_flags[$ "global"], "struct")
 				
-				repeat struct_names_count(_flags) {
-					var _key = _names[i]
+				if is_struct(_global) {
+					var _default_flags = global.default_flags
+					var _names = struct_get_names(_global)
+					var i = 0
+				
+					repeat struct_names_count(_global) {
+						var _key = _names[i]
 					
-					_default_flags[? _key] = _flags[$ _key];
-					++i
+						_default_flags[? _key] = _global[$ _key];
+						++i
+					}
+				}
+				
+				var _static = force_type_fallback(_flags[$ "static"], "struct")
+				
+				if is_struct(_static) {
+					global.flags[2].copy(_static)
 				}
 			}
 			
