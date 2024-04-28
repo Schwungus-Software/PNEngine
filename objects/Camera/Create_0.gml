@@ -182,6 +182,22 @@ event_inherited()
 		}
 	}
 	
+	set_active = function (_bool) {
+		if _bool {
+			global.camera_active = id
+			
+			return true
+		} else {
+			if global.camera_active == id {
+				global.camera_active = noone
+				
+				return true
+			}
+		}
+		
+		return false
+	}
+	
 	update_matrices = function (_width = window_get_width(), _height = window_get_height(), _update_listener = false) {
 		angle_quat[0] = 1
 		angle_quat[1] = 0
