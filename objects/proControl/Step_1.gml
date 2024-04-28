@@ -200,7 +200,24 @@ switch load_state {
 				gravity = force_type_fallback(_json[$ "gravity"], "number", 0.6)
 			}
 #endregion
+			
+			var _copy_flags = force_type_fallback(_json[$ "flags"], "struct")
 				
+			if _copy_flags != undefined {
+				var _flags = global.flags
+				var _copy_global = force_type_fallback(_copy_flags[$ "global"], "struct")
+					
+				if _copy_global != undefined {
+					_flags[0].copy(_copy_global)
+				}
+					
+				var _copy_local = force_type_fallback(_copy_flags[$ "local"], "struct")
+					
+				if _copy_local != undefined {
+					_flags[1].copy(_copy_local)
+				}
+			}
+			
 #region Assets
 			var _assets = force_type_fallback(_json[$ "assets"], "struct")
 				
@@ -466,23 +483,6 @@ switch load_state {
 				}
 			}
 #endregion
-				
-			var _copy_flags = force_type_fallback(_json[$ "flags"], "struct")
-				
-			if _copy_flags != undefined {
-				var _flags = global.flags
-				var _copy_global = force_type_fallback(_copy_flags[$ "global"], "struct")
-					
-				if _copy_global != undefined {
-					_flags[0].copy(_copy_global)
-				}
-					
-				var _copy_local = force_type_fallback(_copy_flags[$ "local"], "struct")
-					
-				if _copy_local != undefined {
-					_flags[1].copy(_copy_local)
-				}
-			}
 				
 			delete _json
 		}
