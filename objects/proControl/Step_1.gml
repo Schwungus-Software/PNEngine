@@ -56,12 +56,7 @@ switch load_state {
 		global.music.clear()
 		global.scripts.flush()
 			
-		var _indices = RNG.indices
-		var i = 0
-			
-		repeat array_length(_indices) {
-			_indices[i++] = 0
-		}
+		RNG.indices[RNGSeeds.GAME] = 0
 			
 		if load_level == undefined {
 			game_end()
