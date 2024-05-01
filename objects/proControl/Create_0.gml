@@ -537,7 +537,12 @@
 					
 					"PANI_PLAY", ParticleAnimations.PLAY,
 					"PANI_PLAY_STAY", ParticleAnimations.PLAY_STAY,
-					"PANI_LOOP", ParticleAnimations.LOOP
+					"PANI_LOOP", ParticleAnimations.LOOP,
+					
+					"CANS_NO_DATA", CanvasStatus.NO_DATA,
+					"CANS_IN_USE", CanvasStatus.IN_USE,
+					"CANS_HAS_DATA", CanvasStatus.HAS_DATA,
+					"CANS_HAS_DATA_CACHED", CanvasStatus.HAS_DATA_CACHED
 				)
 				
 				addFunction(
