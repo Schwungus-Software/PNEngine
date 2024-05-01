@@ -44,14 +44,14 @@ function ui_create(_type, _special = undefined, _replace = true) {
 		if not exists {
 			return undefined
 		}
-		
-		if f_blocking {
-			fmod_channel_control_set_paused(global.world_channel_group, true)
-		}
 	}
 	
 	if _replace {
 		global.ui = _ui
+		
+		if _ui.f_blocking {
+			fmod_channel_control_set_paused(global.world_channel_group, true)
+		}
 	}
 	
 	return _ui

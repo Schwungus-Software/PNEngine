@@ -817,6 +817,10 @@ if _tick >= 1 {
 			input_verb_consume("pause")
 			global.console = false
 			global.console_input = keyboard_string
+			
+			if global.ui == undefined or not global.ui.f_blocking {
+				fmod_channel_control_set_paused(global.world_channel_group, false)
+			}
 		}
 		
 		global.tick_complete = false
@@ -826,6 +830,7 @@ if _tick >= 1 {
 			input_source_mode_set(INPUT_SOURCE_MODE.FIXED)
 			global.console = true
 			keyboard_string = global.console_input
+			fmod_channel_control_set_paused(global.world_channel_group, true)
 		}
 	}
 #endregion

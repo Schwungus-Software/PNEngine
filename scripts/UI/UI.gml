@@ -44,11 +44,9 @@ function UI(_ui_script) constructor {
 		}
 		
 		if global.ui == self {
-			var _ui = ui_exists(parent) ? parent : undefined
+			global.ui = undefined
 			
-			global.ui = _ui
-			
-			if _ui == undefined or not _ui.f_blocking {
+			if not global.console {
 				fmod_channel_control_set_paused(global.world_channel_group, false)
 			}
 		}
