@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"UISoundPool",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"UISoundPool",
+  "parent":{
+    "name":"Sound",
+    "path":"folders/Scripts/PNEngine/Audio/Sound.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

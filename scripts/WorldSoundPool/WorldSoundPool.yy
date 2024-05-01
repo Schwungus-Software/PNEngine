@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"WorldSoundPool",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"WorldSoundPool",
+  "parent":{
+    "name":"Sound",
+    "path":"folders/Scripts/PNEngine/Audio/Sound.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

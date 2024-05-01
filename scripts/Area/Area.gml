@@ -20,7 +20,7 @@ function Area() constructor {
 	}
 	
 	light_data = array_create(MAX_LIGHTS * LightData.__SIZE)
-	sounds = new SoundPool()
+	sounds = new WorldSoundPool()
 	
 	bump_x = 0
 	bump_y = 0

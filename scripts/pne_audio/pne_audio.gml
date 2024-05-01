@@ -27,7 +27,16 @@ print("pne_audio: ============================")
 global.sound_group = fmod_system_create_sound_group("sound")
 global.music_group = fmod_system_create_sound_group("music")
 global.master_channel_group = fmod_system_get_master_channel_group()
-global.sound_channel_group = fmod_system_create_channel_group("sound")
+
+var _sound_channel_group = fmod_system_create_channel_group("sound")
+var _world_channel_group = fmod_system_create_channel_group("world")
+var _ui_channel_group = fmod_system_create_channel_group("ui")
+
+fmod_channel_group_add_group(_sound_channel_group, _world_channel_group)
+fmod_channel_group_add_group(_sound_channel_group, _ui_channel_group)
+global.sound_channel_group = _sound_channel_group
+global.world_channel_group = _world_channel_group
+global.ui_channel_group = _ui_channel_group
 global.music_channel_group = fmod_system_create_channel_group("music")
 
 global.master_volume = 1
@@ -37,7 +46,7 @@ global.audio_focus = true
 
 global.last_sound_pool_id = 0
 global.sound_pools = ds_list_create()
-global.ui_sounds = new SoundPool()
+global.ui_sounds = new UISoundPool()
 
 global.music_instances = ds_list_create()
 global.music_priority = ds_priority_create()

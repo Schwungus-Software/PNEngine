@@ -2,7 +2,6 @@
 
 function SoundPool() constructor {
 	channel_group = fmod_system_create_channel_group($"soundpool{global.last_sound_pool_id++}")
-	fmod_channel_group_add_group(global.sound_channel_group, channel_group)
 	
 	gain = array_create(SOUND_POOL_SLOTS, 1)
 	
