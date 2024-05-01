@@ -233,12 +233,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _sample = _visual ? draw_sample : tick_sample
 			var b = 8 * _index
 			var s = animation_bind_pose[_index]
-			var r3 = _sample[b + 3]
-			var r4 = _sample[b + 4]
-			var r5 = _sample[b + 5]
-			var r6 = _sample[b + 6]
+			var _r3 = _sample[b + 3]
+			var _r4 = _sample[b + 4]
+			var _r5 = _sample[b + 5]
+			var _r6 = _sample[b + 6]
 			
-			if r3 == 1 and r4 == 0 and r5 == 0 and r6 == 0 {
+			if _r3 == 1 and _r4 == 0 and _r5 == 0 and _r6 == 0 {
 				// An early out if this bone has not been transformed, letting
 				// us skip a dual quaternion multiplication
 				array_copy(bone_dq, 0, s, 0, 8)
@@ -246,28 +246,28 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				return bone_dq
 			}
 			
-			var r0 = _sample[b]
-			var r1 = _sample[-~b]
-			var r2 = _sample[b + 2]
-			var r7 = _sample[b + 7]
+			var _r0 = _sample[b]
+			var _r1 = _sample[-~b]
+			var _r2 = _sample[b + 2]
+			var _r7 = _sample[b + 7]
 			
-			var s0 = s[0]
-			var s1 = s[1]
-			var s2 = s[2]
-			var s3 = s[3]
-			var s4 = s[4]
-			var s5 = s[5]
-			var s6 = s[6]
-			var s7 = s[7]
+			var _s0 = s[0]
+			var _s1 = s[1]
+			var _s2 = s[2]
+			var _s3 = s[3]
+			var _s4 = s[4]
+			var _s5 = s[5]
+			var _s6 = s[6]
+			var _s7 = s[7]
 			
-			bone_dq[0] = r3 * s0 + r0 * s3 + r1 * s2 - r2 * s1
-			bone_dq[1] = r3 * s1 + r1 * s3 + r2 * s0 - r0 * s2
-			bone_dq[2] = r3 * s2 + r2 * s3 + r0 * s1 - r1 * s0
-			bone_dq[3] = r3 * s3 - r0 * s0 - r1 * s1 - r2 * s2
-			bone_dq[4] = r3 * s4 + r0 * s7 + r1 * s6 - r2 * s5 + r7 * s0 + r4 * s3 + r5 * s2 - r6 * s1
-			bone_dq[5] = r3 * s5 + r1 * s7 + r2 * s4 - r0 * s6 + r7 * s1 + r5 * s3 + r6 * s0 - r4 * s2
-			bone_dq[6] = r3 * s6 + r2 * s7 + r0 * s5 - r1 * s4 + r7 * s2 + r6 * s3 + r4 * s1 - r5 * s0
-			bone_dq[7] = r3 * s7 - r0 * s4 - r1 * s5 - r2 * s6 + r7 * s3 - r4 * s0 - r5 * s1 - r6 * s2
+			bone_dq[0] = _r3 * _s0 + _r0 * _s3 + _r1 * _s2 - _r2 * _s1
+			bone_dq[1] = _r3 * _s1 + _r1 * _s3 + _r2 * _s0 - _r0 * _s2
+			bone_dq[2] = _r3 * _s2 + _r2 * _s3 + _r0 * _s1 - _r1 * _s0
+			bone_dq[3] = _r3 * _s3 - _r0 * _s0 - _r1 * _s1 - _r2 * _s2
+			bone_dq[4] = _r3 * _s4 + _r0 * _s7 + _r1 * _s6 - _r2 * _s5 + _r7 * _s0 + _r4 * _s3 + _r5 * _s2 - _r6 * _s1
+			bone_dq[5] = _r3 * _s5 + _r1 * _s7 + _r2 * _s4 - _r0 * _s6 + _r7 * _s1 + _r5 * _s3 + _r6 * _s0 - _r4 * _s2
+			bone_dq[6] = _r3 * _s6 + _r2 * _s7 + _r0 * _s5 - _r1 * _s4 + _r7 * _s2 + _r6 * _s3 + _r4 * _s1 - _r5 * _s0
+			bone_dq[7] = _r3 * _s7 - _r0 * _s4 - _r1 * _s5 - _r2 * _s6 + _r7 * _s3 - _r4 * _s0 - _r5 * _s1 - _r6 * _s2
 			
 			return bone_dq
 		}
@@ -284,7 +284,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			   This is useful for head turning and procedural animations.
 			   The bone will rotate around its parent's position. */
 			var _bone = animation_bind_pose[_index]
-			var _dq = get_bone_dq(_bone[8])
+			var _dq = get_bone_dq(_bone[BoneData.PARENT])
 			
 			/* Find the pivot position (position of the root of the bone, typically at the
 			   parent's position). Contents copied from dq_get_translation */
@@ -322,7 +322,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _r6 = _px * _r1 - _py * _r0
 			
 			// Transform this node and all its descendants
-			var _descendants = _bone[10]
+			var _descendants = _bone[BoneData.DESCENDANTS]
 			var b = _index
 			var i = array_length(_descendants)
 			
@@ -401,7 +401,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		
 		static splice_sample = function (_sample, _bone_index, _weight = 1, _target_sample = tick_sample) {
 			var _bone = animation_bind_pose[_bone_index]
-			var _parent_index = _bone[8]
+			var _parent_index = _bone[BoneData.PARENT]
 			var _parent = animation_bind_pose[_parent_index]
 			
 			// Find the change in orientation from the source sample to the
@@ -415,37 +415,37 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var b6 = b + 6
 			var b7 = b + 7
 			
-			var s0 = _sample[b]
-			var s1 = _sample[b1]
-			var s2 = _sample[b2]
-			var s3 = _sample[b3]
-			var s4 = _sample[b4]
-			var s5 = _sample[b5]
-			var s6 = _sample[b6]
-			var s7 = _sample[b7]
+			var _s0 = _sample[b]
+			var _s1 = _sample[b1]
+			var _s2 = _sample[b2]
+			var _s3 = _sample[b3]
+			var _s4 = _sample[b4]
+			var _s5 = _sample[b5]
+			var _s6 = _sample[b6]
+			var _s7 = _sample[b7]
 			
-			var d0 = _target_sample[b]
-			var d1 = _target_sample[b1]
-			var d2 = _target_sample[b2]
-			var d3 = _target_sample[b3]
-			var d4 = _target_sample[b4]
-			var d5 = _target_sample[b5]
-			var d6 = _target_sample[b6]
-			var d7 = _target_sample[b7]
+			var _d0 = _target_sample[b]
+			var _d1 = _target_sample[b1]
+			var _d2 = _target_sample[b2]
+			var _d3 = _target_sample[b3]
+			var _d4 = _target_sample[b4]
+			var _d5 = _target_sample[b5]
+			var _d6 = _target_sample[b6]
+			var _d7 = _target_sample[b7]
 			
-			var r0 = -d3 * s0 + d0 * s3 - d1 * s2 + d2 * s1
-			var r1 = -d3 * s1 + d1 * s3 - d2 * s0 + d0 * s2
-			var r2 = -d3 * s2 + d2 * s3 - d0 * s1 + d1 * s0
-			var r3 =  d3 * s3 + d0 * s0 + d1 * s1 + d2 * s2
-			var r4 = -d3 * s4 + d0 * s7 - d1 * s6 + d2 * s5 - d7 * s0 + d4 * s3 - d5 * s2 + d6 * s1
-			var r5 = -d3 * s5 + d1 * s7 - d2 * s4 + d0 * s6 - d7 * s1 + d5 * s3 - d6 * s0 + d4 * s2
-			var r6 = -d3 * s6 + d2 * s7 - d0 * s5 + d1 * s4 - d7 * s2 + d6 * s3 - d4 * s1 + d5 * s0
-			var r7 =  d3 * s7 + d0 * s4 + d1 * s5 + d2 * s6 + d7 * s3 + d4 * s0 + d5 * s1 + d6 * s2
+			var _r0 = -_d3 * _s0 + _d0 * _s3 - _d1 * _s2 + _d2 * _s1
+			var _r1 = -_d3 * _s1 + _d1 * _s3 - _d2 * _s0 + _d0 * _s2
+			var _r2 = -_d3 * _s2 + _d2 * _s3 - _d0 * _s1 + _d1 * _s0
+			var _r3 = _d3 * _s3 + _d0 * _s0 + _d1 * _s1 + _d2 * _s2
+			var _r4 = -_d3 * _s4 + _d0 * _s7 - _d1 * _s6 + _d2 * _s5 - _d7 * _s0 + _d4 * _s3 - _d5 * _s2 + _d6 * _s1
+			var _r5 = -_d3 * _s5 + _d1 * _s7 - _d2 * _s4 + _d0 * _s6 - _d7 * _s1 + _d5 * _s3 - _d6 * _s0 + _d4 * _s2
+			var _r6 = -_d3 * _s6 + _d2 * _s7 - _d0 * _s5 + _d1 * _s4 - _d7 * _s2 + _d6 * _s3 - _d4 * _s1 + _d5 * _s0
+			var _r7 = _d3 * _s7 + _d0 * _s4 + _d1 * _s5 + _d2 * _s6 + _d7 * _s3 + _d4 * _s0 + _d5 * _s1 + _d6 * _s2
 			
 			/* Transform the source sample so that it stays attached to the
 			   parent in the destination sample. Linearly interpolate between
 			   source and destination samples. */
-			var _descendants = _bone[10]
+			var _descendants = _bone[BoneData.DESCENDANTS]
 			var i = 0
 			var n = array_length(_descendants)
 			
@@ -461,32 +461,32 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					b6 = b + 6
 					b7 = b + 7
 					
-					s0 = _sample[b]
-					s1 = _sample[b1]
-					s2 = _sample[b2]
-					s3 = _sample[b3]
-					s4 = _sample[b4]
-					s5 = _sample[b5]
-					s6 = _sample[b6]
-					s7 = _sample[b7]
+					_s0 = _sample[b]
+					_s1 = _sample[b1]
+					_s2 = _sample[b2]
+					_s3 = _sample[b3]
+					_s4 = _sample[b4]
+					_s5 = _sample[b5]
+					_s6 = _sample[b6]
+					_s7 = _sample[b7]
 					
-					var d0 = _target_sample[b]
-					var d1 = _target_sample[b1]
-					var d2 = _target_sample[b2]
-					var d3 = _target_sample[b3]
-					var d4 = _target_sample[b4]
-					var d5 = _target_sample[b5]
-					var d6 = _target_sample[b6]
-					var d7 = _target_sample[b7]
+					var _d0 = _target_sample[b]
+					var _d1 = _target_sample[b1]
+					var _d2 = _target_sample[b2]
+					var _d3 = _target_sample[b3]
+					var _d4 = _target_sample[b4]
+					var _d5 = _target_sample[b5]
+					var _d6 = _target_sample[b6]
+					var _d7 = _target_sample[b7]
 					
-					_target_sample[b] += _weight * (r3 * s0 + r0 * s3 + r1 * s2 - r2 * s1 - d0)
-					_target_sample[b1] += _weight * (r3 * s1 + r1 * s3 + r2 * s0 - r0 * s2 - d1)
-					_target_sample[b2] += _weight * (r3 * s2 + r2 * s3 + r0 * s1 - r1 * s0 - d2)
-					_target_sample[b3] += _weight * (r3 * s3 - r0 * s0 - r1 * s1 - r2 * s2 - d3)
-					_target_sample[b4] += _weight * (r3 * s4 + r0 * s7 + r1 * s6 - r2 * s5 + r7 * s0 + r4 * s3 + r5 * s2 - r6 * s1 - d4)
-					_target_sample[b5] += _weight * (r3 * s5 + r1 * s7 + r2 * s4 - r0 * s6 + r7 * s1 + r5 * s3 + r6 * s0 - r4 * s2 - d5)
-					_target_sample[b6] += _weight * (r3 * s6 + r2 * s7 + r0 * s5 - r1 * s4 + r7 * s2 + r6 * s3 + r4 * s1 - r5 * s0 - d6)
-					_target_sample[b7] += _weight * (r3 * s7 - r0 * s4 - r1 * s5 - r2 * s6 + r7 * s2 - r4 * s0 - r5 * s1 - r6 * s2 - d7)
+					_target_sample[b] += _weight * (_r3 * _s0 + _r0 * _s3 + _r1 * _s2 - _r2 * _s1 - _d0)
+					_target_sample[b1] += _weight * (_r3 * _s1 + _r1 * _s3 + _r2 * _s0 - _r0 * _s2 - _d1)
+					_target_sample[b2] += _weight * (_r3 * _s2 + _r2 * _s3 + _r0 * _s1 - _r1 * _s0 - _d2)
+					_target_sample[b3] += _weight * (_r3 * _s3 - _r0 * _s0 - _r1 * _s1 - _r2 * _s2 - _d3)
+					_target_sample[b4] += _weight * (_r3 * _s4 + _r0 * _s7 + _r1 * _s6 - _r2 * _s5 + _r7 * _s0 + _r4 * _s3 + _r5 * _s2 - _r6 * _s1 - _d4)
+					_target_sample[b5] += _weight * (_r3 * _s5 + _r1 * _s7 + _r2 * _s4 - _r0 * _s6 + _r7 * _s1 + _r5 * _s3 + _r6 * _s0 - _r4 * _s2 - _d5)
+					_target_sample[b6] += _weight * (_r3 * _s6 + _r2 * _s7 + _r0 * _s5 - _r1 * _s4 + _r7 * _s2 + _r6 * _s3 + _r4 * _s1 - _r5 * _s0 - _d6)
+					_target_sample[b7] += _weight * (_r3 * _s7 - _r0 * _s4 - _r1 * _s5 - _r2 * _s6 + _r7 * _s2 - _r4 * _s0 - _r5 * _s1 - _r6 * _s2 - _d7)
 				}
 				
 				if i < n {

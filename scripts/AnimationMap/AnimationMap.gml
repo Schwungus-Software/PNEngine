@@ -36,16 +36,16 @@ function AnimationMap() : AssetMap() constructor {
 			var i = 0
 			
 			repeat _bones_n {
-				var _dq = array_create(10)
+				var _dq = array_create(BoneData.__SIZE)
 				var j = 0
 				
 				repeat 8 {
 					_dq[j++] = buffer_read(_buffer, buffer_f32)
 				}
 				
-				_dq[@ 8] = buffer_read(_buffer, buffer_u8) // Parent bone
-				_dq[@ 9] = buffer_read(_buffer, buffer_u8) // Attached to parent
-				_dq[@ 10] = [] // Descendants
+				_dq[BoneData.PARENT] = buffer_read(_buffer, buffer_u8) // Parent bone
+				_dq[BoneData.ATTACHED] = buffer_read(_buffer, buffer_u8) // Attached to parent
+				_dq[BoneData.DESCENDANTS] = [] // Descendants
 				_bind_pose[i] = _dq;
 				++i
 			}
@@ -60,9 +60,9 @@ function AnimationMap() : AssetMap() constructor {
 				var _ancestor_bone = _bind_pose[_ancestor]
 				
 				while _ancestor > 0 {
-					_ancestor = _ancestor_bone[8]
+					_ancestor = _ancestor_bone[BoneData.PARENT]
 					_ancestor_bone = _bind_pose[_ancestor]
-					array_push(_ancestor_bone[10], i)
+					array_push(_ancestor_bone[BoneData.DESCENDANTS], i)
 				}
 				
 				++i

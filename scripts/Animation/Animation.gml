@@ -1,3 +1,18 @@
+enum BoneData {
+	RX,
+	RY,
+	RZ,
+	RW,
+	DX,
+	DY,
+	DZ,
+	DW,
+	PARENT,
+	ATTACHED,
+	DESCENDANTS,
+	__SIZE,
+}
+
 enum AnimationTypes {
 	LINEAR,
 	LINEAR_LOOP,
