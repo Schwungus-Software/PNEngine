@@ -1,9 +1,6 @@
 function Material() : Asset() constructor {
-	static blank_textures = [[-1, 0, 0, 1, 1]]
-	
 	image = -1
 	image2 = undefined
-	textures = blank_textures
 	frame_speed = 1
 	
 	alpha_test = 0.5

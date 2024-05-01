@@ -37,11 +37,11 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		}
 	}
 	
-	static override_texture = function (_submodel, _textures) {
+	static override_texture = function (_submodel, _texture) {
 		gml_pragma("forceinline")
 		
-		if override_textures[_submodel] != _textures {
-			override_textures[_submodel] = _textures
+		if override_textures[_submodel] != _texture {
+			override_textures[_submodel] = _texture
 			skins_updated = true
 		}
 	}
@@ -719,13 +719,13 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 						
 						_cache[-~j] = _material
 						
-						var _textures = _override_textures[i]
+						var _texture = _override_textures[i]
 						
-						if _textures == undefined {
-							_textures = _material.textures
+						if not CollageIsImage(_texture) and not CanvasIsCanvas(_texture) {
+							_texture = _material.image
 						}
 						
-						_cache[j + 2] = _textures
+						_cache[j + 2] = _texture
 					}
 					
 					++i
@@ -743,12 +743,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			repeat cache_amount {
 				var _vbo = cache[i]
 				var _material = cache[-~i]
-				var _textures = cache[i + 2]
+				var _texture = cache[i + 2]
 				
 				var _idx = _material.frame_speed * current_time
 				
 				with _material {
-					if image2 != undefined {
+					if CollageIsImage(image2) {
 						_u_material_can_blend.set(1)
 						
 						if image2 == -1 {
@@ -777,11 +777,18 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					_u_material_scroll.set(x_scroll, y_scroll)
 				}
 				
-				var _texdata = _textures[_idx % array_length(_textures)]
-				var _texture = _texdata[0]
+				if CollageIsImage(_texture) {
+					with _texture.GetUVs(_idx) {
+						_u_uvs.set(normLeft, normTop, normRight, normBottom)
+					}
+					
+					_texture = _texture.GetTexture(_idx)
+				} else if CanvasIsCanvas(_texture) {
+					_u_uvs.set(0, 0, 1, 1)
+					_texture = _texture.GetTexture()
+				}
 				
-				_u_uvs.set(_texdata[1], _texdata[2], _texdata[3], _texdata[4])
-				vertex_submit(_vbo, pr_trianglelist, _texdata[0])
+				vertex_submit(_vbo, pr_trianglelist, _texture)
 				i += 3
 			}
 		}
