@@ -16,8 +16,8 @@ attribute vec3 in_Position; // (x, y, z)
 attribute vec3 in_Normal; // (x, y, z)
 attribute vec2 in_TextureCoord; // (u, v)
 attribute vec4 in_Colour; // (r, g, b, a)
-attribute vec4 in_Colour2; // (bone 1, bone 2, weight 1, weight 2)
-attribute vec4 in_Colour3; // (bone 1, bone 2, weight 1, weight 2)
+attribute vec4 in_BoneIndex; // (bone 1, bone 2, bone 3, bone 4)
+attribute vec4 in_BoneWeight; // (weight 1, weight 2, weight 3, weight 4)
 
 /* --------
    VARYINGS
@@ -146,35 +146,55 @@ float snoise(vec4 v) {
                + dot(m1 * m1, vec2(dot(p3, x3), dot(p4, x4))));
 }
 
+vec3 quat_rotate(vec4 q, vec3 v) {
+	vec3 u = q.xyz;
+	
+	return (v + 2. * cross(u, cross(u, v) + q.w * v));
+}
+
+vec3 dq_transform(vec4 real, vec4 dual, vec3 v) {
+	vec3 r3 = real.xyz;
+	vec3 d3 = dual.xyz;
+	
+	return (quat_rotate(real, v) + 2. * (real.w * d3 - dual.w * r3 + cross(r3, d3)));
+}
+
 void main() {
-	// Get bone indices and weights
-	int bone = int(in_Colour2.r * 510.);
-	int bone2 = int(in_Colour2.g * 510.);
-	int bone3 = int(in_Colour2.b * 510.);
-	int bone4 = int(in_Colour2.a * 510.);
+	// Skeletal animation
+	ivec4 i = ivec4(in_BoneIndex) * 2;
+	ivec4 j = i + 1;
+
+	vec4 real0 = u_bone_dq[i.x];
+	vec4 real1 = u_bone_dq[i.y];
+	vec4 real2 = u_bone_dq[i.z];
+	vec4 real3 = u_bone_dq[i.w];
+
+	vec4 dual0 = u_bone_dq[j.x];
+	vec4 dual1 = u_bone_dq[j.y];
+	vec4 dual2 = u_bone_dq[j.z];
+	vec4 dual3 = u_bone_dq[j.w];
+
+	if (dot(real0, real1) < 0.) {
+		real1 *= -1.;
+		dual1 *= -1.;
+	}
 	
-	vec4 r0 = u_bone_dq[bone];
-	vec4 d0 = u_bone_dq[bone + 1];
-	vec4 r1 = u_bone_dq[bone2];
-	vec4 d1 = u_bone_dq[bone2 + 1];
-	vec4 r2 = u_bone_dq[bone3];
-	vec4 d2 = u_bone_dq[bone3 + 1];
-	vec4 r3 = u_bone_dq[bone4];
-	vec4 d3 = u_bone_dq[bone4 + 1];
-	float w0 = in_Colour3.r;
-	float w1 = in_Colour3.g * sign(dot(r0, r1));
-	float w2 = in_Colour3.b * sign(dot(r0, r2));
-	float w3 = in_Colour3.a * sign(dot(r0, r3));
+	if (dot(real0, real2) < 0.) {
+		real2 *= -1.0;
+		dual2 *= -1.0;
+	}
 	
-	// Blend bones
-	vec4 blend_real = mix(vec4(0., 0., 0., 1.), r0 * w0 + r1 * w1 + r2 * w2 + r3 * w3, u_animated);
-	vec4 blend_dual = mix(vec4(0.), d0 * w0 + d1 * w1 + d2 * w2 + d3 * w3, u_animated);
+	if (dot(real0, real3) < 0.) {
+		real3 *= -1.0;
+		dual3 *= -1.0;
+	}
+
+	vec4 blend_real = real0 * in_BoneWeight.x + real1 * in_BoneWeight.y + real2 * in_BoneWeight.z + real3 * in_BoneWeight.w;
+	vec4 blend_dual = dual0 * in_BoneWeight.x + dual1 * in_BoneWeight.y + dual2 * in_BoneWeight.z + dual3 * in_BoneWeight.w;
+	float inv = 1. / length(blend_real);
 	
-	// Normalize resulting dual quaternion
-	float blend_normal_real = 1. / length(blend_real);
-	
-	blend_real *= blend_normal_real;
-	blend_dual = (blend_dual - blend_real * dot(blend_real, blend_dual)) * blend_normal_real;
+	blend_real = mix(vec4(0., 0., 0., 1.), blend_real * inv, u_animated);
+	blend_dual = mix(vec4(0.), blend_dual * inv, u_animated);
 	
 	// Vertex & normal transformation, rotation & translation
 	vec3 animation = 2. * cross(blend_real.xyz, cross(blend_real.xyz, in_Position) + blend_real.w * in_Position) + 2. * (blend_real.w * blend_dual.xyz - blend_dual.w * blend_real.xyz + cross(blend_real.xyz, blend_dual.xyz));

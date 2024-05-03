@@ -51,8 +51,8 @@
 	vertex_format_add_normal() // 3 * 4 (f32)
 	vertex_format_add_texcoord() // 2 * 4 (f32)
 	vertex_format_add_colour() // 1 * 4 (u8)
-	vertex_format_add_colour() // 1 * 4 (u8)
-	vertex_format_add_colour() // 1 * 4 (u8)
+	vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord) // 4 * 4 (f32)
+	vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord) // 4 * 4 (f32)
 	global.vbo_format = vertex_format_end()
 #endregion
 
