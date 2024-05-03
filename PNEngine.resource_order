@@ -672,6 +672,7 @@
     {"name":"MusicInstance","order":1,"path":"scripts/MusicInstance/MusicInstance.yy",},
     {"name":"MusicMap","order":4,"path":"scripts/MusicMap/MusicMap.yy",},
     {"name":"net_typeof","order":3,"path":"scripts/net_typeof/net_typeof.yy",},
+    {"name":"Node","order":4,"path":"scripts/Node/Node.yy",},
     {"name":"normal_vector_3d","order":12,"path":"scripts/normal_vector_3d/normal_vector_3d.yy",},
     {"name":"OUIBinding","order":7,"path":"scripts/OUIBinding/OUIBinding.yy",},
     {"name":"OUIButton","order":5,"path":"scripts/OUIButton/OUIButton.yy",},
