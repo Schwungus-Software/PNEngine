@@ -135,6 +135,7 @@
 	f_holdable = false
 	f_holdable_in_hand = false
 	f_interactive = false
+	f_grounded = true
 	
 	m_collision = MCollision.NONE
 	m_bump = MBump.NONE
@@ -207,6 +208,7 @@
 	jump = function (_spd) {
 		z_speed = _spd
 		floor_ray[RaycastData.HIT] = false
+		f_grounded = false
 	}
 	
 	set_speed = function (_spd) {

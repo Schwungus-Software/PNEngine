@@ -17,7 +17,7 @@ if fric != 0 {
 	}
 }
 
-if f_gravity and not floor_ray[RaycastData.HIT] {
+if f_gravity and not f_grounded {
 	z_speed = clamp(z_speed - (area.gravity * grav), max_fall_speed, max_fly_speed)
 }
 
@@ -98,6 +98,7 @@ if _held {
 	floor_ray[RaycastData.HIT] = false
 	wall_ray[RaycastData.HIT] = false
 	ceiling_ray[RaycastData.HIT] = false
+	f_grounded = false
 } else {
 	switch m_collision {
 		default:
@@ -107,6 +108,7 @@ if _held {
 			floor_ray[RaycastData.HIT] = false
 			wall_ray[RaycastData.HIT] = false
 			ceiling_ray[RaycastData.HIT] = false
+			f_grounded = false
 		break
 	
 		case MCollision.NORMAL: {
@@ -147,7 +149,7 @@ if _held {
 			}
 		
 			// Floor
-			if raycast(x, y, z + _half_height, x, y, (z + z_speed) - ((floor_ray[RaycastData.HIT] and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
+			if raycast(x, y, z + _half_height, x, y, (z + z_speed) - ((f_grounded and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
 				z = floor_ray[RaycastData.Z]
 			
 				if abs(floor_ray[RaycastData.NZ]) >= 0.5 {
@@ -185,13 +187,17 @@ if _held {
 						angle += _diff
 						move_angle += _diff
 					}
+					
+					f_grounded = true
 				} else {
 					var _dir = darctan2(-floor_ray[RaycastData.NY], floor_ray[RaycastData.NX])
 				
 					x += dcos(_dir)
 					y -= dsin(_dir)
-					floor_ray[RaycastData.HIT] = false
+					f_grounded = false
 				}
+			} else {
+				f_grounded = false
 			}
 		
 			z += z_speed
@@ -240,6 +246,7 @@ if _held {
 			x += _x_speed
 			y += _y_speed
 			z += _z_speed
+			f_grounded = false
 			
 			break
 		}
