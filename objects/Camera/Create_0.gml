@@ -50,7 +50,7 @@ event_inherited()
 	angle_quat = quat_build()
 	angle_matrix = matrix_build_identity()
 	forward_axis = matrix_build(1, 0, 0, 0, 0, 0, 1, 1, 1)
-	up_axis = matrix_build(0, 0, 1, 0, 0, 0, 1, 1, 1)
+	up_axis = matrix_build(0, 0, -1, 0, 0, 0, 1, 1, 1)
 	view_matrix = undefined
 	projection_matrix = undefined
 	

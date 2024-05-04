@@ -18,7 +18,7 @@ if fric != 0 {
 }
 
 if f_gravity and not f_grounded {
-	z_speed = clamp(z_speed - (area.gravity * grav), max_fall_speed, max_fly_speed)
+	z_speed = clamp(z_speed + (area.gravity * grav), max_fly_speed, max_fall_speed)
 }
 
 var _held = instance_exists(holder)
@@ -45,7 +45,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 			}
 			
 			// Bounding box check
-			if z < (_tz + _th) and (z + height) > _tz
+			if z > (_tz - _th) and (z - height) < _tz
 			   and point_distance(x, y, _tx, _ty) < bump_radius + _thing.bump_radius {
 				var _me = id
 				var _result = bump_check(_me, _thing)
@@ -113,7 +113,7 @@ if _held {
 	
 		case MCollision.NORMAL: {
 			var _half_height = height * 0.5
-			var _center_z = z + _half_height
+			var _center_z = z - _half_height
 		
 			// X-axis
 			var _add_x = x + x_speed
@@ -143,13 +143,13 @@ if _held {
 			y += y_speed
 		
 			// Ceiling
-			if raycast(x, y, z + _half_height, x, y, z + z_speed + height, CollisionFlags.BODY, CollisionLayers.ALL, ceiling_ray)[RaycastData.HIT] {
+			if raycast(x, y, z - _half_height, x, y, z + z_speed - height, CollisionFlags.BODY, CollisionLayers.ALL, ceiling_ray)[RaycastData.HIT] {
 				z = ceiling_ray[RaycastData.Z] - height
 				z_speed = 0
 			}
 		
 			// Floor
-			if raycast(x, y, z + _half_height, x, y, (z + z_speed) - ((f_grounded and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
+			if raycast(x, y, z - _half_height, x, y, (z + z_speed) + ((f_grounded and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
 				z = floor_ray[RaycastData.Z]
 			
 				if abs(floor_ray[RaycastData.NZ]) >= 0.5 {
@@ -204,52 +204,6 @@ if _held {
 			
 			break
 		}
-		
-		case MCollision.BULLET: {
-			var _vector = normal_vector_3d(angle, pitch)
-			var _nx = _vector[0]
-			var _ny = _vector[1]
-			var _nz = _vector[2]
-			
-			var _x_speed = vector_speed * _nx
-			var _y_speed = vector_speed * _ny
-			var _z_speed = vector_speed * _nz
-			
-			var _x_radius = radius * _nx
-			var _y_radius = radius * _ny
-			var _z_radius = radius * _nz
-			
-			var _result
-			
-			if f_bullet_hitscan {
-				hitscan(x, y, z, x + _x_speed + _x_radius, y + _y_speed + _y_radius, z + _z_speed + _z_radius, CollisionFlags.BULLET, CollisionLayers.ALL, wall_ray)
-			} else {
-				raycast(x, y, z, x + _x_speed + _x_radius, y + _y_speed + _y_radius, z + _z_speed + _z_radius, CollisionFlags.BULLET, CollisionLayers.ALL, wall_ray)
-			}
-			
-			if wall_ray[RaycastData.HIT] {
-				x = wall_ray[RaycastData.X] - _x_radius
-				y = wall_ray[RaycastData.Y] - _y_radius
-				z = wall_ray[RaycastData.Z] - _z_radius
-				
-				var _thing = wall_ray[RaycastData.THING]
-				
-				if instance_exists(_thing) {
-					_thing.receive_damage(bullet_damage, bullet_type, id, instance_exists(master) ? master : id)
-				}
-				
-				receive_damage(1, "BulletCollide", _thing)
-				
-				break
-			}
-			
-			x += _x_speed
-			y += _y_speed
-			z += _z_speed
-			f_grounded = false
-			
-			break
-		}
 	}
 }
 
@@ -262,7 +216,7 @@ var _is_holding = instance_exists(holding)
 if _is_holding {
 	holding.x = x
 	holding.y = y
-	holding.z = z + height
+	holding.z = z - height
 	holding.angle = angle
 	
 	with holding {
@@ -368,7 +322,7 @@ if _held {
 				if torso_bone <= -1 {
 					_x = x
 					_y = y
-					_z = z + other.height * 0.5
+					_z = z - other.height * 0.5
 					
 					break
 				}
@@ -382,12 +336,12 @@ if _held {
 		} else {
 			_x = x
 			_y = y
-			_z = z + height * 0.5
+			_z = z - height * 0.5
 		}
 		
 		var _has_blob = shadow_ray[RaycastData.HIT]
 		
-		if raycast(_x, _y, _z, _x, _y, _z - 65535, CollisionFlags.VISION, CollisionLayers.ALL, shadow_ray)[RaycastData.HIT] {
+		if raycast(_x, _y, _z, _x, _y, _z + 65535, CollisionFlags.VISION, CollisionLayers.ALL, shadow_ray)[RaycastData.HIT] {
 			shadow_x = shadow_ray[RaycastData.X]
 			shadow_y = shadow_ray[RaycastData.Y]
 			shadow_z = shadow_ray[RaycastData.Z]
