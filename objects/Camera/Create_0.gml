@@ -57,7 +57,8 @@ event_inherited()
 	path = ds_grid_create(0, CameraPathData.__SIZE)
 	path_elapsed = 0
 	path_time = 0
-	path_playback = AnimationTypes.LINEAR
+	path_quadratic = false
+	path_loop = false
 	path_active = false
 	
 	quake = 0
@@ -138,14 +139,15 @@ event_inherited()
 		stop_path()
 	}
 	
-	start_path = function (_time, _playback) {
+	start_path = function (_time, _quadratic = false, _loop = false) {
 		if ds_grid_width(path) == 0 {
 			return false
 		}
 		
 		path_elapsed = 0
 		path_time = _time
-		path_playback = _playback
+		path_quadratic = _quadratic
+		path_loop = _loop
 		path_active = true
 		
 		x = path[# 0, CameraPathData.X]
