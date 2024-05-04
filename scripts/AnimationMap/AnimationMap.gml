@@ -58,6 +58,7 @@ function AnimationMap() : AssetMap() constructor {
 		var _animation = new Animation()
 		
 		with _animation {
+			name = _name
 			spaces = _spaces
 			duration = _duration
 			tps = _tps
@@ -69,7 +70,7 @@ function AnimationMap() : AssetMap() constructor {
 			var j = 0
 			
 			if _spaces & BoneSpaces.PARENT {
-				array_resize(parent_frames, _duration)
+				parent_frames = array_create(_duration)
 				
 				repeat _duration {
 					var _frame = array_create(_node_size)
@@ -83,7 +84,7 @@ function AnimationMap() : AssetMap() constructor {
 					parent_frames[i++] = _frame
 				}
 			} else if _spaces & BoneSpaces.WORLD {
-				array_resize(world_frames, _duration)
+				world_frames = array_create(_duration)
 				
 				repeat _duration {
 					var _frame = array_create(_node_size)
@@ -97,7 +98,7 @@ function AnimationMap() : AssetMap() constructor {
 					world_frames[i++] = _frame
 				}
 			} else if _spaces & BoneSpaces.BONE {
-				array_resize(bone_frames, _duration)
+				bone_frames = array_create(_duration)
 				
 				repeat _duration {
 					var _frame = array_create(_bone_size)

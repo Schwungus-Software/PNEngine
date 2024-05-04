@@ -12,7 +12,7 @@ function Animation() : Asset() constructor {
 	nodes_amount = 0
 	bones_amount = 0
 	
-	parent_frames = []
-	world_frames = []
-	bone_frames = []
+	parent_frames = undefined
+	world_frames = undefined
+	bone_frames = undefined
 }

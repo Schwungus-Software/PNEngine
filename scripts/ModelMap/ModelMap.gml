@@ -222,6 +222,7 @@ function ModelMap() : AssetMap() constructor {
 		var _model = new Model()
 		
 		with _model {
+			name = _name
 			submodels = _submodels
 			submodels_amount = _submodel_count
 			root_node = _root_node
@@ -303,6 +304,10 @@ function ModelMap() : AssetMap() constructor {
 						}
 									
 						var _buffer = buffer_load(_batch_filename)
+						
+						if buffer_read(_buffer, buffer_string) != "PNECOL" {
+							show_error($"!!! ModelMap.load: '{_name}' batch '{_batch_name}' has no PNECOL header", true)
+						}
 									
 						repeat buffer_read(_buffer, buffer_u32) {
 							var _triangle = array_create(TriangleData.__SIZE)
