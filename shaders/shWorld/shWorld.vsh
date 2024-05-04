@@ -47,7 +47,7 @@ uniform vec2 u_material_scroll;
 uniform vec2 u_material_specular; // base, exponent
 uniform vec3 u_material_wind; // waviness, lock bottom, speed
 
-uniform float u_animated;
+uniform int u_animated;
 uniform vec4 u_bone_dq[2 * MAX_BONES];
 
 uniform vec4 u_ambient_color;
@@ -173,45 +173,52 @@ vec3 dq_transform(vec4 real, vec4 dual, vec3 v) {
 }
 
 void main() {
-	// Skeletal animation
-	ivec4 i = ivec4(in_BoneIndex) * 2;
-	ivec4 j = i + 1;
-
-	vec4 real0 = u_bone_dq[i.x];
-	vec4 real1 = u_bone_dq[i.y];
-	vec4 real2 = u_bone_dq[i.z];
-	vec4 real3 = u_bone_dq[i.w];
-
-	vec4 dual0 = u_bone_dq[j.x];
-	vec4 dual1 = u_bone_dq[j.y];
-	vec4 dual2 = u_bone_dq[j.z];
-	vec4 dual3 = u_bone_dq[j.w];
-
-	if (dot(real0, real1) < 0.) {
-		real1 *= -1.;
-		dual1 *= -1.;
-	}
+	vec3 calc_position = in_Position;
+	vec3 calc_normal = in_Normal;
 	
-	if (dot(real0, real2) < 0.) {
-		real2 *= -1.0;
-		dual2 *= -1.0;
-	}
-	
-	if (dot(real0, real3) < 0.) {
-		real3 *= -1.0;
-		dual3 *= -1.0;
-	}
+	if (u_animated >= 1) {
+		// Skeletal animation
+		ivec4 i = ivec4(in_BoneIndex) * 2;
+		ivec4 j = i + 1;
 
-	vec4 blend_real = real0 * in_BoneWeight.x + real1 * in_BoneWeight.y + real2 * in_BoneWeight.z + real3 * in_BoneWeight.w;
-	vec4 blend_dual = dual0 * in_BoneWeight.x + dual1 * in_BoneWeight.y + dual2 * in_BoneWeight.z + dual3 * in_BoneWeight.w;
-	float inv = 1. / length(blend_real);
+		vec4 real0 = u_bone_dq[i.x];
+		vec4 real1 = u_bone_dq[i.y];
+		vec4 real2 = u_bone_dq[i.z];
+		vec4 real3 = u_bone_dq[i.w];
+
+		vec4 dual0 = u_bone_dq[j.x];
+		vec4 dual1 = u_bone_dq[j.y];
+		vec4 dual2 = u_bone_dq[j.z];
+		vec4 dual3 = u_bone_dq[j.w];
+
+		if (dot(real0, real1) < 0.) {
+			real1 *= -1.;
+			dual1 *= -1.;
+		}
 	
-	blend_real = mix(vec4(0., 0., 0., 1.), blend_real * inv, u_animated);
-	blend_dual = mix(vec4(0.), blend_dual * inv, u_animated);
+		if (dot(real0, real2) < 0.) {
+			real2 *= -1.0;
+			dual2 *= -1.0;
+		}
+	
+		if (dot(real0, real3) < 0.) {
+			real3 *= -1.0;
+			dual3 *= -1.0;
+		}
+
+		vec4 blend_real = real0 * in_BoneWeight.x + real1 * in_BoneWeight.y + real2 * in_BoneWeight.z + real3 * in_BoneWeight.w;
+		vec4 blend_dual = dual0 * in_BoneWeight.x + dual1 * in_BoneWeight.y + dual2 * in_BoneWeight.z + dual3 * in_BoneWeight.w;
+		float inv = 1. / length(blend_real);
+	
+		blend_real *= inv;
+		blend_dual *= inv;
+		calc_position = dq_transform(blend_real, blend_dual, calc_position);
+		calc_normal = quat_rotate(blend_real, calc_normal);
+	}
 	
 	// Vertex & normal transformation, rotation & translation
 	mat4 world_matrix = gm_Matrices[MATRIX_WORLD];
-	vec4 object_space_position_vec4 = world_matrix * vec4(dq_transform(blend_real, blend_dual, in_Position), 1.);
+	vec4 object_space_position_vec4 = world_matrix * vec4(calc_position, 1.);
 	
 	// Wind effect: Move vertices around using 4D simplex noise
 	if (u_material_wind.x > 0.) {
@@ -232,7 +239,7 @@ void main() {
 	gl_Position = gm_Matrices[MATRIX_PROJECTION] * view_matrix * object_space_position_vec4;
 	
 	// Vertex color & lighting
-	vec3 world_normal = normalize(mat3(world_matrix) * quat_rotate(blend_real, in_Normal));
+	vec3 world_normal = normalize(mat3(world_matrix) * calc_normal);
 	vec3 camera_position = -(view_matrix[3] * view_matrix).xyz;
 	vec3 object_space_position = vec3(object_space_position_vec4);
 	vec3 view_position = object_space_position - camera_position;

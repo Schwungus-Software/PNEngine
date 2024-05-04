@@ -11,7 +11,7 @@ global.depth_shader = new Shader(shDepth)
 global.dither_shader = new Shader(os_type == os_linux ? shDitherBlend : shDither)
 
 global.u_ambient_color = new Uniform("u_ambient_color", UniformTypes.FLOAT)
-global.u_animated = new Uniform("u_animated", UniformTypes.FLOAT)
+global.u_animated = new Uniform("u_animated", UniformTypes.INTEGER)
 global.u_bone_dq = new Uniform("u_bone_dq", UniformTypes.FLOAT_ARRAY)
 global.u_color = new Uniform("u_color", UniformTypes.FLOAT)
 global.u_fog_distance = new Uniform("u_fog_distance", UniformTypes.FLOAT)

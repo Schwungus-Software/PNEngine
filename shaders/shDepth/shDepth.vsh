@@ -38,7 +38,7 @@ uniform vec4 u_wind; // strength, xyz
 uniform vec2 u_material_scroll;
 uniform vec3 u_material_wind; // waviness, lock bottom, speed
 
-uniform float u_animated;
+uniform int u_animated;
 uniform vec4 u_bone_dq[2 * MAX_BONES];
 
 //	Simplex 4D Noise 
@@ -160,47 +160,51 @@ vec3 dq_transform(vec4 real, vec4 dual, vec3 v) {
 }
 
 void main() {
-	// Skeletal animation
-	ivec4 i = ivec4(in_BoneIndex) * 2;
-	ivec4 j = i + 1;
-
-	vec4 real0 = u_bone_dq[i.x];
-	vec4 real1 = u_bone_dq[i.y];
-	vec4 real2 = u_bone_dq[i.z];
-	vec4 real3 = u_bone_dq[i.w];
-
-	vec4 dual0 = u_bone_dq[j.x];
-	vec4 dual1 = u_bone_dq[j.y];
-	vec4 dual2 = u_bone_dq[j.z];
-	vec4 dual3 = u_bone_dq[j.w];
-
-	if (dot(real0, real1) < 0.) {
-		real1 *= -1.;
-		dual1 *= -1.;
-	}
+	vec3 calc_position = in_Position;
 	
-	if (dot(real0, real2) < 0.) {
-		real2 *= -1.0;
-		dual2 *= -1.0;
-	}
-	
-	if (dot(real0, real3) < 0.) {
-		real3 *= -1.0;
-		dual3 *= -1.0;
-	}
+	if (u_animated >= 1) {
+		// Skeletal animation
+		ivec4 i = ivec4(in_BoneIndex) * 2;
+		ivec4 j = i + 1;
 
-	vec4 blend_real = real0 * in_BoneWeight.x + real1 * in_BoneWeight.y + real2 * in_BoneWeight.z + real3 * in_BoneWeight.w;
-	vec4 blend_dual = dual0 * in_BoneWeight.x + dual1 * in_BoneWeight.y + dual2 * in_BoneWeight.z + dual3 * in_BoneWeight.w;
-	float inv = 1. / length(blend_real);
+		vec4 real0 = u_bone_dq[i.x];
+		vec4 real1 = u_bone_dq[i.y];
+		vec4 real2 = u_bone_dq[i.z];
+		vec4 real3 = u_bone_dq[i.w];
+
+		vec4 dual0 = u_bone_dq[j.x];
+		vec4 dual1 = u_bone_dq[j.y];
+		vec4 dual2 = u_bone_dq[j.z];
+		vec4 dual3 = u_bone_dq[j.w];
+
+		if (dot(real0, real1) < 0.) {
+			real1 *= -1.;
+			dual1 *= -1.;
+		}
 	
-	blend_real = mix(vec4(0., 0., 0., 1.), blend_real * inv, u_animated);
-	blend_dual = mix(vec4(0.), blend_dual * inv, u_animated);
+		if (dot(real0, real2) < 0.) {
+			real2 *= -1.0;
+			dual2 *= -1.0;
+		}
+	
+		if (dot(real0, real3) < 0.) {
+			real3 *= -1.0;
+			dual3 *= -1.0;
+		}
+
+		vec4 blend_real = real0 * in_BoneWeight.x + real1 * in_BoneWeight.y + real2 * in_BoneWeight.z + real3 * in_BoneWeight.w;
+		vec4 blend_dual = dual0 * in_BoneWeight.x + dual1 * in_BoneWeight.y + dual2 * in_BoneWeight.z + dual3 * in_BoneWeight.w;
+		float inv = 1. / length(blend_real);
+	
+		blend_real *= inv;
+		blend_dual *= inv;
+		calc_position = dq_transform(blend_real, blend_dual, calc_position);
+	}
 	
 	// Vertex & normal transformation, rotation & translation
-	vec3 animation = 2. * cross(blend_real.xyz, cross(blend_real.xyz, in_Position) + blend_real.w * in_Position) + 2. * (blend_real.w * blend_dual.xyz - blend_dual.w * blend_real.xyz + cross(blend_real.xyz, blend_dual.xyz));
 	mat4 world_matrix = gm_Matrices[MATRIX_WORLD];
 	mat4 view_matrix = gm_Matrices[MATRIX_VIEW];
-	vec4 object_space_position_vec4 = world_matrix * vec4(in_Position + animation, 1.);
+	vec4 object_space_position_vec4 = world_matrix * vec4(calc_position, 1.);
 	
 	// Wind effect: Move vertices around using 4D simplex noise
 	if (u_material_wind.x > 0.) {
