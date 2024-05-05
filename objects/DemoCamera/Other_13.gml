@@ -9,7 +9,7 @@ if poi_target != ThingTags.NONE {
 		var _target = _targets[i++]
 		
 		if not ds_map_exists(pois, _target) {
-			add_poi(_target, poi_lerp, 0, 0, _target.height * 0.5)
+			add_poi(_target, poi_lerp, 0, 0, _target.height * -0.5)
 		}
 	}
 }

@@ -182,8 +182,7 @@ function ModelMap() : AssetMap() constructor {
 		}
 		
 		// Nodes
-		buffer_read(_buffer, buffer_u32) // Node count
-		
+		var _node_count = buffer_read(_buffer, buffer_u32)
 		var _root_node = new Node().from_buffer(_buffer)
 		
 		// Bone offsets
@@ -226,7 +225,9 @@ function ModelMap() : AssetMap() constructor {
 			submodels = _submodels
 			submodels_amount = _submodel_count
 			root_node = _root_node
+			nodes_amount = _node_count
 			bone_offsets = _bone_offsets
+			bones_amount = _bone_count
 		}
 #endregion
 
@@ -453,6 +454,23 @@ function ModelMap() : AssetMap() constructor {
 #endregion
 				
 				_model.collider = _collider
+			}
+#endregion
+		
+#region Points
+			var _points = force_type_fallback(_json[$ "points"], "struct")
+			
+			if _points != undefined {
+				var _names = struct_get_names(_points)
+				var i = 0
+				
+				repeat struct_names_count(_points) {
+					var _point = force_type(_points[$ _names[i++]], "array")
+					
+					_point[3] = _model.get_node(force_type_fallback(_point[3], "string"))
+				}
+				
+				_model.points = _points
 			}
 #endregion
 		}

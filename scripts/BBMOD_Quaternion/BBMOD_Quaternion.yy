@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"BBMOD_Quaternion",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_Quaternion",
+  "parent":{
+    "name":"Quaternions",
+    "path":"folders/Scripts/PNEngine/Math/Quaternions.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

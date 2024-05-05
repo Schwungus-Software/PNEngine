@@ -47,8 +47,6 @@ event_inherited()
 	parent = noone
 	f_raycast = true
 	
-	angle_quat = quat_build()
-	angle_matrix = matrix_build_identity()
 	forward_axis = matrix_build(1, 0, 0, 0, 0, 0, 1, 1, 1)
 	up_axis = matrix_build(0, 0, -1, 0, 0, 0, 1, 1, 1)
 	view_matrix = undefined
@@ -201,15 +199,7 @@ event_inherited()
 	}
 	
 	update_matrices = function (_width = window_get_width(), _height = window_get_height(), _update_listener = false) {
-		angle_quat[0] = 1
-		angle_quat[1] = 0
-		angle_quat[2] = 0
-		angle_quat[3] = 0
-		quat_rotate_world_z(angle_quat, -syaw, angle_quat)
-		quat_rotate_local_z(angle_quat, -spitch, angle_quat)
-		quat_rotate_local_x(angle_quat, sroll, angle_quat)
-		
-		var _matrix = quat_to_matrix(angle_quat, angle_matrix)
+		var _matrix = matrix_build(0, 0, 0, sroll, spitch, syaw, 1, 1, 1)
 		
 		var _forward = matrix_multiply(forward_axis, _matrix)
 		var _fx = _forward[12]

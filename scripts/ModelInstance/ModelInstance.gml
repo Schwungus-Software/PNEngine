@@ -56,9 +56,11 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		frame = 0
 		frame_speed = 1
 		
-		tick_sample = dq_build_identity()
-		from_sample = dq_build_identity()
-		draw_sample = dq_build_identity()
+		node_transforms = []
+		node_post_rotations = undefined
+		tick_sample = []
+		from_sample = []
+		draw_sample = []
 		
 		splice_name = ""
 		splice = undefined
@@ -67,7 +69,77 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		splice_loop = false
 		splice_push = false
 		
-		static _exclude_sample = []
+		static output_to_sample = function (_sample) {
+			var _duration = animation.duration
+			var _frame = floor(animation_loop ? (frame % _duration) : min(frame, _duration - 1))
+			var _frame_data = animation.parent_frames[_frame]
+			var _bone_offsets = model.bone_offsets
+			
+			static _node_stack = []
+			
+			var _node_count = model.nodes_amount
+			
+			if array_length(_node_stack) < _node_count {
+				array_resize(_node_stack, _node_count)
+			}
+			
+			_node_stack[0] = model.root_node
+			
+			var _stack_next = 1
+			
+			repeat _node_count {
+				if _stack_next == 0 {
+					break
+				}
+				
+				var _node = _node_stack[--_stack_next]
+				
+				// TODO: Separate skeleton from the rest of the nodes to save on
+				// iterations here.
+				
+				var _node_index = _node.index
+				var _node_offset = _node_index * 8
+				var _node_post_rotation = node_post_rotations[_node_index]
+				var _node_parent = _node.parent
+				var _parent_index = (_node_parent != undefined) ? _node_parent.index : -1
+				
+				if _node_post_rotation != undefined {
+					var _dq = new BBMOD_DualQuaternion().FromArray(_frame_data, _node_offset)
+					var _position = _dq.GetTranslation()
+					var _rotation = _dq.GetRotation()
+					
+					_rotation = _rotation.Mul(new BBMOD_Quaternion().FromArray(_node_post_rotation))
+					_dq.FromTranslationRotation(_position, _rotation)
+					
+					if _parent_index != -1 {
+						_dq = _dq.Mul(new BBMOD_DualQuaternion().FromArray(node_transforms, _parent_index * 8))
+					}
+					
+					_dq.ToArray(node_transforms, _node_offset)
+				} else {
+					if _parent_index == -1 {
+						// No parent transform -> just copy the node transform
+						array_copy(node_transforms, _node_offset, _frame_data, _node_offset, 8)
+					} else {
+						// Multiply node transform with parent's transform
+						dq_multiply_array(_frame_data, _node_offset, node_transforms, _parent_index * 8, node_transforms, _node_offset)
+					}
+				}
+				
+				if _node.is_bone {
+					dq_multiply_array(_bone_offsets, _node_offset, node_transforms, _node_offset, _sample, _node_offset)
+				}
+				
+				var _children = _node.children
+				var i = 0
+				
+				repeat array_length(_children) {
+					_node_stack[_stack_next++] = _children[i++]
+				}
+			}
+			
+			return _sample
+		}
 		
 		static set_animation = function (_animation = undefined, _frame = 0, _loop = false) {
 			if _animation == undefined {
@@ -97,7 +169,15 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				frame_speed = 1
 			}
 			
-			print("Setting " + animation_name)
+			if not animated {
+				var n = model.nodes_amount
+				
+				node_post_rotations = array_create(n, undefined)
+				animated = true
+			}
+			
+			output_to_sample(tick_sample)
+			array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
 		}
 		
 		static set_splice_animation = function (_animation = undefined, _bone = 0, _frame = 0, _loop = false, _push = false) {
@@ -115,51 +195,90 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			interp_skip("ssplice_frame")
 		}
 		
-		static get_point = function (_name, _visual = false) {
+		static get_node = function (_id) {
+			gml_pragma("forceinline")
+			
+			return model.get_node(_id)
+		}
+		
+		static get_node_id = function (_id) {
+			gml_pragma("forceinline")
+			
+			return model.get_node_id(_id)
+		}
+		
+		static get_point = function (_name) {
 			if points == undefined {
 				return undefined
 			}
 			
 			var _point = points[$ _name]
-			
-			if not is_array(_point) {
-				return undefined
-			}
-			
 			var _x = _point[0]
 			var _y = _point[1]
 			var _z = _point[2]
-			var _bone = _point[3]
+			var _node = _point[3]
 			
-			if _bone != -1 {
-				var _bone_pos = dq_get_translation(dq_add_translation(get_bone_dq(_bone, _visual), _x, _y, _z))
+			if _node != undefined {
+				var _node_pos = dq_get_translation(dq_add_translation(get_node_dq(_node.index), _x, _y, _z))
 				
-				_x = _bone_pos[0]
-				_y = _bone_pos[1]
-				_z = _bone_pos[2]
+				_x = _node_pos[0]
+				_y = _node_pos[1]
+				_z = _node_pos[2]
 			}
 			
-			return matrix_transform_point(_visual ? draw_matrix : tick_matrix, _x, _y, _z)
+			return matrix_transform_point(tick_matrix, _x, _y, _z)
 		}
 		
-		static get_bone_dq = function (_index, _visual = false) {
-			static bone_dq = dq_build_identity()
+		static get_node_dq = function (_index) {
+			gml_pragma("forceinline")
 			
-			if animation == undefined {
-				return bone_dq
-			}
+			static node_dq = dq_build_identity()
 			
-			return bone_dq
+			var i = _index * 8
+			
+			node_dq[0] = node_transforms[i]
+			node_dq[1] = node_transforms[-~i]
+			node_dq[2] = node_transforms[i + 2]
+			node_dq[3] = node_transforms[i + 3]
+			node_dq[4] = node_transforms[i + 4]
+			node_dq[5] = node_transforms[i + 5]
+			node_dq[6] = node_transforms[i + 6]
+			node_dq[7] = node_transforms[i + 7]
+			
+			return node_dq
 		}
 		
-		static get_bone_pos = function (_index, _visual = false) {
-			var _dq = get_bone_dq(_index, _visual)
+		static get_node_pos = function (_index) {
+			var _dq = get_node_dq(_index)
 			var _pos = dq_get_translation(_dq)
 			
-			return matrix_transform_point(_visual ? draw_matrix : tick_matrix, _pos[0], _pos[1], _pos[2])
+			return matrix_transform_point(tick_matrix, _pos[0], _pos[1], _pos[2])
 		}
 		
-		static rotate_bone = function (_index, _x, _y, _z) {}
+		static post_rotate_node = function (_index, _x, _y, _z) {
+			var _quat = node_post_rotations[_index]
+			
+			if _quat == undefined {
+				_quat = quat_build()
+				node_post_rotations[_index] = _quat
+			}
+			
+			_quat[0] = 0
+			_quat[1] = 0
+			_quat[2] = 0
+			_quat[3] = 1
+			quat_rotate_local_x(_quat, _x, _quat)
+			quat_rotate_local_y(_quat, _y, _quat)
+			quat_rotate_local_z(_quat, _z, _quat)
+			
+			return _quat
+		}
+		
+		static post_rotate_node_quat = function (_index, _quat) {
+			node_post_rotations[_index] = _quat
+			
+			return _quat
+		}
 		
 		static splice_animation = function (_animation, _frame, _bone_index, _weight = 1) {}
 		
@@ -202,6 +321,24 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				} else {
 					_update_sample = true
 				}
+			}
+			
+			if _update_sample {
+				/*var _node_size = model.nodes_amount * 8
+				
+				if array_length(node_transforms) < _node_size {
+					array_resize(node_transforms, _node_size)
+				}
+
+				var _bone_size = model.bones_amount * 8
+				
+				if array_length(tick_sample) != _bone_size {
+					array_resize(tick_sample, _bone_size)
+				}*/
+				
+				array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
+				output_to_sample(tick_sample)
+				//array_copy(tick_sample, _bone_size, node_transforms, _bone_size, _node_size - _bone_size)
 			}
 			
 			if _update_matrix {
@@ -285,13 +422,13 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			global.u_color.set(color_get_red(color) * COLOR_INVERSE, color_get_green(color) * COLOR_INVERSE, color_get_blue(color) * COLOR_INVERSE, alpha)
 			global.u_animated.set(0)
 			
-			/*if animation == undefined {
+			if animation == undefined {
 				global.u_animated.set(0)
 			} else {
 				global.u_animated.set(1)
 				sample_blend(draw_sample, from_sample, tick_sample, global.tick_draw)
 				global.u_bone_dq.set(draw_sample)
-			}*/
+			}
 			
 			var _current_shader = global.current_shader
 			var _u_material_bright = global.u_material_bright

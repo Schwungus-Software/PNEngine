@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"unit_vector_3d",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"unit_vector_3d",
+  "parent":{
+    "name":"Math",
+    "path":"folders/Scripts/PNEngine/Math.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

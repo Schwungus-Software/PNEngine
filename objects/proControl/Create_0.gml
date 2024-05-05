@@ -93,9 +93,11 @@
 					"point_distance_3d", point_distance_3d,
 			        "dot_product_3d", dot_product_3d,
 			        "dot_product_3d_normalized", dot_product_3d_normalized,
+					"cross_product_3d", cross_product_3d,
 					"cross_product_3d_normalized", cross_product_3d_normalized,
 					"lengthdir_3d", lengthdir_3d,
 					"normal_vector_3d", normal_vector_3d,
+					"unit_vector_3d", unit_vector_3d,
 			        "matrix_build", matrix_build,
 			        "matrix_multiply", matrix_multiply,
 			        "matrix_build_identity", matrix_build_identity,
@@ -116,7 +118,19 @@
 					"dq_get_y", dq_get_y,
 					"dq_get_z", dq_get_z,
 					"dq_multiply", dq_multiply,
-					"dq_conjugate", dq_conjugate
+					"dq_conjugate", dq_conjugate,
+					"quat_build", quat_build,
+					"quat_dot", quat_dot,
+					"quat_multiply", quat_multiply,
+					"quat_rotate_local_x", quat_rotate_local_x,
+					"quat_rotate_local_y", quat_rotate_local_y,
+					"quat_rotate_local_z", quat_rotate_local_z,
+					//"quat_rotate_world_x", quat_rotate_world_x,
+					//"quat_rotate_world_y", quat_rotate_world_y,
+					"quat_rotate_world_z", quat_rotate_world_z,
+					
+					"Quaternion", BBMOD_Quaternion,
+					"DualQuaternion", BBMOD_DualQuaternion
 			    )
 			#endregion
 			
