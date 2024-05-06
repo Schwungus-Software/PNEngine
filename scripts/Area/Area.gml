@@ -289,6 +289,7 @@ function Area() constructor {
 		_particle[ParticleData.ALPHA_SPEED] = 0
 		_particle[ParticleData.BRIGHT] = 0
 		_particle[ParticleData.BRIGHT_SPEED] = 0
+		_particle[ParticleData.BLENDMODE] = bm_normal
 		_particle[ParticleData.TICKS] = infinity
 		_particle[ParticleData.X] = _x
 		_particle[ParticleData.Y] = _y

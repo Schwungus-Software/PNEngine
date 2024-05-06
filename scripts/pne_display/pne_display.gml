@@ -96,6 +96,7 @@
 		ALPHA_SPEED,
 		BRIGHT,
 		BRIGHT_SPEED,
+		BLENDMODE,
 		TICKS,
 		X,
 		Y,

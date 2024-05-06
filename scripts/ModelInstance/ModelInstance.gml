@@ -558,11 +558,14 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 	#region Rendering
 		visible = true
 		color = c_white
+		blendmode = bm_normal
 		alpha = 1
 		
 		static submit = function () {
+			var _blendmode = gpu_get_blendmode()
+			
 			global.u_color.set(color_get_red(color) * COLOR_INVERSE, color_get_green(color) * COLOR_INVERSE, color_get_blue(color) * COLOR_INVERSE, alpha)
-			global.u_animated.set(0)
+			gpu_set_blendmode(bm_normal)
 			
 			if animation == undefined {
 				global.u_animated.set(0)
@@ -680,6 +683,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				vertex_submit(_vbo, pr_trianglelist, _texture)
 				i += 3
 			}
+			
+			gpu_set_blendmode(_blendmode)
 		}
 		
 		static draw = function () {

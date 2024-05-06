@@ -374,6 +374,7 @@ event_inherited()
 					
 					batch_set_alpha_test(p[ParticleData.ALPHA_TEST])
 					batch_set_bright(p[ParticleData.BRIGHT])
+					batch_set_blendmode(p[ParticleData.BLENDMODE])
 					batch_billboard(p[ParticleData.IMAGE], p[ParticleData.FRAME], p[ParticleData.WIDTH], p[ParticleData.HEIGHT], p[ParticleData.X], p[ParticleData.Y], p[ParticleData.Z], p[ParticleData.ANGLE], p[ParticleData.COLOR], p[ParticleData.ALPHA])
 				}
 				

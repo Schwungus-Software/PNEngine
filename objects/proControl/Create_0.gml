@@ -528,6 +528,7 @@
 					"PART_ALPHA_SPEED", ParticleData.ALPHA_SPEED,
 					"PART_BRIGHT", ParticleData.BRIGHT,
 					"PART_BRIGHT_SPEED", ParticleData.BRIGHT_SPEED,
+					"PART_BLENDMODE", ParticleData.BLENDMODE,
 					"PART_TICKS", ParticleData.TICKS,
 					"PART_X", ParticleData.X,
 					"PART_Y", ParticleData.Y,
@@ -580,7 +581,8 @@
 					"batch_line", batch_line,
 					"batch_trail", batch_trail,
 					"batch_set_alpha_test", batch_set_alpha_test,
-					"batch_set_bright", batch_set_bright
+					"batch_set_bright", batch_set_bright,
+					"batch_set_blendmode", batch_set_blendmode
 				)
 			#endregion
 			
@@ -606,6 +608,14 @@
 						repeat i {
 							_music_instances[| --i].stop(_fade)
 						}
+					},
+					
+					"sound_is_playing", function (_sound) {
+						return fmod_channel_control_is_playing(_sound)
+					},
+					
+					"sound_stop", function (_sound) {
+						fmod_channel_control_stop(_sound)
 					}
 				)
 			#endregion

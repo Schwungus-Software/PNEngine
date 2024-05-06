@@ -315,6 +315,7 @@
     {"name":"batch_floor_ext","order":2,"path":"scripts/batch_floor_ext/batch_floor_ext.yy",},
     {"name":"batch_line","order":7,"path":"scripts/batch_line/batch_line.yy",},
     {"name":"batch_set_alpha_test","order":6,"path":"scripts/batch_set_alpha_test/batch_set_alpha_test.yy",},
+    {"name":"batch_set_blendmode","order":9,"path":"scripts/batch_set_blendmode/batch_set_blendmode.yy",},
     {"name":"batch_set_bright","order":4,"path":"scripts/batch_set_bright/batch_set_bright.yy",},
     {"name":"batch_submit","order":3,"path":"scripts/batch_submit/batch_submit.yy",},
     {"name":"batch_trail","order":8,"path":"scripts/batch_trail/batch_trail.yy",},
@@ -785,9 +786,7 @@
     {"name":"shCurve","order":2,"path":"shaders/shCurve/shCurve.yy",},
     {"name":"shDepth","order":5,"path":"shaders/shDepth/shDepth.yy",},
     {"name":"shDither","order":9,"path":"shaders/shDither/shDither.yy",},
-    {"name":"shDitherBlend","order":10,"path":"shaders/shDitherBlend/shDitherBlend.yy",},
     {"name":"shSky","order":1,"path":"shaders/shSky/shSky.yy",},
-    {"name":"shWorldBlend","order":8,"path":"shaders/shWorldBlend/shWorldBlend.yy",},
     {"name":"scribble_fallback_bulletpoint","order":11,"path":"sprites/scribble_fallback_bulletpoint/scribble_fallback_bulletpoint.yy",},
   ],
 }
