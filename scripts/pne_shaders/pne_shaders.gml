@@ -1,14 +1,14 @@
 global.shaders = ds_list_create()
 global.uniforms_amount = 0
 
-global.world_shader = new Shader(os_type == os_linux ? shWorldBlend : shWorld)
+global.world_shader = new Shader(shWorld)
 global.sky_shader = new Shader(shSky)
 global.bloom_pass_shader = new Shader(shBloomPass)
 global.bloom_up_shader = new Shader(shBloomUp)
 global.bloom_down_shader = new Shader(shBloomDown)
 global.curve_shader = new Shader(shCurve)
 global.depth_shader = new Shader(shDepth)
-global.dither_shader = new Shader(os_type == os_linux ? shDitherBlend : shDither)
+global.dither_shader = new Shader(shDither)
 
 global.u_ambient_color = new Uniform("u_ambient_color", UniformTypes.FLOAT)
 global.u_animated = new Uniform("u_animated", UniformTypes.INTEGER)
