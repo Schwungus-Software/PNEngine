@@ -56,6 +56,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		frame = 0
 		frame_speed = 1
 		
+		transition = 0
+		transition_duration = 0
+		transition_frame = undefined
+		
 		node_transforms = []
 		node_post_rotations = undefined
 		tick_sample = []
@@ -70,9 +74,128 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		splice_push = false
 		
 		static output_to_sample = function (_sample) {
+			static _transframe = []
+			
 			var _duration = animation.duration
 			var _frame = floor(animation_loop ? (frame % _duration) : min(frame, _duration - 1))
 			var _frame_data = animation.parent_frames[_frame]
+			
+			if transition < transition_duration {
+				var _factor = transition / transition_duration
+				var i = 0
+				
+				repeat array_length(_frame_data) div 8 {
+					var i1 = -~i
+					var i2 = i + 2
+					var i3 = i + 3
+					var i4 = i + 4
+					var i5 = i + 5
+					var i6 = i + 6
+					var i7 = i + 7
+					
+					// First dual quaternion
+					var _dq10 = transition_frame[i]
+					var _dq11 = transition_frame[i1]
+					var _dq12 = transition_frame[i2]
+					var _dq13 = transition_frame[i3]
+					// (* 2 since we use this only in the translation reconstruction)
+					var _dq14 = transition_frame[i4] * 2
+					var _dq15 = transition_frame[i5] * 2
+					var _dq16 = transition_frame[i6] * 2
+					var _dq17 = transition_frame[i7] * 2
+
+					// Second dual quaternion
+					var _dq20 = _frame_data[i]
+					var _dq21 = _frame_data[i1]
+					var _dq22 = _frame_data[i2]
+					var _dq23 = _frame_data[i3]
+					// (* 2 since we use this only in the translation reconstruction)
+					var _dq24 = _frame_data[i4] * 2
+					var _dq25 = _frame_data[i5] * 2
+					var _dq26 = _frame_data[i6] * 2
+					var _dq27 = _frame_data[i7] * 2
+
+					// Lerp between reconstructed translations
+					var _pos0 = lerp(
+						_dq17 * (-_dq10) + _dq14 * _dq13 + _dq15 * (-_dq12) - _dq16 * (-_dq11),
+						_dq27 * (-_dq20) + _dq24 * _dq23 + _dq25 * (-_dq22) - _dq26 * (-_dq21),
+						_factor
+					)
+
+					var _pos1 = lerp(
+						_dq17 * (-_dq11) + _dq15 * _dq13 + _dq16 * (-_dq10) - _dq14 * (-_dq12),
+						_dq27 * (-_dq21) + _dq25 * _dq23 + _dq26 * (-_dq20) - _dq24 * (-_dq22),
+						_factor
+					)
+
+					var _pos2 = lerp(
+						_dq17 * (-_dq12) + _dq16 * _dq13 + _dq14 * (-_dq11) - _dq15 * (-_dq10),
+						_dq27 * (-_dq22) + _dq26 * _dq23 + _dq24 * (-_dq21) - _dq25 * (-_dq20),
+						_factor
+					)
+
+					// Slerp rotations and store result into _dq1
+					var _norm = 1 / sqrt(_dq10 * _dq10 + _dq11 * _dq11 + _dq12 * _dq12 + _dq13 * _dq13)
+					
+					_dq10 *= _norm
+					_dq11 *= _norm
+					_dq12 *= _norm
+					_dq13 *= _norm
+					
+					_norm = sqrt(_dq20 * _dq20 + _dq21 * _dq21 + _dq22 * _dq22 + _dq23 * _dq23)
+
+					_dq20 *= _norm
+					_dq21 *= _norm
+					_dq22 *= _norm
+					_dq23 *= _norm
+
+					var _dot = _dq10 * _dq20 + _dq11 * _dq21 + _dq12 * _dq22 + _dq13 * _dq23
+
+					if _dot < 0 {
+						_dot = -_dot
+						_dq20 *= -1
+						_dq21 *= -1
+						_dq22 *= -1
+						_dq23 *= -1
+					}
+					
+					if _dot > 0.9995 {
+						_dq10 = lerp(_dq10, _dq20, _factor)
+						_dq11 = lerp(_dq11, _dq21, _factor)
+						_dq12 = lerp(_dq12, _dq22, _factor)
+						_dq13 = lerp(_dq13, _dq23, _factor)
+					} else {
+						var _theta0 = arccos(_dot)
+						var _theta = _theta0 * _factor
+						var _sinTheta = sin(_theta)
+						var _sinTheta0 = sin(_theta0)
+						var _s2 = _sinTheta / _sinTheta0
+						var _s1 = cos(_theta) - (_dot * _s2)
+						
+						_dq10 = (_dq10 * _s1) + (_dq20 * _s2)
+						_dq11 = (_dq11 * _s1) + (_dq21 * _s2)
+						_dq12 = (_dq12 * _s1) + (_dq22 * _s2)
+						_dq13 = (_dq13 * _s1) + (_dq23 * _s2)
+					}
+					
+					// Create new dual quaternion from translation and rotation
+					// and write it into the frame
+					_transframe[i] = _dq10
+					_transframe[i1] = _dq11
+					_transframe[i2] = _dq12
+					_transframe[i3] = _dq13
+					_transframe[i4] = (+_pos0 * _dq13 + _pos1 * _dq12 - _pos2 * _dq11) * 0.5
+					_transframe[i5] = (+_pos1 * _dq13 + _pos2 * _dq10 - _pos0 * _dq12) * 0.5
+					_transframe[i6] = (+_pos2 * _dq13 + _pos0 * _dq11 - _pos1 * _dq10) * 0.5
+					_transframe[i7] = (-_pos0 * _dq10 - _pos1 * _dq11 - _pos2 * _dq12) * 0.5
+					
+					i += 8
+				}
+				
+				_frame_data = _transframe
+				//_frame_data = sample_blend(_transframe, transition_frame, _frame_data, transition / transition_duration)
+			}
+			
 			var _bone_offsets = model.bone_offsets
 			
 			static _node_stack = []
@@ -141,7 +264,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			return _sample
 		}
 		
-		static set_animation = function (_animation = undefined, _frame = 0, _loop = false) {
+		static set_animation = function (_animation = undefined, _frame = 0, _loop = false, _time = 0) {
 			if _animation == undefined {
 				animation_name = ""
 				animation = undefined
@@ -154,8 +277,22 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				}
 				
 				frame_speed = 1
+				transition = 0
+				transition_duration = 0
 				
 				exit
+			}
+			
+			var _transitioning = false
+			
+			transition = 0
+			transition_duration = _time
+			
+			if _time > 0 and animation != undefined {
+				var _duration = animation.duration
+				
+				transition_frame = animation.parent_frames[animation_loop ? (frame % _duration) : min(frame, _duration - 1)]
+				_transitioning = true
 			}
 			
 			animation_name = _animation.name
@@ -176,8 +313,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				animated = true
 			}
 			
-			output_to_sample(tick_sample)
-			array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
+			if not _transitioning {
+				output_to_sample(tick_sample)
+				array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
+			}
 		}
 		
 		static set_splice_animation = function (_animation = undefined, _bone = 0, _frame = 0, _loop = false, _push = false) {
@@ -284,8 +423,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		
 		static splice_sample = function (_sample, _bone_index, _weight = 1, _target_sample = tick_sample) {}
 		
-		update_sample = undefined
-		
 		static tick = function (_update_matrix = true) {
 			var _update_sample = false
 			
@@ -321,6 +458,11 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				} else {
 					_update_sample = true
 				}
+			}
+			
+			if transition < transition_duration {
+				++transition
+				_update_sample = true
 			}
 			
 			if _update_sample {
