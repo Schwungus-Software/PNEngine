@@ -85,6 +85,8 @@ function cmd_demo(_args) {
 				activate()
 			}
 			
+			clear_states()
+			
 			var n = buffer_read(_demo_buffer, buffer_u32)
 			
 			repeat n {
@@ -103,6 +105,9 @@ function cmd_demo(_args) {
 	
 	// Flags
 	var _global_flags = global.flags[0].flags
+	
+	ds_map_clear(_global_flags)
+	
 	var n = buffer_read(_demo_buffer, buffer_u32)
 	
 	repeat n {
