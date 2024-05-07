@@ -582,7 +582,8 @@
 					"batch_trail", batch_trail,
 					"batch_set_alpha_test", batch_set_alpha_test,
 					"batch_set_bright", batch_set_bright,
-					"batch_set_blendmode", batch_set_blendmode
+					"batch_set_blendmode", batch_set_blendmode,
+					"batch_set_properties", batch_set_properties
 				)
 			#endregion
 			
