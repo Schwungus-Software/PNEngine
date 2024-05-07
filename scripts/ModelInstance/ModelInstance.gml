@@ -387,11 +387,11 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			return node_dq
 		}
 		
-		static get_node_pos = function (_index) {
+		static get_node_pos = function (_index, _visual = false) {
 			var _dq = get_node_dq(_index)
 			var _pos = dq_get_translation(_dq)
 			
-			return matrix_transform_point(tick_matrix, _pos[0], _pos[1], _pos[2])
+			return matrix_transform_point(_visual ? draw_matrix : tick_matrix, _pos[0], _pos[1], _pos[2])
 		}
 		
 		static post_rotate_node = function (_index, _x, _y, _z) {
