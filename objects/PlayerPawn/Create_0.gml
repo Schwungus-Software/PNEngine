@@ -2,7 +2,6 @@ event_inherited()
 
 #region Variables
 	player = undefined
-	states = undefined
 	input = undefined
 	input_previous = undefined
 	camera = noone
@@ -102,11 +101,11 @@ event_inherited()
 	get_state = function (_key) {
 		gml_pragma("forceinline")
 		
-		if states == undefined {
+		if player == undefined {
 			return undefined
 		}
 		
-		return states[? _key]
+		return player.get_state(_key)
 	}
 	
 	set_state = function (_key, _value) {
@@ -163,6 +162,7 @@ event_inherited()
 	player_aimed = function (_self, _target) {}
 	player_respawned = function (_self) {}
 	
+	player_create = function (_self) {}
 	player_update = function (_self) {}
 	player_update_camera = function (_self) {}
 #endregion
