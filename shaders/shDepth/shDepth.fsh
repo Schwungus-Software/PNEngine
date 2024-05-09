@@ -31,18 +31,6 @@ uniform int u_material_can_blend;
 uniform sampler2D u_material_blend;
 uniform vec4 u_material_blend_uvs;
 
-/* ---------
-   CONSTANTS
-   --------- */
-
-const float SCALE_FACTOR = 16777215.;
-
-vec3 toDepthColor(float depth) {
-	float intf = depth * SCALE_FACTOR;
-	
-	return floor(vec3(mod(intf, 256.), mod(intf / 256., 256.), intf / 65536.)) / 255.;
-}
-
 void main() {
 	float u = fract(v_texcoord.x);
 	float v = fract(v_texcoord.y);
@@ -80,5 +68,5 @@ void main() {
 		discard;
 	}
 	
-	gl_FragColor = vec4(toDepthColor(v_light_depth), 1);
+	gl_FragColor = vec4(v_light_depth, 0, 0, 1);
 }
