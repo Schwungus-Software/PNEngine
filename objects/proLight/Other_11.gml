@@ -8,6 +8,11 @@ var _color = undefined
 if is_struct(special) {
 	_color = special[$ "color"]
 	active = special[$ "active"] ?? active
+	
+	if (special[$ "shadow"] ?? false) and global.config.vid_shadow {
+		shadow_camera = area.add(Camera, x, y, z)
+		shadow_camera.output.SetFormat(surface_r32float)
+	}
 }
 
 if _color != undefined {

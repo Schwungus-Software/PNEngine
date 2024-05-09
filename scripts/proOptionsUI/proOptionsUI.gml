@@ -309,6 +309,41 @@ function proOptionsUI() : UI(undefined) constructor {
 			
 			undefined,
 			
+			new OUIOption("options.video.vid_shadow", OUIValues.OFF_ON, 1, global.config.vid_shadow, function (_value) {
+				global.config.vid_shadow = _value
+			}),
+			
+			new OUIOption("options.video.vid_shadow_size", OUIValues.SHADOW_SIZE, 1, function () {
+				var _size = global.config.vid_shadow_size
+				var _preset = 0
+				
+				if _size >= 2048 {
+					_preset = 4
+				} else if _size >= 1024 {
+					_preset = 3
+				} else if _size >= 512 {
+					_preset = 2
+				} else if _size >= 256 {
+					_preset = 1
+				}
+				
+				return _preset
+			}(), function (_value) {
+				var _size
+				
+				switch _value {
+					case 0: _size = 128 break
+					case 1: _size = 256 break
+					case 2: _size = 512 break
+					case 3: _size = 1024 break
+					case 4: _size = 2048 break
+				}
+				
+				global.config.vid_shadow_size = _size
+			}),
+			
+			undefined,
+			
 			new OUIButton("options.video.apply", function () {
 				var _config = global.config
 				

@@ -9,3 +9,7 @@ if handle != -1 {
 		light_data[offset + i++] = 0
 	}
 }
+
+if instance_exists(shadow_camera) {
+	instance_destroy(shadow_camera)
+}
