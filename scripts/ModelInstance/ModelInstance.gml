@@ -77,123 +77,24 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			static _transframe = []
 			
 			var _duration = animation.duration
-			var _frame = floor(animation_loop ? (frame % _duration) : min(frame, _duration - 1))
-			var _frame_data = animation.parent_frames[_frame]
+			var _frame, _next_frame
+			
+			if animation_loop {
+				_frame = frame % _duration
+				_next_frame = (frame + 1) % _duration
+			} else {
+				var _last_frame = _duration - 1
+				
+				_frame = min(frame, _last_frame)
+				_next_frame = min(frame + 1, _last_frame)
+			}
+			
+			var _parent_frames = animation.parent_frames
+			
+			dq_lerp_array(_parent_frames[_frame], _parent_frames[_next_frame], frac(frame), _transframe)
 			
 			if transition < transition_duration {
-				var _factor = transition / transition_duration
-				var i = 0
-				
-				repeat array_length(_frame_data) div 8 {
-					var i1 = -~i
-					var i2 = i + 2
-					var i3 = i + 3
-					var i4 = i + 4
-					var i5 = i + 5
-					var i6 = i + 6
-					var i7 = i + 7
-					
-					// First dual quaternion
-					var _dq10 = transition_frame[i]
-					var _dq11 = transition_frame[i1]
-					var _dq12 = transition_frame[i2]
-					var _dq13 = transition_frame[i3]
-					// (* 2 since we use this only in the translation reconstruction)
-					var _dq14 = transition_frame[i4] * 2
-					var _dq15 = transition_frame[i5] * 2
-					var _dq16 = transition_frame[i6] * 2
-					var _dq17 = transition_frame[i7] * 2
-
-					// Second dual quaternion
-					var _dq20 = _frame_data[i]
-					var _dq21 = _frame_data[i1]
-					var _dq22 = _frame_data[i2]
-					var _dq23 = _frame_data[i3]
-					// (* 2 since we use this only in the translation reconstruction)
-					var _dq24 = _frame_data[i4] * 2
-					var _dq25 = _frame_data[i5] * 2
-					var _dq26 = _frame_data[i6] * 2
-					var _dq27 = _frame_data[i7] * 2
-
-					// Lerp between reconstructed translations
-					var _pos0 = lerp(
-						_dq17 * (-_dq10) + _dq14 * _dq13 + _dq15 * (-_dq12) - _dq16 * (-_dq11),
-						_dq27 * (-_dq20) + _dq24 * _dq23 + _dq25 * (-_dq22) - _dq26 * (-_dq21),
-						_factor
-					)
-
-					var _pos1 = lerp(
-						_dq17 * (-_dq11) + _dq15 * _dq13 + _dq16 * (-_dq10) - _dq14 * (-_dq12),
-						_dq27 * (-_dq21) + _dq25 * _dq23 + _dq26 * (-_dq20) - _dq24 * (-_dq22),
-						_factor
-					)
-
-					var _pos2 = lerp(
-						_dq17 * (-_dq12) + _dq16 * _dq13 + _dq14 * (-_dq11) - _dq15 * (-_dq10),
-						_dq27 * (-_dq22) + _dq26 * _dq23 + _dq24 * (-_dq21) - _dq25 * (-_dq20),
-						_factor
-					)
-
-					// Slerp rotations and store result into _dq1
-					var _norm = 1 / sqrt(_dq10 * _dq10 + _dq11 * _dq11 + _dq12 * _dq12 + _dq13 * _dq13)
-					
-					_dq10 *= _norm
-					_dq11 *= _norm
-					_dq12 *= _norm
-					_dq13 *= _norm
-					
-					_norm = sqrt(_dq20 * _dq20 + _dq21 * _dq21 + _dq22 * _dq22 + _dq23 * _dq23)
-
-					_dq20 *= _norm
-					_dq21 *= _norm
-					_dq22 *= _norm
-					_dq23 *= _norm
-
-					var _dot = _dq10 * _dq20 + _dq11 * _dq21 + _dq12 * _dq22 + _dq13 * _dq23
-
-					if _dot < 0 {
-						_dot = -_dot
-						_dq20 *= -1
-						_dq21 *= -1
-						_dq22 *= -1
-						_dq23 *= -1
-					}
-					
-					if _dot > 0.9995 {
-						_dq10 = lerp(_dq10, _dq20, _factor)
-						_dq11 = lerp(_dq11, _dq21, _factor)
-						_dq12 = lerp(_dq12, _dq22, _factor)
-						_dq13 = lerp(_dq13, _dq23, _factor)
-					} else {
-						var _theta0 = arccos(_dot)
-						var _theta = _theta0 * _factor
-						var _sinTheta = sin(_theta)
-						var _sinTheta0 = sin(_theta0)
-						var _s2 = _sinTheta / _sinTheta0
-						var _s1 = cos(_theta) - (_dot * _s2)
-						
-						_dq10 = (_dq10 * _s1) + (_dq20 * _s2)
-						_dq11 = (_dq11 * _s1) + (_dq21 * _s2)
-						_dq12 = (_dq12 * _s1) + (_dq22 * _s2)
-						_dq13 = (_dq13 * _s1) + (_dq23 * _s2)
-					}
-					
-					// Create new dual quaternion from translation and rotation
-					// and write it into the frame
-					_transframe[i] = _dq10
-					_transframe[i1] = _dq11
-					_transframe[i2] = _dq12
-					_transframe[i3] = _dq13
-					_transframe[i4] = (+_pos0 * _dq13 + _pos1 * _dq12 - _pos2 * _dq11) * 0.5
-					_transframe[i5] = (+_pos1 * _dq13 + _pos2 * _dq10 - _pos0 * _dq12) * 0.5
-					_transframe[i6] = (+_pos2 * _dq13 + _pos0 * _dq11 - _pos1 * _dq10) * 0.5
-					_transframe[i7] = (-_pos0 * _dq10 - _pos1 * _dq11 - _pos2 * _dq12) * 0.5
-					
-					i += 8
-				}
-				
-				_frame_data = _transframe
-				//_frame_data = sample_blend(_transframe, transition_frame, _frame_data, transition / transition_duration)
+				dq_slerp_array(transition_frame, _transframe, transition / transition_duration, _transframe)
 			}
 			
 			var _bone_offsets = model.bone_offsets
@@ -227,7 +128,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				var _parent_index = (_node_parent != undefined) ? _node_parent.index : -1
 				
 				if _node_post_rotation != undefined {
-					var _dq = new BBMOD_DualQuaternion().FromArray(_frame_data, _node_offset)
+					var _dq = new BBMOD_DualQuaternion().FromArray(_transframe, _node_offset)
 					var _position = _dq.GetTranslation()
 					var _rotation = _dq.GetRotation()
 					
@@ -242,10 +143,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				} else {
 					if _parent_index == -1 {
 						// No parent transform -> just copy the node transform
-						array_copy(node_transforms, _node_offset, _frame_data, _node_offset, 8)
+						array_copy(node_transforms, _node_offset, _transframe, _node_offset, 8)
 					} else {
 						// Multiply node transform with parent's transform
-						dq_multiply_array(_frame_data, _node_offset, node_transforms, _parent_index * 8, node_transforms, _node_offset)
+						dq_multiply_array(_transframe, _node_offset, node_transforms, _parent_index * 8, node_transforms, _node_offset)
 					}
 				}
 				
@@ -402,13 +303,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				node_post_rotations[_index] = _quat
 			}
 			
-			_quat[0] = 0
-			_quat[1] = 0
-			_quat[2] = 0
-			_quat[3] = 1
-			quat_rotate_local_x(_quat, _x, _quat)
-			quat_rotate_local_y(_quat, _y, _quat)
-			quat_rotate_local_z(_quat, _z, _quat)
+			quat_build_euler(_x, _y, _z, _quat)
 			
 			return _quat
 		}
@@ -571,7 +466,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				global.u_animated.set(0)
 			} else {
 				global.u_animated.set(1)
-				sample_blend(draw_sample, from_sample, tick_sample, global.tick_draw)
+				dq_lerp_array(from_sample, tick_sample, global.tick_draw, draw_sample)
 				global.u_bone_dq.set(draw_sample)
 			}
 			

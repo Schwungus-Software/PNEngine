@@ -120,14 +120,9 @@
 					"dq_multiply", dq_multiply,
 					"dq_conjugate", dq_conjugate,
 					"quat_build", quat_build,
+					"quat_build_euler", quat_build_euler,
 					"quat_dot", quat_dot,
 					"quat_multiply", quat_multiply,
-					"quat_rotate_local_x", quat_rotate_local_x,
-					"quat_rotate_local_y", quat_rotate_local_y,
-					"quat_rotate_local_z", quat_rotate_local_z,
-					//"quat_rotate_world_x", quat_rotate_world_x,
-					//"quat_rotate_world_y", quat_rotate_world_y,
-					"quat_rotate_world_z", quat_rotate_world_z,
 					
 					"Quaternion", BBMOD_Quaternion,
 					"DualQuaternion", BBMOD_DualQuaternion
