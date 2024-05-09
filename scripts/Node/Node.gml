@@ -40,4 +40,24 @@ function Node() constructor {
 		
 		return self
 	}
+	
+	static push_branch = function (_array) {
+		array_push(_array, self)
+		
+		var i = 0
+		
+		repeat array_length(children) {
+			children[i++].push_branch(_array)
+		}
+	}
+	
+	static push_branch_id = function (_array) {
+		array_push(_array, index)
+		
+		var i = 0
+		
+		repeat array_length(children) {
+			children[i++].push_branch_id(_array)
+		}
+	}
 }

@@ -68,7 +68,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		
 		splice_name = ""
 		splice = undefined
-		splice_bone = -1
+		splice_branch = undefined
 		splice_frame = 0
 		splice_loop = false
 		splice_push = false
@@ -97,17 +97,37 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				dq_slerp_array(transition_frame, _transframe, transition / transition_duration, _transframe)
 			}
 			
-			var _bone_offsets = model.bone_offsets
+			if not (splice == undefined or splice_branch == undefined) {
+				with splice {
+					_parent_frames = parent_frames
+					_duration = duration
+				}
+				
+				var _splice_data = _parent_frames[splice_loop ? (splice_frame % _duration) : min(splice_frame, _duration)]
+				var i = 0
+				
+				repeat array_length(splice_branch) {
+					var _offset = splice_branch[i++] * 8
+					
+					array_copy(_transframe, _offset, _splice_data, _offset, 8)
+				}
+			}
+			
+			var _bone_offsets, _node_count, _root_node
+			
+			with model {
+				_bone_offsets = bone_offsets
+				_node_count = nodes_amount
+				_root_node = root_node
+			}
 			
 			static _node_stack = []
-			
-			var _node_count = model.nodes_amount
 			
 			if array_length(_node_stack) < _node_count {
 				array_resize(_node_stack, _node_count)
 			}
 			
-			_node_stack[0] = model.root_node
+			_node_stack[0] = _root_node
 			
 			var _stack_next = 1
 			
@@ -220,7 +240,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 		}
 		
-		static set_splice_animation = function (_animation = undefined, _bone = 0, _frame = 0, _loop = false, _push = false) {
+		static set_splice_animation = function (_animation = undefined, _branch = undefined, _frame = 0, _loop = false, _push = false) {
 			if _frame < 0 and _animation != undefined {
 				_frame = _animation.frames
 			}
@@ -228,7 +248,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			splice_name = _animation == undefined ? "" : _animation.name
 			splice = _animation
 			splice_finished = false
-			splice_bone = _bone
+			splice_branch = _branch
 			splice_frame = _frame
 			splice_loop = _loop
 			splice_push = _push
@@ -245,6 +265,18 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			gml_pragma("forceinline")
 			
 			return model.get_node_id(_id)
+		}
+		
+		static get_branch = function (_id) {
+			gml_pragma("forceinline")
+			
+			return model.get_branch(_id)
+		}
+		
+		static get_branch_id = function (_id) {
+			gml_pragma("forceinline")
+			
+			return model.get_branch_id(_id)
 		}
 		
 		static get_point = function (_name) {
@@ -313,10 +345,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			return _quat
 		}
-		
-		static splice_animation = function (_animation, _frame, _bone_index, _weight = 1) {}
-		
-		static splice_sample = function (_sample, _bone_index, _weight = 1, _target_sample = tick_sample) {}
 		
 		static tick = function (_update_matrix = true) {
 			var _update_sample = false

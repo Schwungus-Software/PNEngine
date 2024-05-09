@@ -51,6 +51,30 @@ function Model() : Asset() constructor {
 		return undefined
 	}
 	
+	static get_branch = function (_id, _array = []) {
+		gml_pragma("forceinline")
+		
+		var _node = get_node(_id)
+		
+		if _node != undefined {
+			_node.push_branch(_array)
+		}
+		
+		return _array
+	}
+	
+	static get_branch_id = function (_id, _array = []) {
+		gml_pragma("forceinline")
+		
+		var _node = get_node(_id)
+		
+		if _node != undefined {
+			_node.push_branch_id(_array)
+		}
+		
+		return _array
+	}
+	
 	static destroy = function () {
 		destroy_array(submodels)
 		
