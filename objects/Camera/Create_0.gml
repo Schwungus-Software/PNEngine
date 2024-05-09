@@ -321,7 +321,6 @@ event_inherited()
 					
 					if instance_exists(sky) and sky.model != undefined {
 						gpu_set_zwriteenable(false)
-						gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one)
 						global.sky_shader.set()
 						global.u_time.set(_time)
 					
@@ -336,7 +335,6 @@ event_inherited()
 						}
 					
 						shader_reset()
-						gpu_set_blendenable(bm_normal)
 						gpu_set_zwriteenable(true)
 					}
 				} else {
