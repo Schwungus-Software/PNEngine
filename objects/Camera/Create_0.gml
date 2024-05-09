@@ -51,6 +51,7 @@ event_inherited()
 	up_axis = matrix_build(0, 0, -1, 0, 0, 0, 1, 1, 1)
 	view_matrix = undefined
 	projection_matrix = undefined
+	f_ortho = false
 	
 	path = ds_grid_create(0, CameraPathData.__SIZE)
 	path_elapsed = 0
@@ -212,7 +213,7 @@ event_inherited()
 		var _uz = _up[14]
 		
 		view_matrix = matrix_build_lookat(sx, sy, sz, sx + _fx, sy + _fy, sz + _fz, _ux, _uy, _uz)
-		projection_matrix = matrix_build_projection_perspective_fov(-sfov, -(_width / _height), 1, 65535)
+		projection_matrix = f_ortho ? matrix_build_projection_ortho(_width * 0.5, -_height * 0.5, 1, 65535) : matrix_build_projection_perspective_fov(-sfov, -(_width / _height), 1, 65535)
 		
 		if _update_listener {
 			listener_pos.x = sx
