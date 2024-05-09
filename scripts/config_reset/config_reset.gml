@@ -16,8 +16,6 @@ function config_reset() {
 		vid_texture_filter: true,
 		vid_antialias: 0,
 		vid_bloom: true,
-		vid_shadow: false,
-		vid_shadow_size: 256,
 		
 		// AUDIO
 		snd_volume: 1,

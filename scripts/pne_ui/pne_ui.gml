@@ -17,7 +17,6 @@ enum OUIValues {
 	SENSITIVITY,
 	VOLUME,
 	LANGUAGE,
-	SHADOW_SIZE,
 	__SIZE,
 }
 
@@ -60,7 +59,6 @@ _oui_values[OUIValues.ANTIALIAS] = [
 
 _oui_values[OUIValues.SENSITIVITY] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 _oui_values[OUIValues.VOLUME] = ["0%", "5%", "10%", "15%", "20%", "25%", "30%", "35%", "40%", "45%", "50%", "55%", "60%", "65%", "70%", "75%", "80%", "85%", "90%", "95%", "100%"]
-_oui_values[OUIValues.SHADOW_SIZE] = ["128", "256", "512", "1024", "2048"]
 
 global.ui = undefined
 global.ui_input = array_create(UIInputs.__SIZE)

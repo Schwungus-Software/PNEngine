@@ -60,8 +60,6 @@
 				"vid_texture_filter": "Texture Filter",
 				"vid_antialias": "Antialiasing",
 				"vid_bloom": "Bloom",
-				"vid_shadow": "Shadow Mapping",
-				"vid_shadow_size": "Shadow Map Resolution",
 				"apply": "Apply Changes",
 			},
 			
