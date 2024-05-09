@@ -8,11 +8,6 @@ var _color = undefined
 if is_struct(special) {
 	_color = special[$ "color"]
 	active = special[$ "active"] ?? active
-	
-	if (special[$ "shadow"] ?? false) and global.config.vid_shadow {
-		shadow_camera = area.add(Camera, x, y, z)
-		shadow_camera.output.SetFormat(surface_r32float)
-	}
 }
 
 if _color != undefined {
@@ -64,10 +59,10 @@ if _color != undefined {
 
 var _lights = area.lights
 
-handle = ds_list_find_index(_lights, false)
+handle = ds_list_find_index(_lights, noone)
 
 if handle != -1 {
-	_lights[| handle] = true
+	_lights[| handle] = id
 	offset = handle * LightData.__SIZE
 	light_data[offset + LightData.TYPE] = type
 	light_data[offset + LightData.ACTIVE] = active

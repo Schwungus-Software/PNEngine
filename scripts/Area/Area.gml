@@ -16,7 +16,7 @@ function Area() constructor {
 	lights = ds_list_create()
 	
 	repeat MAX_LIGHTS {
-		ds_list_add(lights, false)
+		ds_list_add(lights, noone)
 	}
 	
 	light_data = array_create(MAX_LIGHTS * LightData.__SIZE)

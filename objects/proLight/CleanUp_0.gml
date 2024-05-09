@@ -1,7 +1,7 @@
 event_inherited()
 
 if handle != -1 {
-	area.lights[| handle] = false
+	area.lights[| handle] = noone
 	
 	var i = 0
 	
