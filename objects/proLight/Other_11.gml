@@ -59,10 +59,10 @@ if _color != undefined {
 
 var _lights = area.lights
 
-handle = ds_list_find_index(_lights, false)
+handle = ds_list_find_index(_lights, noone)
 
 if handle != -1 {
-	_lights[| handle] = true
+	_lights[| handle] = id
 	offset = handle * LightData.__SIZE
 	light_data[offset + LightData.TYPE] = type
 	light_data[offset + LightData.ACTIVE] = active

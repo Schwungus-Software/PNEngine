@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"sample_blend",
+  "%Name":"BBMOD_DualQuaternion",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"sample_blend",
+  "name":"BBMOD_DualQuaternion",
   "parent":{
     "name":"Dual Quaternions",
     "path":"folders/Scripts/PNEngine/Math/Dual Quaternions.yy",

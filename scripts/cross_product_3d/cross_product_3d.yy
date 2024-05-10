@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"cross_product_3d",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cross_product_3d",
+  "parent":{
+    "name":"Math",
+    "path":"folders/Scripts/PNEngine/Math.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -679,6 +679,13 @@ function Canvas(_width, _height, _forceInit = false, _format = undefined) constr
 			return __format;		
 		}
 		
+		/// @param {Constant.SurfaceFormatType} Format
+		static SetFormat = function(_format) {
+			__UpdateFormat(_format)
+			if (IsAvailable()) __RefreshSurface();
+			return self;
+		}
+		
 		/// @param {Real} x 
 		/// @param {Real} y 
 		static Draw = function(_x, _y) {

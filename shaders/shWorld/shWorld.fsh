@@ -62,7 +62,7 @@ void main() {
 	
 	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, v_fog);
 	starting_color.a *= mix(1., u_fog_color.a, v_fog);
-    gl_FragColor = starting_color * u_color;
+	gl_FragColor = starting_color * u_color;
 	
 	const mat4 pattern = mat4(
 		vec4(0.0625, 0.5625, 0.1875, 0.6875),

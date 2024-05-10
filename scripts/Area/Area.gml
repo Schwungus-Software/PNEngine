@@ -16,7 +16,7 @@ function Area() constructor {
 	lights = ds_list_create()
 	
 	repeat MAX_LIGHTS {
-		ds_list_add(lights, false)
+		ds_list_add(lights, noone)
 	}
 	
 	light_data = array_create(MAX_LIGHTS * LightData.__SIZE)
@@ -289,6 +289,7 @@ function Area() constructor {
 		_particle[ParticleData.ALPHA_SPEED] = 0
 		_particle[ParticleData.BRIGHT] = 0
 		_particle[ParticleData.BRIGHT_SPEED] = 0
+		_particle[ParticleData.BLENDMODE] = bm_normal
 		_particle[ParticleData.TICKS] = infinity
 		_particle[ParticleData.X] = _x
 		_particle[ParticleData.Y] = _y

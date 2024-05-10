@@ -1377,7 +1377,7 @@ global.tick = _tick
 #region End Interpolation
 var i = ds_list_size(_interps)
 
-if _tick_inc >= 1 {
+if _tick_inc >= 1 or _config.vid_max_fps <= TICKRATE {
 #region Interpolation OFF (FPS <= TICKRATE)
 	repeat i {
 		var _scope = _interps[| --i]

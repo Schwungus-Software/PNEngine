@@ -72,8 +72,8 @@
 	
 	fric = 0
 	grav = 1
-	max_fall_speed = -10
-	max_fly_speed = infinity
+	max_fall_speed = 10
+	max_fly_speed = -infinity
 	
 	radius = 8
 	bump_radius = undefined
@@ -414,7 +414,7 @@
 					_tz1 = z
 					_tx2 = x + radius
 					_ty2 = y + radius
-					_tz2 = z + height
+					_tz2 = z - height
 				}
 				
 				var _t1 = (_tx1 - _x1) * _x_inv
@@ -516,7 +516,7 @@
 		var _ly = lengthdir_y(_len, _dir)
 		
 		if m_collision != MCollision.NONE {
-			var _z = z + height * 0.5
+			var _z = z - height * 0.5
 			var _raycast = raycast(x, y, _z, x + _lx + lengthdir_x(radius, _dir), y + _ly + lengthdir_y(radius, _dir), _z)
 			
 			if _raycast[RaycastData.HIT] {
@@ -676,7 +676,7 @@
 		with _self {
 			_holding.x = x
 			_holding.y = y
-			_holding.z = z + height
+			_holding.z = z - height
 		}
 	}
 	

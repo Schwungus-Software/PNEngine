@@ -24,29 +24,29 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 	
 	var _matrix = matrix_multiply(
 		matrix_multiply(
-			matrix_build(0, (_width * -0.5) + _x_offset, (_height * -0.5) + _y_offset, 0, 0, 0, _width, _width, _height),
+			matrix_build(0, (_width * -0.5) + _x_offset, (_height * 0.5) - _y_offset, 0, 0, 0, _width, _width, _height),
 			matrix_build(0, 0, 0, _angle, 0, 0, 1, 1, 1)
 		),
 		
 		matrix_build(_x, _y, _z, 0, _pitch, _yaw, 1, 1, 1)
 	)
 	
-	var _vert1 = matrix_transform_point(_matrix, 0, -0.5, 0.5)
+	var _vert1 = matrix_transform_point(_matrix, 0, 0.5, -0.5)
 	var _x1 = _vert1[0]
 	var _y1 = _vert1[1]
 	var _z1 = _vert1[2]
 	
-	var _vert2 = matrix_transform_point(_matrix, 0, -0.5, -0.5)
+	var _vert2 = matrix_transform_point(_matrix, 0, 0.5, 0.5)
 	var _x2 = _vert2[0]
 	var _y2 = _vert2[1]
 	var _z2 = _vert2[2]
 	
-	var _vert3 = matrix_transform_point(_matrix, 0, 0.5, -0.5)
+	var _vert3 = matrix_transform_point(_matrix, 0, -0.5, 0.5)
 	var _x3 = _vert3[0]
 	var _y3 = _vert3[1]
 	var _z3 = _vert3[2]
 	
-	var _vert4 = matrix_transform_point(_matrix, 0, 0.5, 0.5)
+	var _vert4 = matrix_transform_point(_matrix, 0, -0.5, -0.5)
 	var _x4 = _vert4[0]
 	var _y4 = _vert4[1]
 	var _z4 = _vert4[2]
@@ -71,12 +71,12 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 	
 	var _batch_vbo = global.batch_vbo
 	
-	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, 1, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, 0, 0, 1, _u2, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, 1, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, 1, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, 1, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, 0, 0, 1, _u1, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, -1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, 0, 0, -1, _u2, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, -1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, -1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, -1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, 0, 0, -1, _u1, _v1, _color, _alpha)
 	
 	return true
 }

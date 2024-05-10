@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"dq_add_translation",
+  "%Name":"dq_slerp_array",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"dq_add_translation",
+  "name":"dq_slerp_array",
   "parent":{
     "name":"Dual Quaternions",
     "path":"folders/Scripts/PNEngine/Math/Dual Quaternions.yy",

@@ -5,6 +5,10 @@ function Asset() constructor {
 	static destroy = function () {}
 	
 	static destroy_array = function (_array) {
+		if not is_array(_array) {
+			exit
+		}
+		
 		var i = 0
 		
 		repeat array_length(_array) {

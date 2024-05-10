@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"quat_rotate_local",
+  "%Name":"BBMOD_Quaternion",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"quat_rotate_local",
+  "name":"BBMOD_Quaternion",
   "parent":{
     "name":"Quaternions",
     "path":"folders/Scripts/PNEngine/Math/Quaternions.yy",

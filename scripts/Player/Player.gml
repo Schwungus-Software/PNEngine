@@ -170,9 +170,9 @@ function Player() constructor {
 					}
 					
 					player = _player
-					states = _player.states
 					input = _player.input
 					input_previous = _player.input_previous
+					player_create(id)
 				}
 			}
 			

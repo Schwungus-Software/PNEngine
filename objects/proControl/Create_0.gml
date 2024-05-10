@@ -93,9 +93,11 @@
 					"point_distance_3d", point_distance_3d,
 			        "dot_product_3d", dot_product_3d,
 			        "dot_product_3d_normalized", dot_product_3d_normalized,
+					"cross_product_3d", cross_product_3d,
 					"cross_product_3d_normalized", cross_product_3d_normalized,
 					"lengthdir_3d", lengthdir_3d,
 					"normal_vector_3d", normal_vector_3d,
+					"unit_vector_3d", unit_vector_3d,
 			        "matrix_build", matrix_build,
 			        "matrix_multiply", matrix_multiply,
 			        "matrix_build_identity", matrix_build_identity,
@@ -111,12 +113,19 @@
 					"dq_build_identity", dq_build_identity,
 					"dq_lerp", dq_lerp,
 					"dq_get_translation", dq_get_translation,
-					"dq_add_translation", dq_add_translation,
+					"dq_transform_point", dq_transform_point,
 					"dq_get_x", dq_get_x,
 					"dq_get_y", dq_get_y,
 					"dq_get_z", dq_get_z,
 					"dq_multiply", dq_multiply,
-					"dq_conjugate", dq_conjugate
+					"dq_conjugate", dq_conjugate,
+					"quat_build", quat_build,
+					"quat_build_euler", quat_build_euler,
+					"quat_dot", quat_dot,
+					"quat_multiply", quat_multiply,
+					
+					"Quaternion", BBMOD_Quaternion,
+					"DualQuaternion", BBMOD_DualQuaternion
 			    )
 			#endregion
 			
@@ -306,11 +315,6 @@
 					"FONTS", global.fonts,
 					"SOUNDS", global.sounds,
 					"MUSIC", global.music,
-					
-					"ANI_LINEAR", AnimationTypes.LINEAR,
-					"ANI_LINEAR_LOOP", AnimationTypes.LINEAR_LOOP,
-					"ANI_QUADRATIC", AnimationTypes.QUADRATIC,
-					"ANI_QUADRATIC_LOOP", AnimationTypes.QUADRATIC_LOOP
 				)
 				
 				addFunction(
@@ -519,6 +523,7 @@
 					"PART_ALPHA_SPEED", ParticleData.ALPHA_SPEED,
 					"PART_BRIGHT", ParticleData.BRIGHT,
 					"PART_BRIGHT_SPEED", ParticleData.BRIGHT_SPEED,
+					"PART_BLENDMODE", ParticleData.BLENDMODE,
 					"PART_TICKS", ParticleData.TICKS,
 					"PART_X", ParticleData.X,
 					"PART_Y", ParticleData.Y,
@@ -571,7 +576,9 @@
 					"batch_line", batch_line,
 					"batch_trail", batch_trail,
 					"batch_set_alpha_test", batch_set_alpha_test,
-					"batch_set_bright", batch_set_bright
+					"batch_set_bright", batch_set_bright,
+					"batch_set_blendmode", batch_set_blendmode,
+					"batch_set_properties", batch_set_properties
 				)
 			#endregion
 			
@@ -597,6 +604,14 @@
 						repeat i {
 							_music_instances[| --i].stop(_fade)
 						}
+					},
+					
+					"sound_is_playing", function (_sound) {
+						return fmod_channel_control_is_playing(_sound)
+					},
+					
+					"sound_stop", function (_sound) {
+						fmod_channel_control_stop(_sound)
 					}
 				)
 			#endregion

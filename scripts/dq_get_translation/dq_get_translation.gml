@@ -6,18 +6,19 @@ function dq_get_translation(_dq, _out = undefined) {
 	
 	_out ??= _temp
 	
-	var _q0 = _dq[0]
-	var _q1 = _dq[1]
-	var _q2 = _dq[2]
-	var _q3 = _dq[3]
-	var _q4 = _dq[4]
-	var _q5 = _dq[5]
-	var _q6 = _dq[6]
-	var _q7 = _dq[7]
+	var _q10 = _dq[4] * 2
+	var _q11 = _dq[5] * 2
+	var _q12 = _dq[6] * 2
+	var _q13 = _dq[7] * 2
 	
-	_out[0] = 2 * (-_q7 * _q0 + _q4 * _q3 + _q6 * _q1 - _q5 * _q2)
-	_out[1] = 2 * (-_q7 * _q1 + _q5 * _q3 + _q4 * _q2 - _q6 * _q0)
-	_out[2] = 2 * (-_q7 * _q2 + _q6 * _q3 + _q5 * _q0 - _q4 * _q1)
+	var _q20 = -_dq[0]
+	var _q21 = -_dq[1]
+	var _q22 = -_dq[2]
+	var _q23 = _dq[3]
+	
+	_out[0] = _q13 * _q20 + _q10 * _q23 + _q11 * _q22 - _q12 * _q21
+	_out[1] = _q13 * _q21 + _q11 * _q23 + _q12 * _q20 - _q10 * _q22
+	_out[2] = _q13 * _q22 + _q12 * _q23 + _q10 * _q21 - _q11 * _q20
 	
 	return _out
 }

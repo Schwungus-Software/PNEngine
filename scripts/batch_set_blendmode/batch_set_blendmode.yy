@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"batch_set_blendmode",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"batch_set_blendmode",
+  "parent":{
+    "name":"Batch",
+    "path":"folders/Scripts/PNEngine/Display/Batch.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
