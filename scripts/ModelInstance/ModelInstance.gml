@@ -62,6 +62,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		
 		node_transforms = []
 		node_post_rotations = undefined
+		node_scales = undefined
 		tick_sample = []
 		from_sample = []
 		draw_sample = []
@@ -103,7 +104,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					_duration = duration
 				}
 				
-				var _splice_data = _parent_frames[splice_loop ? (splice_frame % _duration) : min(splice_frame, _duration)]
+				var _splice_data = _parent_frames[splice_loop ? (splice_frame % _duration) : min(splice_frame, _duration - 1)]
 				var i = 0
 				
 				repeat array_length(splice_branch) {
@@ -231,6 +232,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				var n = model.nodes_amount
 				
 				node_post_rotations = array_create(n, undefined)
+				node_scales = array_create(n, undefined)
 				animated = true
 			}
 			
@@ -242,7 +244,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		
 		static set_splice_animation = function (_animation = undefined, _branch = undefined, _frame = 0, _loop = false, _push = false) {
 			if _frame < 0 and _animation != undefined {
-				_frame = _animation.frames
+				_frame = _animation.duration - 1
 			}
 			
 			splice_name = _animation == undefined ? "" : _animation.name
@@ -253,6 +255,11 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			splice_loop = _loop
 			splice_push = _push
 			interp_skip("ssplice_frame")
+			
+			if splice != undefined {
+				output_to_sample(tick_sample)
+				array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
+			}
 		}
 		
 		static get_node = function (_id) {
@@ -291,7 +298,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _node = _point[3]
 			
 			if _node != undefined {
-				var _node_pos = dq_get_translation(dq_add_translation(get_node_dq(_node.index), _x, _y, _z))
+				var _node_pos = dq_transform_point(get_node_dq(_node.index), _x, _y, _z)
 				
 				_x = _node_pos[0]
 				_y = _node_pos[1]
@@ -321,6 +328,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		}
 		
 		static get_node_pos = function (_index, _visual = false) {
+			gml_pragma("forceinline")
+			
 			var _dq = get_node_dq(_index)
 			var _pos = dq_get_translation(_dq)
 			
@@ -341,9 +350,34 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		}
 		
 		static post_rotate_node_quat = function (_index, _quat) {
+			gml_pragma("forceinline")
+			
 			node_post_rotations[_index] = _quat
 			
 			return _quat
+		}
+		
+		static scale_node = function (_index, _x, _y, _z) {
+			var _vec3 = node_scales[_index]
+			
+			if _vec3 == undefined {
+				_vec3 = array_create(3)
+				node_scales[_index] = _vec3
+			}
+			
+			_vec3[0] = _x
+			_vec3[1] = _y
+			_vec3[2] = _z
+			
+			return _vec3
+		}
+		
+		static scale_node_vec3 = function (_index, _vec3) {
+			gml_pragma("forceinline")
+			
+			node_scales[_index] = _vec3
+			
+			return _vec3
 		}
 		
 		static tick = function (_update_matrix = true) {
@@ -372,7 +406,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				splice_frame += 1
 				splice_finished = false
 				
-				if not splice_loop and splice_frame >= splice.frames {
+				if not splice_loop and splice_frame >= (splice.duration - 1) {
 					splice_finished = true
 					
 					if splice_push {
