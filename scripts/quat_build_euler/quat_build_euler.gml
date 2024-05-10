@@ -1,31 +1,21 @@
 function quat_build_euler(_x, _y, _z, _q = quat_build()) {
-	_x = -_x * 0.5
-	_y = -_y * 0.5
-	_z = -_z * 0.5
-
-	var _q1_sin, _q1_cos, _temp
-	var _qx, _qy, _qz, _qw
-
-	_q1_sin = dsin(_z)
-	_q1_cos = dcos(_z)
-
-	_temp = dsin(_x)
-
-	_qx = _q1_cos * _temp
-	_qy = _q1_sin * _temp
-
-	_temp = dcos(_x)
-
-	_qz = _q1_sin * _temp
-	_qw = _q1_cos * _temp
-
-	_q1_sin = dsin(_y)
-	_q1_cos = dcos(_y)
-
-	_q[0] = _qx * _q1_cos - _qz * _q1_sin
-	_q[1] = _qw * _q1_sin + _qy * _q1_cos
-	_q[2] = _qz * _q1_cos + _qx * _q1_sin
-	_q[3] = _qw * _q1_cos - _qy * _q1_sin
+	gml_pragma("forceinline")
+	
+	_x *= -0.5
+	_y *= -0.5
+	_z *= -0.5
+	
+	var _sx = dsin(_x)
+    var _sy = dsin(_y)
+    var _sz = dsin(_z)
+    var _cx = dcos(_x)
+    var _cy = dcos(_y)
+    var _cz = dcos(_z)
+    
+    _q[0] = _sx * _cy * _cz + _cx * _sy * _sz
+    _q[1] = _cx * _sy * _cz - _sx * _cy * _sz
+	_q[2] = _cx * _cy * _sz - _sx * _sy * _cz
+    _q[3] = _cx * _cy * _cz + _sx * _sy * _sz
 	
 	return _q
 }
