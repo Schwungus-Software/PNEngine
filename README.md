@@ -25,8 +25,9 @@ A list of all of the used libraries can be found **[here](https://schwungus.soft
 ### Special Thanks
 
 - **[Alynne Keith](https://offalynne.neocities.org)** and **[Co](https://offalynne.github.io/Input/#/6.0/Credits)** for [Input](https://github.com/offalynne/Input)
-- **[DragoniteSpam](https://github.com/DragoniteSpam)**, **[Patrik Kraif](https://github.com/kraifpatrik)** and **[TheSnidr](https://thesnidr.com)** for information about 3D in GameMaker
+- **[DragoniteSpam](https://github.com/DragoniteSpam)** and **[TheSnidr](https://thesnidr.com)** for information about 3D in GameMaker
 - **Jaydex** and **Soh** for beta testing multiplayer
 - **[Juju Adams](http://www.jujuadams.com)** for [Scribble](https://github.com/JujuAdams/Scribble)
 - **[katsaii](https://www.katsaii.com)** for [Catspeak](https://www.katsaii.com/catspeak-lang)
+- **[Patrik Kraif](https://github.com/kraifpatrik)** for [BBMOD](https://blueburn.cz/bbmod)
 - **[TabularElf](https://tabularelf.com)** for beta testing and [Canvas](https://github.com/tabularelf/Canvas), [Collage](https://github.com/tabularelf/Collage) and [Lexicon](https://github.com/tabularelf/lexicon)
