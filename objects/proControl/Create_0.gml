@@ -113,7 +113,7 @@
 					"dq_build_identity", dq_build_identity,
 					"dq_lerp", dq_lerp,
 					"dq_get_translation", dq_get_translation,
-					"dq_add_translation", dq_add_translation,
+					"dq_transform_point", dq_transform_point,
 					"dq_get_x", dq_get_x,
 					"dq_get_y", dq_get_y,
 					"dq_get_z", dq_get_z,

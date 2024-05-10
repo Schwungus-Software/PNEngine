@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"dq_add_translation",
+  "%Name":"dq_transform_point",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"dq_add_translation",
+  "name":"dq_transform_point",
   "parent":{
     "name":"Dual Quaternions",
     "path":"folders/Scripts/PNEngine/Math/Dual Quaternions.yy",
