@@ -192,7 +192,7 @@ switch load_state {
 				var _wind_direction = _json[$ "wind_direction"]
 					
 				wind_direction = is_array(_wind_direction) ? [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])] : [1, 1, 1]
-				gravity = force_type_fallback(_json[$ "gravity"], "number", 0.6)
+				gravity = force_type_fallback(_json[$ "gravity"], "number", 0.3)
 			}
 #endregion
 			

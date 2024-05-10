@@ -33,7 +33,7 @@ function Area() constructor {
 	fog_color = undefined
 	wind_strength = 1
 	wind_direction = undefined
-	gravity = 0.6
+	gravity = 0.3
 	
 	/// @desc Attempts to activate the area.
 	static activate = function () {
