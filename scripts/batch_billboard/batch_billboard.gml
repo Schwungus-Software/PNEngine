@@ -24,7 +24,7 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 	
 	var _matrix = matrix_multiply(
 		matrix_multiply(
-			matrix_build(0, (_width * -0.5) + _x_offset, (_height * -0.5) + _y_offset, 0, 0, 0, _width, _width, _height),
+			matrix_build(0, (_width * -0.5) + _x_offset, (_height * 0.5) - _y_offset, 0, 0, 0, _width, _width, _height),
 			matrix_build(0, 0, 0, _angle, 0, 0, 1, 1, 1)
 		),
 		
