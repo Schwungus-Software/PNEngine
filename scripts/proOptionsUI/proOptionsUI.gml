@@ -316,7 +316,7 @@ function proOptionsUI() : UI(undefined) constructor {
 				global.config.vid_lighting = _value
 			}),
 			
-			new OUIOption("options.video.vid_shadow", OUIValues.OFF_ON, 1, global.config.vid_shadow, function (_value) {
+			/*new OUIOption("options.video.vid_shadow", OUIValues.OFF_ON, 1, global.config.vid_shadow, function (_value) {
 				global.config.vid_shadow = _value
 			}),
 			
@@ -363,7 +363,7 @@ function proOptionsUI() : UI(undefined) constructor {
 				}
 				
 				global.config.vid_shadow_size = _size
-			}),
+			}),*/
 			
 			undefined,
 			

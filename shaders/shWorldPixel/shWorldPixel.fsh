@@ -53,7 +53,7 @@ uniform int u_shadowmap_caster;
 uniform mat4 u_shadowmap_projection;
 
 // https://github.com/XorDev/GM_Shadows/blob/main/GM_Shadows/shaders/shd_light/shd_light.fsh
-float shadow_map(vec4 p) {
+float shadow_hard(vec4 p) {
 	// Project shadow map UVs
 	vec2 uv = p.xy / p.w * vec2(0.5, -0.5) + 0.5;
 	
@@ -61,7 +61,7 @@ float shadow_map(vec4 p) {
 	float dif = (texture2D(u_shadowmap, uv).r - p.z) / p.w;
 	
 	// Map to the 0 to 1 range
-	return clamp(dif, 0., 1.);
+	return clamp(dif * 2e3 + 2., 0., 1.);
 }
 
 void main() {
@@ -89,7 +89,12 @@ void main() {
 					vec2 edge = max(1. - suv * suv, 0.);
 					
 					// Shade anything outside of the shadow map
-					factor = (edge.x * edge.y * float(proj.z > 0.)) * shadow_map(proj);
+					factor = (edge.x * edge.y * float(proj.z > 0.));
+					
+					// Only do shadow mapping inside the shadow map
+					if (factor > 0.01) {
+						factor *= shadow_hard(proj);
+					}
 				} else {
 					factor = 1.;
 				}
