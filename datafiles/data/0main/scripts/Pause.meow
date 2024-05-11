@@ -1,8 +1,16 @@
 #ui
 
 tick = fun (_self) {
-	if _self.input[UINP_BACK] {
+	let _input = _self.input
+	
+	if _input[UINP_BACK] {
 		_self.destroy()
+		
+		return
+	}
+	
+	if _input[UINP_CONFIRM] {
+		_self.open_options()
 	}
 }
 
