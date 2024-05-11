@@ -10,6 +10,7 @@ enum OUIValues {
 	UNDEFINED,
 	OFF_ON,
 	NO_YES,
+	LEVEL,
 	RESOLUTION,
 	FRAMERATE,
 	TEXTURE,
@@ -17,6 +18,7 @@ enum OUIValues {
 	SENSITIVITY,
 	VOLUME,
 	LANGUAGE,
+	SHADOW_SIZE,
 	__SIZE,
 }
 
@@ -25,6 +27,7 @@ var _oui_values = array_create(OUIValues.__SIZE)
 _oui_values[OUIValues.UNDEFINED] = ["value.undefined"]
 _oui_values[OUIValues.OFF_ON] = ["value.off", "value.on"]
 _oui_values[OUIValues.NO_YES] = ["value.no", "value.yes"]
+_oui_values[OUIValues.LEVEL] = ["value.low", "value.high"]
 
 _oui_values[OUIValues.RESOLUTION] = [
 	"value.resolution.s240", "value.resolution.w240",

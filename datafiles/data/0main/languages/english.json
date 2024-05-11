@@ -60,6 +60,9 @@
 				"vid_texture_filter": "Texture Filter",
 				"vid_antialias": "Antialiasing",
 				"vid_bloom": "Bloom",
+				"vid_lighting": "Lighting Quality",
+				"vid_shadow": "Shadow Mapping",
+				"vid_shadow_size": "Shadow Map Resolution",
 				"apply": "Apply Changes",
 			},
 			
@@ -95,6 +98,8 @@
 			"on": "On",
 			"no": "No",
 			"yes": "Yes",
+			"low": "Low",
+			"high": "High",
 			
 			"resolution": {
 				"s240": "320 x 240 (4:3)",

@@ -485,7 +485,6 @@
 			
 			#region Rendering
 				addConstant(
-					"SH_WORLD", global.world_shader,
 					"SH_SKY", global.sky_shader,
 					"SH_BLOOM_PASS", global.bloom_pass_shader,
 					"SH_BLOOM_UP", global.bloom_up_shader,
@@ -551,6 +550,10 @@
 				)
 				
 				addFunction(
+					"get_world_shader", function () {
+						return global.config.vid_lighting ? global.world_pixel_shader : global.world_shader
+					},
+					
 					"Canvas", Canvas,
 					"ModelInstance", ModelInstance,
 					"interp", interp,

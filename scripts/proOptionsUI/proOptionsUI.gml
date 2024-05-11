@@ -309,6 +309,12 @@ function proOptionsUI() : UI(undefined) constructor {
 			
 			undefined,
 			
+			new OUIOption("options.video.vid_lighting", OUIValues.LEVEL, 1, global.config.vid_lighting, function (_value) {
+				global.config.vid_lighting = _value
+			}),
+			
+			undefined,
+			
 			new OUIButton("options.video.apply", function () {
 				var _config = global.config
 				
