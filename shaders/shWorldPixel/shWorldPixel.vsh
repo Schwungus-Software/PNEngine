@@ -30,6 +30,7 @@ varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
 varying vec3 v_reflection;
 varying float v_fog_distance;
+varying vec4 v_shadowmap;
 
 /* --------
    UNIFORMS
@@ -44,6 +45,9 @@ uniform vec3 u_material_wind; // waviness, lock bottom, speed
 
 uniform int u_animated;
 uniform vec4 u_bone_dq[2 * MAX_BONES];
+
+uniform int u_shadowmap_enable_vertex;
+uniform mat4 u_shadowmap_view;
 
 //	Simplex 4D Noise 
 //	by Ian McEwan, Ashima Arts
@@ -167,7 +171,7 @@ void main() {
 	vec3 calc_position = in_Position;
 	vec3 calc_normal = in_Normal;
 	
-	if (u_animated >= 1) {
+	if (bool(u_animated)) {
 		// Skeletal animation
 		ivec4 i = ivec4(in_BoneIndex) * 2;
 		ivec4 j = i + 1;
@@ -244,4 +248,9 @@ void main() {
 	
 	// Miscellaneous
 	v_texcoord = in_TextureCoord + (u_time * u_material_scroll);
+	
+	// Shadow mapping
+	if (bool(u_shadowmap_enable_vertex)) {
+		v_shadowmap = u_shadowmap_view * object_space_position_vec4;
+	}
 }

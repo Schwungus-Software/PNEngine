@@ -176,7 +176,7 @@ void main() {
 	vec3 calc_position = in_Position;
 	vec3 calc_normal = in_Normal;
 	
-	if (u_animated >= 1) {
+	if (bool(u_animated)) {
 		// Skeletal animation
 		ivec4 i = ivec4(in_BoneIndex) * 2;
 		ivec4 j = i + 1;

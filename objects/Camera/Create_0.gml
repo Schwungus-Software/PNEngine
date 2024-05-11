@@ -272,190 +272,247 @@ event_inherited()
 		sy += squake_y
 		sz += squake_z
 		
-		var _area = area
+		var _x = sx
+		var _y = sy
+		var _z = sz
 		
-		//if _area != undefined {
-			output.Start()
+		var _area = area
+		var _config = global.config
+		var _shadowmap_available = false
+		var _shadowmap_caster = noone
+		var _shadowmap_camera = noone
+		var _shadowmap_output = undefined
+		
+		if not global.camera_shadowmap and _config.vid_lighting and _config.vid_shadow {
+			_shadowmap_caster = _area.shadowmap_caster
 			
-			var _canvases = global.canvases
-			var _render_canvas = _canvases[Canvases.RENDER]
-			
-			with _render_canvas {
-				Resize(_width, _height)
-				Start()
-			}
-			
-			var _world_canvas = _canvases[Canvases.WORLD]
-			
-			with _world_canvas {
-				Resize(_width, _height)
-				Start()
-			}
-			
-			var _render_camera = view_camera[0]
-			
-			update_matrices(_width, _height, _update_listener)
-			
-			var _view_matrix = view_matrix
-			var _projection_matrix = projection_matrix
-			
-			camera_set_view_mat(_render_camera, _view_matrix)
-			camera_set_proj_mat(_render_camera, _projection_matrix)
-			camera_apply(_render_camera)
-			
-			var _time = current_time * 0.001
-			var _gpu_tex_filter = gpu_get_tex_filter()
-			var _config = global.config
-			var _vid_texture_filter = _config.vid_texture_filter
-			
-			gpu_set_tex_filter(_vid_texture_filter)
-			global.batch_camera = id
-			
-			var _active_things
-			var _x = sx
-			var _y = sy
-			var _z = sz
-			
-			with _area {
-				if _allow_sky {
-					draw_clear(clear_color[4])
+			if instance_exists(_shadowmap_caster) {
+				global.camera_shadowmap = true
+				_shadowmap_camera = _shadowmap_caster.shadow_camera
+				
+				var _vid_shadow_size = _config.vid_shadow_size
+				
+				with _shadowmap_camera {
+					var _nx, _ny, _nz
 					
-					if instance_exists(sky) and sky.model != undefined {
-						gpu_set_zwriteenable(false)
-						global.sky_shader.set()
-						global.u_time.set(_time)
+					with _shadowmap_caster {
+						_nx = sarg0
+						_ny = sarg1
+						_nz = sarg2
+					}
 					
-						with sky {
-							with model {
-								sx = _x
-								sy = _y
-								sz = _z
-							}
+					syaw = darctan2(-_ny, _nx)
+					spitch = point_pitch(0, 0, 0, _nx, _ny, _nz)
+					sroll = 0
+					
+					var _range = lengthdir_3d(64, syaw, spitch)
+					
+					_sx = _x - _range[0]
+					_sy = _y - _range[1]
+					_sz = _z - _range[2]
+					_shadowmap_output = render(_vid_shadow_size, _vid_shadow_size, false, false, false, global.depth_shader)
+					_shadowmap_available = true
+				}
+				
+				global.camera_shadowmap = false
+			}
+		}
+		
+		output.Start()
+			
+		var _canvases = global.canvases
+		var _render_canvas = _canvases[Canvases.RENDER]
+			
+		with _render_canvas {
+			Resize(_width, _height)
+			Start()
+		}
+			
+		var _world_canvas = _canvases[Canvases.WORLD]
+			
+		with _world_canvas {
+			Resize(_width, _height)
+			Start()
+		}
+			
+		var _render_camera = view_camera[0]
+			
+		update_matrices(_width, _height, _update_listener)
+			
+		camera_set_view_mat(_render_camera, view_matrix)
+		camera_set_proj_mat(_render_camera, projection_matrix)
+		camera_apply(_render_camera)
+			
+		var _time = current_time * 0.001
+		var _gpu_tex_filter = gpu_get_tex_filter()
+		var _config = global.config
+		var _vid_texture_filter = _config.vid_texture_filter
+			
+		gpu_set_tex_filter(_vid_texture_filter)
+		global.batch_camera = id
+			
+		var _active_things, _thing_count
+		
+		with _area {
+			if _allow_sky {
+				draw_clear(clear_color[4])
+					
+				if instance_exists(sky) and sky.model != undefined {
+					gpu_set_zwriteenable(false)
+					global.sky_shader.set()
+					global.u_time.set(_time)
+					
+					with sky {
+						with model {
+							sx = _x
+							sy = _y
+							sz = _z
+						}
 							
-							event_user(ThingEvents.DRAW)
-						}
-					
-						shader_reset()
-						gpu_set_zwriteenable(true)
+						event_user(ThingEvents.DRAW)
 					}
-				} else {
-					draw_clear(c_black)
-				}
-				
-				_world_shader.set()
-				global.u_ambient_color.set(ambient_color[0], ambient_color[1], ambient_color[2], ambient_color[3])
-				global.u_fog_distance.set(fog_distance[0], fog_distance[1])
-				global.u_fog_color.set(fog_color[0], fog_color[1], fog_color[2], fog_color[3])
-				global.u_wind.set(wind_strength, wind_direction[0], wind_direction[1], wind_direction[2])
-				global.u_light_data.set(light_data)
-				global.u_time.set(_time)
-				
-				if model != undefined {
-					model.draw()
-				}
-				
-				_active_things = active_things
-				
-				var i = ds_list_size(_active_things)
-				
-				repeat i {
-					with _active_things[| --i] {
-						if f_visible and point_distance(_x, _y, sx, sy) < cull_draw {
-							event_user(ThingEvents.DRAW)
-						}
-					}
-				}
-				
-				i = 0
-				
-				repeat ds_list_size(particles) {
-					var p = particles[| i++]
 					
-					batch_set_alpha_test(p[ParticleData.ALPHA_TEST])
-					batch_set_bright(p[ParticleData.BRIGHT])
-					batch_set_blendmode(p[ParticleData.BLENDMODE])
-					batch_billboard(p[ParticleData.IMAGE], p[ParticleData.FRAME], p[ParticleData.WIDTH], p[ParticleData.HEIGHT], p[ParticleData.X], p[ParticleData.Y], p[ParticleData.Z], p[ParticleData.ANGLE], p[ParticleData.COLOR], p[ParticleData.ALPHA])
-				}
-				
-				batch_submit()
-				gpu_set_tex_filter(_gpu_tex_filter)
-				shader_reset()
-				_world_canvas.Finish()
-			}
-			
-			gpu_set_blendenable(false)
-			_world_canvas.Draw(0, 0)
-			gpu_set_blendenable(true)
-			_render_canvas.Finish()
-			
-			if not _allow_screen or alpha >= 1 {
-				gpu_set_blendenable(false)
-				_render_canvas.Draw(0, 0)
-				gpu_set_blendenable(true)
-			} else {
-				_render_canvas.DrawExt(0, 0, 1, 1, 0, c_white, clamp(global.delta * alpha, 0, 1))
-			}
-			
-			output.Finish();
-			--global.camera_layer
-			
-			if global.camera_layer == 0 {
-				gpu_set_cullmode(cull_noculling)
-			}
-			
-			if _allow_screen {
-				output.Start()
-				
-				// Bloom
-				if _config.vid_bloom {
-					gpu_set_blendenable(false)
-					global.bloom_pass_shader.set()
-					global.u_threshold.set(0.85)
-					global.u_intensity.set(0.36)
-					
-					var _bloom = global.bloom
-					var _third_width = _width div 3
-					var _third_height = _height div 3
-					
-					_bloom.resize(_third_width, _third_height)
-					
-					var _surface = _bloom.get_surface()
-					
-					surface_set_target(_surface)
-					gpu_set_tex_repeat(false)
-					gpu_set_tex_filter(true)
-					_render_canvas.DrawStretched(0, 0, _third_width, _third_height)
-					surface_reset_target()
 					shader_reset()
-					_bloom.blur()
-					gpu_set_blendenable(true)
-					gpu_set_blendmode(bm_add)
-					draw_surface_stretched(_surface, 0, 0, _width, _height)
-					gpu_set_tex_filter(false)
-					gpu_set_tex_repeat(true)
-					gpu_set_blendmode(bm_normal)
+					gpu_set_zwriteenable(true)
+				}
+			} else {
+				draw_clear(c_black)
+			}
+				
+			_world_shader.set()
+			global.u_ambient_color.set(ambient_color[0], ambient_color[1], ambient_color[2], ambient_color[3])
+			global.u_fog_distance.set(fog_distance[0], fog_distance[1])
+			global.u_fog_color.set(fog_color[0], fog_color[1], fog_color[2], fog_color[3])
+			global.u_wind.set(wind_strength, wind_direction[0], wind_direction[1], wind_direction[2])
+			global.u_light_data.set(light_data)
+			global.u_time.set(_time)
+			global.u_shadowmap_enable_vertex.set(0)
+			global.u_shadowmap_enable_pixel.set(0)
+			
+			if _shadowmap_available {
+				global.u_shadowmap_enable_vertex.set(1)
+				global.u_shadowmap_enable_pixel.set(1)
+				global.u_shadowmap.set(_shadowmap_output.GetTexture())
+				
+				with _shadowmap_camera {
+					global.u_shadowmap_view.set(view_matrix)
+					global.u_shadowmap_projection.set(projection_matrix)
 				}
 				
-				// HUD
-				var  _self = id
-				var i = ds_list_size(_active_things)
+				global.u_shadowmap_caster.set(_shadowmap_caster.handle * LightData.__SIZE)
+			} else {
+				global.u_shadowmap_enable_vertex.set(0)
+				global.u_shadowmap_enable_pixel.set(0)
+			}
+			
+			if model != undefined {
+				model.draw()
+			}
 				
-				repeat i {
-					with _active_things[| --i] {
-						if f_visible {
-							screen_camera = _self
-							screen_width = _width
-							screen_height = _height
-							gpu_set_depth(screen_depth)
-							event_user(ThingEvents.DRAW_SCREEN)
-						}
+			_active_things = active_things
+				
+			var i = ds_list_size(_active_things)
+				
+			repeat i {
+				with _active_things[| --i] {
+					if f_visible and point_distance(_x, _y, sx, sy) < cull_draw {
+						event_user(ThingEvents.DRAW)
 					}
 				}
-				
-				gpu_set_depth(0)
-				output.Finish()
 			}
-		//}
+				
+			i = 0
+				
+			repeat ds_list_size(particles) {
+				var p = particles[| i++]
+					
+				batch_set_alpha_test(p[ParticleData.ALPHA_TEST])
+				batch_set_bright(p[ParticleData.BRIGHT])
+				batch_set_blendmode(p[ParticleData.BLENDMODE])
+				batch_billboard(p[ParticleData.IMAGE], p[ParticleData.FRAME], p[ParticleData.WIDTH], p[ParticleData.HEIGHT], p[ParticleData.X], p[ParticleData.Y], p[ParticleData.Z], p[ParticleData.ANGLE], p[ParticleData.COLOR], p[ParticleData.ALPHA])
+			}
+				
+			batch_submit()
+			gpu_set_tex_filter(_gpu_tex_filter)
+			shader_reset()
+			_world_canvas.Finish()
+		}
+			
+		gpu_set_blendenable(false)
+		_world_canvas.Draw(0, 0)
+		gpu_set_blendenable(true)
+		_render_canvas.Finish()
+			
+		if not _allow_screen or alpha >= 1 {
+			gpu_set_blendenable(false)
+			_render_canvas.Draw(0, 0)
+			gpu_set_blendenable(true)
+		} else {
+			_render_canvas.DrawExt(0, 0, 1, 1, 0, c_white, clamp(global.delta * alpha, 0, 1))
+		}
+			
+		output.Finish();
+		--global.camera_layer
+			
+		if global.camera_layer == 0 {
+			gpu_set_cullmode(cull_noculling)
+		}
+			
+		if _allow_screen {
+			output.Start()
+				
+			// Bloom
+			if _config.vid_bloom {
+				gpu_set_blendenable(false)
+				global.bloom_pass_shader.set()
+				global.u_threshold.set(0.85)
+				global.u_intensity.set(0.36)
+					
+				var _bloom = global.bloom
+				var _third_width = _width div 3
+				var _third_height = _height div 3
+					
+				_bloom.resize(_third_width, _third_height)
+					
+				var _surface = _bloom.get_surface()
+					
+				surface_set_target(_surface)
+				gpu_set_tex_filter(true)
+				_render_canvas.DrawStretched(0, 0, _third_width, _third_height)
+				surface_reset_target()
+				shader_reset()
+				_bloom.blur()
+				gpu_set_blendenable(true)
+				gpu_set_blendmode(bm_add)
+				draw_surface_stretched(_surface, 0, 0, _width, _height)
+				gpu_set_tex_filter(false)
+				gpu_set_blendmode(bm_normal)
+			}
+				
+			// HUD
+			var  _self = id
+			var i = ds_list_size(_active_things)
+				
+			repeat i {
+				with _active_things[| --i] {
+					if f_visible {
+						screen_camera = _self
+						screen_width = _width
+						screen_height = _height
+						gpu_set_depth(screen_depth)
+						event_user(ThingEvents.DRAW_SCREEN)
+					}
+				}
+			}
+				
+			gpu_set_depth(0)
+			
+			if _shadowmap_available {
+				_shadowmap_output.Draw(0, 0)
+			}
+			
+			output.Finish()
+		}
 		
 		return output
 	}

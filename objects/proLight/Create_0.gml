@@ -8,8 +8,6 @@ handle = -1
 offset = 0
 type = LightTypes.NONE
 active = true
-shadow = false
-shadow_camera = noone
 
 arg0 = 0
 arg1 = 0

@@ -21,6 +21,7 @@ varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
 varying vec3 v_reflection;
 varying float v_fog_distance;
+varying vec4 v_shadowmap;
 
 /* --------
    UNIFORMS
@@ -46,6 +47,23 @@ uniform vec4 u_ambient_color;
 uniform vec2 u_fog_distance;
 uniform float u_light_data[MAX_LIGHT_DATA];
 
+uniform int u_shadowmap_enable_pixel;
+uniform sampler2D u_shadowmap;
+uniform int u_shadowmap_caster;
+uniform mat4 u_shadowmap_projection;
+
+// https://github.com/XorDev/GM_Shadows/blob/main/GM_Shadows/shaders/shd_light/shd_light.fsh
+float shadow_map(vec4 p) {
+	// Project shadow map UVs
+	vec2 uv = p.xy / p.w * vec2(0.5, -0.5) + 0.5;
+	
+	// Difference in shadow map and current depth
+	float dif = (texture2D(u_shadowmap, uv).r - p.z) / p.w;
+	
+	// Map to the 0 to 1 range
+	return clamp(dif, 0., 1.);
+}
+
 void main() {
 	// Lighting
 	vec4 total_light = u_ambient_color;
@@ -58,9 +76,26 @@ void main() {
 			if (light_type == 1) { // Directional
 				vec3 light_normal = vec3(-u_light_data[i + 5], -u_light_data[i + 6], -u_light_data[i + 7]);
 				vec4 light_color = vec4(u_light_data[i + 8], u_light_data[i + 9], u_light_data[i + 10], u_light_data[i + 11]);
+				float factor;
 				
-				total_light += max(dot(v_world_normal, light_normal), 0.) * light_color;
-				total_specular += max(dot(v_reflection, light_normal), 0.);
+				if (bool(u_shadowmap_enable_pixel) && u_shadowmap_caster == i) {
+					// Compute shadow-projection-space coordinates
+					vec4 proj = u_shadowmap_projection * v_shadowmap;
+					
+					// Normalize to the -1 to +1 range (accounting for perspective)
+					vec2 suv = proj.xy / proj.w;
+					
+					// Edge vignette from shadow uvs
+					vec2 edge = max(1. - suv * suv, 0.);
+					
+					// Shade anything outside of the shadow map
+					factor = (edge.x * edge.y * float(proj.z > 0.)) * shadow_map(proj);
+				} else {
+					factor = 1.;
+				}
+				
+				total_light += max(dot(v_world_normal, light_normal), 0.) * light_color * factor;
+				total_specular += max(dot(v_reflection, light_normal), 0.) * factor;
 			} else if (light_type == 2) { // Point
 				// Get light information
 				vec3 light_position = vec3(u_light_data[i + 2], u_light_data[i + 3], u_light_data[i + 4]);
@@ -94,7 +129,7 @@ void main() {
 	vec4 sample = texture2D(gm_BaseTexture, uv);
 	float v_alpha;
 	
-	if (u_material_can_blend == 1) {
+	if (bool(u_material_can_blend)) {
 		vec2 blend_uv = vec2(u_material_blend_uvs.r + (u_material_blend_uvs.b * u), u_material_blend_uvs.g + (u_material_blend_uvs.a * v));
 		
 		sample = mix(texture2D(u_material_blend, blend_uv), sample, v_color.a);

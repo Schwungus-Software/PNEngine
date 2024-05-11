@@ -20,6 +20,7 @@ function Area() constructor {
 	}
 	
 	light_data = array_create(MAX_LIGHTS * LightData.__SIZE)
+	shadowmap_caster = noone
 	sounds = new WorldSoundPool()
 	
 	bump_x = 0

@@ -7,6 +7,7 @@ function proOptionsUI() : UI(undefined) constructor {
 	
 #region Main Menu
 	main_menu = new OUIMenu("options.title", [
+#region Controls
 		new OUIMenu("options.controls.title", [
 			new OUIOption("options.controls.in_invert_x", OUIValues.NO_YES, 0, global.config.in_invert_x, function (_value) {
 				global.config.in_invert_x = _value
@@ -45,7 +46,9 @@ function proOptionsUI() : UI(undefined) constructor {
 			new OUIBinding("options.controls.inventory_down", "inventory_down"),
 			new OUIBinding("options.controls.inventory_right", "inventory_right"),
 		]),
+#endregion
 		
+#region Video
 		new OUIMenu("options.video.title", [
 			new OUIOption("options.video.vid_fullscreen", OUIValues.OFF_ON, 0, global.config.vid_fullscreen, function (_value) {
 				var _config = global.config
@@ -313,6 +316,55 @@ function proOptionsUI() : UI(undefined) constructor {
 				global.config.vid_lighting = _value
 			}),
 			
+			new OUIOption("options.video.vid_shadow", OUIValues.OFF_ON, 1, global.config.vid_shadow, function (_value) {
+				global.config.vid_shadow = _value
+			}),
+			
+			new OUIOption("options.video.vid_shadow_size", OUIValues.SHADOW_SIZE, 1, function () {
+				var _size = global.config.vid_shadow_size
+				var _preset = 0
+				
+				if _size >= 2048 {
+					_preset = 4
+				} else if _size >= 1024 {
+					_preset = 3
+				} else if _size >= 512 {
+					_preset = 2
+				} else if _size >= 256 {
+					_preset = 1
+				} else if _size >= 128 {
+					_preset = 0
+				}
+				
+				return _preset
+			}(), function (_value) {
+				var _size
+				
+				switch _value {
+					case 0:
+						_size = 128
+					break
+					
+					case 1:
+						_size = 256
+					break
+					
+					case 2:
+						_size = 512
+					break
+					
+					case 3:
+						_size = 1024
+					break
+					
+					case 4:
+						_size = 2048
+					break
+				}
+				
+				global.config.vid_shadow_size = _size
+			}),
+			
 			undefined,
 			
 			new OUIButton("options.video.apply", function () {
@@ -323,7 +375,9 @@ function proOptionsUI() : UI(undefined) constructor {
 				return true
 			}),
 		]),
+#endregion
 		
+#region Audio
 		new OUIMenu("options.audio.title", [
 			new OUIOption("options.audio.snd_volume", OUIValues.VOLUME, 20, floor(clamp(global.config.snd_volume, 0, 1) * 20), function (_value) {
 				var _volume = _value * 0.05
@@ -394,6 +448,7 @@ function proOptionsUI() : UI(undefined) constructor {
 			}),
 		]),
 	])
+#endregion
 #endregion
 	
 	menu = main_menu

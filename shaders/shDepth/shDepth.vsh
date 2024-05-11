@@ -223,5 +223,5 @@ void main() {
 	gl_Position = gm_Matrices[MATRIX_PROJECTION] * view_matrix * object_space_position_vec4;
 	v_texcoord = in_TextureCoord + (u_time * u_material_scroll);
 	v_color = in_Colour;
-	v_light_depth = gl_Position.z / gl_Position.w;
+	v_light_depth = gl_Position.z;
 }
