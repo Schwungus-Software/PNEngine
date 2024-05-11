@@ -278,7 +278,7 @@ event_inherited()
 		
 		var _area = area
 		var _config = global.config
-		var _shadowmap_available = false
+		/*var _shadowmap_available = false
 		var _shadowmap_caster = noone
 		var _shadowmap_camera = noone
 		var _shadowmap_output = undefined
@@ -316,7 +316,7 @@ event_inherited()
 				
 				global.camera_shadowmap = false
 			}
-		}
+		}*/
 		
 		output.Start()
 			
@@ -386,10 +386,8 @@ event_inherited()
 			global.u_wind.set(wind_strength, wind_direction[0], wind_direction[1], wind_direction[2])
 			global.u_light_data.set(light_data)
 			global.u_time.set(_time)
-			global.u_shadowmap_enable_vertex.set(0)
-			global.u_shadowmap_enable_pixel.set(0)
 			
-			if _shadowmap_available {
+			/*if _shadowmap_available {
 				global.u_shadowmap_enable_vertex.set(1)
 				global.u_shadowmap_enable_pixel.set(1)
 				global.u_shadowmap.set(_shadowmap_output.GetTexture())
@@ -403,7 +401,7 @@ event_inherited()
 			} else {
 				global.u_shadowmap_enable_vertex.set(0)
 				global.u_shadowmap_enable_pixel.set(0)
-			}
+			}*/
 			
 			if model != undefined {
 				model.draw()
@@ -506,11 +504,6 @@ event_inherited()
 			}
 				
 			gpu_set_depth(0)
-			
-			if _shadowmap_available {
-				_shadowmap_output.Draw(0, 0)
-			}
-			
 			output.Finish()
 		}
 		
