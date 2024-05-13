@@ -21,21 +21,21 @@ function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _colo
 	var _ly = _cross[1] * _radius
 	var _lz = _cross[2] * _radius
 	
-	var __x1 = _x1 - _lx 
-	var __y1 = _y1 - _ly
-	var __z1 = _z1 - _lz
+	var __x1 = _x1 + _lx 
+	var __y1 = _y1 + _ly
+	var __z1 = _z1 + _lz
 	
-	var __x2 = _x1 + _lx
-	var __y2 = _y1 + _ly
-	var __z2 = _z1 + _lz
+	var __x2 = _x1 - _lx
+	var __y2 = _y1 - _ly
+	var __z2 = _z1 - _lz
 	
-	var __x3 = _x2 + _lx
-	var __y3 = _y2 + _ly
-	var __z3 = _z2 + _lz
+	var __x3 = _x2 - _lx
+	var __y3 = _y2 - _ly
+	var __z3 = _z2 - _lz
 	
-	var __x4 = _x2 - _lx
-	var __y4 = _y2 - _ly
-	var __z4 = _z2 - _lz
+	var __x4 = _x2 + _lx
+	var __y4 = _y2 + _ly
+	var __z4 = _z2 + _lz
 	
 	var _u1, _v1, _u2, _v2
 	

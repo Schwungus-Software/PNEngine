@@ -9,7 +9,7 @@ function raycast_data_create() {
 	_ray[RaycastData.Z] = 0
 	_ray[RaycastData.NX] = 0
 	_ray[RaycastData.NY] = 0
-	_ray[RaycastData.NZ] = 1
+	_ray[RaycastData.NZ] = -1
 	_ray[RaycastData.SURFACE] = 0
 	_ray[RaycastData.TRIANGLE] = undefined
 	

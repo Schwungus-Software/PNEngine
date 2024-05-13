@@ -215,18 +215,18 @@
 		// Source: https://github.com/YoYoGames/GameMaker-HTML5/blob/37ebef72db6b238b892bb0ccc60184d4c4ba5d12/scripts/yyInstance.js#L1402
 		if vector_speed != _spd {
 			vector_speed = _spd
-			x_speed = lengthdir_x(vector_speed, move_angle)
-			y_speed = lengthdir_y(vector_speed, move_angle)
+			x_speed = lengthdir_x(_spd, move_angle)
+			y_speed = lengthdir_y(_spd, move_angle)
 			
 			var _rx = round(x_speed)
 			
-			if (abs(x_speed - _rx) < 0.0001) {
+			if abs(x_speed - _rx) < 0.0001 {
 				x_speed = _rx
 			}
 			
 			var _ry = round(y_speed)
 			
-			if (abs(y_speed - _ry) < 0.0001) {
+			if abs(y_speed - _ry) < 0.0001 {
 				y_speed = _ry
 			}
 		}
@@ -248,13 +248,13 @@
 		
 		var _rx = round(x_speed)
 		
-		if (abs(x_speed - _rx) < 0.0001) {
+		if abs(x_speed - _rx) < 0.0001 {
 			x_speed = _rx
 		}
 		
 		var _ry = round(y_speed)
 		
-		if (abs(y_speed - _ry) < 0.0001) {
+		if abs(y_speed - _ry) < 0.0001 {
 			y_speed = _ry
 		}
 	}
