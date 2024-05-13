@@ -10,3 +10,4 @@ points = []
 sticks = []
 rope_collision = false
 rope_bump = false
+rope_grabbable = false

@@ -65,8 +65,7 @@ repeat 3 {
 			var _dz = point2.z - point1.z
 			
 			var _dist = point_distance_3d(0, 0, 0, _dx, _dy, _dz)
-			var _diff = length - _dist
-			var _percent = _diff / _dist * 0.5
+			var _percent = (length - _dist) / _dist
 			
 			var _xoffs = _dx * _percent
 			var _yoffs = _dy * _percent

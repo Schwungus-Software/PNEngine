@@ -10,6 +10,7 @@ if not is_struct(special) {
 
 rope_collision = force_type_fallback(special[$ "collision"], "bool", true)
 rope_bump = force_type_fallback(special[$ "bump"], "bool", true)
+rope_grabbable = force_type_fallback(special[$ "grabbable"], "bool", true)
 
 var _x2 = force_type_fallback(special[$ "x2"], "number", x)
 var _y2 = force_type_fallback(special[$ "y2"], "number", y)
@@ -19,10 +20,11 @@ var i = 0
 var n = round(force_type_fallback(special[$ "segments"], "number", 8))
 var _previous = noone
 
-repeat -~n {
-	var a = i++ / n
+repeat n {
+	var a = i++ / (n - 1)
 	var _point = area.add(RopePoint, lerp(x, _x2, a), lerp(y, _y2, a), lerp(z, _z2, a))
 	
+	_point.master = id
 	array_push(points, _point)
 	
 	if not instance_exists(_previous) {
