@@ -321,11 +321,11 @@ if _held {
 						_x = x
 						_y = y
 						_z = z - other.height * 0.5
-					
+						
 						break
 					}
-				
-					var _bone_pos = get_bone_pos(torso_bone)
+					
+					var _bone_pos = get_node_pos(torso_bone)
 				
 					_x = _bone_pos[0]
 					_y = _bone_pos[1]
