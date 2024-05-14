@@ -66,6 +66,7 @@
 	global.batch_alpha_test = 0
 	global.batch_bright = 0
 	global.batch_blendmode = bm_normal
+	global.batch_filter = true
 	
 	vertex_begin(global.batch_vbo, global.vbo_format)
 #endregion
@@ -86,6 +87,7 @@
 		FRAME_SPEED,
 		ANIMATION,
 		ALPHA_TEST,
+		FILTER,
 		WIDTH,
 		WIDTH_SPEED,
 		HEIGHT,

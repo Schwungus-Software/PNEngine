@@ -20,12 +20,15 @@ function batch_submit() {
 	
 	var _matrix = matrix_get(matrix_world)
 	var _blend_mode = gpu_get_blendmode()
+	var _tex_filter = gpu_get_tex_filter()
 	var _batch_vbo = global.batch_vbo
 	
 	matrix_world_reset()
 	gpu_set_blendmode(global.batch_blendmode)
+	gpu_set_tex_filter(_tex_filter * global.batch_filter)
 	vertex_end(_batch_vbo)
 	vertex_submit(_batch_vbo, pr_trianglelist, _batch_texture)
+	gpu_set_tex_filter(_tex_filter)
 	gpu_set_blendmode(_blend_mode)
 	matrix_set(matrix_world, _matrix)
 	

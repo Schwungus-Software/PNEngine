@@ -319,6 +319,7 @@
     {"name":"batch_set_alpha_test","order":6,"path":"scripts/batch_set_alpha_test/batch_set_alpha_test.yy",},
     {"name":"batch_set_blendmode","order":9,"path":"scripts/batch_set_blendmode/batch_set_blendmode.yy",},
     {"name":"batch_set_bright","order":4,"path":"scripts/batch_set_bright/batch_set_bright.yy",},
+    {"name":"batch_set_filter","order":11,"path":"scripts/batch_set_filter/batch_set_filter.yy",},
     {"name":"batch_set_properties","order":10,"path":"scripts/batch_set_properties/batch_set_properties.yy",},
     {"name":"batch_submit","order":3,"path":"scripts/batch_submit/batch_submit.yy",},
     {"name":"batch_trail","order":8,"path":"scripts/batch_trail/batch_trail.yy",},

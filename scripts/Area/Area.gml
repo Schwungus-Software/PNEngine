@@ -279,6 +279,7 @@ function Area() constructor {
 		_particle[ParticleData.FRAME_SPEED] = 1
 		_particle[ParticleData.ANIMATION] = ParticleAnimations.PLAY
 		_particle[ParticleData.ALPHA_TEST] = 0
+		_particle[ParticleData.FILTER] = true
 		_particle[ParticleData.WIDTH] = 1
 		_particle[ParticleData.WIDTH_SPEED] = 0
 		_particle[ParticleData.HEIGHT] = 1
