@@ -86,6 +86,12 @@ event_inherited()
 
 #region Functions
 	resolve = function () {
+		var _camera_active = global.camera_active
+		
+		if instance_exists(_camera_active) and _camera_active.area == area {
+			return _camera_active
+		}
+		
 		if instance_exists(parent) {
 			return parent.resolve()
 		}
