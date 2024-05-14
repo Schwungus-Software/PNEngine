@@ -1,7 +1,7 @@
 /// @description Create
 if is_struct(special) {
 	yaw = special[$ "yaw"] ?? angle
-	pitch = special[$ "pitch"] ?? pitch
+	pitch = special[$ "pitch"] ?? 0
 	roll = special[$ "roll"] ?? 0
 	fov = special[$ "fov"] ?? 45
 	f_ortho = special[$ "ortho"] ?? false

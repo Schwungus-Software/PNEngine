@@ -100,7 +100,11 @@ event_inherited()
 	}
 	
 	add_target = function (_target, _range = 100, _x_offset = 0, _y_offset = 0, _z_offset = 0) {
-		ds_map_add(targets, _target, [_range, _x_offset, _y_offset, _z_offset])
+		var _target_data = [_range, _x_offset, _y_offset, _z_offset]
+		
+		ds_map_add(targets, _target, _target_data)
+		
+		return _target_data
 	}
 	
 	delete_target = function (_target) {
@@ -112,7 +116,11 @@ event_inherited()
 	}
 	
 	add_poi = function (_target, _lerp = 1, _x_offset = 0, _y_offset = 0, _z_offset = 0) {
-		ds_map_add(pois, _target, [_lerp, _x_offset, _y_offset, _z_offset])
+		var _poi_data = [_lerp, _x_offset, _y_offset, _z_offset]
+		
+		ds_map_add(pois, _target, _poi_data)
+		
+		return _poi_data
 	}
 	
 	delete_poi = function (_target) {
@@ -244,7 +252,7 @@ event_inherited()
 	}
 	
 	world_to_screen = function (_x, _y, _z) {
-		static _pos = []
+		static _pos = array_create(2)
 		
 		var _w = view_matrix[2] * _x + view_matrix[6] * _y + view_matrix[10] * _z + view_matrix[14]
 		
@@ -429,10 +437,8 @@ event_inherited()
 				
 			repeat ds_list_size(particles) {
 				var p = particles[| i++]
-					
-				batch_set_alpha_test(p[ParticleData.ALPHA_TEST])
-				batch_set_bright(p[ParticleData.BRIGHT])
-				batch_set_blendmode(p[ParticleData.BLENDMODE])
+				
+				batch_set_properties(p[ParticleData.ALPHA_TEST], p[ParticleData.BRIGHT], p[ParticleData.BLENDMODE], p[ParticleData.FILTER])
 				batch_billboard(p[ParticleData.IMAGE], p[ParticleData.FRAME], p[ParticleData.WIDTH], p[ParticleData.HEIGHT], p[ParticleData.X], p[ParticleData.Y], p[ParticleData.Z], p[ParticleData.ANGLE], p[ParticleData.COLOR], p[ParticleData.ALPHA])
 			}
 				
