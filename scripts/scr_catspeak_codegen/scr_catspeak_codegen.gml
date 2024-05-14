@@ -1244,19 +1244,21 @@ function CatspeakGMLCompiler(ir, interface=undefined) constructor {
 /// @return {Any}
 function __catspeak_function__() {
     var isRecursing = callTime >= 0;
+	var localCount = array_length(locals);
     if (isRecursing) {
         // catch unbound recursion
         __catspeak_timeout_check(callTime);
         // store the previous local variable array
         // this will make function recursion quite expensive, but
         // hopefully that's uncommon enough for it to not matter
-        var localCount = array_length(locals);
         var oldLocals = array_create(localCount);
         array_copy(oldLocals, 0, locals, 0, localCount);
     } else {
         callTime = current_time;
     }
-    for (var argI = argCount - 1; argI >= 0; argI -= 1) {
+    var argI = argCount;
+    repeat (argI) {
+        --argI;
         locals[@ argI] = argument[argI];
     }
     var value;
@@ -1277,6 +1279,10 @@ function __catspeak_function__() {
         } else {
             // reset the timer
             callTime = -1;
+            // Clear locals
+            // Gone with array_resize, as it's faster to resize than to loop
+            array_resize(locals, 0);
+            array_resize(locals, localCount);
         }
     //}
     return value;
