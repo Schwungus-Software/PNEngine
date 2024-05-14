@@ -46,7 +46,7 @@ function MusicMap() : AssetMap() constructor {
 			var _stream = fmod_system_create_stream(_music_file, FMOD_MODE.ACCURATETIME)
 			
 			if is_real(_loop_start) or is_real(_loop_end) {
-				fmod_sound_set_loop_points(_stream, _loop_start ?? 0, FMOD_TIMEUNIT.MS, _loop_end ?? fmod_sound_get_length(_stream, FMOD_TIMEUNIT.MS), FMOD_TIMEUNIT.MS)
+				fmod_sound_set_loop_points(_stream, _loop_start ?? 0, FMOD_TIMEUNIT.PCM, _loop_end ?? fmod_sound_get_length(_stream, FMOD_TIMEUNIT.PCM), FMOD_TIMEUNIT.PCM)
 			}
 			
 			var __music = new Music()
