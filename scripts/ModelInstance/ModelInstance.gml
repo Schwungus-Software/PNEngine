@@ -522,7 +522,12 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _blendmode = gpu_get_blendmode()
 			
 			global.u_color.set(color_get_red(color) * COLOR_INVERSE, color_get_green(color) * COLOR_INVERSE, color_get_blue(color) * COLOR_INVERSE, alpha)
-			gpu_set_blendmode(bm_normal)
+			
+			if shader_current() == shSky and blendmode == bm_normal {
+				gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one)
+			} else {
+				gpu_set_blendmode(blendmode)
+			}
 			
 			if animation == undefined {
 				global.u_animated.set(0)
