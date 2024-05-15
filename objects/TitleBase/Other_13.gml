@@ -62,11 +62,10 @@ if menu != undefined and not locked {
 					global.flags[0].clear()
 					
 					var _players = global.players
-					
-					i = 0
+					var j = 0
 					
 					repeat INPUT_MAX_PLAYERS {
-						_players[i++].clear_states()
+						_players[j++].clear_states()
 					}
 					
 					global.save_name = $"File {i}"
