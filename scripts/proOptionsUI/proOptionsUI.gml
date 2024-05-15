@@ -98,7 +98,7 @@ function proOptionsUI() : UI(undefined) constructor {
 					break
 					
 					case 1:
-						_width = 427
+						_width = 426
 						_height = 240
 					break
 					
@@ -118,7 +118,7 @@ function proOptionsUI() : UI(undefined) constructor {
 					break
 					
 					case 5:
-						_width = 853
+						_width = 854
 						_height = 480
 					break
 					
