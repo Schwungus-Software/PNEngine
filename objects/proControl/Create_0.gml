@@ -492,6 +492,7 @@
 					"SH_CURVE", global.curve_shader,
 					"SH_DEPTH", global.depth_shader,
 					"SH_DITHER", global.dither_shader,
+					"SH_BLEED", global.bleed_shader,
 					
 					"U_AMBIENT_COLOR", global.u_ambient_color,
 					"U_COLOR", global.u_color,
@@ -504,6 +505,11 @@
 					"U_MATERIAL_SPECULAR", global.u_material_specular,
 					"U_MATERIAL_WIND", global.u_material_wind,
 					"U_CURVE", global.u_curve,
+					"U_LIGHT_TEXTURE", global.u_light_texture,
+					"U_LIGHT_UVS", global.u_light_uvs,
+					"U_LIGHT_REPEAT", global.u_light_repeat,
+					"U_DARK_COLOR", global.u_dark_color,
+					"U_BLEED", global.u_bleed,
 					
 					"PART_DEAD", ParticleData.DEAD,
 					"PART_IMAGE", ParticleData.IMAGE,
