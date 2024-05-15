@@ -206,7 +206,7 @@
 					"PR_LINE_STRIP", pr_linestrip,
 					"PR_TRIANGLE_LIST", pr_trianglelist,
 					"PR_TRIANGLE_STRIP", pr_trianglestrip,
-					"PR_TRIANGLE_FAN", pr_trianglefan
+					"PR_TRIANGLE_FAN", pr_trianglefan,
 				)
 				
 				addFunction(
@@ -543,6 +543,7 @@
 					"PANI_PLAY_STAY", ParticleAnimations.PLAY_STAY,
 					"PANI_LOOP", ParticleAnimations.LOOP,
 					
+					"SCREEN_CANVAS", global.canvases[Canvases.SCREEN],
 					"CANS_NO_DATA", CanvasStatus.NO_DATA,
 					"CANS_IN_USE", CanvasStatus.IN_USE,
 					"CANS_HAS_DATA", CanvasStatus.HAS_DATA,

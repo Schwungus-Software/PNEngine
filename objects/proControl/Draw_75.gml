@@ -20,20 +20,28 @@ if _draw_target != undefined {
 }
 
 if _draw_target == undefined or _draw_target.f_draw_screen {
+	var _screen_canvas = global.canvases[Canvases.SCREEN]
 	var _width = window_get_width()
 	var _height = window_get_height()
+	
+	with _screen_canvas {
+		Resize(_width, _height)
+		Start()
+	}
+	
+	draw_clear(c_black)
 	
 #region Draw Active Cameras
 	var _players = global.players
 	var _camera_active = global.camera_active
 	
 	if instance_exists(_camera_active) {
-		_camera_active.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
+		_camera_active.render(_width, _height, true).Draw(0, 0)
 	} else {
 		var _camera_demo = global.camera_demo
 		
 		if instance_exists(_camera_demo) {
-			_camera_demo.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
+			_camera_demo.render(_width, _height, true).Draw(0, 0)
 		} else {
 			switch global.players_active {
 				case 1:
@@ -42,7 +50,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 					repeat INPUT_MAX_PLAYERS {
 						with _players[i++] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
+								camera.render(_width, _height, true).Draw(0, 0)
 							
 								break
 							}
@@ -59,11 +67,11 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 					repeat INPUT_MAX_PLAYERS {
 						with _players[i] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height, i == 0).DrawStretched(0, _y, 480, 135)
+								camera.render(_width, _height, i == 0).Draw(0, _y)
 							}
 						}
 						
-						_y += 135;
+						_y += _height;
 						++i
 					}
 				break
@@ -80,15 +88,15 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 					repeat INPUT_MAX_PLAYERS {
 						with _players[i] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height, i == 0).DrawStretched(_x, _y, 240, 135)
+								camera.render(_width, _height, i == 0).Draw(_x, _y)
 							}
 						}
 						
-						_x += 240
+						_x += _width
 						
-						if _x > 240 {
+						if _x > _width {
 							_x = 0
-							_y += 135
+							_y += _height
 						}
 						
 						++i
@@ -96,6 +104,11 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 				break
 			}
 		}
+	}
+	
+	with _screen_canvas {
+		Finish()
+		DrawStretched(0, 0, 480, 270)
 	}
 #endregion
 	

@@ -23,6 +23,7 @@
 
 #region Rendering
 	enum Canvases {
+		SCREEN,
 		WORLD,
 		RENDER,
 		__SIZE,
@@ -30,6 +31,7 @@
 	
 	var _canvases = array_create(Canvases.__SIZE)
 	
+	_canvases[Canvases.SCREEN] = new Canvas(480, 270)
 	_canvases[Canvases.WORLD] = new Canvas(480, 270)
 	_canvases[Canvases.RENDER] = (new Canvas(480, 270)).SetDepthDisabled(true)
 	global.canvases = _canvases

@@ -498,7 +498,7 @@ event_inherited()
 				gpu_set_tex_filter(false)
 				gpu_set_blendmode(bm_normal)
 			}
-				
+			
 			// HUD
 			var  _self = id
 			var i = ds_list_size(_active_things)
