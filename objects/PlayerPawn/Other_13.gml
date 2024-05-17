@@ -4,5 +4,8 @@ if player == undefined {
 }
 
 event_inherited()
-player_update(id)
-player_update_camera(id)
+
+if instance_exists(id) {
+	player_update(id)
+	player_update_camera(id)
+}
