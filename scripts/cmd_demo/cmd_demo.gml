@@ -104,7 +104,7 @@ function cmd_demo(_args) {
 	var _tag = buffer_read(_demo_buffer, buffer_s32)
 	
 	// Flags
-	var _global_flags = global.flags[0].flags
+	var _global_flags = global.flags[FlagGroups.GLOBAL].flags
 	
 	ds_map_clear(_global_flags)
 	

@@ -59,7 +59,7 @@ if menu != undefined and not locked {
 						++i
 					}
 					
-					global.flags[0].clear()
+					global.flags[FlagGroups.GLOBAL].clear()
 					
 					var _players = global.players
 					var j = 0
@@ -136,7 +136,7 @@ if menu != undefined and not locked {
 							++i
 						}
 						
-						var _global = global.flags[0]
+						var _global = global.flags[FlagGroups.GLOBAL]
 						var _names = struct_get_names(flags)
 						
 						_global.clear()

@@ -47,6 +47,12 @@
 #endregion
 
 #region Levels
+	enum FlagGroups {
+		GLOBAL,
+		LOCAL,
+		STATIC,
+	}
+	
 	global.checkpoint = ["", 0, ThingTags.NONE]
 	global.level = new Level()
 	global.flags = [new Flags(0), new Flags(1), new Flags(2)]

@@ -67,7 +67,7 @@ function save_game() {
 	buffer_write(_buffer, buffer_s32, _checkpoint[2])
 	
 	// Flags
-	var _global_flags = global.flags[0].flags
+	var _global_flags = global.flags[FlagGroups.GLOBAL].flags
 	var n = ds_map_size(_global_flags)
 	
 	buffer_write(_buffer, buffer_u32, n)

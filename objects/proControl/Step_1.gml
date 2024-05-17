@@ -64,7 +64,7 @@ switch load_state {
 			exit
 		}
 			
-		global.flags[1].clear()
+		global.flags[FlagGroups.LOCAL].clear()
 		global.level = new Level()
 		gc_collect()
 		load_state = LoadStates.LOAD
@@ -203,13 +203,13 @@ switch load_state {
 				var _copy_global = force_type_fallback(_copy_flags[$ "global"], "struct")
 					
 				if _copy_global != undefined {
-					_flags[0].copy(_copy_global)
+					_flags[FlagGroups.GLOBAL].copy(_copy_global)
 				}
 					
 				var _copy_local = force_type_fallback(_copy_flags[$ "local"], "struct")
 					
 				if _copy_local != undefined {
-					_flags[1].copy(_copy_local)
+					_flags[FlagGroups.LOCAL].copy(_copy_local)
 				}
 			}
 			
@@ -639,7 +639,7 @@ switch load_state {
 			buffer_write(_demo_buffer, buffer_s32, load_tag)
 				
 			// Flags
-			var _global_flags = global.flags[0].flags
+			var _global_flags = global.flags[FlagGroups.GLOBAL].flags
 			var n = ds_map_size(_global_flags)
 				
 			buffer_write(_demo_buffer, buffer_u32, n)

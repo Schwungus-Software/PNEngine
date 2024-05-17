@@ -383,9 +383,9 @@
 				var _flags = global.flags
 				
 				addConstant(
-					"GLOBAL", _flags[0],
-					"LOCAL", _flags[1],
-					"STATIC", _flags[2],
+					"GLOBAL", _flags[FlagGroups.GLOBAL],
+					"LOCAL", _flags[FlagGroups.LOCAL],
+					"STATIC", _flags[FlagGroups.STATIC],
 					
 					"CP_LEVEL", 0,
 					"CP_AREA", 1,
@@ -792,7 +792,7 @@ var _custom_back_sound = undefined
 				var _static = force_type_fallback(_flags[$ "static"], "struct")
 				
 				if is_struct(_static) {
-					global.flags[2].copy(_static)
+					global.flags[FlagGroups.STATIC].copy(_static)
 				}
 			}
 			
@@ -830,7 +830,7 @@ var _custom_back_sound = undefined
 		_key = ds_map_find_next(_mods, _key)
 	}
 	
-	global.flags[0].clear()
+	global.flags[FlagGroups.GLOBAL].clear()
 #endregion
 
 #region Language
