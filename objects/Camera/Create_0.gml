@@ -60,6 +60,17 @@ event_inherited()
 	path_loop = false
 	path_active = false
 	
+	lerp_x = 0
+	lerp_y = 0
+	lerp_z = 0
+	lerp_yaw = 0
+	lerp_pitch = 0
+	lerp_roll = 0
+	lerp_fov = 0
+	lerp_time = 0
+	lerp_duration = 0
+	lerp_smoothly = false
+	
 	quake = 0
 	quake_x = 0
 	quake_y = 0
@@ -185,6 +196,49 @@ event_inherited()
 		path_active = false
 	}
 	
+	lerp_from_self = function (_time, _smooth = false) {
+		if lerp_time < lerp_duration {
+			var _factor = lerp_time / lerp_duration
+			
+			if lerp_smoothly {
+				_factor = lerp(sqr(_factor), 1 - sqr(1 - _factor), _factor)
+			}
+			
+			lerp_x = lerp(lerp_x, x, _factor)
+			lerp_y = lerp(lerp_y, y, _factor)
+			lerp_z = lerp(lerp_z, z, _factor)
+			lerp_yaw = lerp(lerp_yaw, yaw, _factor)
+			lerp_pitch = lerp_angle(lerp_pitch, pitch, _factor)
+			lerp_roll = lerp_angle(lerp_roll, roll, _factor)
+			lerp_fov = lerp_angle(lerp_fov, fov, _factor)
+		} else {
+			lerp_x = x
+			lerp_y = y
+			lerp_z = z
+			lerp_yaw = yaw
+			lerp_pitch = pitch
+			lerp_roll = roll
+			lerp_fov = fov
+		}
+		
+		lerp_time = 0
+		lerp_duration = _time
+		lerp_smoothly = _smooth
+	}
+	
+	lerp_from = function (_camera, _time, _smooth = false) {
+		lerp_x = _camera.x
+		lerp_y = _camera.y
+		lerp_z = _camera.z
+		lerp_yaw = _camera.yaw
+		lerp_pitch = _camera.pitch
+		lerp_roll = _camera.roll
+		lerp_fov = _camera.fov
+		lerp_time = 0
+		lerp_duration = _time
+		lerp_smoothly = _smooth
+	}
+	
 	set_child = function (_camera) {
 		if instance_exists(child) {
 			child.parent = noone
@@ -282,6 +336,24 @@ event_inherited()
 		}
 		
 		output.Resize(_width, _height)
+		
+		if lerp_time < lerp_duration {
+			var _factor = lerp_time / lerp_duration
+			
+			if lerp_smoothly {
+				_factor = lerp(sqr(_factor), 1 - sqr(1 - _factor), _factor)
+			}
+			
+			sx = lerp(lerp_x, sx, _factor)
+			sy = lerp(lerp_y, sy, _factor)
+			sz = lerp(lerp_z, sz, _factor)
+			syaw = lerp(lerp_yaw, syaw, _factor)
+			spitch = lerp_angle(lerp_pitch, spitch, _factor)
+			sroll = lerp_angle(lerp_roll, sroll, _factor)
+			sfov = lerp_angle(lerp_fov, sfov, _factor)
+			lerp_time += global.delta
+		}
+		
 		sx += squake_x
 		sy += squake_y
 		sz += squake_z
