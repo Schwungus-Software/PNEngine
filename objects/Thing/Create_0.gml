@@ -130,6 +130,7 @@
 	f_bump_passive = false
 	f_bump_avoid = false
 	f_bump_intercept = false
+	f_bump_heavy = false
 	f_collider_stick = true
 	f_bullet_hitscan = false
 	f_holdable = false
@@ -517,19 +518,31 @@
 		
 		if m_collision != MCollision.NONE {
 			var _z = z - height * 0.5
-			var _raycast = raycast(x, y, _z, x + _lx + lengthdir_x(radius, _dir), y + _ly + lengthdir_y(radius, _dir), _z)
+			var _raycast = raycast(x, y, _z, x + _lx + lengthdir_x(radius, _dir), y + _ly + lengthdir_y(radius, _dir), _z, CollisionFlags.BODY)
 			
 			if _raycast[RaycastData.HIT] {
 				_dir = darctan2(-_raycast[RaycastData.NY], _raycast[RaycastData.NX])
 				_lx = (_raycast[RaycastData.X] - x) + lengthdir_x(radius, _dir)
 				_ly = (_raycast[RaycastData.Y] - y) + lengthdir_y(radius, _dir)
 			}
+			
+			x += _lx
+			y += _ly
+			
+			// Stick to the ground so we don't slip off of slopes
+			if f_grounded {
+				_raycast = raycast(x, y, _z, x, y, z + point_distance(0, 0, _lx, _ly), CollisionFlags.BODY)
+				
+				if _raycast[RaycastData.HIT] {
+					z = _raycast[RaycastData.Z]
+				}
+			}
+		} else {
+			x += _lx
+			y += _ly
 		}
 		
-		x += _lx
-		y += _ly
-		
-		return point_distance(x_previous, y_previous, x, y) > 0.001
+		return abs(_lx) != 0 or abs(_ly) != 0
 	}
 	
 	grid_iterate = function (_type, _distance, _include_self = false) {

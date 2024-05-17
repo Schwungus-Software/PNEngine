@@ -51,7 +51,7 @@ if not instance_exists(holder) or not f_holdable_in_hand {
 	_draw_model = false
 }
 
-if m_shadow and shadow_ray[RaycastData.HIT] {
+if m_shadow != MShadow.NONE and shadow_ray[RaycastData.HIT] {
 	if m_shadow == MShadow.MODEL {
 		if _draw_model {
 			var _mwp = matrix_get(matrix_world)

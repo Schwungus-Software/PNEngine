@@ -72,7 +72,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 				var _pusher, _pushed
 				
 				if _thing.f_bump_avoid
-				   and point_distance(0, 0, x_speed, y_speed) > point_distance(0, 0, _thing.x_speed, _thing.y_speed) {
+				   and (f_bump_heavy or point_distance(0, 0, x_speed, y_speed) > point_distance(0, 0, _thing.x_speed, _thing.y_speed)) {
 					_pusher = id
 					_pushed = _thing
 				} else {
@@ -85,7 +85,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 					_pushed = id
 				}
 				
-				if not _pushed.bump_avoid(_pusher) and _pusher.f_bump_avoid {
+				if not _pushed.bump_avoid(_pusher) and _pusher.f_bump_avoid and (not _pusher.f_bump_heavy or _pushed.f_bump_heavy) {
 					_pusher.bump_avoid(_pushed)
 				}
 			}
