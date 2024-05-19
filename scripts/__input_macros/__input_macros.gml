@@ -1,7 +1,7 @@
 // Feather disable all
 
-#macro __INPUT_VERSION "6.2.3 beta (PNEngine Fork)"
-#macro __INPUT_DATE    "2024-01-16"
+#macro __INPUT_VERSION "6.2.5 (PNEngine Fork)"
+#macro __INPUT_DATE    "2024-05-18"
 #macro __INPUT_DEBUG   false
 
 
@@ -48,8 +48,6 @@
 #macro INPUT_MOUSE     __input_global().__source_mouse
 #macro INPUT_GAMEPAD   __input_global().__source_gamepad
 #macro INPUT_TOUCH     __input_global().__source_touch
-
-#macro INPUT_MAX_GAMEPADS  12
 
 #macro INPUT_KEYBOARD_LOCALE  __input_global().__keyboard_locale
 #macro INPUT_KEYBOARD_TYPE    __input_global().__keyboard_type
@@ -148,14 +146,14 @@
 #macro vk_lbracket    219
 #macro vk_rbracket    221
 
-#macro vk_apostrophe ((__INPUT_ON_MACOS && !INPUT_ON_WEB)? 192 : 222)
-#macro vk_equals     ((__INPUT_ON_MACOS && !INPUT_ON_WEB)?  24 : 187)
-#macro vk_numlock    ((__INPUT_ON_APPLE &&  INPUT_ON_WEB)?  12 : 144)
-#macro vk_hyphen     ((__INPUT_ON_SWITCH || (__INPUT_ON_MACOS && !INPUT_ON_WEB))? 109 : 189)
-#macro vk_rmeta      (__INPUT_ON_MACOS? ((__INPUT_ON_APPLE && INPUT_ON_WEB)? 93 : 91) : 92)
-#macro vk_backtick   (__INPUT_ON_MACOS?   50 : (__INPUT_ON_LINUX? 223 : 192))
-#macro vk_lmeta      (__INPUT_ON_MACOS?   92 :  91)
-#macro vk_period     (__INPUT_ON_SWITCH? 110 : 190)
+#macro vk_numlock     ((__INPUT_ON_APPLE &&  INPUT_ON_WEB)?  12 : 144)
+#macro vk_equals      ((__INPUT_ON_MACOS && !INPUT_ON_WEB)?  24 : 187)
+#macro vk_apostrophe (((__INPUT_ON_MACOS || __INPUT_ON_LINUX)  && !INPUT_ON_WEB)? 192 : 222)
+#macro vk_hyphen     (((__INPUT_ON_MACOS || __INPUT_ON_SWITCH) && !INPUT_ON_WEB)? 109 : 189)
+#macro vk_rmeta        (__INPUT_ON_MACOS? ((__INPUT_ON_APPLE && INPUT_ON_WEB)? 93 : 91) : 92)
+#macro vk_backtick     (__INPUT_ON_MACOS?   50 : (__INPUT_ON_LINUX? 223 : 192))
+#macro vk_lmeta        (__INPUT_ON_MACOS?   92 :  91)
+#macro vk_period       (__INPUT_ON_SWITCH? 110 : 190)
 
 // gp_axislv         = 32786             32769 = gp_face1
 // gp_axisrh         = 32787             32770 = gp_face2

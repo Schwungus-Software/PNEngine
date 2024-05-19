@@ -212,6 +212,9 @@ function __input_system_tick()
         {
             if (_global.__window_focus)
             {
+                var _window_width = window_get_width();
+                var _window_height = window_get_height();
+                
                 if (_global.__frame - _global.__mouse_capture_frame > 10)
                 {
                     if (__INPUT_ON_WINDOWS)
@@ -227,8 +230,8 @@ function __input_system_tick()
                 
                     //Only bother updating each coordinate space if we've moved far enough in device space
                     //This presumes that we don't get better than 1px resolution in device space
-                    if ((abs(_pointer_x - window_get_width()/2)  >= 1)
-                    ||  (abs(_pointer_y - window_get_height()/2) >= 1))
+                    if ((abs(_pointer_x - _window_width/2)  >= 1)
+                    ||  (abs(_pointer_y - _window_height/2) >= 1))
                     {
                         var _m = 0;
                         repeat(INPUT_COORD_SPACE.__SIZE)
@@ -264,8 +267,8 @@ function __input_system_tick()
                                 break;
                             
                                 case INPUT_COORD_SPACE.DEVICE:
-                                    var _old_x = window_get_width()/2;
-                                    var _old_y = window_get_height()/2;
+                                    var _old_x = _window_width/2;
+                                    var _old_y = _window_height/2;
                                 
                                     if (__INPUT_ON_WINDOWS)
                                     {
@@ -298,7 +301,7 @@ function __input_system_tick()
                 }
             
                 //Recenter mouse cursor
-                window_mouse_set(window_get_width()/2, window_get_height()/2);
+                window_mouse_set(_window_width/2, _window_height/2);
             }
         }
         else if (_global.__window_focus || INPUT_ALLOW_OUT_OF_FOCUS || __INPUT_ON_MACOS)
@@ -462,28 +465,45 @@ function __input_system_tick()
     
     if (_global.__gamepad_allowed && (_global.__frame > __INPUT_GAMEPADS_TICK_PREDELAY))
     {
-        //Expand dynamic device count
-        var _device_change = max(0, gamepad_get_device_count() - array_length(_global.__gamepads));
-        repeat(_device_change) array_push(_global.__gamepads, undefined);
-        
-        _device_change = max(0, gamepad_get_device_count() - array_length(INPUT_GAMEPAD));
-        repeat(_device_change)
+        //Android gamepad enumeration (enables USB hotplugging)
+        if (_global.__allow_gamepad_enumerate)
         {
-            array_push(INPUT_GAMEPAD, new __input_class_source(__INPUT_SOURCE.GAMEPAD, array_length(INPUT_GAMEPAD)));
-            
-            if ((_global.__source_mode == INPUT_SOURCE_MODE.MIXED) || (_global.__source_mode == INPUT_SOURCE_MODE.MULTIDEVICE))
+            if (_global.__current_time - _global.__enumeration_time > INPUT_ANDROID_GAMEPAD_ENUMERATION_INTERVAL)
             {
-                _global.__players[0].__source_add(INPUT_GAMEPAD[array_length(INPUT_GAMEPAD)-1]);
+                _global.__enumeration_time = _global.__current_time;
+                gamepad_enumerate();
+            }
+        }
+        
+        //Expand dynamic device count
+        if (__INPUT_ON_LINUX || __INPUT_ON_ANDROID)
+        {
+            var _g = array_length(_global.__gamepads);
+            var _change = max(0, gamepad_get_device_count() - _g);
+            repeat(_change)
+            {
+                _global.__gamepads[_g] = undefined;
+                array_push(INPUT_GAMEPAD, new __input_class_source(__INPUT_SOURCE.GAMEPAD, array_length(INPUT_GAMEPAD)));
+            
+                if ((_global.__source_mode == INPUT_SOURCE_MODE.MIXED) || (_global.__source_mode == INPUT_SOURCE_MODE.MULTIDEVICE))
+                {
+                    _global.__players[0].__source_add(INPUT_GAMEPAD[array_length(INPUT_GAMEPAD)-1]);
+                }
+            
+                ++_g;
             }
         }
         
         var _g = 0;
         repeat(array_length(_global.__gamepads))
         {
+            var _connected = gamepad_is_connected(_g);
+            _global.__gamepad_connections_native[_g] = _connected;
+            _global.__gamepad_connections_internal[_g] = false;
+            
             var _gamepad = _global.__gamepads[_g];
             if (is_struct(_gamepad))
             {
-                var _connected = gamepad_is_connected(_g);
                 if (_connected)
                 {
                     with (_gamepad)
@@ -506,6 +526,8 @@ function __input_system_tick()
                 }
                 
                 var _sustain_connection = _gamepad.tick(_connected);
+                _global.__gamepad_connections_internal[_g] = _sustain_connection;
+                
                 if not (_sustain_connection)
                 {
                     //Remove our gamepad handler
@@ -533,7 +555,7 @@ function __input_system_tick()
             }
             else
             {
-                if (gamepad_is_connected(_g))
+                if (_global.__gamepad_connections_native[_g])
                 {
                     __input_trace("Gamepad ", _g, " connected");
                     if (!__INPUT_SILENT) __input_trace("New gamepad = \"", gamepad_get_description(_g), "\", GUID=\"", gamepad_get_guid(_g), "\", buttons = ", gamepad_button_count(_g), ", axes = ", gamepad_axis_count(_g), ", hats = ", gamepad_hat_count(_g));
@@ -684,7 +706,7 @@ function __input_system_tick()
     array_resize(_connection_array,    0);
     array_resize(_disconnection_array, 0);
     
-    var _device_count = gamepad_get_device_count();
+    var _device_count = array_length(_global.__gamepad_connections_native);
     if (array_length(_status_array) != _device_count)
     {
         //Resize the gamepad status array if the total device count has changed
