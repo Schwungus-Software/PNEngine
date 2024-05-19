@@ -296,8 +296,8 @@ function Area() constructor {
 		_particle[ParticleData.X] = _x
 		_particle[ParticleData.Y] = _y
 		_particle[ParticleData.Z] = _z
-		_particle[ParticleData.FLOOR_Z] = -infinity
-		_particle[ParticleData.CEILING_Z] = infinity
+		_particle[ParticleData.FLOOR_Z] = infinity
+		_particle[ParticleData.CEILING_Z] = -infinity
 		_particle[ParticleData.X_SPEED] = 0
 		_particle[ParticleData.Y_SPEED] = 0
 		_particle[ParticleData.Z_SPEED] = 0

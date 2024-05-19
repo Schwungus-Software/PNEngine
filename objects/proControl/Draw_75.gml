@@ -20,28 +20,20 @@ if _draw_target != undefined {
 }
 
 if _draw_target == undefined or _draw_target.f_draw_screen {
-	var _screen_canvas = global.canvases[Canvases.SCREEN]
 	var _width = window_get_width()
 	var _height = window_get_height()
-	
-	with _screen_canvas {
-		Resize(_width, _height)
-		Start()
-	}
-	
-	draw_clear(c_black)
 	
 #region Draw Active Cameras
 	var _players = global.players
 	var _camera_active = global.camera_active
 	
 	if instance_exists(_camera_active) {
-		_camera_active.render(_width, _height, true).Draw(0, 0)
+		_camera_active.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 	} else {
 		var _camera_demo = global.camera_demo
 		
 		if instance_exists(_camera_demo) {
-			_camera_demo.render(_width, _height, true).Draw(0, 0)
+			_camera_demo.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 		} else {
 			switch global.players_active {
 				case 1:
@@ -50,8 +42,8 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 					repeat INPUT_MAX_PLAYERS {
 						with _players[i++] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height, true).Draw(0, 0)
-							
+								camera.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
+								
 								break
 							}
 						}
@@ -63,15 +55,15 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 					
 					var _y = 0
 					var i = 0
-				
+					
 					repeat INPUT_MAX_PLAYERS {
 						with _players[i] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height, i == 0).Draw(0, _y)
+								camera.render(_width, _height, i == 0).DrawStretched(0, _y, 480, 135)
 							}
 						}
 						
-						_y += _height;
+						_y += 135;
 						++i
 					}
 				break
@@ -88,15 +80,15 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 					repeat INPUT_MAX_PLAYERS {
 						with _players[i] {
 							if status == PlayerStatus.ACTIVE and instance_exists(camera) {
-								camera.render(_width, _height, i == 0).Draw(_x, _y)
+								camera.render(_width, _height, i == 0).DrawStretched(_x, _y, 240, 135)
 							}
 						}
 						
-						_x += _width
+						_x += 240
 						
 						if _x > _width {
 							_x = 0
-							_y += _height
+							_y += 135
 						}
 						
 						++i
@@ -104,11 +96,6 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 				break
 			}
 		}
-	}
-	
-	with _screen_canvas {
-		Finish()
-		DrawStretched(0, 0, 480, 270)
 	}
 #endregion
 	
@@ -159,7 +146,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 				p[ParticleData.Z] = _z
 				p[ParticleData.X_SPEED] *= power(p[ParticleData.X_FRICTION], d)
 				p[ParticleData.Y_SPEED] *= power(p[ParticleData.Y_FRICTION], d)
-				p[ParticleData.Z_SPEED] = clamp(_z_speed - (p[ParticleData.GRAVITY] * d), p[ParticleData.MAX_FALL_SPEED] * d, p[ParticleData.MAX_FLY_SPEED] * d) * power(p[ParticleData.Z_FRICTION], d)
+				p[ParticleData.Z_SPEED] = clamp(_z_speed + (p[ParticleData.GRAVITY] * d), p[ParticleData.MAX_FALL_SPEED] * d, p[ParticleData.MAX_FLY_SPEED] * d) * power(p[ParticleData.Z_FRICTION], d)
 				
 				var _width = p[ParticleData.WIDTH] - p[ParticleData.WIDTH_SPEED] * d
 				var _height = p[ParticleData.HEIGHT] - p[ParticleData.HEIGHT_SPEED] * d
@@ -182,7 +169,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 				
 				p[ParticleData.FRAME] = _frame
 				
-				if p[ParticleData.TICKS] <= 0 or (_animation == ParticleAnimations.PLAY and _frame >= p[ParticleData.IMAGE].GetCount()) or _width <= 0 or _height <= 0 or _alpha <= 0 or _z < p[ParticleData.FLOOR_Z] or _z > p[ParticleData.CEILING_Z] {
+				if p[ParticleData.TICKS] <= 0 or (_animation == ParticleAnimations.PLAY and _frame >= p[ParticleData.IMAGE].GetCount()) or _width <= 0 or _height <= 0 or _alpha <= 0 or _z > p[ParticleData.FLOOR_Z] or _z < p[ParticleData.CEILING_Z] {
 					p[ParticleData.DEAD] = true
 				}
 				

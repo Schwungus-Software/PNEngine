@@ -549,7 +549,6 @@
 					"PANI_PLAY_STAY", ParticleAnimations.PLAY_STAY,
 					"PANI_LOOP", ParticleAnimations.LOOP,
 					
-					"SCREEN_CANVAS", global.canvases[Canvases.SCREEN],
 					"CANS_NO_DATA", CanvasStatus.NO_DATA,
 					"CANS_IN_USE", CanvasStatus.IN_USE,
 					"CANS_HAS_DATA", CanvasStatus.HAS_DATA,
@@ -562,6 +561,7 @@
 					},
 					
 					"Canvas", Canvas,
+					"screenshot_canvas", screenshot_canvas,
 					"ModelInstance", ModelInstance,
 					"interp", interp,
 					"interp_skip", interp_skip,

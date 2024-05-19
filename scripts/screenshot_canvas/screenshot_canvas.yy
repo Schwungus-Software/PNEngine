@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"screenshot_canvas",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"screenshot_canvas",
+  "parent":{
+    "name":"Display",
+    "path":"folders/Scripts/PNEngine/Display.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
