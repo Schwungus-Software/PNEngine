@@ -62,12 +62,12 @@ function __input_config_verbs()
 	        interact: input_binding_gamepad_button(gp_face2),
 			attack:   input_binding_gamepad_button(gp_shoulderrb),
 		
-			inventory_up:    input_binding_gamepad_button(gp_padu),
+			inventory_up:    input_binding_gamepad_button(gp_shoulderlb),
 	        inventory_left:  input_binding_gamepad_button(gp_padl),
 			inventory_down:  input_binding_gamepad_button(gp_padd),
 			inventory_right: input_binding_gamepad_button(gp_padr),
         
-			aim:       input_binding_gamepad_button(gp_shoulderlb),
+			aim:       input_binding_gamepad_button(gp_shoulderl),
 	        aim_up:    input_binding_gamepad_axis(gp_axisrv, true),
 			aim_left:  input_binding_gamepad_axis(gp_axisrh, true),
 	        aim_down:  input_binding_gamepad_axis(gp_axisrv, false),
