@@ -1,9 +1,12 @@
-function screenshot_canvas() {
+function screenshot_canvas(_canvas = new Canvas(1, 1)) {
 	var _width = window_get_width()
 	var _height = window_get_height()
-	var _canvas = new Canvas(_width, _height)
 	
-	_canvas.Start()
+	with _canvas {
+		Resize(_width, _height)
+		Start()
+	}
+	
 	draw_clear(c_black)
 	
 	var _players = global.players
