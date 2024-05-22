@@ -530,7 +530,9 @@ event_inherited()
 			_render_canvas.Draw(0, 0)
 			gpu_set_blendenable(true)
 		} else {
+			gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one)
 			_render_canvas.DrawExt(0, 0, 1, 1, 0, c_white, clamp(global.delta * alpha, 0, 1))
+			gpu_set_blendmode(bm_normal)
 		}
 			
 		output.Finish();

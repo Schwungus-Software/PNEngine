@@ -18,7 +18,7 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 	sound_instance = fmod_system_play_sound(_music.stream, true, global.music_channel_group)
 	fmod_channel_control_set_mode(sound_instance, _loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF)
 	fmod_channel_control_set_volume(sound_instance, gain[0] * gain[1] * gain[2])
-	fmod_channel_set_position(sound_instance, _offset, FMOD_TIMEUNIT.MS)
+	fmod_channel_set_position(sound_instance, _offset, FMOD_TIMEUNIT.PCM)
 	fmod_channel_control_set_paused(sound_instance, false)
 	
 	static set_gain = function (_gain, _time = 0) {
@@ -46,8 +46,8 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 		gain_end[_slot] = _gain
 	}
 	
-	static set_position = function (_time) {
-		fmod_channel_set_position(sound_instance, _time, FMOD_TIMEUNIT.MS)
+	static set_position = function (_position) {
+		fmod_channel_set_position(sound_instance, _position, FMOD_TIMEUNIT.PCM)
 	}
 	
 	if _active {
