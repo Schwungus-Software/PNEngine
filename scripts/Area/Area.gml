@@ -141,7 +141,13 @@ function Area() constructor {
 				f_new = true
 			}
 			
-			ds_list_add(active_things, _thing.id)
+			var _id = _thing.id
+			
+			if _thing.is_ancestor(Prop) {
+				ds_list_insert(active_things, 0, _id)
+			} else {
+				ds_list_add(active_things, _id)
+			}
 		}
 		
 		
@@ -245,7 +251,13 @@ function Area() constructor {
 			return noone
 		}
 		
-		ds_list_add(active_things, _thing.id)
+		var _id = _thing.id
+		
+		if _thing.is_ancestor(Prop) {
+			ds_list_insert(active_things, 0, _id)
+		} else {
+			ds_list_add(active_things, _id)
+		}
 		
 		return _thing
 	}
