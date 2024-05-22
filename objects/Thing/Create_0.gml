@@ -69,6 +69,7 @@
 	z_speed = 0
 	vector_speed = 0
 	move_angle = 0
+	last_prop = noone
 	
 	fric = 0
 	grav = 1

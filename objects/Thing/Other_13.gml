@@ -149,46 +149,66 @@ if _held {
 			}
 		
 			// Floor
-			if raycast(x, y, z - _half_height, x, y, (z + z_speed) + ((f_grounded and z_speed <= 0) * point_distance(x_previous, y_previous, x, y)) - math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
+			var _extra_z = 0
+			
+			if f_grounded {
+				_extra_z += point_distance(x_previous, y_previous, x, y)
+			}
+			
+			if instance_exists(last_prop) {
+				with last_prop {
+					_extra_z += max(0, z - z_previous)
+				}
+				
+				_extra_z += max(0, z_speed) + 1
+				last_prop = noone
+			}
+			
+			if raycast(x, y, z - _half_height, x, y, (z + z_speed) + _extra_z + math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
 				z = floor_ray[RaycastData.Z]
 			
 				if abs(floor_ray[RaycastData.NZ]) >= 0.5 {
 					z_speed = 0
+					f_grounded = true
 				
 					// Stick to movers
 					var _thing = floor_ray[RaycastData.THING]
 				
-					if instance_exists(_thing) and _thing.f_collider_stick {
-						var _x, _y, _z, _z_previous, _x_speed, _y_speed, _yaw, _yaw_previous
+					if instance_exists(_thing) {
+						if _thing.f_collider_stick {
+							var _x, _y, _z, _z_previous, _x_speed, _y_speed, _yaw, _yaw_previous
 					
-						with _thing {
-							_x = x
-							_y = y
-							_z = z
-							_z_previous = z_previous
-							_x_speed = x_speed
-							_y_speed = y_speed
-							_yaw = angle
-							_yaw_previous = angle_previous
+							with _thing {
+								_x = x
+								_y = y
+								_z = z
+								_z_previous = z_previous
+								_x_speed = x_speed
+								_y_speed = y_speed
+								_yaw = angle
+								_yaw_previous = angle_previous
+							}
+					
+							var _diff = angle_difference(_yaw, _yaw_previous)
+							var _dir = point_direction(_x, _y, x, y) + _diff
+							var _len = point_distance(x, y, _x, _y)
+					
+							x = _x + lengthdir_x(_len, _dir) + _x_speed
+							y = _y + lengthdir_y(_len, _dir) + _y_speed
+							z += _z - _z_previous
+					
+							if model != undefined {
+								model.yaw += _diff
+							}
+					
+							angle += _diff
+							move_angle += _diff
 						}
-					
-						var _diff = angle_difference(_yaw, _yaw_previous)
-						var _dir = point_direction(_x, _y, x, y) + _diff
-						var _len = point_distance(x, y, _x, _y)
-					
-						x = _x + lengthdir_x(_len, _dir) + _x_speed
-						y = _y + lengthdir_y(_len, _dir) + _y_speed
-						z += _z - _z_previous
-					
-						if model != undefined {
-							model.yaw += _diff
-						}
-					
-						angle += _diff
-						move_angle += _diff
+						
+						_thing.thing_on_prop(_thing, id)
 					}
 					
-					f_grounded = true
+					last_prop = _thing
 				} else {
 					var _dir = darctan2(-floor_ray[RaycastData.NY], floor_ray[RaycastData.NX])
 				
