@@ -36,11 +36,11 @@ function __input_config_verbs()
 	        aim_down:  input_binding_key(vk_down),
 	        aim_right: input_binding_key(vk_right),
         
-			ui_up: input_binding_key(vk_up),
-			ui_left: input_binding_key(vk_left),
-			ui_down: input_binding_key(vk_down),
-			ui_right: input_binding_key(vk_right),
-			ui_enter: input_binding_key(vk_enter),
+			ui_up: [input_binding_key(vk_up), input_binding_key("W")],
+			ui_left: [input_binding_key(vk_left), input_binding_key("A")],
+			ui_down: [input_binding_key(vk_down), input_binding_key("S")],
+			ui_right: [input_binding_key(vk_right), input_binding_key("D")],
+			ui_enter: [input_binding_key(vk_enter), input_binding_key(vk_space)],
 		
 	        pause: input_binding_key(vk_escape),
 			leave: input_binding_key(vk_backspace),
@@ -73,10 +73,10 @@ function __input_config_verbs()
 	        aim_down:  input_binding_gamepad_axis(gp_axisrv, false),
 	        aim_right: input_binding_gamepad_axis(gp_axisrh, false),
         
-			ui_up:    input_binding_gamepad_button(gp_padu),
-	        ui_left:  input_binding_gamepad_button(gp_padl),
-			ui_down:  input_binding_gamepad_button(gp_padd),
-			ui_right: input_binding_gamepad_button(gp_padr),
+			ui_up:    [input_binding_gamepad_button(gp_padu), input_binding_gamepad_axis(gp_axislv, true)],
+	        ui_left:  [input_binding_gamepad_button(gp_padl), input_binding_gamepad_axis(gp_axislh, true)],
+			ui_down:  [input_binding_gamepad_button(gp_padd), input_binding_gamepad_axis(gp_axislv, false)],
+			ui_right: [input_binding_gamepad_button(gp_padr), input_binding_gamepad_axis(gp_axislh, false)],
 			ui_enter: input_binding_gamepad_button(gp_face1),
 		
 	        pause: input_binding_gamepad_button(gp_start),
