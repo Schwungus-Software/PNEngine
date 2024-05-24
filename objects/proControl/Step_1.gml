@@ -1141,8 +1141,8 @@ if _tick >= 1 {
 				} else {
 					// Main
 					var _move_range = input_check("walk", i) ? 64 : 127
-					var _input_up_down = floor(input_check_opposing("up", "down", i, true) * _move_range)
-					var _input_left_right = floor(input_check_opposing("left", "right", i, true) * _move_range)
+					var _input_up_down = floor((input_value("down", i) - input_value("up", i)) * _move_range)
+					var _input_left_right = floor((input_value("right", i) - input_value("left", i)) * _move_range)
 					var _input_jump = input_check("jump", i)
 					var _input_interact = input_check("interact", i)
 					var _input_attack = input_check("attack", i)
@@ -1169,8 +1169,8 @@ if _tick >= 1 {
 					input[PlayerInputs.AIM] = _input_aim
 					
 					// This one kinda sucks...
-					var _dx_factor = input_check_opposing("aim_left", "aim_right", i, true)
-					var _dy_factor = input_check_opposing("aim_up", "aim_down", i, true)
+					var _dx_factor = input_value("aim_right", i) - input_value("aim_left", i)
+					var _dy_factor = input_value("aim_down", i) - input_value("aim_up", i)
 					var _dx_angle, _dy_angle
 					
 					with _config {
