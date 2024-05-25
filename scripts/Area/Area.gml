@@ -495,6 +495,14 @@ function Area() constructor {
 		var j = 0
 		
 		switch _tag {
+			case ThingTags.ALL:
+				repeat ds_list_size(active_things) {
+					with active_things[| i++] {
+						things[j++] = id
+					}
+				}
+			break
+			
 			case ThingTags.PLAYERS:
 				repeat ds_list_size(active_things) {
 					with active_things[| i++] {
