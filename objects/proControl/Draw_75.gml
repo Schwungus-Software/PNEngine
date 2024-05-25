@@ -19,6 +19,8 @@ if _draw_target != undefined {
 	}
 }
 
+var _console = global.console
+
 if _draw_target == undefined or _draw_target.f_draw_screen {
 	var _width = window_get_width()
 	var _height = window_get_height()
@@ -98,8 +100,6 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 		}
 	}
 #endregion
-	
-	var _console = global.console
 	
 #region Update Particles & Draw GUI
 	var _dead_particles = global.dead_particles
