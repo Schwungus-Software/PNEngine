@@ -7,7 +7,7 @@ uniform vec2 u_light_repeat;
 
 uniform vec4 u_dark_color;
 
-uniform float u_bleed;
+uniform vec2 u_bleed;
 
 void main() {
 	vec2 frac = fract(v_texcoord * u_light_repeat);
@@ -18,5 +18,5 @@ void main() {
 	
 	float gray = 0.21 * dark.r + 0.71 * dark.g + 0.07 * dark.b;
 	
-	gl_FragColor = v_color * mix(dark, mix(u_dark_color, light, step(0.64, gray)), u_bleed);
+	gl_FragColor = v_color * mix(dark, mix(u_dark_color, light, step(u_bleed.y, gray)), u_bleed.x);
 }
