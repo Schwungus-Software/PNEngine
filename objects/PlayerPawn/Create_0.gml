@@ -36,6 +36,7 @@ event_inherited()
 	playcam_z_lerp = 0.25
 	playcam_z_snap = false
 	playcam_sync_input = true
+	playcam_target = undefined
 #endregion
 
 #region Functions
