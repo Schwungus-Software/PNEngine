@@ -2,16 +2,14 @@ function Level() constructor {
 	name = ""
 	areas = ds_map_create()
 	
-	#region Properties
-		rp_name = ""
-		rp_icon = ""
-		music = undefined
-		clear_color = undefined
-		ambient_color = undefined
-		wind_strength = 1
-		wind_direction = undefined
-		gravity = 0.6
-	#endregion
+	rp_name = ""
+	rp_icon = ""
+	music = undefined
+	clear_color = undefined
+	ambient_color = undefined
+	wind_strength = 1
+	wind_direction = undefined
+	gravity = 0.6
 	
 	bump_x = 0
 	bump_y = 0

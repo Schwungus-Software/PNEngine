@@ -20,6 +20,7 @@ if _draw_target != undefined {
 }
 
 var _console = global.console
+var d = global.delta
 
 if _draw_target == undefined or _draw_target.f_draw_screen {
 	var _width = window_get_width()
@@ -104,7 +105,6 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 #region Update Particles & Draw GUI
 	var _dead_particles = global.dead_particles
 	var _particle_step = not (global.freeze_step or _console or (_draw_target != undefined and _draw_target.f_blocking))
-	var d = global.delta
 	var _drawn_areas = 0
 	var i = 0
 

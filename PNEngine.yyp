@@ -1643,6 +1643,8 @@
     {"$GMIncludedFile":"","%Name":"mdlSwitchPlatform.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/models","name":"mdlSwitchPlatform.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mdlVideo.bbmod","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/models","name":"mdlVideo.bbmod","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mdlVideo.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/models","name":"mdlVideo.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"musClear.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/music","name":"musClear.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"musClear.ogg","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/music","name":"musClear.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"musForest.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/music","name":"musForest.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"musForest.ogg","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/music","name":"musForest.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"musIntro.json","CopyToMask":-1,"filePath":"datafiles/data/AugerBolt/music","name":"musIntro.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
