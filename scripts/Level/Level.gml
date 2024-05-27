@@ -11,6 +11,8 @@ function Level() constructor {
 	wind_direction = undefined
 	gravity = 0.6
 	
+	time = 0
+	
 	bump_x = 0
 	bump_y = 0
 	bump_grid = ds_grid_create(1, 1)

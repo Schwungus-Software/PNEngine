@@ -302,7 +302,8 @@
 					"string_localize", lexicon_text,
 					"string_rich", scribble,
 					"string_typist", scribble_typist,
-					"string_input", string_input
+					"string_input", string_input,
+					"string_time", string_time
 				)
 			#endregion
 			

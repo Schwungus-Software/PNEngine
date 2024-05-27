@@ -712,6 +712,7 @@ _tick += _tick_inc
 var _interps = global.interps
 var _players = global.players
 var _config = global.config
+var _level = global.level
 var _demo_write = global.demo_write
 var _demo_buffer = global.demo_buffer
 var _demo_input = global.demo_input
@@ -1349,6 +1350,10 @@ if _tick >= 1 {
 			++i
 		}
 #endregion
+		
+		if _level != undefined {
+			++_level.time
+		}
 		
 		_mouse_dx = 0
 		_mouse_dy = 0

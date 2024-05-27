@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"string_input",
+  "%Name":"string_time",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"string_input",
+  "name":"string_time",
   "parent":{
     "name":"String",
     "path":"folders/Scripts/PNEngine/String.yy",
