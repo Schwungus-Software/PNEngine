@@ -10,9 +10,10 @@ if is_struct(special) {
 	var _y_scale = special[$ "y_scale"] ?? 1
 	var _z_scale = special[$ "z_scale"] ?? 1
 	
-	yaw_speed = special[$ "yaw_speed"] ?? 0
-	pitch_speed = special[$ "pitch_speed"] ?? 0
-	roll_speed = special[$ "roll_speed"] ?? 0
+	f_prop_collision = special[$ "collision"] ?? f_prop_collision
+	yaw_speed = special[$ "yaw_speed"] ?? yaw_speed
+	pitch_speed = special[$ "pitch_speed"] ?? pitch_speed
+	roll_speed = special[$ "roll_speed"] ?? roll_speed
 	
 	if model == undefined {
 		var _model_name = special[$ "model"]

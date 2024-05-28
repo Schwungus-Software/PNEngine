@@ -319,7 +319,7 @@
 		repeat i {
 			var _thing = _collidables[| --i]
 			
-			if _thing == id or _thing.f_culled {
+			if _thing == id or _thing.f_culled or not _thing.f_prop_collision {
 				continue
 			}
 			

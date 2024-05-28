@@ -161,7 +161,6 @@ if _held {
 				}
 				
 				_extra_z += max(0, z_speed) + 1
-				last_prop = noone
 			}
 			
 			if raycast(x, y, z - _half_height, x, y, (z + z_speed) + _extra_z + math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
@@ -230,6 +229,8 @@ if _held {
 if tick != undefined {
 	tick(id)
 }
+
+last_prop = noone
 
 var _is_holding = instance_exists(holding) 
 
