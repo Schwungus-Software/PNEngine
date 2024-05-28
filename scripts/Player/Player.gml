@@ -27,7 +27,7 @@ function Player() constructor {
 			}
 			
 			++global.players_ready;
-			show_caption($"[c_lime]Player {-~slot} readied! ({_device})")
+			show_caption($"[c_lime]{lexicon_text("hud.caption.player.ready", -~slot)} ({_device})")
 			
 			if global.demo_write {
 				var _demo_buffer = global.demo_buffer
@@ -66,10 +66,10 @@ function Player() constructor {
 				}
 				
 				_in_area = true
-				show_caption($"[c_red]Player {-~slot} disconnected!")
+				show_caption($"[c_red]{lexicon_text("hud.caption.player.disconnect", -~slot)}")
 			} else {
 				--global.players_ready;
-				show_caption($"[c_red]Player {-~slot} unreadied!")
+				show_caption($"[c_red]{lexicon_text("hud.caption.player.unready", -~slot)}")
 			}
 			
 			status = PlayerStatus.INACTIVE

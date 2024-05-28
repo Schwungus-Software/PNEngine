@@ -5,13 +5,11 @@
     "text": {
 		"loading": "Loading",
 		
-		"save": {
-			"code": {
-				"SAVE_UNKNOWN": "Unknown error",
-				"SAVE_INVALID": "Invalid or corrupted file",
-				"SAVE_VERSION": "Version mismatch",
-				"SAVE_MODS": "Mod mismatch",
-			},
+		"save.code": {
+			"SAVE_UNKNOWN": "Unknown error",
+			"SAVE_INVALID": "Invalid or corrupted file",
+			"SAVE_VERSION": "Version mismatch",
+			"SAVE_MODS": "Mod mismatch",
 		},
 		
 		"hud": {
@@ -20,6 +18,14 @@
 			"cancel": "Cancel",
 			"player": "Player {0}",
 			"leave": "Leave",
+			
+			"caption.player": {
+				"reconnect": "Player {0} reconnected",
+				"disconnect": "Player {0} disconnected",
+				"last_disconnect": "Player {0} disconnected. Press any button to reconnect.",
+				"ready": "Player {0} readied",
+				"unready": "Player {0} unreadied",
+			},
 		},
 		
 		"options": {
