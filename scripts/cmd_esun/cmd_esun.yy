@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"cmd_esun",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cmd_esun",
+  "parent":{
+    "name":"Environment",
+    "path":"folders/Scripts/PNEngine/Debug/Commands/Environment.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

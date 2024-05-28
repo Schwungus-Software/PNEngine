@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"cmd_eamb",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cmd_eamb",
+  "parent":{
+    "name":"Environment",
+    "path":"folders/Scripts/PNEngine/Debug/Commands/Environment.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

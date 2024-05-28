@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"cmd_efog",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cmd_efog",
+  "parent":{
+    "name":"Environment",
+    "path":"folders/Scripts/PNEngine/Debug/Commands/Environment.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
