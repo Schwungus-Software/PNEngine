@@ -109,8 +109,11 @@ switch load_state {
 			}
 				
 #region Discord Rich Presence
-			_level.rp_name = force_type_fallback(_json[$ "rp_name"], "string", "")
-			_level.rp_icon = force_type_fallback(_json[$ "rp_icon"], "string", "")
+			with _level {
+				rp_name = force_type_fallback(_json[$ "rp_name"], "string", "")
+				rp_icon = force_type_fallback(_json[$ "rp_icon"], "string", "")
+				rp_time = force_type_fallback(_json[$ "rp_time"], "bool", false)
+			}
 #endregion
 				
 #region Default Properties
@@ -576,12 +579,12 @@ switch load_state {
 				music[i] = _asset;
 				++i
 			}
-		}
 			
-		with _level {
 			if start != undefined {
 				start(_level)
 			}
+			
+			np_setpresence_timestamps(rp_time ? date_current_datetime() : 0, 0, false)
 		}
 			
 		if global.demo_write and global.demo_buffer == undefined {
@@ -740,7 +743,7 @@ if _tick >= 1 {
 									_device = "no controller"
 								}
 						
-								show_caption($"[c_lime]Player {-~slot} reconnected! ({_device})")
+								show_caption($"[c_lime]{lexicon_text("hud.caption.player.reconnect", -~slot)} ({_device})")
 							} else {
 								__show_reconnect_caption = true
 							}
@@ -753,7 +756,7 @@ if _tick >= 1 {
 				repeat array_length(new_disconnections) {
 					with _players[new_disconnections[i++]] {
 						if not deactivate() {
-							show_caption($"[c_red]Player {-~slot} disconnected. Press any key to reconnect.")
+							show_caption($"[c_red]{lexicon_text("hud.caption.player.last_disconnect", -~slot)}")
 						}
 					}
 				}

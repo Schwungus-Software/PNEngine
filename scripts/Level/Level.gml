@@ -4,6 +4,8 @@ function Level() constructor {
 	
 	rp_name = ""
 	rp_icon = ""
+	rp_time = false
+	
 	music = undefined
 	clear_color = undefined
 	ambient_color = undefined
