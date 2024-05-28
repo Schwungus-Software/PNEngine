@@ -8,12 +8,6 @@ In order to build this, you will need to import the extensions
 and [NekoPresence](https://github.com/nkrapivin/NekoPresence) to the project's
 Extensions folder using the GameMaker IDE.
 
-## Documentation
-
-PNEngine Documentation is hosted at [schwungus.software/docs](https://schwungus.software/docs/#/pnengine/summary).
-
-It's a work-in-progress, but user contributions are [welcome](https://github.com/Schwungus-Software/schwungus.software/tree/main/docs/pnengine)!
-
 ## Credits
 
 PNEngine was created by **[Can't Sleep](https://cantsleep.cc)** and **[nonk](https://nonk.dev)**.
