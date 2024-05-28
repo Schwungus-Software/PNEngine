@@ -132,6 +132,7 @@
     {"name":"Prop","order":6,"path":"objects/Prop/Prop.yy",},
     {"name":"RopePoint","order":1,"path":"objects/RopePoint/RopePoint.yy",},
     {"name":"Sky","order":2,"path":"objects/Sky/Sky.yy",},
+    {"name":"SpotLight","order":3,"path":"objects/SpotLight/SpotLight.yy",},
     {"name":"TitleBase","order":1,"path":"objects/TitleBase/TitleBase.yy",},
     {"name":"__CanvasCleanupQueue","order":1,"path":"scripts/__CanvasCleanupQueue/__CanvasCleanupQueue.yy",},
     {"name":"__CanvasConfig","order":2,"path":"scripts/__CanvasConfig/__CanvasConfig.yy",},

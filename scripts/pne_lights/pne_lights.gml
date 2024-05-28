@@ -4,6 +4,7 @@ enum LightTypes {
 	NONE,
 	DIRECTIONAL,
 	POINT,
+	SPOT,
 }
 
 enum LightData {
@@ -15,6 +16,9 @@ enum LightData {
 	ARG0,
 	ARG1,
 	ARG2,
+	ARG3,
+	ARG4,
+	ARG5,
 	RED,
 	GREEN,
 	BLUE,

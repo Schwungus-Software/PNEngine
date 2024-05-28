@@ -9,9 +9,9 @@
 
 #define MAX_BONES 128
 
-#define LIGHT_SIZE 12
+#define LIGHT_SIZE 15
 #define MAX_LIGHTS 16
-#define MAX_LIGHT_DATA 192
+#define MAX_LIGHT_DATA 240
 
 /* ----------
    ATTRIBUTES
@@ -252,25 +252,39 @@ void main() {
 			int light_type = int(u_light_data[i]);
 		
 			if (light_type == 1) { // Directional
-				vec3 light_normal = vec3(-u_light_data[i + 5], -u_light_data[i + 6], -u_light_data[i + 7]);
-				vec4 light_color = vec4(u_light_data[i + 8], u_light_data[i + 9], u_light_data[i + 10], u_light_data[i + 11]);
+				vec3 light_normal = -normalize(vec3(u_light_data[i + 5], u_light_data[i + 6], u_light_data[i + 7]));
+				vec4 light_color = vec4(u_light_data[i + 11], u_light_data[i + 12], u_light_data[i + 13], u_light_data[i + 14]);
 				
 				total_light += max(dot(world_normal, light_normal), 0.) * light_color;
 				total_specular += max(dot(reflection, light_normal), 0.);
 			} else if (light_type == 2) { // Point
-				// Get light information
 				vec3 light_position = vec3(u_light_data[i + 2], u_light_data[i + 3], u_light_data[i + 4]);
 				float light_start = u_light_data[i + 5];
 				float light_end = u_light_data[i + 6];
-				vec4 light_color = vec4(u_light_data[i + 8], u_light_data[i + 9], u_light_data[i + 10], u_light_data[i + 11]);
+				vec4 light_color = vec4(u_light_data[i + 11], u_light_data[i + 12], u_light_data[i + 13], u_light_data[i + 14]);
 				
-				// Calculate lighting
 				vec3 light_direction = normalize(object_space_position - light_position);
 				float attenuation = max((light_end - distance(object_space_position, light_position)) / (light_end - light_start), 0.);
-				float angle_difference = max(dot(world_normal, -light_direction), 0.);
 				
-				// Add to total lighting
-				total_light += attenuation * light_color * angle_difference;
+				total_light += attenuation * light_color * max(dot(world_normal, -light_direction), 0.);
+				total_specular += attenuation * max(dot(reflection, light_direction), 0.);
+			} else if (light_type == 3) { // Spot
+				vec3 light_position = vec3(u_light_data[i + 2], u_light_data[i + 3], u_light_data[i + 4]);
+				vec3 light_normal = -normalize(vec3(u_light_data[i + 5], u_light_data[i + 6], u_light_data[i + 7]));
+				float light_range = u_light_data[i + 8];
+				vec2 light_cutoff = vec2(u_light_data[i + 9], u_light_data[i + 10]);
+				vec4 light_color = vec4(u_light_data[i + 11], u_light_data[i + 12], u_light_data[i + 13], u_light_data[i + 14]);
+				
+				vec3 light_direction = object_space_position - light_position;
+				float dist = length(light_direction);
+				
+				light_direction = normalize(light_direction);
+				
+				float angle_difference = max(dot(light_direction, light_normal), 0.);
+				float cutoff_outer = light_cutoff.y;
+				float attenuation = clamp((angle_difference - cutoff_outer) / (light_cutoff.x - cutoff_outer), 0., 1.) * max((light_range - dist) / light_range, 0.);
+				
+				total_light += attenuation * light_color * max(dot(world_normal, -light_direction), 0.);
 				total_specular += attenuation * max(dot(reflection, light_direction), 0.);
 			}
 		}
