@@ -287,10 +287,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		}
 		
 		static get_point = function (_name) {
-			if points == undefined {
-				return undefined
-			}
-			
 			var _point = points[$ _name]
 			var _x = _point[0]
 			var _y = _point[1]
@@ -423,21 +419,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			if _update_sample {
-				/*var _node_size = model.nodes_amount * 8
-				
-				if array_length(node_transforms) < _node_size {
-					array_resize(node_transforms, _node_size)
-				}
-
-				var _bone_size = model.bones_amount * 8
-				
-				if array_length(tick_sample) != _bone_size {
-					array_resize(tick_sample, _bone_size)
-				}*/
-				
 				array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
 				output_to_sample(tick_sample)
-				//array_copy(tick_sample, _bone_size, node_transforms, _bone_size, _node_size - _bone_size)
 			}
 			
 			if _update_matrix {
