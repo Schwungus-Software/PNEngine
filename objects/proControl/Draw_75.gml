@@ -211,7 +211,14 @@ with proTransition {
 }
 
 if caption_time > 0 {
-	caption.align(fa_center, fa_bottom).draw(240, 240)
+	draw_set_alpha(0.5)
+	
+	with caption {
+		draw_rectangle_color(get_left(240) - 1, get_top(240) - 1, get_right(240), get_bottom(240), c_black, c_black, c_black, c_black, false)
+	}
+	
+	draw_set_alpha(1)
+	caption.draw(240, 240)
 	caption_time -= d
 }
 

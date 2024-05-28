@@ -872,7 +872,7 @@ if is_string(_custom_back_sound) {
 	global.back_sound.transient = true
 }
 
-caption = scribble("", "__PNENGINE_CAPTION__").starting_format(ui_font_name, c_white)
+caption = scribble("", "__PNENGINE_CAPTION__").starting_format(ui_font_name, c_white).align(fa_center, fa_bottom)
 caption_time = -1
 
 // LEVEL
