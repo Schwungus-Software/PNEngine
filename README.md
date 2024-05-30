@@ -14,8 +14,6 @@ PNEngine was created by **[Can't Sleep](https://cantsleep.cc)** and **[nonk](htt
 
 The curve shader is from **[Mors](https://mors-games.com/)**' [Super Mario 64 Plus Launcher](https://github.com/MorsGames/sm64plus-launcher).
 
-A list of all of the used libraries can be found **[here](https://schwungus.software/docs/#/pnengine/summary?id=credits)**.
-
 ### Special Thanks
 
 - **[Alynne Keith](https://offalynne.neocities.org)** and **[Co](https://offalynne.github.io/Input/#/6.0/Credits)** for [Input](https://github.com/offalynne/Input)
