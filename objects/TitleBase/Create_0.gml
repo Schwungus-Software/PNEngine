@@ -56,7 +56,9 @@ add_option = function (_name, _function = undefined, _disabled = false) {
 set_menu = function (_menu, _allow_return = true) {
 	if _menu != undefined and not global.title_delete_state {
 		with _menu {
-			from = _allow_return ? other.menu : undefined
+			if _allow_return {
+				from = other.menu
+			}
 			
 			var n = array_length(options)
 			
