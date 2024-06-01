@@ -277,7 +277,10 @@
 					
 					"shader_reset", shader_reset,
 					"draw_clear", draw_clear,
-					"draw_clear_alpha", draw_clear_alpha
+					"draw_clear_alpha", draw_clear_alpha,
+					
+					"screen_width", window_get_width,
+					"screen_height", window_get_height
 				)
 			#endregion
 		#endregion
@@ -331,6 +334,13 @@
 						}
 						
 						return _mod.version
+					},
+					
+					"mod_find_file", mod_find_file,
+					"mod_find_folder", mod_find_folder,
+					
+					"json_load", function (_filename, _exclude = "") {
+						return json_load(mod_find_file(_filename, _exclude))
 					}
 				)
 			#endregion
@@ -506,6 +516,7 @@
 					"U_MATERIAL_SPECULAR", global.u_material_specular,
 					"U_MATERIAL_WIND", global.u_material_wind,
 					"U_CURVE", global.u_curve,
+					"U_LIGHT_DATA", global.u_light_data,
 					"U_LIGHT_TEXTURE", global.u_light_texture,
 					"U_LIGHT_UVS", global.u_light_uvs,
 					"U_LIGHT_REPEAT", global.u_light_repeat,
@@ -553,7 +564,31 @@
 					"CANS_NO_DATA", CanvasStatus.NO_DATA,
 					"CANS_IN_USE", CanvasStatus.IN_USE,
 					"CANS_HAS_DATA", CanvasStatus.HAS_DATA,
-					"CANS_HAS_DATA_CACHED", CanvasStatus.HAS_DATA_CACHED
+					"CANS_HAS_DATA_CACHED", CanvasStatus.HAS_DATA_CACHED,
+					
+					"LIGHT_ACTIVE", LightData.ACTIVE,
+					"LIGHT_TYPE", LightData.TYPE,
+					"LIGHT_X", LightData.X,
+					"LIGHT_Y", LightData.Y,
+					"LIGHT_Z", LightData.Z,
+					"LIGHT_ARG0", LightData.ARG0,
+					"LIGHT_ARG1", LightData.ARG1,
+					"LIGHT_ARG2", LightData.ARG2,
+					"LIGHT_ARG3", LightData.ARG3,
+					"LIGHT_ARG4", LightData.ARG4,
+					"LIGHT_ARG5", LightData.ARG5,
+					"LIGHT_RED", LightData.RED,
+					"LIGHT_GREEN", LightData.GREEN,
+					"LIGHT_BLUE", LightData.BLUE,
+					"LIGHT_ALPHA", LightData.ALPHA,
+					"LIGHT_SIZE", LightData.__SIZE,
+					
+					"LTYPE_NONE", LightTypes.NONE,
+					"LTYPE_DIRECTIONAL", LightTypes.DIRECTIONAL,
+					"LTYPE_POINT", LightTypes.POINT,
+					"LTYPE_SPOT", LightTypes.SPOT,
+					
+					"MAX_LIGHTS", MAX_LIGHTS,
 				)
 				
 				addFunction(
