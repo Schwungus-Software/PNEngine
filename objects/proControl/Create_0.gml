@@ -596,6 +596,10 @@
 						return global.config.vid_lighting ? global.world_pixel_shader : global.world_shader
 					},
 					
+					"vid_texture_filter", function () {
+						return global.config.vid_texture_filter
+					},
+					
 					"Canvas", Canvas,
 					"screenshot_canvas", screenshot_canvas,
 					"ModelInstance", ModelInstance,
