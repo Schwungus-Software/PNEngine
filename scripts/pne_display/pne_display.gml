@@ -19,6 +19,8 @@
 	application_surface_draw_enable(false)
 	surface_free(application_surface)
 	display_set_gui_size(480, 270)
+	
+	global.gui_priority = ds_priority_create()
 #endregion
 
 #region Rendering

@@ -106,6 +106,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 	var _dead_particles = global.dead_particles
 	var _particle_step = not (global.freeze_step or _console or (_draw_target != undefined and _draw_target.f_blocking))
 	var _drawn_areas = 0
+	var _gui_priority = global.gui_priority
 	var i = 0
 
 	repeat INPUT_MAX_PLAYERS {
@@ -186,9 +187,15 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 		repeat j {
 			with _things[| --j] {
 				if f_visible {
-					gpu_set_depth(gui_depth)
-					event_user(ThingEvents.DRAW_GUI)
+					ds_priority_add(_gui_priority, id, gui_depth)
 				}
+			}
+		}
+		
+		repeat ds_priority_size(_gui_priority) {
+			with ds_priority_delete_max(_gui_priority) {
+				gpu_set_depth(gui_depth)
+				event_user(ThingEvents.DRAW_GUI)
 			}
 		}
 		

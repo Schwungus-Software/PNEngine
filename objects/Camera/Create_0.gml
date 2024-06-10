@@ -570,23 +570,27 @@ event_inherited()
 			}
 			
 			// HUD
-			var  _self = id
 			var i = ds_list_size(_active_things)
+			var _gui_priority = global.gui_priority
 				
 			repeat i {
 				with _active_things[| --i] {
 					if f_visible {
-						screen_camera = _self
-						screen_width = _width
-						screen_height = _height
-						gpu_set_depth(screen_depth)
-						event_user(ThingEvents.DRAW_SCREEN)
+						ds_priority_add(_gui_priority, id, screen_depth)
 					}
 				}
 			}
 			
-			if _shadowmap_available {
-				_shadowmap_output.Draw(0, 0)
+			var _self = id
+			
+			repeat ds_priority_size(_gui_priority) {
+				with ds_priority_delete_max(_gui_priority) {
+					screen_camera = _self
+					screen_width = _width
+					screen_height = _height
+					gpu_set_depth(screen_depth)
+					event_user(ThingEvents.DRAW_SCREEN)
+				}
 			}
 			
 			gpu_set_depth(0)
