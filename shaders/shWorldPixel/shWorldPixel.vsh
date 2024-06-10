@@ -24,13 +24,13 @@ attribute vec4 in_BoneWeight; // (weight 1, weight 2, weight 3, weight 4)
    VARYINGS
    -------- */
 
+varying vec3 v_position;
 varying vec2 v_texcoord;
 varying vec4 v_color;
 varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
 varying vec3 v_reflection;
-varying float v_fog_distance;
-varying vec4 v_shadowmap;
+varying vec3 v_shadowmap;
 
 /* --------
    UNIFORMS
@@ -48,6 +48,7 @@ uniform vec4 u_bone_dq[2 * MAX_BONES];
 
 uniform int u_shadowmap_enable_vertex;
 uniform mat4 u_shadowmap_view;
+uniform mat4 u_shadowmap_projection;
 
 //	Simplex 4D Noise 
 //	by Ian McEwan, Ashima Arts
@@ -232,7 +233,7 @@ void main() {
 	mat4 view_matrix = gm_Matrices[MATRIX_VIEW];
 	
 	gl_Position = gm_Matrices[MATRIX_PROJECTION] * view_matrix * object_space_position_vec4;
-	v_fog_distance = length(gl_Position.xyz);
+	v_position = gl_Position.xyz;
 	
 	// Vertex color & lighting
 	v_world_normal = normalize(mat3(world_matrix) * calc_normal);
@@ -251,6 +252,10 @@ void main() {
 	
 	// Shadow mapping
 	if (bool(u_shadowmap_enable_vertex)) {
-		v_shadowmap = u_shadowmap_view * object_space_position_vec4;
+		vec4 screen_space = u_shadowmap_projection * u_shadowmap_view * object_space_position_vec4;
+		
+		v_shadowmap = screen_space.xyz / screen_space.w;
+		v_shadowmap = v_shadowmap * 0.5 + 0.5;
+		v_shadowmap.y = 1. - v_shadowmap.y;
 	}
 }

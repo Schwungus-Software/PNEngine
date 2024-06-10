@@ -281,7 +281,7 @@ event_inherited()
 		var _uz = _up[14]
 		
 		view_matrix = matrix_build_lookat(sx, sy, sz, sx + _fx, sy + _fy, sz + _fz, _ux, _uy, _uz)
-		projection_matrix = f_ortho ? matrix_build_projection_ortho(_width * 0.5, -_height * 0.5, 1, 65535) : matrix_build_projection_perspective_fov(-sfov, -(_width / _height), 1, 65535)
+		projection_matrix = f_ortho ? matrix_build_projection_ortho(_width * 0.5, _height * 0.5, 1, 32000) : matrix_build_projection_perspective_fov(sfov, _width / _height, 1, 32000)
 		
 		if _update_listener {
 			listener_pos.x = sx
@@ -364,7 +364,7 @@ event_inherited()
 		
 		var _area = area
 		var _config = global.config
-		/*var _shadowmap_available = false
+		var _shadowmap_available = false
 		var _shadowmap_caster = noone
 		var _shadowmap_camera = noone
 		var _shadowmap_output = undefined
@@ -393,16 +393,16 @@ event_inherited()
 					
 					var _range = lengthdir_3d(64, syaw, spitch)
 					
-					_sx = _x - _range[0]
-					_sy = _y - _range[1]
-					_sz = _z - _range[2]
+					sx = _x - _range[0]
+					sy = _y - _range[1]
+					sz = _z - _range[2]
 					_shadowmap_output = render(_vid_shadow_size, _vid_shadow_size, false, false, false, global.depth_shader)
 					_shadowmap_available = true
 				}
 				
 				global.camera_shadowmap = false
 			}
-		}*/
+		}
 		
 		output.Start()
 			
@@ -420,14 +420,10 @@ event_inherited()
 			Resize(_width, _height)
 			Start()
 		}
-			
-		var _render_camera = view_camera[0]
-			
+		
 		update_matrices(_width, _height, _update_listener)
-			
-		camera_set_view_mat(_render_camera, view_matrix)
-		camera_set_proj_mat(_render_camera, projection_matrix)
-		camera_apply(_render_camera)
+		matrix_set(matrix_view, view_matrix)
+		matrix_set(matrix_projection, projection_matrix)
 			
 		var _time = current_time * 0.001
 		var _gpu_tex_filter = gpu_get_tex_filter()
@@ -473,7 +469,7 @@ event_inherited()
 			global.u_light_data.set(light_data)
 			global.u_time.set(_time)
 			
-			/*if _shadowmap_available {
+			if _shadowmap_available {
 				global.u_shadowmap_enable_vertex.set(1)
 				global.u_shadowmap_enable_pixel.set(1)
 				global.u_shadowmap.set(_shadowmap_output.GetTexture())
@@ -487,7 +483,7 @@ event_inherited()
 			} else {
 				global.u_shadowmap_enable_vertex.set(0)
 				global.u_shadowmap_enable_pixel.set(0)
-			}*/
+			}
 			
 			if model != undefined {
 				model.draw()
@@ -588,7 +584,11 @@ event_inherited()
 					}
 				}
 			}
-				
+			
+			if _shadowmap_available {
+				_shadowmap_output.Draw(0, 0)
+			}
+			
 			gpu_set_depth(0)
 			output.Finish()
 		}

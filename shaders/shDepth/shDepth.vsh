@@ -203,7 +203,6 @@ void main() {
 	
 	// Vertex & normal transformation, rotation & translation
 	mat4 world_matrix = gm_Matrices[MATRIX_WORLD];
-	mat4 view_matrix = gm_Matrices[MATRIX_VIEW];
 	vec4 object_space_position_vec4 = world_matrix * vec4(calc_position, 1.);
 	
 	// Wind effect: Move vertices around using 4D simplex noise
@@ -220,7 +219,7 @@ void main() {
 		object_space_position_vec4.z += u_wind.w * snoise(vec4(-vx, -vy, vz, wind_time)) * wind_weight;
 	}
 	
-	gl_Position = gm_Matrices[MATRIX_PROJECTION] * view_matrix * object_space_position_vec4;
+	gl_Position = gm_Matrices[MATRIX_PROJECTION] * gm_Matrices[MATRIX_VIEW] * object_space_position_vec4;
 	v_texcoord = in_TextureCoord + (u_time * u_material_scroll);
 	v_color = in_Colour;
 	v_light_depth = gl_Position.z;

@@ -15,13 +15,13 @@
    VARYINGS
    -------- */
 
+varying vec3 v_position;
 varying vec2 v_texcoord;
 varying vec4 v_color;
 varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
 varying vec3 v_reflection;
-varying float v_fog_distance;
-varying vec4 v_shadowmap;
+varying vec3 v_shadowmap;
 
 /* --------
    UNIFORMS
@@ -50,19 +50,6 @@ uniform float u_light_data[MAX_LIGHT_DATA];
 uniform int u_shadowmap_enable_pixel;
 uniform sampler2D u_shadowmap;
 uniform int u_shadowmap_caster;
-uniform mat4 u_shadowmap_projection;
-
-// https://github.com/XorDev/GM_Shadows/blob/main/GM_Shadows/shaders/shd_light/shd_light.fsh
-float shadow_hard(vec4 p) {
-	// Project shadow map UVs
-	vec2 uv = p.xy / p.w * vec2(0.5, -0.5) + 0.5;
-	
-	// Difference in shadow map and current depth
-	float dif = (texture2D(u_shadowmap, uv).r - p.z) / p.w;
-	
-	// Map to the 0 to 1 range
-	return clamp(dif * 2e3 + 2., 0., 1.);
-}
 
 void main() {
 	// Lighting
@@ -79,27 +66,12 @@ void main() {
 				float factor;
 				
 				if (bool(u_shadowmap_enable_pixel) && u_shadowmap_caster == i) {
-					// Compute shadow-projection-space coordinates
-					vec4 proj = u_shadowmap_projection * v_shadowmap;
-					
-					// Normalize to the -1 to +1 range (accounting for perspective)
-					vec2 suv = proj.xy / proj.w;
-					
-					// Edge vignette from shadow uvs
-					vec2 edge = max(1. - suv * suv, 0.);
-					
-					// Shade anything outside of the shadow map
-					factor = (edge.x * edge.y * float(proj.z > 0.));
-					
-					// Only do shadow mapping inside the shadow map
-					if (factor > 0.01) {
-						factor *= shadow_hard(proj);
-					}
+					factor = float((texture2D(u_shadowmap, v_shadowmap.xy).r + 0.001) > v_shadowmap.z);
 				} else {
 					factor = 1.;
 				}
 				
-				total_light += max(dot(v_world_normal, light_normal), 0.) * light_color * factor;
+				total_light += (max(dot(v_world_normal, light_normal), 0.) * light_color) * factor;
 				total_specular += max(dot(v_reflection, light_normal), 0.) * factor;
 			} else if (light_type == 2) { // Point
 				vec3 light_position = vec3(u_light_data[i + 2], u_light_data[i + 3], u_light_data[i + 4]);
@@ -139,7 +111,7 @@ void main() {
 	
 	// Fog
 	float fog_start = u_fog_distance.x;
-	float fog = clamp((v_fog_distance - fog_start) / (u_fog_distance.y - fog_start), 0., 1.);
+	float fog = clamp((length(v_position) - fog_start) / (u_fog_distance.y - fog_start), 0., 1.);
 	
 	// Final changes
 	float u = fract(v_texcoord.x);
