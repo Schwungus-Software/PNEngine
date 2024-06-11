@@ -72,6 +72,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		splice_branch = undefined
 		splice_frame = 0
 		splice_loop = false
+		splice_finished = false
+		splice_state = 0
 		splice_push = false
 		
 		static output_to_sample = function (_sample) {
@@ -249,10 +251,11 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			splice_name = _animation == undefined ? "" : _animation.name
 			splice = _animation
-			splice_finished = false
 			splice_branch = _branch
 			splice_frame = _frame
 			splice_loop = _loop
+			splice_finished = false
+			splice_state = 0
 			splice_push = _push
 			interp_skip("ssplice_frame")
 			
