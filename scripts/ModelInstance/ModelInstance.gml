@@ -74,7 +74,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		splice_loop = false
 		splice_finished = false
 		splice_state = 0
-		splice_push = false
 		
 		static output_to_sample = function (_sample) {
 			static _transframe = []
@@ -244,7 +243,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 		}
 		
-		static set_splice_animation = function (_animation = undefined, _branch = undefined, _frame = 0, _loop = false, _push = false) {
+		static set_splice_animation = function (_animation = undefined, _branch = undefined, _frame = 0, _loop = false) {
 			if _frame < 0 and _animation != undefined {
 				_frame = _animation.duration - 1
 			}
@@ -256,13 +255,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			splice_loop = _loop
 			splice_finished = false
 			splice_state = 0
-			splice_push = _push
 			interp_skip("ssplice_frame")
-			
-			if splice != undefined {
-				output_to_sample(tick_sample)
-				array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
-			}
+			output_to_sample(tick_sample)
+			array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
 		}
 		
 		static get_node = function (_id) {
@@ -407,10 +402,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				
 				if not splice_loop and splice_frame >= (splice.duration - 1) {
 					splice_finished = true
-					
-					if splice_push {
-						splice = undefined
-					}
 				} else {
 					_update_sample = true
 				}
