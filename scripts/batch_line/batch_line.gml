@@ -16,7 +16,7 @@ function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _colo
 		_cz = sz
 	}
 	
-	var _cross = cross_product_3d_normalized(lerp(_x1, _x2, 0.5), lerp(_y1, _y2, 0.5), lerp(_z1, _z2, 0.5), _cx, _cy, _cz)
+	/*var _cross = cross_product_3d_normalized(lerp(_x1, _x2, 0.5), lerp(_y1, _y2, 0.5), lerp(_z1, _z2, 0.5), _cx, _cy, _cz)
 	var _lx = _cross[0] * _radius
 	var _ly = _cross[1] * _radius
 	var _lz = _cross[2] * _radius
@@ -35,7 +35,35 @@ function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _colo
 	
 	var __x4 = _x2 + _lx
 	var __y4 = _y2 + _ly
-	var __z4 = _z2 + _lz
+	var __z4 = _z2 + _lz*/
+	var _dir = point_direction(_x1, _y1, _x2, _y2)
+	var _left = _dir - 90
+	var _right = _dir + 90
+	
+	var _lx = lengthdir_x(_radius, _left)
+	var _ly = lengthdir_y(_radius, _left)
+	var _rx = lengthdir_x(_radius, _right)
+	var _ry = lengthdir_y(_radius, _right)
+	
+	// Bottom left
+	var __x1 = _x1 + _rx
+	var __y1 = _y1 + _ry
+	var __z1 = _z1
+	
+	// Bottom right
+	var __x2 = _x2 + _rx
+	var __y2 = _y2 + _ry
+	var __z2 = _z2
+	
+	// Top right
+	var __x3 = _x2 + _lx
+	var __y3 = _y2 + _ly
+	var __z3 = _z2
+	
+	// Top left
+	var __x4 = _x1 + _lx
+	var __y4 = _y1 + _ly
+	var __z4 = _z1
 	
 	var _u1, _v1, _u2, _v2
 	
@@ -48,21 +76,26 @@ function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _colo
 		var _uvs = _image.GetUVs(_frame)
 		
 		with _uvs {
-			_u2 = normLeft
-			_v2 = normTop
-			_u1 = _u2 + normRight
-			_v1 = _v2 + normBottom
+			_u1 = normLeft
+			_v1 = normTop
+			_u2 = _u1 + normRight
+			_v2 = _v1 + normBottom
 		}
 	}
 	
 	var _batch_vbo = global.batch_vbo
 	
-	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u1, _v2, _color, _alpha)
 	vbo_add_vertex(_batch_vbo, __x2, __y2, __z2, 0, 0, 1, _u2, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u2, _v1, _color, _alpha)
 	vbo_add_vertex(_batch_vbo, __x4, __y4, __z4, 0, 0, 1, _u1, _v1, _color, _alpha)
 	
-	return true
+	vbo_add_vertex(_batch_vbo, __x4, __y4, __z4, 0, 0, 1, _u1, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x2, __y2, __z2, 0, 0, 1, _u2, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u1, _v2, _color, _alpha)
 }

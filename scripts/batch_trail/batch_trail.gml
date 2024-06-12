@@ -4,7 +4,7 @@ function batch_trail(_points, _image = -1, _frame = 0, _color1 = c_white, _color
 	var n = array_length(_points) div 8
 	
 	if n <= 1 {
-		return false
+		exit
 	}
 	
 	var _blank = _image == -1
@@ -89,6 +89,4 @@ function batch_trail(_points, _image = -1, _frame = 0, _color1 = c_white, _color
 		vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, 1, _u2, _v1, _color1, _alpha1)
 		i += 8
 	}
-	
-	return true
 }

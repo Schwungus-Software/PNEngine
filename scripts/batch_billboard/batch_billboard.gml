@@ -77,6 +77,4 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, -1, _u2, _v1, _color, _alpha)
 	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, -1, _u1, _v2, _color, _alpha)
 	vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, 0, 0, -1, _u1, _v1, _color, _alpha)
-	
-	return true
 }
