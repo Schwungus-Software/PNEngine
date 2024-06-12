@@ -382,7 +382,7 @@
 		var _pitch_factor = dcos(_ray_pitch)
 		var _nx = dcos(_ray_yaw) * _pitch_factor
 		var _ny = -dsin(_ray_yaw) * _pitch_factor
-		var _nz = dsin(_ray_pitch)
+		var _nz = -dsin(_ray_pitch)
 		var _x_inv = 1 / _nx
 		var _y_inv = 1 / _ny
 		var _z_inv = 1 / _nz
@@ -465,9 +465,9 @@
 			
 			if _hit {
 				_result[RaycastData.HIT] = true
-				_result[RaycastData.NX] = _nx
-				_result[RaycastData.NY] = _ny
-				_result[RaycastData.NZ] = _nz
+				_result[RaycastData.NX] = -_nx
+				_result[RaycastData.NY] = -_ny
+				_result[RaycastData.NZ] = -_nz
 				_result[RaycastData.SURFACE] = 0
 				_result[RaycastData.TRIANGLE] = undefined
 				
