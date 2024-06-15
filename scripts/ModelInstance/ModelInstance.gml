@@ -70,10 +70,11 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		splice_name = ""
 		splice = undefined
 		splice_branch = undefined
-		splice_frame = 0
 		splice_loop = false
 		splice_finished = false
 		splice_state = 0
+		splice_frame = 0
+		splice_speed = 1
 		
 		static output_to_sample = function (_sample) {
 			static _transframe = []
@@ -255,7 +256,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			splice_loop = _loop
 			splice_finished = false
 			splice_state = 0
-			interp_skip("ssplice_frame")
+			splice_speed = 1
 			output_to_sample(tick_sample)
 			array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
 		}
@@ -284,7 +285,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			return model.get_branch_id(_id)
 		}
 		
-		static get_point = function (_name) {
+		static get_point = function (_name, _visual = false) {
 			var _point = points[$ _name]
 			var _x = _point[0]
 			var _y = _point[1]
@@ -299,7 +300,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				_z = _node_pos[2]
 			}
 			
-			return matrix_transform_point(tick_matrix, _x, _y, _z)
+			return matrix_transform_point(_visual ? draw_matrix : tick_matrix, _x, _y, _z)
 		}
 		
 		static get_node_dq = function (_index) {
@@ -324,8 +325,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		static get_node_pos = function (_index, _visual = false) {
 			gml_pragma("forceinline")
 			
-			var _dq = get_node_dq(_index)
-			var _pos = dq_get_translation(_dq)
+			var _pos = dq_get_translation(get_node_dq(_index))
 			
 			return matrix_transform_point(_visual ? draw_matrix : tick_matrix, _pos[0], _pos[1], _pos[2])
 		}
@@ -397,7 +397,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			if splice != undefined {
-				splice_frame += 1
+				var _frame_step = splice_speed //* animation.tps
+				
+				splice_frame += _frame_step
 				splice_finished = false
 				
 				if not splice_loop and splice_frame >= (splice.duration - 1) {
