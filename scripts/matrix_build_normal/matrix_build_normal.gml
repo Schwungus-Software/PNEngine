@@ -11,8 +11,8 @@ function matrix_build_normal(_x, _y, _z, _nx, _ny, _nz, _scale, _matrix = matrix
 	
 	// Orthogonalize x-axis to the normal
 	var _xx = 1 - _nx * _nx
-	var _xy = - _ny * _nx
-	var _xz = - _nz * _nx
+	var _xy = -_ny * _nx
+	var _xz = -_nz * _nx
 	
 	l = sqr(_xx) + sqr(_xy) + sqr(_xz)
 	
@@ -24,9 +24,9 @@ function matrix_build_normal(_x, _y, _z, _nx, _ny, _nz, _scale, _matrix = matrix
 	}
 	
 	// Orthogonalize y-axis to the normal
-	var _yx = - _nx * _ny
+	var _yx = -_nx * _ny
 	var _yy = 1 - _ny * _ny
-	var _yz = - _nz * _ny
+	var _yz = -_nz * _ny
 	
 	l = sqr(_yx) + sqr(_yy) + sqr(_yz)
 	

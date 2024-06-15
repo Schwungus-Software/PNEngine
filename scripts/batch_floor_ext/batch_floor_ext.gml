@@ -7,7 +7,7 @@ function batch_floor_ext(_image, _frame, _width, _height, _x, _y, _z, _nx, _ny, 
 		global.batch_texture = _texture
 	}
 	
-	var _batch_matrix = matrix_build_normal(_x, _y, _z, _nx, _ny, _nz, 1, global.batch_matrix)
+	var _batch_matrix = matrix_build(_x, _y, _z, 0, point_pitch(0, 0, 0, _nx, _ny, _nz) + 90, point_direction(0, 0, _nx, _ny), 1, 1, 1)
 	
 	var _left = -(_image.GetXOffset() / _image.GetWidth()) * _width
 	var _top = (_image.GetYOffset() / _image.GetHeight()) * _height
