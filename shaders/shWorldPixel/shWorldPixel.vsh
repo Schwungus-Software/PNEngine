@@ -29,7 +29,7 @@ varying vec2 v_texcoord;
 varying vec4 v_color;
 varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
-varying vec3 v_reflection;
+varying vec3 v_view_position;
 varying vec3 v_shadowmap;
 
 /* --------
@@ -237,14 +237,8 @@ void main() {
 	
 	// Vertex color & lighting
 	v_world_normal = normalize(mat3(world_matrix) * calc_normal);
-	
-	vec3 camera_position = -(view_matrix[3] * view_matrix).xyz;
-	
 	v_object_space_position = vec3(object_space_position_vec4);
-	
-	vec3 view_position = v_object_space_position - camera_position;
-	
-	v_reflection = normalize(reflect(view_position, v_world_normal));
+	v_view_position = v_object_space_position + (view_matrix[3] * view_matrix).xyz;
 	v_color = in_Colour;
 	
 	// Miscellaneous

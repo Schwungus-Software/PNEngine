@@ -20,7 +20,7 @@ varying vec2 v_texcoord;
 varying vec4 v_color;
 varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
-varying vec3 v_reflection;
+varying vec3 v_view_position;
 varying vec3 v_shadowmap;
 
 /* --------
@@ -53,6 +53,7 @@ uniform int u_shadowmap_caster;
 
 void main() {
 	// Lighting
+	vec3 reflection = normalize(reflect(v_view_position, v_world_normal));
 	vec4 total_light = u_ambient_color;
 	float total_specular = 0.;
 	
@@ -72,7 +73,7 @@ void main() {
 				}
 				
 				total_light += (max(dot(v_world_normal, light_normal), 0.) * light_color) * factor;
-				total_specular += max(dot(v_reflection, light_normal), 0.) * factor;
+				total_specular += max(dot(reflection, light_normal), 0.) * factor;
 			} else if (light_type == 2) { // Point
 				vec3 light_position = vec3(u_light_data[i + 2], u_light_data[i + 3], u_light_data[i + 4]);
 				float light_start = u_light_data[i + 5];
@@ -83,7 +84,7 @@ void main() {
 				float attenuation = max((light_end - distance(v_object_space_position, light_position)) / (light_end - light_start), 0.);
 				
 				total_light += attenuation * light_color * max(dot(v_world_normal, -light_direction), 0.);
-				total_specular += attenuation * max(dot(v_reflection, light_direction), 0.);
+				total_specular += attenuation * max(dot(reflection, light_direction), 0.);
 			} else if (light_type == 3) { // Spot
 				vec3 light_position = vec3(u_light_data[i + 2], u_light_data[i + 3], u_light_data[i + 4]);
 				vec3 light_normal = -normalize(vec3(u_light_data[i + 5], u_light_data[i + 6], u_light_data[i + 7]));
@@ -101,7 +102,7 @@ void main() {
 				float attenuation = clamp((angle_difference - cutoff_outer) / (light_cutoff.x - cutoff_outer), 0., 1.) * max((light_range - dist) / light_range, 0.);
 				
 				total_light += attenuation * light_color * max(dot(v_world_normal, -light_direction), 0.);
-				total_specular += attenuation * max(dot(v_reflection, light_direction), 0.);
+				total_specular += attenuation * max(dot(reflection, light_direction), 0.);
 			}
 		}
 	}
