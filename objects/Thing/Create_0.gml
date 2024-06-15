@@ -603,6 +603,34 @@
 		return results
 	}
 	
+	check_sight = function (_thing, _yaw, _pitch, _fov, _raycast = false) {
+		var _tx, _ty, _tz
+		
+		with _thing {
+			_tx = x
+			_ty = y
+			_tz = z - (height * 0.5)
+		}
+		
+		if abs(angle_difference(point_direction(x, y, _tx, _ty), _yaw)) < _fov {
+			var _z = z - (height * 0.5)
+			
+			if abs(angle_difference(_pitch, point_pitch(x, y, _z, _tx, _ty, _tz))) < _fov {
+				if _raycast {
+					var _ray = raycast(x, y, _z, _tx, _ty, _tz, CollisionFlags.VISION)
+					
+					if _ray[RaycastData.HIT] and _ray[RaycastData.THING] != _thing {
+						return false
+					}
+				}
+				
+				return true
+			}
+		}
+		
+		return false
+	}
+	
 	do_hold = function (_thing, _forced = false) {
 		if not instance_exists(_thing) {
 			return false
