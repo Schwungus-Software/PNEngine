@@ -664,6 +664,10 @@
 					
 					"sound_stop", function (_sound) {
 						fmod_channel_control_stop(_sound)
+					},
+					
+					"sound_set_pitch", function (_sound, _pitch) {
+						fmod_channel_control_set_pitch(_sound, _pitch)
 					}
 				)
 			#endregion
