@@ -62,6 +62,7 @@
 	y_previous = y
 	z_previous = z
 	angle = 0
+	angle_start = 0
 	angle_previous = 0
 	pitch = 0
 	x_speed = 0

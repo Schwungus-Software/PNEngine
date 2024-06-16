@@ -134,6 +134,8 @@ function Area() constructor {
 				z_start = _z
 				z_previous = _z
 				angle = _angle
+				angle_start = _angle
+				angle_previous = _angle
 				tag = _tag
 				special = _special
 				f_persistent = _persistent
@@ -239,6 +241,8 @@ function Area() constructor {
 			z_start = _z
 			z_previous = _z
 			angle = _angle
+			angle_start = _angle
+			angle_previous = _angle
 			tag = _tag
 			special = _special
 			f_new = true
