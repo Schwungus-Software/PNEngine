@@ -319,7 +319,7 @@ event_inherited()
 		var _cy = projection_matrix[9] + projection_matrix[5] * (view_matrix[1] * _x + view_matrix[5] * _y + view_matrix[9] * _z + view_matrix[13]) * _w_inv
 		
 		_pos[0] = 0.5 + 0.5 * _cx
-		_pos[1] = 0.5 + 0.5 * _cy
+		_pos[1] = 0.5 - 0.5 * _cy
 		
 		return _pos
 	}
