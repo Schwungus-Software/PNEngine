@@ -7,7 +7,7 @@ function normal_vector_3d(_yaw, _pitch) {
 	
 	result[0] = dcos(_yaw) * _nz
 	result[1] = -dsin(_yaw) * _nz
-	result[2] = -dsin(_pitch)
+	result[2] = dsin(_pitch)
 	
 	return result
 }
