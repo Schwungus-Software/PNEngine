@@ -121,6 +121,8 @@ function Level() constructor {
 				continue
 			}
 			
+			// TODO: Use bitmasking with area IDs so we don't add up the count
+			//       from the same area more than once.
 			var _area = _player.area
 			
 			if _area != undefined {

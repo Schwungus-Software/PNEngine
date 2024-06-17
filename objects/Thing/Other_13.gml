@@ -152,12 +152,12 @@ if _held {
 			var _extra_z = 0
 			
 			if f_grounded {
-				_extra_z += point_distance(x_previous, y_previous, x, y)
+				_extra_z += point_distance(0, 0, x_speed, y_speed)
 			}
 			
 			if instance_exists(last_prop) {
 				with last_prop {
-					_extra_z += max(0, z - z_previous)
+					_extra_z += max(0, z_speed)
 				}
 				
 				_extra_z += max(0, z_speed) + 1
@@ -176,31 +176,31 @@ if _held {
 				
 					if instance_exists(_thing) {
 						if _thing.f_collider_stick {
-							var _x, _y, _z, _z_previous, _x_speed, _y_speed, _yaw, _yaw_previous
-					
+							var _x, _y, _z, _x_speed, _y_speed, _z_speed, _yaw, _yaw_previous
+							
 							with _thing {
 								_x = x
 								_y = y
 								_z = z
-								_z_previous = z_previous
 								_x_speed = x_speed
 								_y_speed = y_speed
+								_z_speed = z_speed
 								_yaw = angle
 								_yaw_previous = angle_previous
 							}
-					
+							
 							var _diff = angle_difference(_yaw, _yaw_previous)
 							var _dir = point_direction(_x, _y, x, y) + _diff
 							var _len = point_distance(x, y, _x, _y)
-					
+							
 							x = _x + lengthdir_x(_len, _dir) + _x_speed
 							y = _y + lengthdir_y(_len, _dir) + _y_speed
-							z += _z - _z_previous
-					
+							z += _z_speed
+							
 							if model != undefined {
 								model.yaw += _diff
 							}
-					
+							
 							angle += _diff
 							move_angle += _diff
 						}

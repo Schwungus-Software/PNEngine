@@ -1295,10 +1295,67 @@ if _tick >= 1 {
 							}
 						}
 						
+						// Tick Things with Colliders first so that other
+						// Things that stick to them don't lag behind.
+						j = ds_list_size(collidables)
+						
+						repeat j {
+							with collidables[| --j] {
+								var _can_tick = true
+								
+								if cull_tick != infinity {
+									_can_tick = false
+									
+									var _ox = x
+									var _oy = y
+									var _od = cull_tick
+									var k = ds_list_size(_players_in_area)
+									
+									repeat k {
+										with _players_in_area[| --k] {
+											if instance_exists(thing) {
+												with thing {
+													if point_distance(x, y, _ox, _oy) < _od {
+														_can_tick = true
+													}
+												}
+											}
+											
+											if _can_tick {
+												break
+											}
+										}
+										
+										if _can_tick {
+											break
+										}
+									}
+								}
+								
+								if _can_tick {
+									f_culled = false
+									
+									if not f_frozen {
+										event_user(ThingEvents.TICK)
+									}
+								} else {
+									f_culled = true
+									
+									if f_cull_destroy {
+										destroy(false)
+									}
+								}
+							}
+						}
+						
 						j = _nthings
 						
 						repeat j {
 							with active_things[| --j] {
+								if collider != undefined {
+									break
+								}
+								
 								var _can_tick = true
 								
 								if cull_tick != infinity {
