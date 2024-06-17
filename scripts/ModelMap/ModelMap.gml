@@ -176,6 +176,7 @@ function ModelMap() : AssetMap() constructor {
 				}
 				
 				vertex_end(vbo)
+				vertex_freeze(vbo)
 			}
 			
 			_submodels[i++] = _submodel
