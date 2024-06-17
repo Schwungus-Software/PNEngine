@@ -64,7 +64,7 @@ if m_shadow != MShadow.NONE and shadow_ray[RaycastData.HIT] {
 				))
 				
 				var _color = color
-				var _alpha = 1
+				var _alpha = alpha
 				
 				color = c_black
 				alpha = 0.5
