@@ -16,7 +16,6 @@ event_inherited()
 	nearest_target = noone
 	nearest_holdable = noone
 	nearest_interactive = noone
-	untarget_buffer = false
 	
 	movement_speed = 6
 	jump_speed = -6.44
@@ -70,33 +69,6 @@ event_inherited()
 		}
 		
 		player_attacked(id)
-	}
-	
-	do_target = function (_thing) {
-		gml_pragma("forceinline")
-		
-		if not aiming or target != _thing {
-			aiming = true
-			aim_angle = move_angle
-			target = _thing
-			player_aimed(id, _thing)
-		}
-	}
-	
-	do_untarget = function () {
-		gml_pragma("forceinline")
-		
-		if aiming {
-			aiming = false
-			
-			if vector_speed <= 0 {
-				move_angle = aim_angle
-			}
-			
-			target = noone
-			player_aimed(id, noone)
-			untarget_buffer = true
-		}
 	}
 	
 	get_state = function (_key) {
