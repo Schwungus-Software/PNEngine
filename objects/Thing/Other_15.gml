@@ -60,7 +60,7 @@ if m_shadow != MShadow.NONE and shadow_ray[RaycastData.HIT] {
 			with _model {
 				matrix_set(matrix_world, matrix_multiply(
 					matrix_build(0, 0, 0, sroll, spitch, syaw, sscale * sx_scale, sscale * sy_scale, 0),
-					matrix_build_normal(sx, sy, other.sshadow_z - 0.0625, _shadow_ray[RaycastData.NX], _shadow_ray[RaycastData.NY], _shadow_ray[RaycastData.NZ], 1, other.shadow_matrix)
+					matrix_build_normal(sx, sy, other.sshadow_z - 0.05, _shadow_ray[RaycastData.NX], _shadow_ray[RaycastData.NY], _shadow_ray[RaycastData.NZ], 1, other.shadow_matrix)
 				))
 				
 				var _color = color
