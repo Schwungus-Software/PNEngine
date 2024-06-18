@@ -61,7 +61,7 @@ function AnimationMap() : AssetMap() constructor {
 			name = _name
 			spaces = _spaces
 			duration = _duration
-			tps = _tps
+			frame_speed = _tps / TICKRATE
 			
 			nodes_amount = _node_count
 			bones_amount = _bone_count

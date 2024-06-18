@@ -378,7 +378,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _update_sample = false
 			
 			if animation != undefined {
-				var _frame_step = frame_speed //* animation.tps
+				var _frame_step = frame_speed * animation.frame_speed
 				
 				animation_finished = false
 				
@@ -397,7 +397,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			if splice != undefined {
-				var _frame_step = splice_speed //* animation.tps
+				var _frame_step = splice_speed * animation.frame_speed
 				
 				splice_frame += _frame_step
 				splice_finished = false

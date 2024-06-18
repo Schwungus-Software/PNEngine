@@ -7,7 +7,7 @@ enum BoneSpaces {
 function Animation() : Asset() constructor {
 	spaces = 0
 	duration = 0
-	tps = 0
+	frame_speed = 1
 	
 	nodes_amount = 0
 	bones_amount = 0
