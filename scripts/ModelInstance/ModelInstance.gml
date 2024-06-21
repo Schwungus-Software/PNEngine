@@ -151,18 +151,21 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				var _parent_index = (_node_parent != undefined) ? _node_parent.index : -1
 				
 				if _node_post_rotation != undefined {
-					var _dq = new BBMOD_DualQuaternion().FromArray(_transframe, _node_offset)
-					var _position = _dq.GetTranslation()
-					var _rotation = _dq.GetRotation()
+					static _npr_dq = new BBMOD_DualQuaternion()
 					
-					_rotation = _rotation.Mul(new BBMOD_Quaternion().FromArray(_node_post_rotation))
-					_dq.FromTranslationRotation(_position, _rotation)
+					_npr_dq.FromArray(_transframe, _node_offset)
+					
+					var _position = _npr_dq.GetTranslation()
+					var _rotation = _npr_dq.GetRotation()
+					
+					_rotation.MulSelf(new BBMOD_Quaternion().FromArray(_node_post_rotation))
+					_npr_dq.FromTranslationRotation(_position, _rotation)
 					
 					if _parent_index != -1 {
-						_dq = _dq.Mul(new BBMOD_DualQuaternion().FromArray(node_transforms, _parent_index * 8))
+						_npr_dq.MulSelf(new BBMOD_DualQuaternion().FromArray(node_transforms, _parent_index * 8))
 					}
 					
-					_dq.ToArray(node_transforms, _node_offset)
+					_npr_dq.ToArray(node_transforms, _node_offset)
 				} else {
 					if _parent_index == -1 {
 						// No parent transform -> just copy the node transform
