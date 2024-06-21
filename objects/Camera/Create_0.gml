@@ -324,7 +324,7 @@ event_inherited()
 		return _pos
 	}
 	
-	render = function (_width, _height, _update_listener = false, _allow_sky = true, _allow_screen = true, _world_shader = global.config.vid_lighting ? global.world_pixel_shader : global.world_shader) {
+	render = function (_width, _height, _update_listener = false, _allow_sky = true, _allow_screen = true, _world_shader = (global.config.vid_lighting or global.config.vid_antialias) ? global.world_pixel_shader : global.world_shader) {
 		++global.camera_layer
 		
 		if global.camera_layer == 1 {

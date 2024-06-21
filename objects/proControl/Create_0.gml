@@ -595,7 +595,9 @@
 				
 				addFunction(
 					"get_world_shader", function () {
-						return global.config.vid_lighting ? global.world_pixel_shader : global.world_shader
+						with global.config {
+							return (vid_lighting or vid_antialias) ? global.world_pixel_shader : global.world_shader
+						}
 					},
 					
 					"vid_texture_filter", function () {
