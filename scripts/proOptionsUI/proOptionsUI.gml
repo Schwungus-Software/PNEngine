@@ -275,29 +275,9 @@ function proOptionsUI() : UI(undefined) constructor {
 				var _aa = 0
 				
 				switch _value {
-					case 1:
-						if display_aa == 2 or display_aa == 6 or display_aa == 14 {
-							_aa = 2
-						} else {
-							print("! proOptionsUI: 2x anti-aliasing not supported")
-						}
-					break
-					
-					case 2:
-						if display_aa == 6 or display_aa == 12 or display_aa == 14 {
-							_aa = 4
-						} else {
-							print("! proOptionsUI: 4x anti-aliasing not supported")
-						}
-					break
-					
-					case 3:
-						if display_aa == 12 or display_aa == 14 {
-							_aa = 8
-						} else {
-							print("! proOptionsUI: 8x anti-aliasing not supported")
-						}
-					break
+					case 1: _aa = 2 break
+					case 2: _aa = 4 break
+					case 3: _aa = 8 break
 				}
 				
 				var _config = global.config
