@@ -229,9 +229,9 @@ void main() {
 		float vy = in_Position.y;
 		float vz = in_Position.z;
 	
-		object_space_position_vec4.x += u_wind.y * snoise(vec4(vx, -vy, -vz, wind_time)) * wind_weight;
-		object_space_position_vec4.y += u_wind.z * snoise(vec4(-vx, vy, -vz, wind_time)) * wind_weight;
-		object_space_position_vec4.z += u_wind.w * snoise(vec4(-vx, -vy, vz, wind_time)) * wind_weight;
+		object_space_position_vec4.x += u_wind.y * snoise(vec4(vx, -vy, -vz, wind_time)) * wind_weight * min(length(world_matrix[0]), 1.);
+		object_space_position_vec4.y += u_wind.z * snoise(vec4(-vx, vy, -vz, wind_time)) * wind_weight * min(length(world_matrix[1]), 1.);
+		object_space_position_vec4.z += u_wind.w * snoise(vec4(-vx, -vy, vz, wind_time)) * wind_weight * min(length(world_matrix[2]), 1.);
 	}
 	
 	mat4 view_matrix = gm_Matrices[MATRIX_VIEW];
