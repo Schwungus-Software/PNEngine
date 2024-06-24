@@ -160,7 +160,8 @@ if _held {
 					_extra_z += max(0, z_speed)
 				}
 				
-				_extra_z += max(0, z_speed) + 1
+				_extra_z += max(1, z_speed)
+				
 				last_prop = noone
 			}
 			
