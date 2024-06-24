@@ -19,29 +19,29 @@ function __input_config_verbs()
 			left:  input_binding_key("A"),
 	        down:  input_binding_key("S"),
 	        right: input_binding_key("D"),
-			walk: input_binding_key(vk_shift),
-        
+			walk: input_binding_key(vk_lcontrol),
+			
 	        jump:     input_binding_key(vk_space),
 	        interact: input_binding_key("E"),
 			attack:   [input_binding_key(vk_period), input_binding_mouse_button(mb_left)],
-		
-			inventory_up:    input_binding_key("1"),
+			
+			inventory_up:    input_binding_key(vk_lshift),
 			inventory_left:  input_binding_key("2"),
 			inventory_down:  input_binding_key("3"),
 			inventory_right: input_binding_key("4"),
-        
+			
 	        aim:       [input_binding_key(vk_comma), input_binding_mouse_button(mb_right)],
 			aim_up:    input_binding_key(vk_up),
 			aim_left:  input_binding_key(vk_left),
 	        aim_down:  input_binding_key(vk_down),
 	        aim_right: input_binding_key(vk_right),
-        
+			
 			ui_up: [input_binding_key(vk_up), input_binding_key("W")],
 			ui_left: [input_binding_key(vk_left), input_binding_key("A")],
 			ui_down: [input_binding_key(vk_down), input_binding_key("S")],
 			ui_right: [input_binding_key(vk_right), input_binding_key("D")],
 			ui_enter: [input_binding_key(vk_enter), input_binding_key(vk_space)],
-		
+			
 	        pause: input_binding_key(vk_escape),
 			leave: input_binding_key(vk_backspace),
 		
@@ -51,38 +51,38 @@ function __input_config_verbs()
 			debug_console_submit: input_binding_key(vk_enter),
 			debug_console_previous: input_binding_key(vk_up),
 	    },
-    
+		
 	    gamepad: {
 	        up:    input_binding_gamepad_axis(gp_axislv, true),
 			left:  input_binding_gamepad_axis(gp_axislh, true),
 	        down:  input_binding_gamepad_axis(gp_axislv, false),
 	        right: input_binding_gamepad_axis(gp_axislh, false),
-        
+			
 	        jump:     input_binding_gamepad_button(gp_face1),
 	        interact: input_binding_gamepad_button(gp_face2),
 			attack:   input_binding_gamepad_button(gp_shoulderrb),
-		
+			
 			inventory_up:    input_binding_gamepad_button(gp_shoulderlb),
 	        inventory_left:  input_binding_gamepad_button(gp_padl),
 			inventory_down:  input_binding_gamepad_button(gp_padd),
 			inventory_right: input_binding_gamepad_button(gp_padr),
-        
+			
 			aim:       input_binding_gamepad_button(gp_shoulderl),
 	        aim_up:    input_binding_gamepad_axis(gp_axisrv, true),
 			aim_left:  input_binding_gamepad_axis(gp_axisrh, true),
 	        aim_down:  input_binding_gamepad_axis(gp_axisrv, false),
 	        aim_right: input_binding_gamepad_axis(gp_axisrh, false),
-        
+			
 			ui_up:    [input_binding_gamepad_button(gp_padu), input_binding_gamepad_axis(gp_axislv, true)],
 	        ui_left:  [input_binding_gamepad_button(gp_padl), input_binding_gamepad_axis(gp_axislh, true)],
 			ui_down:  [input_binding_gamepad_button(gp_padd), input_binding_gamepad_axis(gp_axislv, false)],
 			ui_right: [input_binding_gamepad_button(gp_padr), input_binding_gamepad_axis(gp_axislh, false)],
 			ui_enter: input_binding_gamepad_button(gp_face1),
-		
+			
 	        pause: input_binding_gamepad_button(gp_start),
 			leave: input_binding_gamepad_button(gp_select),
 	    },
-    
+		
 	    touch: {},
 	};
 }
