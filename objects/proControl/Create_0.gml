@@ -415,6 +415,7 @@
 			#region Things
 				addConstant(
 					"NO_THING", noone,
+					"EVERY_THING", all,
 					
 					"TAG_PLAYERS", ThingTags.PLAYERS,
 					"TAG_FRIENDS", ThingTags.FRIENDS,
