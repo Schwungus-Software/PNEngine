@@ -212,14 +212,16 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			var _transitioning = false
 			
-			transition = 0
 			transition_duration = _time
 			
 			if _time > 0 and animation != undefined {
 				var _duration = animation.duration
 				
+				transition = 1
 				transition_frame = animation.parent_frames[animation_loop ? (frame % _duration) : min(frame, _duration - 1)]
 				_transitioning = true
+			} else {
+				transition = 0
 			}
 			
 			animation_name = _animation.name
@@ -230,8 +232,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			if _frame >= 0 {
 				frame = _frame
-				frame_speed = 1
 			}
+			
+			frame_speed = 1
 			
 			if not animated {
 				var n = model.nodes_amount
