@@ -517,6 +517,7 @@ switch load_state {
 	case LoadStates.FINISH:
 #region Finish Loading
 		game_update_status()
+		global.tick_scale = 1
 			
 		var _level = global.level
 		var _players = global.players
@@ -529,6 +530,7 @@ switch load_state {
 				
 			with _player {
 				level = _level
+				set_state("frozen", false)
 					
 				// Bring new players in-game
 				if status == PlayerStatus.PENDING {

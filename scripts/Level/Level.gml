@@ -72,6 +72,8 @@ function Level() constructor {
 				
 			_transition = _index
 		}
+		
+		set_tick_scale(1)
 			
 		if object_exists(_transition) and (_transition == proTransition or object_is_ancestor(_transition, proTransition)) {
 			with instance_create_depth(0, 0, 0, _transition) {
@@ -131,5 +133,9 @@ function Level() constructor {
 		}
 		
 		return _count
+	}
+	
+	static set_tick_scale = function (_scale) {
+		global.tick_scale = _scale
 	}
 }
