@@ -562,7 +562,7 @@ event_inherited()
 				_bloom.blur()
 				gpu_set_blendenable(true)
 				gpu_set_blendmode(bm_add)
-				draw_surface_stretched(_surface, 0, 0, _width, _height)
+				draw_surface_stretched_ext(_surface, 0, 0, _width, _height, c_white, alpha >= 1 ? 1 : clamp(global.delta * alpha, 0, 1))
 				gpu_set_tex_filter(false)
 				gpu_set_blendmode(bm_normal)
 			}
