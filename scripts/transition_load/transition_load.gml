@@ -1,7 +1,13 @@
-/// @func transition_load(index)
+/// @func transition_load(type)
+/// @desc Loads a type of Transition for use in the current level.
+/// @param {Asset.GMObject or string} type The type of Transition to load.
 function transition_load(_type) {
 	if is_string(_type) {
-		var _script = global.scripts.fetch(_type)
+		var _scripts = global.scripts
+		
+		_scripts.load(_type)
+		
+		var _script = _scripts.get(_type)
 		
 		if _script != undefined and is_instanceof(_script, TransitionScript) {
 			return true

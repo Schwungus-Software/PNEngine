@@ -58,64 +58,64 @@ function ScriptMap() : AssetMap() constructor {
 						throw $"Cannot have more than one type header, found '{_line}'"
 					}
 					
-						var _index = asset_get_index(_name)
+					var _index = asset_get_index(_name)
 						
-						if object_exists(_index) and object_is_ancestor(_index, Thing) {
-							throw "Cannot override internal Thing of the same name"
+					if object_exists(_index) and object_is_ancestor(_index, Thing) {
+						throw "Cannot override internal Thing of the same name"
+					}
+						
+					_script = new ThingScript()
+						
+					var _parents = string_split(_line, " ", true)
+					var _parents_n = array_length(_parents)
+						
+					if _parents_n >= 2 {
+						if _parents_n > 2 {
+							throw "Cannot inherit more than one Thing"
 						}
-						
-						_script = new ThingScript()
-						
-						var _parents = string_split(_line, " ", true)
-						var _parents_n = array_length(_parents)
-						
-						if _parents_n >= 2 {
-							if _parents_n > 2 {
-								throw "Cannot inherit more than one Thing"
-							}
 							
-							var _parent = _parents[1]
+						var _parent = _parents[1]
 							
-							load(_parent, _special)
+						load(_parent, _special)
 							
-							with _script {
-								parent = other.get(_parent)
+						with _script {
+							parent = other.get(_parent)
 								
-								if parent == undefined {
-									_index = asset_get_index(_parent)
+							if parent == undefined {
+								_index = asset_get_index(_parent)
 									
-									if not object_exists(_index) {
-										throw $"Unknown parent Thing '{_parent}'"
-									}
-									
-									if not object_is_ancestor(_index, Thing) {
-										throw $"Cannot inherit non-Thing '{_parent}'"
-									}
-									
-									if string_starts_with(_parent, "pro") {
-										throw $"Cannot inherit protected Thing '{_parent}'"
-									}
-									
-									internal_parent = _index
+								if not object_exists(_index) {
+									throw $"Unknown parent Thing '{_parent}'"
 								}
-								
-								if parent != undefined {
-									internal_parent = parent.internal_parent
-									main = parent.main
 									
-									load = parent.load
-									create = parent.create
-									on_destroy = parent.on_destroy
-									clean_up = parent.clean_up
-									tick = parent.tick
-									draw = parent.draw
-									draw_screen = parent.draw_screen
-									draw_gui = parent.draw_gui
+								if not object_is_ancestor(_index, Thing) {
+									throw $"Cannot inherit non-Thing '{_parent}'"
 								}
-								
-								thing_load(internal_parent, _special)
+									
+								if string_starts_with(_parent, "pro") {
+									throw $"Cannot inherit protected Thing '{_parent}'"
+								}
+									
+								internal_parent = _index
 							}
+								
+							if parent != undefined {
+								internal_parent = parent.internal_parent
+								main = parent.main
+									
+								load = parent.load
+								create = parent.create
+								on_destroy = parent.on_destroy
+								clean_up = parent.clean_up
+								tick = parent.tick
+								draw = parent.draw
+								draw_screen = parent.draw_screen
+								draw_gui = parent.draw_gui
+							}
+								
+							thing_load(internal_parent, _special)
 						}
+					}
 					
 					_type_header_exists = true
 					_omit_line = true
@@ -169,34 +169,62 @@ function ScriptMap() : AssetMap() constructor {
 						throw $"Cannot have more than one type header, found '{_line}'"
 					}
 					
-						_script = new TransitionScript()
+					var _index = asset_get_index(_name)
 						
-						var _parents = string_split(_line, " ", true)
-						var _parents_n = array_length(_parents)
-						
-						if _parents_n >= 2 {
-							if _parents_n > 2 {
-								throw "Cannot inherit more than one TransitionScript"
-							}
-							
-							var _parent = _parents[1]
-							
-							load(_parent)
-							
-							with _script {
-								parent = other.get(_parent)
-								
-								if parent != undefined {
-									main = _parent.main
-									load = _parent.load
-									reload = _parent.reload
-									create = _parent.create
-									clean_up = _parent.clean_up
-									tick = _parent.tick
-									draw_gui = _parent.draw_gui
-								}
-							}
+					if object_exists(_index) and object_is_ancestor(_index, proTransition) {
+						throw "Cannot override internal Transition of the same name"
+					}
+					
+					_script = new TransitionScript()
+					
+					var _parents = string_split(_line, " ", true)
+					var _parents_n = array_length(_parents)
+					
+					if _parents_n >= 2 {
+						if _parents_n > 2 {
+							throw "Cannot inherit more than one TransitionScript"
 						}
+						
+						var _parent = _parents[1]
+						
+						load(_parent)
+						
+						with _script {
+							parent = other.get(_parent)
+							
+							if parent == undefined {
+								_index = asset_get_index(_parent)
+								
+								if not object_exists(_index) {
+									throw $"Unknown parent Transition '{_parent}'"
+								}
+								
+								if not object_is_ancestor(_index, Thing) {
+									throw $"Cannot inherit non-Transition '{_parent}'"
+								}
+								
+								if string_starts_with(_parent, "pro") {
+									throw $"Cannot inherit protected Transition '{_parent}'"
+								}
+								
+								internal_parent = _index
+							}
+							
+							if parent != undefined {
+								internal_parent = parent.internal_parent
+								main = parent.main
+								
+								load = parent.load
+								reload = parent.reload
+								create = parent.create
+								clean_up = parent.clean_up
+								tick = parent.tick
+								draw_gui = parent.draw_gui
+							}
+							
+							transition_load(internal_parent)
+						}
+					}
 					
 					_type_header_exists = true
 					_omit_line = true

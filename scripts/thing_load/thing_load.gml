@@ -1,4 +1,4 @@
-/// @func thing_load(index)
+/// @func thing_load(type)
 /// @desc Loads a type of Thing for use in the current level.
 /// @param {Asset.GMObject or string} type The type of Thing to load.
 function thing_load(_type, _special = undefined) {
