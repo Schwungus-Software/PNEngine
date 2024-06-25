@@ -30,6 +30,7 @@ varying vec3 v_shadowmap;
 uniform vec4 u_uvs;
 
 uniform vec4 u_color;
+uniform vec4 u_stencil;
 
 uniform vec4 u_fog_color;
 
@@ -156,4 +157,5 @@ void main() {
 	}
 	
 	gl_FragColor.a = 1.;
+	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_stencil.rgb, u_stencil.a);
 }
