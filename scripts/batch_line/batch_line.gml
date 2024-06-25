@@ -85,17 +85,17 @@ function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _colo
 	
 	var _batch_vbo = global.batch_vbo
 	
-	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x2, __y2, __z2, 0, 0, 1, _u2, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x4, __y4, __z4, 0, 0, 1, _u1, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, -1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x2, __y2, __z2, 0, 0, -1, _u2, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, -1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, -1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, -1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x4, __y4, __z4, 0, 0, -1, _u1, _v1, _color, _alpha)
 	
-	vbo_add_vertex(_batch_vbo, __x4, __y4, __z4, 0, 0, 1, _u1, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, 1, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x2, __y2, __z2, 0, 0, 1, _u2, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, 1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x4, __y4, __z4, 0, 0, -1, _u1, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, -1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, -1, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x3, __y3, __z3, 0, 0, -1, _u2, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x2, __y2, __z2, 0, 0, -1, _u2, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, __x1, __y1, __z1, 0, 0, -1, _u1, _v2, _color, _alpha)
 }
