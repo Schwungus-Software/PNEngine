@@ -103,8 +103,8 @@ event_inherited()
 			return _camera_active
 		}
 		
-		if instance_exists(parent) {
-			return parent.resolve()
+		if instance_exists(child) {
+			return child.resolve()
 		}
 		
 		return id
@@ -327,7 +327,9 @@ event_inherited()
 	render = function (_width, _height, _update_listener = false, _allow_sky = true, _allow_screen = true, _world_shader = (global.config.vid_lighting or global.config.vid_antialias) ? global.world_pixel_shader : global.world_shader) {
 		++global.camera_layer
 		
-		if global.camera_layer == 1 {
+		var _camera_layer = global.camera_layer
+		
+		if _camera_layer == 1 {
 			gpu_set_cullmode(cull_counterclockwise)
 		}
 		
@@ -347,10 +349,10 @@ event_inherited()
 			sx = lerp(lerp_x, sx, _factor)
 			sy = lerp(lerp_y, sy, _factor)
 			sz = lerp(lerp_z, sz, _factor)
-			syaw = lerp(lerp_yaw, syaw, _factor)
+			syaw = lerp_angle(lerp_yaw, syaw, _factor)
 			spitch = lerp_angle(lerp_pitch, spitch, _factor)
 			sroll = lerp_angle(lerp_roll, sroll, _factor)
-			sfov = lerp_angle(lerp_fov, sfov, _factor)
+			sfov = lerp(lerp_fov, sfov, _factor)
 			lerp_time += global.delta
 		}
 		
@@ -531,14 +533,10 @@ event_inherited()
 			gpu_set_blendmode(bm_normal)
 		}
 			
-		output.Finish();
-		--global.camera_layer
-			
-		if global.camera_layer == 0 {
-			gpu_set_cullmode(cull_noculling)
-		}
+		output.Finish()
 			
 		if _allow_screen {
+			gpu_set_cullmode(cull_noculling)
 			output.Start()
 				
 			// Bloom
@@ -595,6 +593,16 @@ event_inherited()
 			
 			gpu_set_depth(0)
 			output.Finish()
+			
+			if _camera_layer >= 1 {
+				gpu_set_cullmode(cull_counterclockwise)
+			}
+		}
+		
+		--global.camera_layer
+			
+		if global.camera_layer <= 0 {
+			gpu_set_cullmode(cull_noculling)
 		}
 		
 		return output
