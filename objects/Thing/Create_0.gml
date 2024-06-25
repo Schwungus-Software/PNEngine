@@ -647,15 +647,17 @@
 			return false
 		}
 		
+		var _me = id
+		
 		with _thing {
-			if not holdable_held(_thing, holder, _forced) and not _forced {
+			if not holdable_held(_thing, _me, _forced) and not _forced {
 				return false
 			}
 			
-			holder = other.id
+			holder = _me
 		}
 		
-		if holder_held(id, _thing, _forced) {
+		if holder_held(_me, _thing, _forced) {
 			holding = _thing
 			
 			return true
