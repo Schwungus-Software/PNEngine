@@ -107,7 +107,9 @@ function ScriptMap() : AssetMap() constructor {
 								create = parent.create
 								on_destroy = parent.on_destroy
 								clean_up = parent.clean_up
+								tick_start = parent.tick_start
 								tick = parent.tick
+								tick_end = parent.tick_end
 								draw = parent.draw
 								draw_screen = parent.draw_screen
 								draw_gui = parent.draw_gui
@@ -409,7 +411,9 @@ function ScriptMap() : AssetMap() constructor {
 				create = _globals[$ "create"]
 				on_destroy = _globals[$ "on_destroy"]
 				clean_up = _globals[$ "clean_up"]
+				tick_start = _globals[$ "tick_start"]
 				tick = _globals[$ "tick"]
+				tick_end = _globals[$ "tick_end"]
 				draw = _globals[$ "draw"]
 				draw_screen = _globals[$ "draw_screen"]
 				draw_gui = _globals[$ "draw_gui"]

@@ -118,7 +118,9 @@ function Area() constructor {
 					create = _thing_script.create
 					on_destroy = _thing_script.on_destroy
 					clean_up = _thing_script.clean_up
+					tick_start = _thing_script.tick_start
 					tick = _thing_script.tick
+					tick_end = _thing_script.tick_end
 					draw = _thing_script.draw
 					draw_screen = _thing_script.draw_screen
 					draw_gui = _thing_script.draw_gui
@@ -221,7 +223,9 @@ function Area() constructor {
 				create = _thing_script.create
 				on_destroy = _thing_script.on_destroy
 				clean_up = _thing_script.clean_up
+				tick_start = _thing_script.tick_start
 				tick = _thing_script.tick
+				tick_end = _thing_script.tick_end
 				draw = _thing_script.draw
 				draw_screen = _thing_script.draw_screen
 				draw_gui = _thing_script.draw_gui

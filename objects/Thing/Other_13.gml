@@ -4,6 +4,10 @@ y_previous = y
 z_previous = z
 angle_previous = angle
 
+if tick_start != undefined {
+	tick_start(id)
+}
+
 // Source: https://github.com/YoYoGames/GameMaker-HTML5/blob/37ebef72db6b238b892bb0ccc60184d4c4ba5d12/scripts/yyInstance.js#L1157
 if fric != 0 {
 	var _ns = vector_speed > 0 ? vector_speed - fric : vector_speed + fric
@@ -373,4 +377,8 @@ if _held {
 			}
 		break
 	}
+}
+
+if tick_end != undefined {
+	tick_end(id)
 }

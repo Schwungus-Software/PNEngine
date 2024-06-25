@@ -27,7 +27,9 @@
 	create = undefined
 	on_destroy = undefined
 	clean_up = undefined
+	tick_start = undefined
 	tick = undefined
+	tick_end = undefined
 	draw = undefined
 	draw_screen = undefined
 	draw_gui = undefined
