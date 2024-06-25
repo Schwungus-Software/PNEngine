@@ -76,6 +76,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		splice_frame = 0
 		splice_speed = 1
 		
+		sync_parent = undefined
+		sync_child = undefined
+		
 		static output_to_sample = function (_sample) {
 			static _transframe = []
 			
@@ -380,7 +383,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			return _vec3
 		}
 		
-		static tick = function (_update_matrix = true) {
+		static force_tick = function (_update_matrix) {
+			gml_pragma("forceinline")
+			
 			var _update_sample = false
 			
 			if animation != undefined {
@@ -427,6 +432,30 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			if _update_matrix {
 				tick_matrix = matrix_build(x, y, z, roll, pitch, yaw, scale * x_scale, scale * y_scale, scale * z_scale)
+			}
+			
+			if sync_child != undefined {
+				sync_child.force_tick(_update_matrix)
+			}
+		}
+		
+		static tick = function (_update_matrix = true) {
+			if sync_parent != undefined {
+				return
+			}
+			
+			force_tick(_update_matrix)
+		}
+		
+		static sync_with = function (_model) {
+			if sync_child != undefined {
+				sync_child.sync_parent = undefined
+			}
+			
+			sync_child = _model
+			
+			if _model != undefined {
+				_model.sync_parent = self
 			}
 		}
 	#endregion

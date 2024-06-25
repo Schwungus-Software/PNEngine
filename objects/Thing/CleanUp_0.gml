@@ -36,6 +36,8 @@ if area != undefined {
 }
 
 if model != undefined {
+	model.sync_with(undefined)
+	
 	delete model
 }
 
