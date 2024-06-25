@@ -442,7 +442,17 @@
 					"DMG_MISSED", DamageResults.MISSED,
 					"DMG_BLOCKED", DamageResults.BLOCKED,
 					"DMG_DAMAGED", DamageResults.DAMAGED,
-					"DMG_FATAL", DamageResults.FATAL
+					"DMG_FATAL", DamageResults.FATAL,
+					
+					"CTARG_RANGE", CameraTargetData.RANGE,
+					"CTARG_X_OFFSET", CameraTargetData.X_OFFSET,
+					"CTARG_Y_OFFSET", CameraTargetData.Y_OFFSET,
+					"CTARG_Z_OFFSET", CameraTargetData.Z_OFFSET,
+					
+					"CPOI_LERP", CameraPOIData.LERP,
+					"CPOI_X_OFFSET", CameraTargetData.X_OFFSET,
+					"CPOI_Y_OFFSET", CameraTargetData.Y_OFFSET,
+					"CPOI_Z_OFFSET", CameraTargetData.Z_OFFSET
 				)
 				
 				addFunction("thing_exists", instance_exists)
