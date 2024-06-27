@@ -260,6 +260,16 @@ function ColliderInstance(_collider) constructor {
 					_x2 = _end[0]
 					_y2 = _end[1]
 					_z2 = _end[2]
+					_end = matrix_transform_vertex(matrix, _nx, _ny, _nz, 0)
+					_nx = _end[0]
+					_ny = _end[1]
+					_nz = _end[2]
+					
+					var d = 1 / point_distance_3d(0, 0, 0, _nx, _ny, _nz)
+					
+					_nx *= d
+					_ny *= d
+					_nz *= d
 				}
 			}
 			
