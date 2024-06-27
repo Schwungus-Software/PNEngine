@@ -118,6 +118,13 @@ if _held {
 		case MCollision.NORMAL: {
 			var _half_height = height * 0.5
 			var _center_z = z - _half_height
+			
+			// Check the ground first so we don't clip through moving colliders
+			var _raycast = raycast(x, y, _center_z, x, y, z, CollisionFlags.BODY)
+			
+			if _raycast[RaycastData.HIT] {
+				z = _raycast[RaycastData.Z]
+			}
 		
 			// X-axis
 			var _add_x = x + x_speed
@@ -133,7 +140,8 @@ if _held {
 		
 			// Y-axis
 			var _add_y = y + y_speed
-			var _raycast = raycast(x, _add_y - radius, _center_z, x, _add_y + radius, _center_z, CollisionFlags.BODY, CollisionLayers.ALL)
+			
+			_raycast = raycast(x, _add_y - radius, _center_z, x, _add_y + radius, _center_z, CollisionFlags.BODY, CollisionLayers.ALL)
 		
 			if _raycast[RaycastData.HIT] {
 				array_copy(wall_ray, 0, _raycast, 0, RaycastData.__SIZE)
@@ -148,7 +156,7 @@ if _held {
 		
 			// Ceiling
 			if raycast(x, y, z - _half_height, x, y, z + z_speed - height, CollisionFlags.BODY, CollisionLayers.ALL, ceiling_ray)[RaycastData.HIT] {
-				z = ceiling_ray[RaycastData.Z] - height
+				z = ceiling_ray[RaycastData.Z] + height
 				z_speed = 0
 			}
 		
