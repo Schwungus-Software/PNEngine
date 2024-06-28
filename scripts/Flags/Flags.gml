@@ -12,6 +12,14 @@ function Flags(_id) constructor {
 		return true
 	}
 	
+	static increment = function (_key) {
+		if not is_real(flags[? _key]) {
+			flags[? _key] = 0
+		}
+		
+		return ++flags[? _key]
+	}
+	
 	static copy = function (_struct) {
 		var _names = struct_get_names(_struct)
 		var i = 0
