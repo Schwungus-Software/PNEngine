@@ -514,18 +514,18 @@
 			_pr = bump_radius
 		}
 		
-		var _len = ((bump_radius + _pr) - point_distance(_px, _py, x, y)) + 0.001
+		var _len = ((bump_radius + _pr) - point_distance(_px, _py, x, y)) + math_get_epsilon()
 		var _dir = point_direction(_px, _py, x, y)
 		
 		var _lx = lengthdir_x(_len, _dir)
 		var _ly = lengthdir_y(_len, _dir)
 		
 		if m_collision != MCollision.NONE {
-			var _z = z - height * 0.5
+			var _z = z - (height * 0.5)
 			var _raycast = raycast(x, y, _z, x + _lx + lengthdir_x(radius, _dir), y + _ly + lengthdir_y(radius, _dir), _z, CollisionFlags.BODY)
 			
 			if _raycast[RaycastData.HIT] {
-				_dir = darctan2(-_raycast[RaycastData.NY], _raycast[RaycastData.NX])
+				_dir = point_direction(0, 0, _raycast[RaycastData.NX], _raycast[RaycastData.NY])
 				_lx = (_raycast[RaycastData.X] - x) + lengthdir_x(radius, _dir)
 				_ly = (_raycast[RaycastData.Y] - y) + lengthdir_y(radius, _dir)
 			}

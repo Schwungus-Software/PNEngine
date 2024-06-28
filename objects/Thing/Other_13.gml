@@ -125,13 +125,20 @@ if _held {
 			if _raycast[RaycastData.HIT] {
 				z = _raycast[RaycastData.Z]
 			}
-		
-			// X-axis
-			var _add_x = x + x_speed
-		
-			if raycast(_add_x - radius, y, _center_z, _add_x + radius, y, _center_z, CollisionFlags.BODY, CollisionLayers.ALL, wall_ray)[RaycastData.HIT] {
-				var _hit_x = wall_ray[RaycastData.X]
 			
+			// X-axis
+			if raycast(
+				x + min(0.1, x_speed) - radius, 
+				y, 
+				_center_z, 
+				x + max(-0.1, x_speed) + radius, 
+				y, 
+				_center_z, 
+				CollisionFlags.BODY, 
+				CollisionLayers.ALL, 
+				wall_ray)[RaycastData.HIT] {
+				var _hit_x = wall_ray[RaycastData.X]
+				
 				x = _hit_x + (_hit_x < x ? radius : -radius)
 				x_speed = 0
 			}
@@ -139,9 +146,15 @@ if _held {
 			x += x_speed
 		
 			// Y-axis
-			var _add_y = y + y_speed
-			
-			_raycast = raycast(x, _add_y - radius, _center_z, x, _add_y + radius, _center_z, CollisionFlags.BODY, CollisionLayers.ALL)
+			_raycast = raycast(
+				x, 
+				y + min(0.1, y_speed) - radius, 
+				_center_z, 
+				x, 
+				y + max(-0.1, y_speed) + radius, 
+				_center_z, 
+				CollisionFlags.BODY, 
+				CollisionLayers.ALL)
 		
 			if _raycast[RaycastData.HIT] {
 				array_copy(wall_ray, 0, _raycast, 0, RaycastData.__SIZE)
