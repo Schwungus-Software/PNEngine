@@ -202,7 +202,7 @@ if _held {
 				
 					if instance_exists(_thing) {
 						if _thing.f_collider_stick {
-							var _x, _y, _z, _x_speed, _y_speed, _z_speed, _yaw, _yaw_previous
+							var _x, _y, _z, _x_speed, _y_speed, _yaw, _yaw_previous
 							
 							with _thing {
 								_x = x
@@ -210,7 +210,7 @@ if _held {
 								_z = z
 								_x_speed = x_speed
 								_y_speed = y_speed
-								_z_speed = z_speed
+								//_z_speed = z_speed
 								_yaw = angle
 								_yaw_previous = angle_previous
 							}
@@ -221,7 +221,7 @@ if _held {
 							
 							x = _x + lengthdir_x(_len, _dir) + _x_speed
 							y = _y + lengthdir_y(_len, _dir) + _y_speed
-							z += _z_speed
+							//z += _z_speed
 							
 							if model != undefined {
 								model.yaw += _diff
