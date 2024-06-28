@@ -537,11 +537,14 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		color = c_white
 		blendmode = bm_normal
 		alpha = 1
+		stencil = c_white
+		stencil_alpha = 0
 		
 		static submit = function () {
 			var _blendmode = gpu_get_blendmode()
 			
 			global.u_color.set(color_get_red(color) * COLOR_INVERSE, color_get_green(color) * COLOR_INVERSE, color_get_blue(color) * COLOR_INVERSE, alpha)
+			global.u_stencil.set(color_get_red(stencil) * COLOR_INVERSE, color_get_green(stencil) * COLOR_INVERSE, color_get_blue(stencil) * COLOR_INVERSE, stencil_alpha)
 			
 			if shader_current() == shSky and blendmode == bm_normal {
 				gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one)
