@@ -1,7 +1,7 @@
 # PNEngine
 
 PNEngine is a fully external 3D engine for GameMaker with support for modding
-and local multiplayer with up to 4 players.
+and local multiplayer.
 
 In order to build this, you will need to import the extensions
 [GMEXT-FMOD](https://github.com/YoYoGames/GMEXT-FMOD)
