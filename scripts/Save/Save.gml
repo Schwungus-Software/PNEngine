@@ -71,6 +71,19 @@ function Save(_filename) constructor {
 		
 		repeat n {
 			var i = buffer_read(_buffer, buffer_u8)
+			
+			// Skip excess player slots
+			if i >= INPUT_MAX_PLAYERS {
+				n = buffer_read(_buffer, buffer_u32)
+				
+				repeat n {
+					buffer_read(_buffer, buffer_string)
+					buffer_read_dynamic(_buffer)
+				}
+				
+				continue
+			}
+			
 			var _states = states[i]
 			
 			n = buffer_read(_buffer, buffer_u32)

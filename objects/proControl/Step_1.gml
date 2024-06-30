@@ -819,7 +819,7 @@ if _tick >= 1 {
 		}
 		
 		if input_check_pressed("pause") {
-			input_source_mode_set(INPUT_SOURCE_MODE.JOIN)
+			input_source_mode_set(global.input_mode)
 			input_verb_consume("pause")
 			global.console = false
 			global.console_input = keyboard_string

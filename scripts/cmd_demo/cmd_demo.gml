@@ -78,6 +78,13 @@ function cmd_demo(_args) {
 	repeat _max_players {
 		var _slot = buffer_read(_demo_buffer, buffer_u8)
 		
+		if _slot >= INPUT_MAX_PLAYERS {
+			buffer_delete(_demo_buffer)
+			print($"! cmd_demo: '{_filename}' has more than {INPUT_MAX_PLAYERS} players")
+			
+			exit
+		}
+		
 		with _players[_slot] {
 			var _status = buffer_read(_demo_buffer, buffer_u8)
 			
