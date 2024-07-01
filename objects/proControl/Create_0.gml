@@ -34,9 +34,8 @@
 					"MATRIX_PROJECTION", matrix_projection,
 					"MATRIX_VIEW", matrix_view,
 					"MATRIX_WORLD", matrix_world,
-					"RNG", static_get(RNG),
-					"RNG_GAME", RNGSeeds.GAME,
-					"RNG_VISUAL", RNGSeeds.VISUAL,
+					"RNG_GAME", global.rng_game,
+					"RNG_VISUAL", global.rng_visual,
 				)
 				
 				addFunction(

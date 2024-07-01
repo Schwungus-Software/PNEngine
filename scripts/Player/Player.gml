@@ -144,7 +144,7 @@ function Player() constructor {
 			n = array_length(_spawns)
 			
 			if n {
-				_spawn = _spawns[RNG.irandom(n - 1)]
+				_spawn = _spawns[global.rng_game.int(n - 1)]
 			}
 		}
 		

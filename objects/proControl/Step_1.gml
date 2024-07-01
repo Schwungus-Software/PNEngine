@@ -56,8 +56,6 @@ switch load_state {
 		global.music.clear()
 		global.scripts.flush()
 			
-		RNG.indices[RNGSeeds.GAME] = 0
-			
 		if load_level == undefined {
 			game_end()
 				
@@ -83,7 +81,7 @@ switch load_state {
 		var _level = global.level
 			
 		_level.name = load_level
-			
+		
 		var _json = json_load(mod_find_file("levels/" + load_level + ".*"))
 			
 		if not is_struct(_json) {
@@ -107,7 +105,12 @@ switch load_state {
 					}
 				}
 			}
-				
+			
+			with global.rng_game {
+				left = 4
+				right = 29
+			}
+			
 #region Discord Rich Presence
 			with _level {
 				rp_name = force_type_fallback(_json[$ "rp_name"], "string", "")
