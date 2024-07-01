@@ -327,14 +327,20 @@ event_inherited()
 	render = function (_width, _height, _update_listener = false, _allow_sky = true, _allow_screen = true, _world_shader = (global.config.vid_lighting or global.config.vid_antialias) ? global.world_pixel_shader : global.world_shader) {
 		++global.camera_layer
 		
-		var _camera_layer = global.camera_layer
-		
-		if _camera_layer == 1 {
+		if global.camera_layer == 1 {
 			gpu_set_cullmode(cull_counterclockwise)
 		}
 		
 		if instance_exists(child) {
-			return child.render(_width, _height, _update_listener, _allow_sky, _allow_screen, _world_shader)
+			var _render = child.render(_width, _height, _update_listener, _allow_sky, _allow_screen, _world_shader)
+			
+			--global.camera_layer
+			
+			if global.camera_layer <= 0 {
+				gpu_set_cullmode(cull_noculling)
+			}
+			
+			return _render
 		}
 		
 		output.Resize(_width, _height)
@@ -538,7 +544,7 @@ event_inherited()
 		if _allow_screen {
 			gpu_set_cullmode(cull_noculling)
 			output.Start()
-				
+			
 			// Bloom
 			if _config.vid_bloom {
 				gpu_set_blendenable(false)
@@ -593,10 +599,7 @@ event_inherited()
 			
 			gpu_set_depth(0)
 			output.Finish()
-			
-			if _camera_layer >= 1 {
-				gpu_set_cullmode(cull_counterclockwise)
-			}
+			gpu_set_cullmode(cull_counterclockwise)
 		}
 		
 		--global.camera_layer
