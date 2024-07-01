@@ -711,10 +711,10 @@ if _mouse_focused {
 }
 
 var _tick = global.tick
-var _tick_inc = (delta_time * TICKRATE_DELTA) * global.tick_scale
+var _tick_inc = delta_time * TICKRATE_DELTA
 
 global.delta = _tick_inc
-_tick += _tick_inc
+_tick += _tick_inc * global.tick_scale
 
 // Cache a lot of things into local variables
 var _interps = global.interps
