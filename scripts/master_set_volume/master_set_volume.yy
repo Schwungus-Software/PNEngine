@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"master_set_volume",
   "isCompatibility":false,
   "isDnD":false,

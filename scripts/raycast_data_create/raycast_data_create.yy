@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"raycast_data_create",
   "isCompatibility":false,
   "isDnD":false,

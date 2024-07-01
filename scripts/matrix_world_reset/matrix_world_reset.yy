@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"matrix_world_reset",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"dq_conjugate",
   "isCompatibility":false,
   "isDnD":false,

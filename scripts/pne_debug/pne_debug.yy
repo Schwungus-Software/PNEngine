@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"pne_debug",
   "isCompatibility":false,
   "isDnD":false,

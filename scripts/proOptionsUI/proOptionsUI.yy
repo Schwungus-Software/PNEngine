@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"proOptionsUI",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"batch_line",
   "isCompatibility":false,
   "isDnD":false,

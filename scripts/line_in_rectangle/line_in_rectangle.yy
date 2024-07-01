@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"line_in_rectangle",
   "isCompatibility":false,
   "isDnD":false,

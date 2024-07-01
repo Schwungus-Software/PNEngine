@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"cmd_efog",
   "isCompatibility":false,
   "isDnD":false,

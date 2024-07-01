@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"UISoundPool",
   "isCompatibility":false,
   "isDnD":false,

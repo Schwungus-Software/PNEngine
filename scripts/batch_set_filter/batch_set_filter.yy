@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"batch_set_filter",
   "isCompatibility":false,
   "isDnD":false,

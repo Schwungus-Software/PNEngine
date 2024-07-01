@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"buffer_prettyprint",
   "isCompatibility":false,
   "isDnD":false,

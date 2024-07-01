@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_Vec3",
   "parent":{
-    "name":"Math",
-    "path":"folders/Scripts/PNEngine/Math.yy",
+    "name":"Vectors",
+    "path":"folders/Scripts/PNEngine/Math/Vectors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

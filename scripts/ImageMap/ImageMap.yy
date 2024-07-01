@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"ImageMap",
   "isCompatibility":false,
   "isDnD":false,

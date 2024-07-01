@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"mod_find_file",
   "isCompatibility":false,
   "isDnD":false,

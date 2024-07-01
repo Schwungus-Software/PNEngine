@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"pne_audio",
   "isCompatibility":false,
   "isDnD":false,

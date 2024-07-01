@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"ModelInstance",
   "isCompatibility":false,
   "isDnD":false,

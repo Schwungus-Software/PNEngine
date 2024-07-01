@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"Submodel",
   "isCompatibility":false,
   "isDnD":false,

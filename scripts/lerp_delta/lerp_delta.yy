@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"lerp_delta",
   "isCompatibility":false,
   "isDnD":false,

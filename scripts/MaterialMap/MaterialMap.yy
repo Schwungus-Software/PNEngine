@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"MaterialMap",
   "isCompatibility":false,
   "isDnD":false,

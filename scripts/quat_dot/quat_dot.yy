@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"quat_dot",
   "isCompatibility":false,
   "isDnD":false,

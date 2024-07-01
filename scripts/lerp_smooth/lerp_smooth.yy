@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"lerp_smooth",
   "isCompatibility":false,
   "isDnD":false,

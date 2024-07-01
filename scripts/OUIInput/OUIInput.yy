@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"OUIInput",
   "isCompatibility":false,
   "isDnD":false,

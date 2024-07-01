@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"OUIMenu",
   "isCompatibility":false,
   "isDnD":false,

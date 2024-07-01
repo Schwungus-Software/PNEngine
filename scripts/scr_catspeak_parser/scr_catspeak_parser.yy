@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"scr_catspeak_parser",
   "isCompatibility":false,
   "isDnD":false,

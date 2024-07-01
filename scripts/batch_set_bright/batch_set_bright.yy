@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"batch_set_bright",
   "isCompatibility":false,
   "isDnD":false,

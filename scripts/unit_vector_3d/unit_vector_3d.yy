@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"unit_vector_3d",
   "parent":{
-    "name":"Math",
-    "path":"folders/Scripts/PNEngine/Math.yy",
+    "name":"Vectors",
+    "path":"folders/Scripts/PNEngine/Math/Vectors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

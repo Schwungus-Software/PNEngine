@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"pne_ui",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"OUIButton",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"batch_trail",
   "isCompatibility":false,
   "isDnD":false,

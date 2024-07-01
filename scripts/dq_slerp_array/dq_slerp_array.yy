@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"dq_slerp_array",
   "isCompatibility":false,
   "isDnD":false,

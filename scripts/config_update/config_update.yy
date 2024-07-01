@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"config_update",
   "isCompatibility":false,
   "isDnD":false,

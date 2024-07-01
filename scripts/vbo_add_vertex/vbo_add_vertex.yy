@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"vbo_add_vertex",
   "isCompatibility":false,
   "isDnD":false,

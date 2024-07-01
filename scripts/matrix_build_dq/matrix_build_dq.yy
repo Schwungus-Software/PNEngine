@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"matrix_build_dq",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"OUIBinding",
   "isCompatibility":false,
   "isDnD":false,

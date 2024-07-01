@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"interp_skip",
   "isCompatibility":false,
   "isDnD":false,

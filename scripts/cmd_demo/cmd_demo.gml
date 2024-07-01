@@ -80,7 +80,7 @@ function cmd_demo(_args) {
 		
 		if _slot >= INPUT_MAX_PLAYERS {
 			buffer_delete(_demo_buffer)
-			print($"! cmd_demo: '{_filename}' has more than {INPUT_MAX_PLAYERS} players")
+			print($"! cmd_demo: '{_filename}' has invalid player index {_slot}")
 			
 			exit
 		}

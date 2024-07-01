@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"quat_build_euler",
   "isCompatibility":false,
   "isDnD":false,

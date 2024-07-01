@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"FontMap",
   "isCompatibility":false,
   "isDnD":false,

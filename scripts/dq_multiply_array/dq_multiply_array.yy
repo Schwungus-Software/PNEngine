@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"dq_multiply_array",
   "isCompatibility":false,
   "isDnD":false,

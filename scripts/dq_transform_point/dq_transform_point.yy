@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"dq_transform_point",
   "isCompatibility":false,
   "isDnD":false,

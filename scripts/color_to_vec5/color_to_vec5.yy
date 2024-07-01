@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"color_to_vec5",
   "isCompatibility":false,
   "isDnD":false,

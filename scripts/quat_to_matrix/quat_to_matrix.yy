@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"quat_to_matrix",
   "isCompatibility":false,
   "isDnD":false,

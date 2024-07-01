@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"show_caption",
   "isCompatibility":false,
   "isDnD":false,

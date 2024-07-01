@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"buffer_read_dynamic",
   "isCompatibility":false,
   "isDnD":false,

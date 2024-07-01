@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"scr_catspeak_alloc",
   "isCompatibility":false,
   "isDnD":false,
