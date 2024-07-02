@@ -53,7 +53,7 @@
 		STATIC,
 	}
 	
-	global.checkpoint = ["", 0, ThingTags.NONE]
+	global.checkpoint = ["lvlTitle", 0, ThingTags.NONE]
 	global.level = new Level()
 	global.flags = [new Flags(0), new Flags(1), new Flags(2)]
 	global.default_flags = ds_map_create()
