@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"cross_product_3d",
   "isCompatibility":false,
   "isDnD":false,

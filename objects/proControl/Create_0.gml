@@ -733,7 +733,6 @@
 	}
 #endregion
 
-// CREATE
 global.ui_font = scribble_fallback_font
 ui_font_name = ""
 global.switch_sound = undefined
@@ -829,6 +828,21 @@ var _custom_back_sound = undefined
 				global.game_rpc_id = _rpc_id
 			}
 			
+			var _states = force_type_fallback(_info[$ "states"], "struct")
+			
+			if is_struct(_states) {
+				var _default_states = global.default_states
+				var _names = struct_get_names(_states)
+				var i = 0
+				
+				repeat struct_names_count(_states) {
+					var _key = _names[i]
+					
+					_default_states[? _key] = _states[$ _key];
+					++i
+				}
+			}
+			
 			var _flags = force_type_fallback(_info[$ "flags"], "struct")
 			
 			if is_struct(_flags) {
@@ -898,7 +912,14 @@ var _custom_back_sound = undefined
 
 config_update()
 
-// MESSAGE
+var _players = global.players
+var i = 0
+
+repeat INPUT_MAX_PLAYERS {
+	_players[i++].clear_states()
+}
+
+#region Text
 var _fonts = global.fonts
 
 if is_string(_custom_ui_font) {
@@ -931,14 +952,17 @@ if is_string(_custom_back_sound) {
 
 caption = scribble("", "__PNENGINE_CAPTION__").starting_format(ui_font_name, c_white).align(fa_center, fa_bottom)
 caption_time = -1
+#endregion
 
-// LEVEL
+#region Level
 load_level = "lvlLogo"
 load_area = 0
 load_tag = ThingTags.NONE
 load_state = LoadStates.START
+#endregion
 
-// DISCORD
+#region Discord
 if not np_initdiscord(global.game_rpc_id, true, np_steam_app_id_empty) {
 	print("! proControl: Could not initialize Discord Rich Presence")
 }
+#endregion

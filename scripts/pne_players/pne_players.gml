@@ -28,6 +28,7 @@ enum PlayerInputs {
 
 global.players_active = 0
 global.players_ready = 0
+global.default_states = ds_map_create()
 
 var _players = array_create(INPUT_MAX_PLAYERS)
 var i = 0

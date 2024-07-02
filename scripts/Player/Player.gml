@@ -336,12 +336,10 @@ function Player() constructor {
 	}
 	
 	static clear_states = function () {
-		ds_map_clear(states)
-		states[? "hp"] = 8
-		states[? "coins"] = 0
 		states[? "invincible"] = false
 		states[? "frozen"] = false
 		states[? "hud"] = true
+		ds_map_copy(states, global.default_states)
 		
 		return true
 	}
@@ -351,6 +349,4 @@ function Player() constructor {
 		
 		return true
 	}
-	
-	clear_states()
 }
