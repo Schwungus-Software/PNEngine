@@ -91,6 +91,16 @@ event_inherited()
 		return player.set_state(_key, _value)
 	}
 	
+	reset_state = function (_key) {
+		gml_pragma("forceinline")
+		
+		if player == undefined {
+			return undefined
+		}
+		
+		return player.reset_state(_key)
+	}
+	
 	respawn = function () {
 		gml_pragma("forceinline")
 		

@@ -154,7 +154,7 @@ function Player() constructor {
 			global.last_player = slot
 			
 			with _spawn {
-				var _player_pawn = area.add(_type, x, y, z, angle, tag, special)
+				_player_pawn = area.add(_type, x, y, z, angle, tag, special)
 				
 				if not instance_exists(_player_pawn) {
 					return noone
@@ -172,7 +172,7 @@ function Player() constructor {
 					player = _player
 					input = _player.input
 					input_previous = _player.input_previous
-					player_create(id)
+					player_create(_player_pawn)
 				}
 			}
 			
@@ -196,10 +196,6 @@ function Player() constructor {
 				
 				if _respawned {
 					_player_pawn.player_respawned(_player_pawn)
-				}
-				
-				if get_state("hp") <= 0 {
-					set_state("hp", 8)
 				}
 				
 				return _player_pawn
@@ -333,6 +329,14 @@ function Player() constructor {
 		states[? _key] = _value
 		
 		return true
+	}
+	
+	static reset_state = function (_key) {
+		var _default = global.default_states[? _key]
+		
+		states[? _key] = _default
+		
+		return _default
 	}
 	
 	static clear_states = function () {
