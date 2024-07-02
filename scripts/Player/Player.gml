@@ -336,10 +336,18 @@ function Player() constructor {
 	}
 	
 	static clear_states = function () {
+		ds_map_clear(states)
 		states[? "invincible"] = false
 		states[? "frozen"] = false
 		states[? "hud"] = true
-		ds_map_copy(states, global.default_states)
+		
+		var _default_states = global.default_states
+		var _key = ds_map_find_first(_default_states)
+		
+		repeat ds_map_size(_default_states) {
+			states[? _key] = _default_states[? _key]
+			_key = ds_map_find_next(_default_states, _key)
+		}
 		
 		return true
 	}
