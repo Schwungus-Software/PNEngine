@@ -534,6 +534,8 @@ switch load_state {
 			with _player {
 				level = _level
 				set_state("frozen", false)
+				set_state("hud", true)
+				set_state("invincible", false)
 					
 				// Bring new players in-game
 				if status == PlayerStatus.PENDING {
