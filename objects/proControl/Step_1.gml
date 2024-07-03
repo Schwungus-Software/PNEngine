@@ -519,6 +519,7 @@ switch load_state {
 		
 	case LoadStates.FINISH:
 #region Finish Loading
+		global.transition_canvas.Flush()
 		game_update_status()
 		global.tick_scale = 1
 			
@@ -899,6 +900,21 @@ if _tick >= 1 {
 			// Freeze the world while the screen is fading in
 			switch state {
 				case 1:
+					var _transition_canvas = global.transition_canvas
+					var _width = window_get_width()
+					var _height = window_get_height()
+					
+					with _transition_canvas {
+						Resize(_width, _height)
+						Start()
+						draw_clear(c_black)
+					}
+					
+					screen_width = _width
+					screen_height = _height
+					event_user(ThingEvents.DRAW_SCREEN)
+					_transition_canvas.Finish()
+					
 					with proControl {
 						load_level = other.to_level
 						load_area = other.to_area

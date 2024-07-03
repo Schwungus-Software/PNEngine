@@ -221,7 +221,7 @@ function ScriptMap() : AssetMap() constructor {
 								create = parent.create
 								clean_up = parent.clean_up
 								tick = parent.tick
-								draw_gui = parent.draw_gui
+								draw_screen = parent.draw_screen
 							}
 							
 							transition_load(internal_parent)
@@ -427,7 +427,7 @@ function ScriptMap() : AssetMap() constructor {
 				create = _globals[$ "create"]
 				clean_up = _globals[$ "clean_up"]
 				tick = _globals[$ "tick"]
-				draw_gui = _globals[$ "draw_gui"]
+				draw_screen = _globals[$ "draw_screen"]
 			} else if is_instanceof(self, MixinScript) {
 				create = _globals[$ "create"]
 				_is_mixin = true

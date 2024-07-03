@@ -4,7 +4,10 @@ reload = undefined
 create = undefined
 clean_up = undefined
 tick = undefined
-draw_gui = undefined
+draw_screen = undefined
+
+screen_width = 0
+screen_height = 0
 
 state = 0
 to_level = undefined

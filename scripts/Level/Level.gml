@@ -83,7 +83,7 @@ function Level() constructor {
 					create = _script.create
 					clean_up = _script.clean_up
 					tick = _script.tick
-					draw_gui = _script.draw_gui
+					draw_screen = _script.draw_screen
 				}
 					
 				to_level = _level

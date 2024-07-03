@@ -5,7 +5,7 @@ function TransitionScript() : Script() constructor {
 	create = undefined
 	clean_up = undefined
 	tick = undefined
-	draw_gui = undefined
+	draw_screen = undefined
 	
 	static flush = function () {
 		flush_function(main)
@@ -14,6 +14,6 @@ function TransitionScript() : Script() constructor {
 		flush_function(create)
 		flush_function(clean_up)
 		flush_function(tick)
-		flush_function(draw_gui)
+		flush_function(draw_screen)
 	}
 }

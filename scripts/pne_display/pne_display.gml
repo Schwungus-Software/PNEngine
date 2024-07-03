@@ -2,16 +2,7 @@
 #macro SMOOTH_INVERSE 0.3333333333333333 // 1/3
 
 #region Colors
-	#macro C_PN_RED 857048
-	#macro C_PN_YELLOW 59387
-	#macro C_PN_GREEN 49288
-	#macro C_PN_BLUE 15566148
-	#macro C_PN_LIGHT_BLUE 15318923
-
-	#macro C_SUN_YELLOW 8454143
-	#macro C_NIGHT_BLUE 8405056
-	#macro C_FOG_SUNSET 9342369
-	#macro C_FOG_NIGHT 7220268
+	#macro C_AB_GREEN 0x00F000
 #endregion
 
 #region Display
@@ -21,6 +12,7 @@
 	display_set_gui_size(480, 270)
 	
 	global.gui_priority = ds_priority_create()
+	global.transition_canvas = (new Canvas(1, 1)).SetDepthDisabled(true)
 #endregion
 
 #region Rendering

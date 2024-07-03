@@ -1,4 +1,10 @@
 if load_state != LoadStates.NONE and instance_exists(proTransition) {
+	var _transition_canvas = global.transition_canvas
+	
+	if _transition_canvas.GetStatus() == CanvasStatus.HAS_DATA {
+		_transition_canvas.DrawStretched(0, 0, 480, 270)
+	}
+	
 	exit
 }
 
@@ -214,7 +220,14 @@ if _draw_target != undefined {
 }
 
 with proTransition {
-	event_user(ThingEvents.DRAW_GUI)
+	var _width = window_get_width()
+	var _height = window_get_height()
+	
+	display_set_gui_size(_width, _height)
+	screen_width = _width
+	screen_height = _height
+	event_user(ThingEvents.DRAW_SCREEN)
+	display_set_gui_size(480, 270)
 }
 
 if caption_time > 0 {
