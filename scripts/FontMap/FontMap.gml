@@ -96,6 +96,26 @@ function FontMap() : AssetMap() constructor {
 			print("FontMap.load: Added '{0}' ({1})", _name, _font)
 		}
 	}
+	
+	static get_font = function (_name) {
+		var _font = get(_name)
+		
+		if _font != undefined {
+			return _font.font
+		}
+		
+		return -1
+	}
+	
+	static fetch_font = function (_name) {
+		var _font = fetch(_name)
+		
+		if _font != undefined {
+			return _font.font
+		}
+		
+		return -1
+	}
 }
 
 global.fonts = new FontMap()
