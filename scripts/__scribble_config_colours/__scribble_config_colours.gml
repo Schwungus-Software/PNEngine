@@ -40,11 +40,7 @@ function __scribble_config_colours()
         c_xanadu:     scribble_rgb_to_bgr(0x738678),
         c_amaranth:   scribble_rgb_to_bgr(0xe52b50),
 		
-		c_pn_red: C_PN_RED,
-		c_pn_yellow: C_PN_YELLOW,
-		c_pn_green: C_PN_GREEN,
-		c_pn_blue: C_PN_BLUE,
-		c_pn_light_blue: C_PN_LIGHT_BLUE,
+		c_ab_green: C_AB_GREEN,
     };
     
     return _colours;

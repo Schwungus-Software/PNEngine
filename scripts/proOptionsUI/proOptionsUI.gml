@@ -613,7 +613,7 @@ function proOptionsUI() : UI(undefined) constructor {
 					continue
 				}
 				
-				var _color = is_instanceof(_element, OUIText) ? c_white : (option == i ? c_yellow : c_lime)
+				var _color = is_instanceof(_element, OUIText) ? c_white : (option == i ? c_yellow : C_AB_GREEN)
 				
 				with _element {
 					var _name = lexicon_text(name)

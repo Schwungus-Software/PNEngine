@@ -153,11 +153,7 @@
 			        "TEAL", c_teal,
 			        "WHITE", c_white,
 			        "YELLOW", c_yellow,
-					"PN_RED", C_PN_RED,
-					"PN_YELLOW", C_PN_YELLOW,
-					"PN_GREEN", C_PN_GREEN,
-					"PN_BLUE", C_PN_BLUE,
-					"PN_LIGHT_BLUE", C_PN_LIGHT_BLUE
+					"AB_GREEN", C_AB_GREEN,
 			    )
 				
 				addFunction(
