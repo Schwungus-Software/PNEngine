@@ -81,7 +81,7 @@ event_inherited()
 	interp("quake_z", "squake_z")
 	
 	alpha = 1
-	output = (new Canvas(480, 270)).SetDepthDisabled(true)
+	output = (new Canvas(1, 1)).SetDepthDisabled(true)
 	
 	listener_pos = new FmodVector()
 	listener_vel = new FmodVector()
@@ -539,11 +539,8 @@ event_inherited()
 			gpu_set_blendmode(bm_normal)
 		}
 			
-		output.Finish()
-			
 		if _allow_screen {
 			gpu_set_cullmode(cull_noculling)
-			output.Start()
 			
 			// Bloom
 			if _config.vid_bloom {
@@ -598,10 +595,10 @@ event_inherited()
 			}
 			
 			gpu_set_depth(0)
-			output.Finish()
 			gpu_set_cullmode(cull_counterclockwise)
 		}
 		
+		output.Finish();
 		--global.camera_layer
 			
 		if global.camera_layer <= 0 {
