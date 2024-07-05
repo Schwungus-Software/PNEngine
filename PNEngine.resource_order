@@ -327,6 +327,7 @@
     {"name":"batch_set_properties","order":10,"path":"scripts/batch_set_properties/batch_set_properties.yy",},
     {"name":"batch_submit","order":3,"path":"scripts/batch_submit/batch_submit.yy",},
     {"name":"batch_trail","order":8,"path":"scripts/batch_trail/batch_trail.yy",},
+    {"name":"batch_wall","order":12,"path":"scripts/batch_wall/batch_wall.yy",},
     {"name":"BBMOD_DualQuaternion","order":16,"path":"scripts/BBMOD_DualQuaternion/BBMOD_DualQuaternion.yy",},
     {"name":"BBMOD_Quaternion","order":10,"path":"scripts/BBMOD_Quaternion/BBMOD_Quaternion.yy",},
     {"name":"Bloom","order":3,"path":"scripts/Bloom/Bloom.yy",},

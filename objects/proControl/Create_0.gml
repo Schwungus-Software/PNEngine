@@ -633,6 +633,7 @@
 					"batch_billboard", batch_billboard,
 					"batch_floor", batch_floor,
 					"batch_floor_ext", batch_floor_ext,
+					"batch_wall", batch_wall,
 					"batch_line", batch_line,
 					"batch_trail", batch_trail,
 					"batch_set_alpha_test", batch_set_alpha_test,

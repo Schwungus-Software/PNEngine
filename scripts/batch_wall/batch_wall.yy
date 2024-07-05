@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"batch_wall",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"batch_wall",
+  "parent":{
+    "name":"Batch",
+    "path":"folders/Scripts/PNEngine/Display/Batch.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
