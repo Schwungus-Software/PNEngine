@@ -60,7 +60,7 @@ function __input_config_verbs()
 			
 	        jump:     input_binding_gamepad_button(gp_face1),
 	        interact: input_binding_gamepad_button(gp_face2),
-			attack:   input_binding_gamepad_button(gp_shoulderrb),
+			attack:   input_binding_gamepad_button(gp_shoulderr),
 			
 			inventory_up:    input_binding_gamepad_button(gp_shoulderlb),
 	        inventory_left:  input_binding_gamepad_button(gp_padl),
