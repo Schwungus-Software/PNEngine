@@ -53,6 +53,7 @@
 					"lerp_angle", lerp_angle,
 					"lerp_smooth", lerp_smooth,
 					"lerp_delta", lerp_delta,
+					"lerp3", lerp3,
 			        "clamp", clamp,
 			        "exp", exp,
 			        "ln", ln,

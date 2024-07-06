@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"lerp3",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"lerp3",
+  "parent":{
+    "name":"Math",
+    "path":"folders/Scripts/PNEngine/Math.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
