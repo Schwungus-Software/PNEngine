@@ -43,10 +43,10 @@ function batch_wall(_image, _frame, _width, _height, _x, _y, _z, _angle, _color 
 	var _nx = dcos(_angle)
 	var _ny = -dsin(_angle)
 	
-	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, _nx, _ny, 0, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, _nx, _ny, 0, _u2, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, _nx, _ny, 0, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, _nx, _ny, 0, _u1, _v2, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, _nx, _ny, 0, _u2, _v1, _color, _alpha)
-	vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, _nx, _ny, 0, _u1, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, _nx, _ny, 0, _u2, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, _nx, _ny, 0, _u1, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, _nx, _ny, 0, _u1, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, _nx, _ny, 0, _u2, _v2, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, _nx, _ny, 0, _u1, _v1, _color, _alpha)
+	vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, _nx, _ny, 0, _u2, _v1, _color, _alpha)
 }
