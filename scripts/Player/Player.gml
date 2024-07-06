@@ -293,23 +293,7 @@ function Player() constructor {
 						var _entrances = find_tag(_tag)
 						
 						if array_length(_entrances) {
-							var _entrance = _entrances[0]
-							
-							with _pawn {
-								x = _entrance.x
-								y = _entrance.y
-								z = _entrance.z
-								angle = _entrance.angle
-								
-								if model != undefined {
-									model.x = x
-									model.y = y
-									model.z = z
-									model.yaw = angle
-								}
-							}
-							
-							_entrance.thing_intro(_entrance, _pawn)
+							_pawn.enter_from(_entrances[0])
 						}
 					}
 				}

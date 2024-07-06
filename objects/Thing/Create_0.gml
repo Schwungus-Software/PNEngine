@@ -694,6 +694,20 @@
 		
 		return _thing.interactive_triggered(_thing, id) and interactor_triggered(id, _thing)
 	}
+	
+	enter_from = function (_thing) {
+		x = _thing.x
+		y = _thing.y
+		z = _thing.z
+		angle = _thing.angle
+		
+		if model != undefined {
+			model.move(x, y, z)
+			model.rotate(angle, 0, 0)
+		}
+		
+		_thing.thing_intro(_thing, id)
+	}
 #endregion
 
 #region Virtual Functions
