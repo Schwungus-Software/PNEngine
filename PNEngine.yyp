@@ -3828,6 +3828,7 @@
     {"id":{"name":"lerp_angle","path":"scripts/lerp_angle/lerp_angle.yy",},},
     {"id":{"name":"lerp_delta","path":"scripts/lerp_delta/lerp_delta.yy",},},
     {"id":{"name":"lerp_smooth","path":"scripts/lerp_smooth/lerp_smooth.yy",},},
+    {"id":{"name":"lerp3","path":"scripts/lerp3/lerp3.yy",},},
     {"id":{"name":"Level","path":"scripts/Level/Level.yy",},},
     {"id":{"name":"LevelScript","path":"scripts/LevelScript/LevelScript.yy",},},
     {"id":{"name":"lexicon_async","path":"scripts/lexicon_async/lexicon_async.yy",},},

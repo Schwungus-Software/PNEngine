@@ -640,6 +640,7 @@
     {"name":"lerp_angle","order":8,"path":"scripts/lerp_angle/lerp_angle.yy",},
     {"name":"lerp_delta","order":9,"path":"scripts/lerp_delta/lerp_delta.yy",},
     {"name":"lerp_smooth","order":7,"path":"scripts/lerp_smooth/lerp_smooth.yy",},
+    {"name":"lerp3","order":18,"path":"scripts/lerp3/lerp3.yy",},
     {"name":"LevelScript","order":2,"path":"scripts/LevelScript/LevelScript.yy",},
     {"name":"lexicon_dynamic_define","order":1,"path":"scripts/lexicon_dynamic_define/lexicon_dynamic_define.yy",},
     {"name":"lexicon_entry_exists","order":1,"path":"scripts/lexicon_entry_exists/lexicon_entry_exists.yy",},

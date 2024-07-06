@@ -65,12 +65,15 @@ if m_shadow != MShadow.NONE and shadow_ray[RaycastData.HIT] {
 				
 				var _color = color
 				var _alpha = alpha
+				var _stencil_alpha = stencil_alpha
 				
 				color = c_black
 				alpha = 0.5
+				stencil_alpha = 0
 				submit()
 				color = _color
 				alpha = _alpha
+				stencil_alpha = _stencil_alpha
 			}
 			
 			matrix_set(matrix_world, _mwp)
