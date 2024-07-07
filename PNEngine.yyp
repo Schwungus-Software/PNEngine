@@ -10,6 +10,8 @@
   },
   "defaultScriptType":1,
   "Folders":[
+    {"$GMFolder":"","%Name":"Canvas","folderPath":"folders/Scripts/Libraries/Canvas.yy","name":"Canvas","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"System","folderPath":"folders/Scripts/Libraries/Canvas/System.yy","name":"System","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Extensions","folderPath":"folders/Extensions.yy","name":"Extensions","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"FMOD","folderPath":"folders/Extensions/FMOD.yy","name":"FMOD","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Objects","folderPath":"folders/Objects.yy","name":"Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -22,8 +24,6 @@
     {"$GMFolder":"","%Name":"Rooms","folderPath":"folders/Rooms.yy","name":"Rooms","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Libraries","folderPath":"folders/Scripts/Libraries.yy","name":"Libraries","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Canvas","folderPath":"folders/Scripts/Libraries/Canvas.yy","name":"Canvas","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"System","folderPath":"folders/Scripts/Libraries/Canvas/System.yy","name":"System","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Catspeak","folderPath":"folders/Scripts/Libraries/Catspeak.yy","name":"Catspeak","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"common","folderPath":"folders/Scripts/Libraries/Catspeak/common.yy","name":"common","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"compiler","folderPath":"folders/Scripts/Libraries/Catspeak/compiler.yy","name":"compiler","resourceType":"GMFolder","resourceVersion":"2.0",},
