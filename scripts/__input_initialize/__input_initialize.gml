@@ -30,8 +30,23 @@ function __input_initialize()
     //Detect infinity
     if (is_undefined(infinity))
     {
-        __input_error("Error!\nGM constant 'infinity' is undefined. Please file a bug with YoYoGames.\n", "@jujuadams and @offalynne\n", __INPUT_DATE);
+        __input_error("Error!\nGM constant 'infinity' is undefined. Please file a bug with YoYoGames.");
     }
+    
+    //Detect string functions
+    var _use_split_and_trim;
+    try
+    {
+        var _split = array_equals(string_split("Juju\nwaz\nere", "\n", true), ["Juju", "waz", "ere"]);
+        var _trim = (string_trim("         you can't catch me          ") == "you can't catch me");
+        _use_split_and_trim = _split && _trim;
+    }
+    catch(_error)
+    {
+        _use_split_and_trim = false;
+    }
+    
+    if not (_use_split_and_trim) __input_error("Error!\nGM extended string functions are unavailable. Please update GameMaker.");
     
     //Detect is_instanceof(), which offers some minor performance gains
     if (INPUT_ON_WEB)
@@ -358,17 +373,17 @@ function __input_initialize()
     //Two structs that are returned by input_players_get_status() and input_gamepads_get_status()
     //These are "static" structs that are reset and populated by __input_system_tick()
     _global.__players_status = {
-        any_changed: false,
-        new_connections: [],
-        new_disconnections: [],
-        players: array_create(INPUT_MAX_PLAYERS, INPUT_STATUS.DISCONNECTED),
+        __any_changed: false,
+        __new_connections: [],
+        __new_disconnections: [],
+        __players: array_create(INPUT_MAX_PLAYERS, INPUT_STATUS.DISCONNECTED),
     }
     
     _global.__gamepads_status = {
-        any_changed: false,
-        new_connections: [],
-        new_disconnections: [],
-        gamepads: array_create(_max_gamepads, INPUT_STATUS.DISCONNECTED),
+        __any_changed: false,
+        __new_connections: [],
+        __new_disconnections: [],
+        __gamepads: array_create(_max_gamepads, INPUT_STATUS.DISCONNECTED),
     }
     
     //The default player. This player struct holds default binding data

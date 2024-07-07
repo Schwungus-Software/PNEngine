@@ -737,12 +737,12 @@ if _tick >= 1 {
 #region New Players
 	if not _has_demo {
 		with input_players_get_status() {
-			if any_changed {
-				print($"proControl: Player input status updated ({new_connections}, {new_disconnections})")
+			if __any_changed {
+				print($"proControl: Player input status updated ({__new_connections}, {__new_disconnections})")
 				var i = 0
 		
-				repeat array_length(new_connections) {
-					with _players[new_connections[i++]] {
+				repeat array_length(__new_connections) {
+					with _players[__new_connections[i++]] {
 						if not activate() {
 							if __show_reconnect_caption {
 								var _device = input_player_get_gamepad_type(slot)
@@ -761,8 +761,8 @@ if _tick >= 1 {
 			
 				i = 0
 			
-				repeat array_length(new_disconnections) {
-					with _players[new_disconnections[i++]] {
+				repeat array_length(__new_disconnections) {
+					with _players[__new_disconnections[i++]] {
 						if not deactivate() {
 							show_caption($"[c_red]{lexicon_text("hud.caption.player.last_disconnect", -~slot)}")
 						}

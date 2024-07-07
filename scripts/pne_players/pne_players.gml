@@ -50,7 +50,7 @@ repeat INPUT_MAX_PLAYERS {
 }
 
 global.players = _players
-global.input_mode = INPUT_SOURCE_MODE.HOTSWAP
+global.input_mode = INPUT_SOURCE_MODE.JOIN
 i = 0
 
 repeat parameter_count() {
