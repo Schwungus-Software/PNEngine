@@ -1,6 +1,33 @@
 #region Profiling
 global.debug_overlay = false
 global.debug_fps = false
+
+dbg_view("Resource Counts", false)
+global.resource_counts = ""
+
+var _refresh_counts = function () {
+	var _info = debug_event("ResourceCounts", true)
+	
+	var _text = $"DS Lists: {_info.listCount}\n"
+	_text += $"DS Maps: {_info.mapCount}\n"
+	_text += $"DS Queues: {_info.queueCount}\n"
+	_text += $"DS Grids: {_info.gridCount}\n"
+	_text += $"DS Priorities: {_info.priorityCount}\n"
+	_text += $"DS Stacks: {_info.stackCount}\n"
+	_text += $"Buffers: {_info.bufferCount}\n"
+	_text += $"Surfaces: {_info.surfaceCount}\n"
+	_text += $"Time Sources: {_info.timeSourceCount}\n"
+	_text += $"Instances: {instance_count}\n"
+	global.resource_counts = _text
+}
+
+_refresh_counts()
+global.refresh_counts = _refresh_counts
+global.refresh_counts_ref = ref_create(global, "refresh_counts")
+global.resource_counts_ref = ref_create(global, "resource_counts")
+dbg_button("Refresh", global.refresh_counts_ref)
+dbg_text(global.resource_counts_ref)
+show_debug_overlay(false)
 #endregion
 
 #region Console
@@ -12,7 +39,7 @@ global.console_buffer = false
 if not variable_global_exists("console_log") {
 	global.console_log = ds_list_create()
 }
-	
+
 global.console_input = ""
 global.console_input_previous = ""
 #endregion
