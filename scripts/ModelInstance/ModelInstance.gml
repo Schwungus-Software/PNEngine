@@ -56,6 +56,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		frame = 0
 		frame_speed = 1
 		
+		frame_frozen = false
+		interp("frame", "sframe")
+		
 		transition = 0
 		transition_duration = 0
 		transition_frame = undefined
@@ -235,6 +238,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			if _frame >= 0 {
 				frame = _frame
+				interp_skip("sframe")
 			}
 			
 			frame_speed = 1
@@ -268,6 +272,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			splice_speed = 1
 			output_to_sample(tick_sample)
 			array_copy(from_sample, 0, tick_sample, 0, array_length(tick_sample))
+			interp_skip("sframe")
 		}
 		
 		static get_node = function (_id) {
@@ -556,7 +561,17 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				global.u_animated.set(0)
 			} else {
 				global.u_animated.set(1)
-				dq_lerp_array(from_sample, tick_sample, global.tick_draw, draw_sample)
+				
+				if sframe == frame {
+					if not frame_frozen {
+						array_copy(draw_sample, 0, tick_sample, 0, array_length(tick_sample))
+						frame_frozen = true
+					}
+				} else {
+					dq_lerp_array(from_sample, tick_sample, global.tick_draw, draw_sample)
+					frame_frozen = false
+				}
+				
 				global.u_bone_dq.set(draw_sample)
 			}
 			
