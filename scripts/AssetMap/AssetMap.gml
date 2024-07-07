@@ -43,6 +43,6 @@ function AssetMap() constructor {
 			ds_map_add(assets, _asset.name, _asset)
 		}
 		
-		array_resize(keep_assets, _kept)
+		array_resize(keep_assets, 0)
 	}
 }
