@@ -15,11 +15,6 @@ function Level() constructor {
 	
 	time = 0
 	
-	bump_x = 0
-	bump_y = 0
-	bump_grid = ds_grid_create(1, 1)
-	bump_lists = ds_grid_create(1, 1)
-	
 	area_things = ds_list_create()
 	
 	level_script = undefined
