@@ -696,18 +696,17 @@ if global.freeze_step {
 var _console = global.console
 var _ui = global.ui
 var _mouse_focused = global.mouse_focused
-var _mouse_dx, _mouse_dy
 
 if _mouse_focused {
 	if not _console and not global.debug_overlay and window_has_focus() and _ui == undefined {
-		_mouse_dx = window_mouse_get_delta_x()
-		_mouse_dy = window_mouse_get_delta_y()
+		mouse_dx += window_mouse_get_delta_x()
+		mouse_dy += window_mouse_get_delta_y()
 	} else {
 		window_mouse_set_locked(false)
 		global.mouse_focused = false
 		_mouse_focused = false
-		_mouse_dx = 0
-		_mouse_dy = 0
+		mouse_dx = 0
+		mouse_dy = 0
 	}
 } else {
 	var _mouse_start = global.mouse_start
@@ -723,8 +722,8 @@ if _mouse_focused {
 		_mouse_focused = true
 	}
 	
-	_mouse_dx = 0
-	_mouse_dy = 0
+	mouse_dx = 0
+	mouse_dy = 0
 }
 
 var _tick = global.tick
@@ -1016,8 +1015,8 @@ if _tick >= 1 {
 		}
 		
 		if _skip_tick {
-			_mouse_dx = 0
-			_mouse_dy = 0
+			mouse_dx = 0
+			mouse_dy = 0
 			input_clear_momentary(true)
 			global.tick_complete = false;
 			--_tick
@@ -1134,6 +1133,8 @@ if _tick >= 1 {
 		}
 		
 #region Players
+		var _mouse_dx = mouse_dx
+		var _mouse_dy = mouse_dy
 		var i = 0
 		
 		repeat INPUT_MAX_PLAYERS {
@@ -1452,8 +1453,8 @@ if _tick >= 1 {
 			++_level.time
 		}
 		
-		_mouse_dx = 0
-		_mouse_dy = 0
+		mouse_dx = 0
+		mouse_dy = 0
 		input_clear_momentary(true)
 		
 		if _has_demo {
