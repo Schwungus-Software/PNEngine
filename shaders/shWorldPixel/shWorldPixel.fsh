@@ -17,6 +17,7 @@
 
 varying vec3 v_position;
 varying vec2 v_texcoord;
+varying vec2 v_texcoord2;
 varying vec4 v_color;
 varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
@@ -47,6 +48,8 @@ uniform vec2 u_material_specular; // base, exponent
 uniform vec4 u_ambient_color;
 uniform vec2 u_fog_distance;
 uniform float u_light_data[MAX_LIGHT_DATA];
+uniform int u_lightmap_enable_pixel;
+uniform sampler2D u_lightmap;
 
 uniform int u_shadowmap_enable_pixel;
 uniform sampler2D u_shadowmap;
@@ -55,14 +58,28 @@ uniform int u_shadowmap_caster;
 void main() {
 	// Lighting
 	vec3 reflection = normalize(reflect(v_view_position, v_world_normal));
-	vec4 total_light = u_ambient_color;
+	vec4 total_light;
+	bool lightmap_enabled = bool(u_lightmap_enable_pixel);
+	
+	if (lightmap_enabled) {
+		total_light = texture2D(u_lightmap, v_texcoord2);
+	} else {
+		total_light = u_ambient_color;
+	}
+	
 	float total_specular = 0.;
 	
 	for (int i = 0; i < MAX_LIGHT_DATA; i += LIGHT_SIZE) {
-		if (bool(u_light_data[i + 1])) {
-			int light_type = int(u_light_data[i]);
+		int light_active = int(u_light_data[i + 1]);
 		
+		if (light_active > 0) {
+			int light_type = int(u_light_data[i]);
+			
 			if (light_type == 1) { // Directional
+				if (lightmap_enabled && light_active < 2) {
+					continue;
+				}
+				
 				vec3 light_normal = -normalize(vec3(u_light_data[i + 5], u_light_data[i + 6], u_light_data[i + 7]));
 				vec4 light_color = vec4(u_light_data[i + 11], u_light_data[i + 12], u_light_data[i + 13], u_light_data[i + 14]);
 				float factor;

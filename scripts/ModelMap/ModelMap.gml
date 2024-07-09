@@ -128,8 +128,12 @@ function ModelMap() : AssetMap() constructor {
 					
 					// UVs 2
 					if _uvs2 {
-						buffer_read(_buffer, buffer_f32)
-						buffer_read(_buffer, buffer_f32)
+						var _u = buffer_read(_buffer, buffer_f32)
+						var _v = buffer_read(_buffer, buffer_f32)
+						
+						vertex_texcoord(vbo, _u, _v)
+					} else {
+						vertex_texcoord(vbo, 0, 0)
 					}
 					
 					// Color

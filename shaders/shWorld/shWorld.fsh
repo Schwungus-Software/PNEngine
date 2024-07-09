@@ -12,6 +12,7 @@
    -------- */
 
 varying vec2 v_texcoord;
+varying vec2 v_texcoord2;
 varying vec4 v_color;
 varying vec4 v_lighting;
 varying vec2 v_specular;
@@ -34,6 +35,9 @@ uniform float u_material_alpha_test;
 uniform int u_material_can_blend;
 uniform sampler2D u_material_blend;
 uniform vec4 u_material_blend_uvs;
+
+uniform int u_lightmap_enable_pixel;
+uniform sampler2D u_lightmap;
 
 void main() {
 	float u = fract(v_texcoord.x);
@@ -59,7 +63,13 @@ void main() {
 		sample.a = 1.;
 	}
 	
-	vec4 starting_color = (sample * u_material_color * vec4(v_color.rgb, v_alpha) * v_lighting) + pow(v_specular.x, v_specular.y);
+	vec4 lighting = v_lighting;
+	
+	if (bool(u_lightmap_enable_pixel)) {
+		lighting += texture2D(u_lightmap, v_texcoord2);
+	}
+	
+	vec4 starting_color = (sample * u_material_color * vec4(v_color.rgb, v_alpha) * lighting) + pow(v_specular.x, v_specular.y);
 	
 	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, v_fog);
 	starting_color.a *= mix(1., u_fog_color.a, v_fog);

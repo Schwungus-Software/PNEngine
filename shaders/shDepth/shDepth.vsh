@@ -15,6 +15,7 @@
 attribute vec3 in_Position; // (x, y, z) 
 attribute vec3 in_Normal; // (x, y, z)
 attribute vec2 in_TextureCoord; // (u, v)
+attribute vec2 in_TextureCoord2; // (u, v)
 attribute vec4 in_Colour; // (r, g, b, a)
 attribute vec4 in_BoneIndex; // (bone 1, bone 2, bone 3, bone 4)
 attribute vec4 in_BoneWeight; // (weight 1, weight 2, weight 3, weight 4)

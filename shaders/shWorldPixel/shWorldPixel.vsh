@@ -16,6 +16,7 @@
 attribute vec3 in_Position; // (x, y, z) 
 attribute vec3 in_Normal; // (x, y, z)
 attribute vec2 in_TextureCoord; // (u, v)
+attribute vec2 in_TextureCoord2; // (u, v)
 attribute vec4 in_Colour; // (r, g, b, a)
 attribute vec4 in_BoneIndex; // (bone 1, bone 2, bone 3, bone 4)
 attribute vec4 in_BoneWeight; // (weight 1, weight 2, weight 3, weight 4)
@@ -26,6 +27,7 @@ attribute vec4 in_BoneWeight; // (weight 1, weight 2, weight 3, weight 4)
 
 varying vec3 v_position;
 varying vec2 v_texcoord;
+varying vec2 v_texcoord2;
 varying vec4 v_color;
 varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
@@ -243,6 +245,7 @@ void main() {
 	
 	// Miscellaneous
 	v_texcoord = in_TextureCoord + (u_time * u_material_scroll);
+	v_texcoord2 = in_TextureCoord2;
 	
 	// Shadow mapping
 	if (bool(u_shadowmap_enable_vertex)) {

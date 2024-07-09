@@ -20,6 +20,7 @@
 attribute vec3 in_Position; // (x, y, z) 
 attribute vec3 in_Normal; // (x, y, z)
 attribute vec2 in_TextureCoord; // (u, v)
+attribute vec2 in_TextureCoord2; // (u, v)
 attribute vec4 in_Colour; // (r, g, b, a)
 attribute vec4 in_BoneIndex; // (bone 1, bone 2, bone 3, bone 4)
 attribute vec4 in_BoneWeight; // (weight 1, weight 2, weight 3, weight 4)
@@ -29,6 +30,7 @@ attribute vec4 in_BoneWeight; // (weight 1, weight 2, weight 3, weight 4)
    -------- */
 
 varying vec2 v_texcoord;
+varying vec2 v_texcoord2;
 varying vec4 v_color;
 varying vec4 v_lighting;
 varying vec2 v_specular;
@@ -53,6 +55,7 @@ uniform vec4 u_bone_dq[2 * MAX_BONES];
 uniform vec4 u_ambient_color;
 uniform vec2 u_fog_distance;
 uniform float u_light_data[MAX_LIGHT_DATA];
+uniform int u_lightmap_enable_vertex;
 
 //	Simplex 4D Noise 
 //	by Ian McEwan, Ashima Arts
@@ -243,15 +246,29 @@ void main() {
 	vec3 camera_position = -(view_matrix[3] * view_matrix).xyz;
 	vec3 object_space_position = vec3(object_space_position_vec4);
 	vec3 view_position = object_space_position - camera_position;
-	vec4 total_light = u_ambient_color;
+	vec4 total_light;
+	bool lightmap_enabled = bool(u_lightmap_enable_vertex);
+	
+	if (lightmap_enabled) {
+		total_light = vec4(0., 0., 0., 1.);
+	} else {
+		total_light = u_ambient_color;
+	}
+	
 	float total_specular = 0.;
 	vec3 reflection = normalize(reflect(view_position, world_normal));
 	
 	for (int i = 0; i < MAX_LIGHT_DATA; i += LIGHT_SIZE) {
-		if (bool(u_light_data[i + 1])) {
-			int light_type = int(u_light_data[i]);
+		int light_active = int(u_light_data[i + 1]);
 		
+		if (light_active > 0) {
+			int light_type = int(u_light_data[i]);
+			
 			if (light_type == 1) { // Directional
+				if (lightmap_enabled && light_active < 2) {
+					continue;
+				}
+				
 				vec3 light_normal = -normalize(vec3(u_light_data[i + 5], u_light_data[i + 6], u_light_data[i + 7]));
 				vec4 light_color = vec4(u_light_data[i + 11], u_light_data[i + 12], u_light_data[i + 13], u_light_data[i + 14]);
 				
@@ -300,4 +317,5 @@ void main() {
 	
 	// Miscellaneous
 	v_texcoord = in_TextureCoord + (u_time * u_material_scroll);
+	v_texcoord2 = in_TextureCoord2;
 }
