@@ -30,7 +30,7 @@
     2: Crop horizontally
 	3: Crop vertically
 */
-#macro __COLLAGE_DEFAULT_CROP 1
+#macro __COLLAGE_DEFAULT_CROP 0
 
 // Levels of optimization in which Collage will pack texture pages more efficiently (during batch mode)
 /*
