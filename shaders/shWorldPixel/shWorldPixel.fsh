@@ -50,6 +50,7 @@ uniform vec2 u_fog_distance;
 uniform float u_light_data[MAX_LIGHT_DATA];
 uniform int u_lightmap_enable_pixel;
 uniform sampler2D u_lightmap;
+uniform vec4 u_lightmap_uvs;
 
 uniform int u_shadowmap_enable_pixel;
 uniform sampler2D u_shadowmap;
@@ -62,7 +63,11 @@ void main() {
 	bool lightmap_enabled = bool(u_lightmap_enable_pixel);
 	
 	if (lightmap_enabled) {
-		total_light = texture2D(u_lightmap, v_texcoord2);
+		float lu = fract(v_texcoord2.x);
+		float lv = fract(v_texcoord2.y);
+		vec2 lightmap_uv = vec2(u_lightmap_uvs.r + (u_lightmap_uvs.b * lu), u_lightmap_uvs.g + (u_lightmap_uvs.a * lv));
+		
+		total_light = texture2D(u_lightmap, lightmap_uv);
 	} else {
 		total_light = u_ambient_color;
 	}

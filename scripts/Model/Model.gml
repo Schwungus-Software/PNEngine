@@ -14,6 +14,8 @@ function Model() : Asset() constructor {
 	hold_offset_matrix = undefined
 	points = undefined
 	
+	lightmap = undefined
+	
 	static get_node = function (_id, _node = root_node) {
 		var _is_name = is_string(_id)
 		

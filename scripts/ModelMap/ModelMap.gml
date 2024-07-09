@@ -478,6 +478,15 @@ function ModelMap() : AssetMap() constructor {
 				_model.points = _points
 			}
 #endregion
+
+#region Lightmap
+			var _lightmap = force_type_fallback(_json[$ "lightmap"], "string")
+			
+			if _lightmap != undefined {
+				global.images.load(_lightmap)
+				_model.lightmap = _lightmap
+			}
+#endregion
 		}
 #endregion
 		

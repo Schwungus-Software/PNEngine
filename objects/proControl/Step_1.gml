@@ -512,6 +512,20 @@ switch load_state {
 				
 			_key = ds_map_find_next(_materials_map, _key)
 		}
+		
+		var _models_map = global.models.assets
+		
+		_key = ds_map_find_first(_models_map)
+			
+		repeat ds_map_size(_models_map) {
+			with _models_map[? _key] {
+				if lightmap != undefined {
+					lightmap = CollageImageGetInfo(lightmap)
+				}
+			}
+			
+			_key = ds_map_find_next(_models_map, _key)
+		}
 			
 		load_state = LoadStates.FINISH
 #endregion

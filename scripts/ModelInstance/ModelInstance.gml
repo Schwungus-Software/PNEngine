@@ -566,7 +566,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				global.u_bone_dq.set(draw_sample)
 			}
 			
-			var _current_shader = global.current_shader
 			var _u_material_bright = global.u_material_bright
 			var _u_material_specular = global.u_material_specular
 			var _u_material_wind = global.u_material_wind
@@ -577,6 +576,22 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _u_material_blend = global.u_material_blend
 			var _u_material_blend_uvs = global.u_material_blend_uvs
 			var _u_uvs = global.u_uvs
+			var _lightmap = model.lightmap
+			
+			if _lightmap != undefined {
+				global.u_lightmap_enable_vertex.set(true)
+				global.u_lightmap_enable_pixel.set(true)
+				global.u_lightmap.set(_lightmap.GetTexture(0))
+				
+				var _uvs = _lightmap.GetUVs(0)
+				
+				with _uvs {
+					global.u_lightmap_uvs.set(normLeft, normTop, normRight, normBottom)
+				}
+			} else {
+				global.u_lightmap_enable_vertex.set(false)
+				global.u_lightmap_enable_pixel.set(false)
+			}
 			
 			if skins_updated {
 				var i = 0

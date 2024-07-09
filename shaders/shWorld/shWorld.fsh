@@ -38,6 +38,7 @@ uniform vec4 u_material_blend_uvs;
 
 uniform int u_lightmap_enable_pixel;
 uniform sampler2D u_lightmap;
+uniform vec4 u_lightmap_uvs;
 
 void main() {
 	float u = fract(v_texcoord.x);
@@ -66,7 +67,11 @@ void main() {
 	vec4 lighting = v_lighting;
 	
 	if (bool(u_lightmap_enable_pixel)) {
-		lighting += texture2D(u_lightmap, v_texcoord2);
+		float lu = fract(v_texcoord2.x);
+		float lv = fract(v_texcoord2.y);
+		vec2 lightmap_uv = vec2(u_lightmap_uvs.r + (u_lightmap_uvs.b * lu), u_lightmap_uvs.g + (u_lightmap_uvs.a * lv));
+		
+		lighting += texture2D(u_lightmap, lightmap_uv);
 	}
 	
 	vec4 starting_color = (sample * u_material_color * vec4(v_color.rgb, v_alpha) * lighting) + pow(v_specular.x, v_specular.y);
