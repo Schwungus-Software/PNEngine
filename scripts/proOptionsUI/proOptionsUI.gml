@@ -17,11 +17,11 @@ function proOptionsUI() : UI(undefined) constructor {
 				global.config.in_invert_y = _value
 			}),
 			
-			new OUIOption("options.controls.in_pan_x", OUIValues.SENSITIVITY, 4, global.config.in_pan_x - 1, function (_value) {
+			new OUIOption("options.controls.in_pan_x", OUIValues.SENSITIVITY, 5, global.config.in_pan_x - 1, function (_value) {
 				global.config.in_pan_x = -~_value
 			}),
 			
-			new OUIOption("options.controls.in_pan_y", OUIValues.SENSITIVITY, 4, global.config.in_pan_y - 1, function (_value) {
+			new OUIOption("options.controls.in_pan_y", OUIValues.SENSITIVITY, 5, global.config.in_pan_y - 1, function (_value) {
 				global.config.in_pan_y = -~_value
 			}),
 			

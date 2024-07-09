@@ -29,10 +29,10 @@ function config_reset() {
 		// INPUT
 		in_invert_x: false,
 		in_invert_y: false,
-		in_pan_x: 5,
-		in_pan_y: 5,
-		in_mouse_x: 0.025,
-		in_mouse_y: 0.025,
+		in_pan_x: 6,
+		in_pan_y: 6,
+		in_mouse_x: 0.0125,
+		in_mouse_y: 0.0125,
 	}
 	
 	input_player_reset()
