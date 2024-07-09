@@ -322,16 +322,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			static node_dq = dq_build_identity()
 			
-			var i = _index * 8
-			
-			node_dq[0] = node_transforms[i]
-			node_dq[1] = node_transforms[-~i]
-			node_dq[2] = node_transforms[i + 2]
-			node_dq[3] = node_transforms[i + 3]
-			node_dq[4] = node_transforms[i + 4]
-			node_dq[5] = node_transforms[i + 5]
-			node_dq[6] = node_transforms[i + 6]
-			node_dq[7] = node_transforms[i + 7]
+			array_copy(node_dq, 0, node_transforms, _index * 8, 8)
 			
 			return node_dq
 		}
