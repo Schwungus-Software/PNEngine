@@ -23,7 +23,7 @@ function cmd_dend(_args) {
 			
 			global.game_status = GameStatus.DEFAULT
 			
-			var _devices = input_players_get_status().players
+			var _devices = input_players_get_status().__players
 			var _players = global.players
 			
 			i = 0
