@@ -287,7 +287,12 @@ if _console {
 }
 
 if global.debug_fps {
-	draw_text(0, 0, fps)
+	var _fps = string(fps)
+	
+	draw_set_alpha(0.5)
+	draw_rectangle_color(0, 0, string_width(_fps), string_height(_fps), c_black, c_black, c_black, c_black, false)
+	draw_set_alpha(1)
+	draw_text(0, 0, _fps)
 }
 
 if load_state != LoadStates.NONE and load_level != undefined {
