@@ -26,7 +26,8 @@ enum CollisionFlags {
 	BULLET = 1 << 1,
 	VISION = 1 << 2,
 	CAMERA = 1 << 3,
-	ALL = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3),
+	STICKY = 1 << 4,
+	ALL = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4),
 }
 
 enum CollisionLayers {

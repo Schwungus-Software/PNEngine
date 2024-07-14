@@ -193,7 +193,7 @@ if _held {
 			if raycast(x, y, z - _half_height, x, y, (z + z_speed) + _extra_z + math_get_epsilon(), CollisionFlags.BODY, CollisionLayers.ALL, floor_ray)[RaycastData.HIT] {
 				z = floor_ray[RaycastData.Z]
 			
-				if abs(floor_ray[RaycastData.NZ]) >= 0.5 {
+				if (floor_ray[RaycastData.TRIANGLE][TriangleData.FLAGS] & CollisionFlags.STICKY) or abs(floor_ray[RaycastData.NZ]) >= 0.5 {
 					z_speed = 0
 					f_grounded = true
 				
