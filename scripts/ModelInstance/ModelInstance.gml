@@ -60,7 +60,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 		
 		transition = 0
 		transition_duration = 0
-		transition_frame = undefined
+		transition_frame = []
+		transition_frame_old = []
 		
 		node_transforms = []
 		node_post_rotations = undefined
@@ -101,10 +102,6 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			dq_lerp_array(_parent_frames[_frame], _parent_frames[_next_frame], frac(frame), _transframe)
 			
-			if transition < transition_duration {
-				dq_slerp_array(transition_frame, _transframe, transition / transition_duration, _transframe)
-			}
-			
 			if not (splice == undefined or splice_branch == undefined) {
 				with splice {
 					_parent_frames = parent_frames
@@ -119,6 +116,10 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 					
 					array_copy(_transframe, _offset, _splice_data, _offset, 8)
 				}
+			}
+			
+			if transition < transition_duration {
+				dq_slerp_array(transition_frame, _transframe, transition / transition_duration, _transframe)
 			}
 			
 			var _bone_offsets, _node_count, _root_node
@@ -217,17 +218,47 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			
 			var _transitioning = false
 			
-			transition_duration = _time
-			
 			if _time > 0 and animation != undefined {
+				var _was_transitioning = transition < transition_duration
+				
+				if _was_transitioning {
+					array_copy(transition_frame_old, 0, transition_frame, 0, array_length(transition_frame))
+				}
+				
 				var _duration = animation.duration
+				var _transframe = animation.parent_frames[animation_loop ? (frame % _duration) : min(frame, _duration - 1)]
+				
+				array_copy(transition_frame, 0, _transframe, 0, array_length(_transframe))
+				
+				if not (splice == undefined or splice_branch == undefined) {
+					var _parent_frames
+					
+					with splice {
+						_parent_frames = parent_frames
+						_duration = duration
+					}
+				
+					var _splice_data = _parent_frames[splice_loop ? (splice_frame % _duration) : min(splice_frame, _duration - 1)]
+					var i = 0
+				
+					repeat array_length(splice_branch) {
+						var _offset = splice_branch[i++] * 8
+					
+						array_copy(transition_frame, _offset, _splice_data, _offset, 8)
+					}
+				}
+				
+				if _was_transitioning {
+					dq_slerp_array(transition_frame_old, transition_frame, transition / transition_duration, transition_frame)
+				}
 				
 				transition = 1
-				transition_frame = animation.parent_frames[animation_loop ? (frame % _duration) : min(frame, _duration - 1)]
 				_transitioning = true
 			} else {
 				transition = 0
 			}
+			
+			transition_duration = _time
 			
 			animation_name = _animation.name
 			animation = _animation
