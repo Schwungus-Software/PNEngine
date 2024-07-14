@@ -185,7 +185,7 @@ if _held {
 					_extra_z += max(0, z_speed)
 				}
 				
-				_extra_z += max(1, z_speed)
+				_extra_z += clamp(z_speed, 0, 1)
 				
 				last_prop = noone
 			}
