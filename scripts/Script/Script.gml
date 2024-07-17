@@ -30,9 +30,4 @@ function Script() : Asset() constructor {
 			}
 		}
 	}
-	
-	static flush = function () {
-		flush_function(main)
-		flush_function(load)
-	}
 }

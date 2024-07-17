@@ -13,7 +13,7 @@ function thing_load(_type, _special = undefined) {
 			return true
 		}
 		
-		return thing_load(asset_get_index(_type))
+		return thing_load(asset_get_index(_type), _special)
 	}
 	
 	if object_exists(_type) {

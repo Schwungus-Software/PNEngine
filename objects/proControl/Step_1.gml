@@ -54,7 +54,6 @@ switch load_state {
 		//global.fonts.clear()
 		global.sounds.clear()
 		global.music.clear()
-		global.scripts.flush()
 			
 		if load_level == undefined {
 			game_end()
@@ -65,6 +64,7 @@ switch load_state {
 		global.flags[FlagGroups.LOCAL].clear()
 		global.level = new Level()
 		gc_collect()
+		catspeak_collect()
 		load_state = LoadStates.LOAD
 #endregion
 	exit

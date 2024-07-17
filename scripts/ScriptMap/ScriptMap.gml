@@ -372,8 +372,9 @@ function ScriptMap() : AssetMap() constructor {
 		
 		file_text_close(_script_file)
 		
-		var _main = Catspeak.compileGML(Catspeak.parseString(_code))
-		var _globals = _main.getGlobals()
+		var _hir = Catspeak.parseString(_code)
+		var _main = Catspeak.compile(_hir)
+		var _globals = catspeak_globals(_main)
 		
 		var _imports = _script.imports
 		var i = 0
@@ -381,13 +382,13 @@ function ScriptMap() : AssetMap() constructor {
 		repeat array_length(_imports) {
 			var _import = _imports[i++]
 			
-			_globals[$ _import.name] = _import.main.getGlobals()
+			_globals[$ _import.name] = catspeak_globals(_import.main)
 		}
 		
 		var _parent = _script.parent
 		
 		if _parent != undefined {
-			var _parent_globals = _parent.main.getGlobals()
+			var _parent_globals = catspeak_globals(_parent.main)
 			var _parent_globals_names = struct_get_names(_parent_globals)
 			var i = 0
 			
@@ -445,15 +446,6 @@ function ScriptMap() : AssetMap() constructor {
 		
 		ds_map_add(assets, _name, _script)
 		print("ScriptMap.load: Added '{0}' ({1})", _name, _script)
-	}
-	
-	static flush = function () {
-		var _key = ds_map_find_first(assets)
-		
-		repeat ds_map_size(assets) {
-			assets[? _key].flush()
-			_key = ds_map_find_next(assets, _key)
-		}
 	}
 }
 

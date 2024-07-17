@@ -5,13 +5,4 @@ function UIScript() : Script() constructor {
 	clean_up = undefined
 	tick = undefined
 	draw_gui = undefined
-	
-	static flush = function () {
-		flush_function(main)
-		flush_function(load)
-		flush_function(create)
-		flush_function(clean_up)
-		flush_function(tick)
-		flush_function(draw_gui)
-	}
 }

@@ -676,6 +676,10 @@
 						fmod_channel_control_stop(_sound)
 					},
 					
+					"sound_get_pitch", function (_sound) {
+						return fmod_channel_control_get_pitch(_sound)
+					},
+					
 					"sound_set_pitch", function (_sound, _pitch) {
 						fmod_channel_control_set_pitch(_sound, _pitch)
 					}
