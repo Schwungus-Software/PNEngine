@@ -28,7 +28,7 @@ function __input_config_verbs()
 			inventory_up:    input_binding_key(vk_lshift),
 			inventory_left:  input_binding_key("2"),
 			inventory_down:  input_binding_key("3"),
-			inventory_right: input_binding_key("4"),
+			inventory_right: input_binding_key("F"),
 			
 	        aim:       [input_binding_key(vk_comma), input_binding_mouse_button(mb_right)],
 			aim_up:    input_binding_key(vk_up),
