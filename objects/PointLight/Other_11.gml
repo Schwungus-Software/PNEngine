@@ -6,5 +6,7 @@ if is_struct(special) {
 
 arg0 = near
 arg1 = far
+interp_skip("sarg0")
+interp_skip("sarg1")
 
 event_inherited()

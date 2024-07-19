@@ -14,5 +14,11 @@ arg2 = nz
 arg3 = range
 arg4 = cutoff_inner
 arg5 = cutoff_outer
+interp_skip("sarg0")
+interp_skip("sarg1")
+interp_skip("sarg2")
+interp_skip("sarg3")
+interp_skip("sarg4")
+interp_skip("sarg5")
 
 event_inherited()
