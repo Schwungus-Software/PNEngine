@@ -63,8 +63,8 @@ switch load_state {
 			
 		global.flags[FlagGroups.LOCAL].clear()
 		global.level = new Level()
-		gc_collect()
 		catspeak_collect()
+		gc_collect()
 		load_state = LoadStates.LOAD
 #endregion
 	exit

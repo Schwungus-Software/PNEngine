@@ -295,13 +295,13 @@ void main() {
 				vec3 light_direction = object_space_position - light_position;
 				float dist = length(light_direction);
 				
-				light_direction = normalize(light_direction);
+				light_direction = normalize(-light_direction);
 				
 				float angle_difference = max(dot(light_direction, light_normal), 0.);
 				float cutoff_outer = light_cutoff.y;
 				float attenuation = clamp((angle_difference - cutoff_outer) / (light_cutoff.x - cutoff_outer), 0., 1.) * max((light_range - dist) / light_range, 0.);
 				
-				total_light += attenuation * light_color * max(dot(world_normal, -light_direction), 0.);
+				total_light += attenuation * light_color * max(dot(world_normal, light_direction), 0.);
 				total_specular += attenuation * max(dot(reflection, light_direction), 0.);
 			}
 		}
