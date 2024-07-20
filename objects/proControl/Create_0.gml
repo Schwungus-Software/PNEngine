@@ -476,6 +476,8 @@
 					"CFLAG_BULLET", CollisionFlags.BULLET,
 					"CFLAG_VISION", CollisionFlags.VISION,
 					"CFLAG_CAMERA", CollisionFlags.CAMERA,
+					"CFLAG_SHADOW", CollisionFlags.SHADOW,
+					"CFLAG_STICKY", CollisionFlags.STICKY,
 					"CFLAG_ALL", CollisionFlags.ALL,
 					
 					"CLAYER_0", CollisionLayers._0,

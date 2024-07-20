@@ -285,6 +285,10 @@ function ModelMap() : AssetMap() constructor {
 							_batch_flags &= ~CollisionFlags.CAMERA
 						}
 						
+						if not force_type_fallback(_batch[$ "collide_shadow"], "bool", true) {
+							_batch_flags &= ~CollisionFlags.SHADOW
+						}
+						
 						if not force_type_fallback(_batch[$ "sticky"], "bool", false) {
 							_batch_flags &= ~CollisionFlags.STICKY
 						}
