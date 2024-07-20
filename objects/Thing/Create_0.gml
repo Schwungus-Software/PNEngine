@@ -665,6 +665,10 @@
 			return true
 		}
 		
+		with _thing {
+			holder = noone
+		}
+		
 		return false
 	}
 	
