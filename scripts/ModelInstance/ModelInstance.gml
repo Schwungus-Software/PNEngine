@@ -158,20 +158,35 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				
 				if _node_post_rotation != undefined {
 					static _npr_dq = new BBMOD_DualQuaternion()
+					static _npr_dq_mul = new BBMOD_DualQuaternion()
+					static _npr_q = new BBMOD_Quaternion()
 					
-					_npr_dq.FromArray(_transframe, _node_offset)
-					
-					var _position = _npr_dq.GetTranslation()
-					var _rotation = _npr_dq.GetRotation()
-					
-					_rotation.MulSelf(new BBMOD_Quaternion().FromArray(_node_post_rotation))
-					_npr_dq.FromTranslationRotation(_position, _rotation)
-					
-					if _parent_index != -1 {
-						_npr_dq.MulSelf(new BBMOD_DualQuaternion().FromArray(node_transforms, _parent_index * 8))
+					with _npr_dq {
+						FromArray(_transframe, _node_offset)
+						
+						var _position = GetTranslation()
+						var _rotation = GetRotation()
+						
+						_npr_q.FromArray(_node_post_rotation)
+						
+						if _node_post_rotation[4] {
+							_rotation = _npr_q.MulSelf(_rotation)
+						} else {
+							_rotation.MulSelf(_npr_q)
+						}
+						
+						FromTranslationRotation(_position, _rotation)
 					}
 					
-					_npr_dq.ToArray(node_transforms, _node_offset)
+					var _node_transforms = node_transforms
+					
+					with _npr_dq {
+						if _parent_index != -1 {
+							MulSelf(_npr_dq_mul.FromArray(_node_transforms, _parent_index * 8))
+						}
+					
+						ToArray(_node_transforms, _node_offset)
+					}
 				} else {
 					if _parent_index == -1 {
 						// No parent transform -> just copy the node transform
@@ -365,7 +380,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			return matrix_transform_point(_visual ? draw_matrix : tick_matrix, _pos[0], _pos[1], _pos[2])
 		}
 		
-		static post_rotate_node = function (_index, _x, _y, _z) {
+		static post_rotate_node = function (_index, _x, _y, _z, _global = false) {
 			var _quat = node_post_rotations[_index]
 			
 			if _quat == undefined {
@@ -374,14 +389,16 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			quat_build_euler(_x, _y, _z, _quat)
+			_quat[4] = _global
 			
 			return _quat
 		}
 		
-		static post_rotate_node_quat = function (_index, _quat) {
+		static post_rotate_node_quat = function (_index, _quat, _global = false) {
 			gml_pragma("forceinline")
 			
 			node_post_rotations[_index] = _quat
+			_quat[4] = _global
 			
 			return _quat
 		}
