@@ -385,7 +385,7 @@ if _held {
 		
 			var _has_blob = shadow_ray[RaycastData.HIT]
 		
-			if raycast(_x, _y, _z, _x, _y, _z + 65535, CollisionFlags.SHADOW, CollisionLayers.ALL, shadow_ray)[RaycastData.HIT] {
+			if raycast(_x, _y, _z, _x, _y, _z + 2000, CollisionFlags.SHADOW, CollisionLayers.ALL, shadow_ray)[RaycastData.HIT] {
 				shadow_x = shadow_ray[RaycastData.X]
 				shadow_y = shadow_ray[RaycastData.Y]
 				shadow_z = shadow_ray[RaycastData.Z]
