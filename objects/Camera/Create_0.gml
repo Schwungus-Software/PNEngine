@@ -41,6 +41,7 @@ event_inherited()
 	interp("fov", "sfov")
 	
 	range = 0
+	range_lerp = 0.25
 	targets = ds_map_create()
 	pois = ds_map_create()
 	child = noone

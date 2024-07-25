@@ -64,7 +64,7 @@ if _targets {
 			}
 		} else {
 			// Empty space behind camera, lerp to normal range
-			range = lerp(range, _range, 0.25)
+			range = lerp(range, _range, range_lerp)
 		}
 	
 		var _nr = _range <= 0 ?  0 : range / _range
