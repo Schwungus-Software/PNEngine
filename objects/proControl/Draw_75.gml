@@ -188,10 +188,10 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 		}
 		
 		var _things = _area.active_things
-		var j = ds_list_size(_things)
+		var j = 0
 		
-		repeat j {
-			with _things[| --j] {
+		repeat ds_list_size(_things) {
+			with _things[| j++] {
 				if f_visible {
 					ds_priority_add(_gui_priority, id, gui_depth)
 				}
