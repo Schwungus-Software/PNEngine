@@ -23,6 +23,7 @@ varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
 varying vec3 v_view_position;
 varying vec3 v_shadowmap;
+varying float v_rimlight;
 
 /* --------
    UNIFORMS
@@ -44,6 +45,7 @@ uniform vec4 u_material_blend_uvs;
 
 uniform float u_material_bright;
 uniform vec2 u_material_specular; // base, exponent
+uniform vec2 u_material_rimlight; // base, exponent
 
 uniform vec4 u_ambient_color;
 uniform vec2 u_fog_distance;
@@ -133,6 +135,8 @@ void main() {
 	total_light = vec4(mix(total_light.rgb, vec3(1.), u_material_bright), min(total_light.a, 1.));
 	total_specular = mix(u_material_specular.x * total_specular, 0., u_material_bright);
 	
+	float rimlight = mix(u_material_rimlight.x * (1. - max(v_rimlight, 0.)), 0., u_material_bright);
+	
 	// Fog
 	float fog_start = u_fog_distance.x;
 	float fog = clamp((length(v_position) - fog_start) / (u_fog_distance.y - fog_start), 0., 1.);
@@ -161,8 +165,9 @@ void main() {
 		sample.a = 1.;
 	}
 	
-	vec4 starting_color = (sample * u_material_color * vec4(v_color.rgb, v_alpha) * total_light) + pow(total_specular, u_material_specular.y);
+	vec4 starting_color = sample * u_material_color * vec4(v_color.rgb, v_alpha) * total_light;
 	
+	starting_color.rgb += pow(total_specular, u_material_specular.y) + pow(rimlight, u_material_rimlight.y);
 	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, fog);
 	starting_color.a *= mix(1., u_fog_color.a, fog);
 	gl_FragColor = starting_color * u_color;

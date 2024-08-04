@@ -33,6 +33,7 @@ varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
 varying vec3 v_view_position;
 varying vec3 v_shadowmap;
+varying float v_rimlight;
 
 /* --------
    UNIFORMS
@@ -242,6 +243,11 @@ void main() {
 	v_object_space_position = vec3(object_space_position_vec4);
 	v_view_position = v_object_space_position + (view_matrix[3] * view_matrix).xyz;
 	v_color = in_Colour;
+	
+	vec3 rim_n = normalize(mat3(view_matrix) * v_world_normal);
+	vec3 rim_v = normalize(-vec3(view_matrix * object_space_position_vec4));
+	
+	v_rimlight = dot(rim_v, rim_n);
 	
 	// Miscellaneous
 	v_texcoord = in_TextureCoord + (u_time * u_material_scroll);

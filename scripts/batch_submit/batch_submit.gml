@@ -14,6 +14,7 @@ function batch_submit() {
 	global.u_material_color.set(1, 1, 1, 1)
 	global.u_material_scroll.set(0, 0)
 	global.u_material_specular.set(0, 1)
+	global.u_material_rimlight.set(0, 1)
 	global.u_material_wind.set(0, 1, 1)
 	global.u_material_can_blend.set(0)
 	global.u_uvs.set(0, 0, 1, 1)

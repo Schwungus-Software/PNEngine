@@ -16,6 +16,7 @@ varying vec2 v_texcoord2;
 varying vec4 v_color;
 varying vec4 v_lighting;
 varying vec2 v_specular;
+varying vec2 v_rimlight;
 varying float v_fog;
 
 /* --------
@@ -74,8 +75,9 @@ void main() {
 		lighting += texture2D(u_lightmap, lightmap_uv);
 	}
 	
-	vec4 starting_color = (sample * u_material_color * vec4(v_color.rgb, v_alpha) * lighting) + pow(v_specular.x, v_specular.y);
+	vec4 starting_color = sample * u_material_color * vec4(v_color.rgb, v_alpha) * lighting;
 	
+	starting_color.rgb += pow(v_specular.x, v_specular.y) + pow(v_rimlight.x, v_rimlight.y);
 	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, v_fog);
 	starting_color.a *= mix(1., u_fog_color.a, v_fog);
 	gl_FragColor = starting_color * u_color;

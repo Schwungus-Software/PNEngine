@@ -5,6 +5,8 @@ function MaterialMap() : AssetMap() constructor {
 		}
 		
 		var _path = "materials/" + _name
+		
+		// All material properties (and default values)
 		var _image = -1
 		var _image2 = undefined
 		var _alpha_test = 0.5
@@ -14,10 +16,13 @@ function MaterialMap() : AssetMap() constructor {
 		var _y_scroll = 0
 		var _specular = 0
 		var _specular_exponent = 1
+		var _rimlight = 0
+		var _rimlight_exponent = 1
 		var _wind = 0
 		var _wind_lock_bottom = 1
 		var _wind_speed = 1
 		var _color = [1, 1, 1, 1, c_white]
+		
 		var _json = json_load(mod_find_file(_path + ".*"))
 		
 		if is_struct(_json) {
@@ -48,6 +53,8 @@ function MaterialMap() : AssetMap() constructor {
 			
 			_specular = _json[$ "specular"] ?? 0
 			_specular_exponent = _json[$ "specular_exponent"] ?? 1
+			_rimlight = _json[$ "rimlight"] ?? 0
+			_rimlight_exponent = _json[$ "rimlight_exponent"] ?? 1
 			_wind = _json[$ "wind"] ?? 0
 			_wind_lock_bottom = _json[$ "wind_lock_bottom"] ?? 1
 			_wind_speed = _json[$ "wind_speed"] ?? 1
@@ -96,6 +103,8 @@ function MaterialMap() : AssetMap() constructor {
 			y_scroll = _y_scroll
 			specular = _specular
 			specular_exponent = _specular_exponent
+			rimlight = _rimlight
+			rimlight_exponent = _rimlight_exponent
 			wind = _wind
 			wind_lock_bottom = _wind_lock_bottom
 			wind_speed = _wind_speed

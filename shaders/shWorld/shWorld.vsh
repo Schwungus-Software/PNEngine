@@ -34,6 +34,7 @@ varying vec2 v_texcoord2;
 varying vec4 v_color;
 varying vec4 v_lighting;
 varying vec2 v_specular;
+varying vec2 v_rimlight;
 varying float v_fog;
 
 /* --------
@@ -47,6 +48,7 @@ uniform vec4 u_wind; // strength, xyz
 uniform float u_material_bright;
 uniform vec2 u_material_scroll;
 uniform vec2 u_material_specular; // base, exponent
+uniform vec2 u_material_rimlight; // base, exponent
 uniform vec3 u_material_wind; // waviness, lock bottom, speed
 
 uniform int u_animated;
@@ -310,6 +312,11 @@ void main() {
 	v_color = in_Colour;
 	v_lighting = vec4(mix(total_light.rgb, vec3(1.), u_material_bright), min(total_light.a, 1.));
 	v_specular = vec2(mix(u_material_specular.x * total_specular, 0., u_material_bright), u_material_specular.y);
+	
+	vec3 rim_n = normalize(mat3(view_matrix) * world_normal);
+	vec3 rim_v = normalize(-vec3(view_matrix * object_space_position_vec4));
+	
+	v_rimlight = vec2(mix(u_material_rimlight.x * (1. - max(dot(rim_v, rim_n), 0.)), 0., u_material_bright), u_material_rimlight.y);
 	
 	float fog_start = u_fog_distance.x;
 	

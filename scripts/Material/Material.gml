@@ -12,6 +12,8 @@ function Material() : Asset() constructor {
 	
 	specular = 0
 	specular_exponent = 1
+	rimlight = 0
+	rimlight_exponent = 1
 	
 	wind = 0
 	wind_lock_bottom = 1
