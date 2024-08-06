@@ -19,7 +19,6 @@
 	enum Canvases {
 		WORLD,
 		RENDER,
-		DEPTH,
 		__SIZE,
 	}
 	
@@ -27,7 +26,6 @@
 	
 	_canvases[Canvases.WORLD] = new Canvas(480, 270)
 	_canvases[Canvases.RENDER] = (new Canvas(480, 270)).SetDepthDisabled(true)
-	_canvases[Canvases.DEPTH] = (new Canvas(480, 270, false, surface_r8unorm)).SetDepthDisabled(true)
 	global.canvases = _canvases
 	global.bloom = new Bloom(160, 90, 3)
 	gpu_set_ztestenable(true)

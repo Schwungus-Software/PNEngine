@@ -326,22 +326,7 @@ event_inherited()
 	}
 	
 	depth_from_world = function (_x, _y) {
-		/* By copying the world canvas' depth buffer to the depth canvas, we
-		   can fetch the depth value from the CPU side. This thing is
-		   especially useful for lens flares.
-		   
-		   This method returns an 8-bit integer value where 0 is near and 255
-		   is far.
-		   It's not very precise, because the depth canvas' format is
-		   surface_r8unorm. There isn't much of a choice here, since, when
-		   using surface_r16float, the R-component value returned by Canvas'
-		   GetPixelArray() probably requires some sort of normalizing math in
-		   order to get the correct value; I'm not enough of a graphics nerd to
-		   figure this out.
-		   
-		   This function may be slow if called more than once, and, if needed,
-		   should be optimized to allow repetitive calls (compare frame number
-		   and current camera before updating depth canvas?) */
+		static depth_buffer = buffer_create(1, buffer_fixed, 1)
 		
 		var _canvases = global.canvases
 		var _surface = _canvases[Canvases.WORLD].GetSurfaceID()
@@ -350,28 +335,23 @@ event_inherited()
 			return 0
 		}
 		
-		var _depth_canvas = _canvases[Canvases.DEPTH]
 		var _width = surface_get_width(_surface)
 		var _height = surface_get_height(_surface)
 		
-		with _depth_canvas {
-			Resize(_width, _height)
-			Start()
+		_x = floor(_x)
+		_y = floor(_y)
+		
+		if _x < 0 or _x >= _width or _y < 0 or _y >= _height {
+			return 0
 		}
 		
-		draw_primitive_begin_texture(pr_trianglestrip, surface_get_texture_depth(_surface))
-		draw_vertex_texture(0, _height, 0, 1)
-		draw_vertex_texture(_width, _height, 1, 1)
-		draw_vertex_texture(0, 0, 0, 0)
-		draw_vertex_texture(_width, 0, 1, 0)
-		draw_primitive_end()
+		buffer_resize(depth_buffer, _width * _height * 4)
 		
-		with _depth_canvas {
-			Finish()
-			UpdateCache()
+		if not buffer_get_surface_depth(depth_buffer, _surface, 0) {
+			return 0
 		}
 		
-		return _depth_canvas.GetPixel(_x, _y)
+		return buffer_peek(depth_buffer, (_x + (_y * _width)) * 4, buffer_f32)
 	}
 	
 	render = function (_width, _height, _update_listener = false, _allow_sky = true, _allow_screen = true, _world_shader = (global.config.vid_lighting or global.config.vid_antialias) ? global.world_pixel_shader : global.world_shader) {
