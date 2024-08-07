@@ -326,8 +326,6 @@ event_inherited()
 	}
 	
 	depth_from_world = function (_x, _y) {
-		static depth_buffer = buffer_create(1, buffer_fixed, 1)
-		
 		var _canvases = global.canvases
 		var _surface = _canvases[Canvases.WORLD].GetSurfaceID()
 		
@@ -337,21 +335,26 @@ event_inherited()
 		
 		var _width = surface_get_width(_surface)
 		var _height = surface_get_height(_surface)
+		var _depth_canvas = _canvases[Canvases.DEPTH]
 		
-		_x = floor(_x)
-		_y = floor(_y)
-		
-		if _x < 0 or _x >= _width or _y < 0 or _y >= _height {
-			return 0
+		with _depth_canvas {
+			Resize(_width, _height)
+			Start()
 		}
 		
-		buffer_resize(depth_buffer, _width * _height * 4)
+		draw_primitive_begin_texture(pr_trianglestrip, surface_get_texture_depth(_surface))
+		draw_vertex_texture(0, _height, 0, 1)
+		draw_vertex_texture(_width, _height, 1, 1)
+		draw_vertex_texture(0, 0, 0, 0)
+		draw_vertex_texture(_width, 0, 1, 0)
+		draw_primitive_end()
 		
-		if not buffer_get_surface_depth(depth_buffer, _surface, 0) {
-			return 0
+		with _depth_canvas {
+			Finish()
+			UpdateCache()
 		}
 		
-		return buffer_peek(depth_buffer, (_x + (_y * _width)) * 4, buffer_f32)
+		return _depth_canvas.GetPixel(floor(_x), floor(_y))
 	}
 	
 	render = function (_width, _height, _update_listener = false, _allow_sky = true, _allow_screen = true, _world_shader = (global.config.vid_lighting or global.config.vid_antialias) ? global.world_pixel_shader : global.world_shader) {
@@ -362,7 +365,7 @@ event_inherited()
 		}
 		
 		if instance_exists(child) {
-			var _render = child.render(_width, _height, _update_listener, _allow_sky, _allow_screen, _world_shader)
+			var _render = child.render(_width, _height, _update_listener, _allow_sky, _allow_screen, _world_shader);
 			
 			--global.camera_layer
 			
@@ -472,12 +475,14 @@ event_inherited()
 		global.batch_camera = id
 			
 		var _active_things, _thing_count
+		var _sky = noone
 		
 		with _area {
 			if _allow_sky {
-				draw_clear(clear_color[4])
+				draw_clear_alpha(clear_color[4], clear_color[3])
 					
 				if instance_exists(sky) and sky.model != undefined {
+					_sky = sky
 					gpu_set_zwriteenable(false)
 					global.sky_shader.set()
 					global.u_time.set(_time)
@@ -492,7 +497,7 @@ event_inherited()
 						event_user(ThingEvents.DRAW)
 					}
 					
-					shader_reset()
+					batch_submit()
 					gpu_set_zwriteenable(true)
 				}
 			} else {
@@ -606,7 +611,7 @@ event_inherited()
 				
 			repeat i {
 				with _active_things[| --i] {
-					if f_visible {
+					if f_visible or (_allow_sky and id == _sky) {
 						ds_priority_add(_gui_priority, id, screen_depth)
 					}
 				}
