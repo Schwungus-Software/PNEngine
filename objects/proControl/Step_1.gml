@@ -848,7 +848,6 @@ if _tick >= 1 {
 			}
 		}
 		
-		global.tick_complete = false
 		_tick = 0
 	} else {
 		if input_check_pressed("debug_console") {
@@ -944,81 +943,121 @@ if _tick >= 1 {
 			}
 		}
 		
-		_ui = global.ui
+		if not _skip_tick {
+			var _camera_man = global.camera_man
 		
-		if _ui != undefined {
-			var _ui_input = global.ui_input
+			if instance_exists(_camera_man) {
+				var _turn_x, _turn_y
 			
-			_ui_input[UIInputs.UP_DOWN] = input_check_opposing_pressed("ui_up", "ui_down", 0, true) + input_check_opposing_repeat("ui_up", "ui_down", 0, true, 2, 12)
-			_ui_input[UIInputs.LEFT_RIGHT] = input_check_opposing_pressed("ui_left", "ui_right", 0, true) + input_check_opposing_repeat("ui_left", "ui_right", 0, true, 2, 12)
-			_ui_input[UIInputs.CONFIRM] = input_check_pressed("ui_enter")
-			_ui_input[UIInputs.BACK] = input_check_pressed("pause")
-			
-			var _tick_target = _ui
-			
-			while true {
-				var _child = _tick_target.child
-				
-				if _child == undefined {
-					break
+				with _config {
+					_turn_x = in_pan_x * (in_invert_x ? -1 : 1) * in_mouse_x
+					_turn_y = in_pan_y * (in_invert_y ? -1 : 1) * in_mouse_y
 				}
-				
-				_tick_target = _child
-			}
 			
-			with _tick_target {
-				if tick != undefined {
-					tick(_tick_target)
-				}
+				_camera_man.yaw += mouse_dx * _turn_x
+				_camera_man.pitch += mouse_dy * _turn_y
 				
-				if not exists and parent != undefined {
-					_tick_target = parent
-				}
-			}
-			
-			with _tick_target {
-				if exists and f_blocking {
-					_skip_tick = true
-				}
-			}
-		} else {
-			var _paused = false
-			
-			if input_check_pressed("pause") {
-				_paused = true
+				var _move_f = input_value("up") - input_value("down")
+				var _move_s = input_value("left") - input_value("right")
 				
-				var i = INPUT_MAX_PLAYERS
-				
-				repeat i {
-					with _players[--i] {
-						if status != PlayerStatus.ACTIVE or get_state("hp") <= 0 {
-							break
-						}
-						
-						if not instance_exists(thing) or get_state("frozen") {
-							_paused = false
-							
-							break
-						}
-					}
+				if point_distance(0, 0, _move_f, _move_s) > 0 {
+					var _len = (2 - input_check("walk")) * (1 + input_check("inventory_up"))
 					
-					if not _paused {
+					with _camera_man {
+						var _forward = lengthdir_3d(_move_f * _len, yaw, pitch)
+						
+						x += _forward[0]
+						y += _forward[1]
+						z += _forward[2]
+						
+						var _side = lengthdir_3d(_move_s * _len, yaw - 90, roll)
+						
+						x += _side[0]
+						y += _side[1]
+						z += _side[2]
+					}
+				}
+				
+				_skip_tick = true
+			}
+		}
+		
+		if not _skip_tick {
+			_ui = global.ui
+		
+			if _ui != undefined {
+				var _ui_input = global.ui_input
+			
+				_ui_input[UIInputs.UP_DOWN] = input_check_opposing_pressed("ui_up", "ui_down", 0, true) + input_check_opposing_repeat("ui_up", "ui_down", 0, true, 2, 12)
+				_ui_input[UIInputs.LEFT_RIGHT] = input_check_opposing_pressed("ui_left", "ui_right", 0, true) + input_check_opposing_repeat("ui_left", "ui_right", 0, true, 2, 12)
+				_ui_input[UIInputs.CONFIRM] = input_check_pressed("ui_enter")
+				_ui_input[UIInputs.BACK] = input_check_pressed("pause")
+			
+				var _tick_target = _ui
+			
+				while true {
+					var _child = _tick_target.child
+				
+					if _child == undefined {
 						break
 					}
+				
+					_tick_target = _child
 				}
-			}
 			
-			if _paused {
-				ui_create("Pause")
-				_skip_tick = true
+				with _tick_target {
+					if tick != undefined {
+						tick(_tick_target)
+					}
+				
+					if not exists and parent != undefined {
+						_tick_target = parent
+					}
+				}
+			
+				with _tick_target {
+					if exists and f_blocking {
+						_skip_tick = true
+					}
+				}
+			} else {
+				var _paused = false
+			
+				if input_check_pressed("pause") {
+					_paused = true
+				
+					var i = INPUT_MAX_PLAYERS
+				
+					repeat i {
+						with _players[--i] {
+							if status != PlayerStatus.ACTIVE or get_state("hp") <= 0 {
+								break
+							}
+						
+							if not instance_exists(thing) or get_state("frozen") {
+								_paused = false
+							
+								break
+							}
+						}
+					
+						if not _paused {
+							break
+						}
+					}
+				}
+			
+				if _paused {
+					ui_create("Pause")
+					_skip_tick = true
+				}
 			}
 		}
 		
 		if _skip_tick {
 			mouse_dx = 0
 			mouse_dy = 0
-			input_clear_momentary(true)
-			global.tick_complete = false;
+			input_clear_momentary(true);
 			--_tick
 			
 			continue
@@ -1465,14 +1504,9 @@ if _tick >= 1 {
 			buffer_write(_demo_buffer, buffer_u8, DemoPackets.TERMINATE)
 		}
 		
-		global.tick_complete = true;
 		--_tick
 	}
 #endregion
-}
-
-if global.tick_complete {
-	global.tick_draw = _tick
 }
 
 global.tick = _tick

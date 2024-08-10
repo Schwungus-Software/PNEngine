@@ -603,7 +603,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				if sframe == frame {
 					array_copy(draw_sample, 0, tick_sample, 0, array_length(tick_sample))
 				} else {
-					dq_lerp_array(from_sample, tick_sample, global.tick_draw, draw_sample)
+					dq_lerp_array(from_sample, tick_sample, global.tick, draw_sample)
 				}
 				
 				global.u_bone_dq.set(draw_sample)
