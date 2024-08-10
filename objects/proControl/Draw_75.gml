@@ -35,8 +35,9 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 #region Draw Active Cameras
 	var _players = global.players
 	var _camera_man = global.camera_man
+	var _has_camera_man = instance_exists(_camera_man)
 	
-	if instance_exists(_camera_man) {
+	if _has_camera_man {
 		_camera_man.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 	} else {
 		var _camera_active = global.camera_active
@@ -116,7 +117,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 
 #region Update Particles & Draw GUI
 	var _dead_particles = global.dead_particles
-	var _particle_step = not (global.freeze_step or _console or (_draw_target != undefined and _draw_target.f_blocking))
+	var _particle_step = not (global.freeze_step or _console or (_draw_target != undefined and _draw_target.f_blocking) or _has_camera_man)
 	var _drawn_areas = 0
 	var _gui_priority = global.gui_priority
 	var i = 0

@@ -950,12 +950,30 @@ if _tick >= 1 {
 				var _turn_x, _turn_y
 			
 				with _config {
-					_turn_x = in_pan_x * (in_invert_x ? -1 : 1) * in_mouse_x
-					_turn_y = in_pan_y * (in_invert_y ? -1 : 1) * in_mouse_y
+					_turn_x = in_pan_x * (in_invert_x ? -1 : 1)
+					_turn_y = in_pan_y * (in_invert_y ? -1 : 1)
 				}
-			
-				_camera_man.yaw += mouse_dx * _turn_x
-				_camera_man.pitch += mouse_dy * _turn_y
+				
+				// GROSS HACK: Add analog turning controls to camera by adding
+				//             to mouse delta
+				mouse_dx = (mouse_dx * _config.in_mouse_x) + (input_value("aim_right") - input_value("aim_left"))
+				mouse_dy = (mouse_dy * _config.in_mouse_y) + (input_value("aim_down") - input_value("aim_up"))
+				
+				if input_check("attack") {
+					_camera_man.roll += mouse_dx * _turn_x
+				} else if input_check("aim") {
+					_camera_man.fov += mouse_dy * _turn_y
+				} else {
+					_camera_man.yaw += mouse_dx * _turn_x
+					_camera_man.pitch += mouse_dy * _turn_y
+				}
+				
+				if input_check_pressed("inventory_right") {
+					with _camera_man {
+						roll = 0
+						fov = 45
+					}
+				}
 				
 				var _move_f = input_value("up") - input_value("down")
 				var _move_s = input_value("left") - input_value("right")
@@ -970,7 +988,7 @@ if _tick >= 1 {
 						y += _forward[1]
 						z += _forward[2]
 						
-						var _side = lengthdir_3d(_move_s * _len, yaw - 90, roll)
+						var _side = lengthdir_3d(_move_s * _len, yaw - 90, -roll)
 						
 						x += _side[0]
 						y += _side[1]
