@@ -51,6 +51,7 @@
 	master = noone
 	holding = noone
 	holder = noone
+	tosser = noone
 	
 	cull_tick = infinity
 	cull_draw = infinity
@@ -505,7 +506,7 @@
 		return _result
 	}
 	
-	bump_avoid = function (_from) {
+	bump_avoid = function (_from, _amount = 1) {
 		var _px, _py, _pr
 		
 		with _from {
@@ -530,6 +531,8 @@
 				_ly = (_raycast[RaycastData.Y] - y) + lengthdir_y(radius, _dir)
 			}
 			
+			_lx *= _amount
+			_ly *= _amount
 			x += _lx
 			y += _ly
 			
@@ -542,6 +545,8 @@
 				}
 			}
 		} else {
+			_lx *= _amount
+			_ly *= _amount
 			x += _lx
 			y += _ly
 		}
@@ -682,6 +687,7 @@
 		}
 		
 		with holding {
+			tosser = holder
 			holder = noone
 			pitch = 0
 		}

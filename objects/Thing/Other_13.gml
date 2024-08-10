@@ -52,33 +52,35 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 			if z > (_tz - _th) and (z - height) < _tz
 			   and point_distance(x, y, _tx, _ty) < bump_radius + _thing.bump_radius {
 				var _me = id
-				var _result = bump_check(_me, _thing)
+				var _result_me = bump_check(_me, _thing)
 				
 				if not instance_exists(_me) {
 					exit
 				}
 				
-				if not _result or not instance_exists(_thing) {
+				if _result_me == 0 or not instance_exists(_thing) {
 					continue
 				}
 				
-				_result = _thing.bump_check(_thing, _me)
+				var _result_from = _thing.bump_check(_thing, _me)
 				
 				if not instance_exists(_me) {
 					exit
 				}
 				
-				if not _result or not instance_exists(_thing) or f_bump_passive or _thing.f_bump_passive {
+				if _result_from == 0 or not instance_exists(_thing) or f_bump_passive or _thing.f_bump_passive {
 					continue
 				}
 				
 				// Avoid this Thing if all these conditions are met
-				var _pusher, _pushed
+				var _pusher, _pushed, _pusher_result, _pushed_result
 				
 				if _thing.f_bump_avoid
 				   and (f_bump_heavy or point_distance(0, 0, x_speed, y_speed) > point_distance(0, 0, _thing.x_speed, _thing.y_speed)) {
 					_pusher = id
 					_pushed = _thing
+					_pusher_result = _result_me
+					_pushed_result = _result_from
 				} else {
 					if not f_bump_avoid {
 						// None of the Things can avoid each other
@@ -87,10 +89,12 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 					
 					_pusher = _thing
 					_pushed = id
+					_pusher_result = _result_from
+					_pushed_result = _result_me
 				}
 				
-				if not _pushed.bump_avoid(_pusher) and _pusher.f_bump_avoid and (not _pusher.f_bump_heavy or _pushed.f_bump_heavy) {
-					_pusher.bump_avoid(_pushed)
+				if not _pushed.bump_avoid(_pusher, _pusher_result) and _pusher.f_bump_avoid and (not _pusher.f_bump_heavy or _pushed.f_bump_heavy) {
+					_pusher.bump_avoid(_pushed, _pushed_result)
 				}
 			}
 		}
