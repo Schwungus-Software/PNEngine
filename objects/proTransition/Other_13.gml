@@ -1,4 +1,4 @@
 /// @description Tick
 if tick != undefined {
-	tick(id)
+	catspeak_execute(tick)
 }

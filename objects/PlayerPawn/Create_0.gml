@@ -54,11 +54,11 @@ event_inherited()
 		f_grounded = false
 		coyote = 0
 		jumped = true
-		player_jumped(id)
+		catspeak_execute(player_jumped)
 	}
 	
 	do_maneuver = function () {
-		player_maneuvered(id)
+		catspeak_execute(player_maneuvered)
 	}
 	
 	do_attack = function () {
@@ -68,7 +68,7 @@ event_inherited()
 			exit
 		}
 		
-		player_attacked(id)
+		catspeak_execute(player_attacked)
 	}
 	
 	get_state = function (_key) {
@@ -125,27 +125,27 @@ event_inherited()
 #endregion
 
 #region Virtual Functions
-	try_jump = function (_self) {
+	try_jump = function () {
 		return true
 	}
 	
-	player_jumped = function (_self) {}
+	player_jumped = function () {}
 	
-	try_maneuver = function (_self) {
+	try_maneuver = function () {
 		return true
 	}
 	
-	player_maneuvered = function (_self) {}
+	player_maneuvered = function () {}
 	
-	try_attack = function (_self) {
+	try_attack = function () {
 		return true
 	}
 	
-	player_attacked = function (_self) {}
-	player_aimed = function (_self, _target) {}
-	player_respawned = function (_self) {}
+	player_attacked = function () {}
+	player_aimed = function (_target) {}
+	player_respawned = function () {}
 	
-	player_create = function (_self) {}
-	player_update = function (_self) {}
-	player_update_camera = function (_self) {}
+	player_create = function () {}
+	player_update = function () {}
+	player_update_camera = function () {}
 #endregion

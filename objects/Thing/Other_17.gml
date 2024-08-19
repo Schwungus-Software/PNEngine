@@ -1,4 +1,4 @@
 /// @description Draw GUI
 if draw_gui != undefined {
-	draw_gui(id)
+	catspeak_execute(draw_gui)
 }

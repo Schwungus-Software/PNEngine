@@ -1,20 +1,20 @@
 #ui
 
-tick = fun (_self) {
-	let _input = _self.input
+tick = fun {
+	let _input = self.input
 	
 	if _input[UINP_BACK] {
-		_self.destroy()
+		self.destroy()
 		
 		return
 	}
 	
 	if _input[UINP_CONFIRM] {
-		_self.open_options()
+		self.open_options()
 	}
 }
 
-draw_gui = fun (_self) {
+draw_gui = fun {
 	draw_set_alpha(0.5)
 	draw_rectangle_color(0, 0, 480, 270, BLACK, BLACK, BLACK, BLACK, false)
 	draw_set_alpha(1)

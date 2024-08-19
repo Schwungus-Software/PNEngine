@@ -1,4 +1,4 @@
 /// @description Draw Screen
 if draw_screen != undefined {
-	draw_screen(id, screen_width, screen_height)
+	catspeak_execute(draw_screen, screen_width, screen_height)
 }

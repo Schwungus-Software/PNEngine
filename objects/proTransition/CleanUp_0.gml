@@ -1,3 +1,3 @@
 if clean_up != undefined {
-	clean_up(id)
+	catspeak_execute(clean_up)
 }

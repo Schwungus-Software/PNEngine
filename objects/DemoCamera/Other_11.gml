@@ -2,7 +2,7 @@
 event_inherited()
 
 if not global.game_status & GameStatus.DEMO {
-	instance_destroy()
+	instance_destroy(id, false)
 	
 	exit
 }

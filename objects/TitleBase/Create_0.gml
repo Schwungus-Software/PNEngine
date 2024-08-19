@@ -75,7 +75,7 @@ set_menu = function (_menu, _allow_return = true) {
 		var _previous = menu
 		
 		menu = _menu
-		change_menu(id, _previous)
+		catspeak_execute(change_menu, _previous)
 		
 		return true
 	}
@@ -85,11 +85,11 @@ set_menu = function (_menu, _allow_return = true) {
 #endregion
 
 #region Virtual Functions
-change_menu = function (_self, _previous) {}
+change_menu = function (_previous) {}
 
-change_option = function (_self, _previous) {}
+change_option = function (_previous) {}
 
-change_delete_state = function (_self, _state) {}
+change_delete_state = function (_state) {}
 
-exit_title = function (_self, _option) {}
+exit_title = function (_option) {}
 #endregion

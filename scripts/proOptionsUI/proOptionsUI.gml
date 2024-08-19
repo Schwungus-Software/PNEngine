@@ -435,11 +435,11 @@ function proOptionsUI() : UI(undefined) constructor {
 	focus = undefined
 	force_option = -1
 	
-	clean_up = function (_self) {
+	clean_up = function () {
 		input_binding_scan_abort()
 	}
 	
-	tick = function (_self) {
+	tick = function () {
 		if focus != undefined {
 			input_verb_consume("jump")
 			input_verb_consume("leave")
@@ -586,7 +586,7 @@ function proOptionsUI() : UI(undefined) constructor {
 		}
 	}
 	
-	draw_gui = function (_self) {
+	draw_gui = function () {
 		draw_set_alpha(0.5)
 		draw_rectangle_color(0, 0, 480, 270, c_black, c_black, c_black, c_black, false)
 		draw_set_alpha(1)

@@ -6,6 +6,6 @@ if player == undefined {
 event_inherited()
 
 if instance_exists(id) {
-	player_update(id)
-	player_update_camera(id)
+	catspeak_execute(player_update)
+	catspeak_execute(player_update_camera)
 }

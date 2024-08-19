@@ -283,7 +283,7 @@ function Player() constructor {
 					
 					with level {
 						if area_changed != undefined {
-							area_changed(self, _newcomer, other)
+							catspeak_execute(area_changed, _newcomer, other)
 						}
 					}
 					

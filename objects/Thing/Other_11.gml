@@ -2,7 +2,7 @@
 move_angle = angle
 
 if create != undefined {
-	create(id)
+	catspeak_execute(create)
 }
 
 if f_unique {

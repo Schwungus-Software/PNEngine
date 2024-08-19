@@ -452,7 +452,13 @@
 					continue
 				}
 				
-				if not _thing.hitscan_intercept(_thing, _self, _x1, _y1, _z1, _x2, _y2, _z2, _flags) {
+				var _exres
+				
+				with _thing {
+					_exres = catspeak_execute(hitscan_intercept, _self, _x1, _y1, _z1, _x2, _y2, _z2, _flags)
+				}
+				
+				if not _exres {
 					continue
 				}
 				
@@ -491,16 +497,18 @@
 	}
 	
 	do_sequence = function (_sequence) {
-		thing_sequenced(id, _sequence)
+		catspeak_execute(thing_sequenced, _sequence)
 	}
 	
 	receive_damage = function (_amount, _type = "Normal", _from = noone, _source = _from) {
-		var _to = id
-		
-		var _result = damage_received(_to, _from, _source, _amount, _type)
+		var _result = catspeak_execute(damage_received, _from, _source, _amount, _type)
 		
 		if instance_exists(_from) {
-			_from.damage_dealt(_from, _to, _source, _amount, _type, _result)
+			var _to = id
+			
+			with _from {
+				catspeak_execute(damage_dealt, _to, _source, _amount, _type, _result)
+			}
 		}
 		
 		return _result
@@ -657,14 +665,14 @@
 		var _me = id
 		
 		with _thing {
-			if not holdable_held(_thing, _me, _forced) and not _forced {
+			if not catspeak_execute(holdable_held, _me, _forced) and not _forced {
 				return false
 			}
 			
 			holder = _me
 		}
 		
-		if holder_held(_me, _thing, _forced) {
+		if catspeak_execute(holder_held, _thing, _forced) {
 			holding = _thing
 			
 			return true
@@ -682,7 +690,15 @@
 			return true
 		}
 		
-		if (not holding.holdable_unheld(holding, id, _tossed, _forced) or not holder_unheld(id, holding, _tossed, _forced)) and not _forced {
+		var _me = id
+		
+		with holding {
+			if not (catspeak_execute(holdable_unheld, _me, _tossed, _forced) or _forced) {
+				return false
+			}
+		}
+		
+		if not (catspeak_execute(holder_unheld, holding, _tossed, _forced) or _forced) {
 			return false
 		}
 		
@@ -702,7 +718,14 @@
 			return false
 		}
 		
-		return _thing.interactive_triggered(_thing, id) and interactor_triggered(id, _thing)
+		var _exres
+		var _me = id
+		
+		with _thing {
+			_exres = catspeak_execute(interactive_triggered, _me)
+		}
+		
+		return _exres and catspeak_execute(interactor_triggered, _thing)
 	}
 	
 	enter_from = function (_thing) {
@@ -716,58 +739,60 @@
 			model.rotate(angle, 0, 0)
 		}
 		
-		_thing.thing_intro(_thing, id)
+		var _me = id
+		
+		with _thing {
+			catspeak_execute(thing_intro, _me)
+		}
 	}
 #endregion
 
 #region Virtual Functions
-	player_entered = function (_self, _player) {}
-	player_left = function (_self, _player) {}
-	thing_intro = function (_self, _from) {}
-	thing_sequenced = function (_self, _sequence) {}
-	damage_dealt = function (_self, _to, _source, _amount, _type, _result) {}
+	player_entered = function (_player) {}
+	player_left = function (_player) {}
+	thing_intro = function (_from) {}
+	thing_sequenced = function (_sequence) {}
+	damage_dealt = function (_to, _source, _amount, _type, _result) {}
 	
-	damage_received = function (_self, _from, _source, _amount, _type) {
+	damage_received = function (_from, _source, _amount, _type) {
 		return DamageResults.NONE
 	}
 	
-	bump_check = function (_self, _from) {
+	bump_check = function (_from) {
 		return true
 	}
 	
-	holder_held = function (_self, _to, _forced) {
+	holder_held = function (_to, _forced) {
 		return true
 	}
 	
-	holder_unheld = function (_self, _to, _tossed, _forced) {
+	holder_unheld = function (_to, _tossed, _forced) {
 		return true
 	}
 	
-	holder_attach_holdable = function (_self, _holding) {
-		with _self {
-			_holding.x = x
-			_holding.y = y
-			_holding.z = z - height
-		}
+	holder_attach_holdable = function (_holding) {
+		_holding.x = x
+		_holding.y = y
+		_holding.z = z - height
 	}
 	
-	holdable_held = function (_self, _from, _forced) {
+	holdable_held = function (_from, _forced) {
 		return true
 	}
 	
-	holdable_unheld = function (_self, _from, _tossed, _forced) {
+	holdable_unheld = function (_from, _tossed, _forced) {
 		return true
 	}
 	
-	interactor_triggered = function (_self, _to) {
+	interactor_triggered = function (_to) {
 		return true
 	}
 	
-	interactive_triggered = function (_self, _from) {
+	interactive_triggered = function (_from) {
 		return true
 	}
 	
-	hitscan_intercept = function (_self, _from, _x1, _y1, _z1, _x2, _y2, _z2, _flags) {
+	hitscan_intercept = function (_from, _x1, _y1, _z1, _x2, _y2, _z2, _flags) {
 		return true
 	}
 #endregion

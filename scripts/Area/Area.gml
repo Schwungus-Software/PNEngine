@@ -166,7 +166,7 @@ function Area() constructor {
 		
 		with level {
 			if area_activated != undefined {
-				area_activated(self, other)
+				catspeak_execute(area_activated, other)
 			}
 		}
 	}
@@ -429,7 +429,7 @@ function Area() constructor {
 		
 		with level {
 			if area_deactivated != undefined {
-				area_deactivated(self, other)
+				catspeak_execute(area_deactivated, other)
 			}
 		}
 	}

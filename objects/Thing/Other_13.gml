@@ -5,7 +5,7 @@ z_previous = z
 angle_previous = angle
 
 if tick_start != undefined {
-	tick_start(id)
+	catspeak_execute(tick_start)
 }
 
 // Source: https://github.com/YoYoGames/GameMaker-HTML5/blob/37ebef72db6b238b892bb0ccc60184d4c4ba5d12/scripts/yyInstance.js#L1157
@@ -52,7 +52,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 			if z > (_tz - _th) and (z - height) < _tz
 			   and point_distance(x, y, _tx, _ty) < bump_radius + _thing.bump_radius {
 				var _me = id
-				var _result_me = bump_check(_me, _thing)
+				var _result_me = catspeak_execute(bump_check, _thing)
 				
 				if not instance_exists(_me) {
 					exit
@@ -62,7 +62,11 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 					continue
 				}
 				
-				var _result_from = _thing.bump_check(_thing, _me)
+				var _result_from
+				
+				with _thing {
+					_result_from = catspeak_execute(bump_check, _me)
+				}
 				
 				if not instance_exists(_me) {
 					exit
@@ -235,7 +239,11 @@ if _held {
 							move_angle += _diff
 						}
 						
-						_thing.thing_on_prop(_thing, id)
+						var _me = id
+						
+						with _thing {
+							catspeak_execute(thing_on_prop, _me)
+						}
 					}
 					
 					last_prop = _thing
@@ -258,7 +266,7 @@ if _held {
 }
 
 if tick != undefined {
-	tick(id)
+	catspeak_execute(tick)
 }
 
 var _is_holding = instance_exists(holding) 
@@ -330,7 +338,7 @@ if _model != undefined and not _held {
 				}
 			}
 		} else {
-			holder_attach_holdable(id, holding)
+			catspeak_execute(holder_attach_holdable, holding)
 			
 			with holding {
 				if model != undefined {
@@ -405,5 +413,5 @@ if _held {
 }
 
 if tick_end != undefined {
-	tick_end(id)
+	catspeak_execute(tick_end)
 }
