@@ -1025,7 +1025,7 @@ if _tick >= 1 {
 			
 				with _tick_target {
 					if tick != undefined {
-						tick(_tick_target)
+						catspeak_execute(tick)
 					}
 				
 					if not exists and parent != undefined {

@@ -172,7 +172,7 @@ function Player() constructor {
 					player = _player
 					input = _player.input
 					input_previous = _player.input_previous
-					player_create(_player_pawn)
+					catspeak_execute(player_create)
 				}
 			}
 			
@@ -195,7 +195,9 @@ function Player() constructor {
 				input[PlayerInputs.FORCE_UP_DOWN] = -15
 				
 				if _respawned {
-					_player_pawn.player_respawned(_player_pawn)
+					with _player_pawn {
+						catspeak_execute(player_respawned)
+					}
 				}
 				
 				return _player_pawn

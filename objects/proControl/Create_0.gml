@@ -294,7 +294,8 @@
 					
 					"show_caption", show_caption,
 					"force_type", force_type,
-					"force_type_fallback", force_type_fallback
+					"force_type_fallback", force_type_fallback,
+					"method", catspeak_method
 				)
 			#endregion
 			

@@ -221,7 +221,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 if _draw_target != undefined {
 	with _draw_target {
 		if draw_gui != undefined {
-			draw_gui(_draw_target)
+			catspeak_execute(draw_gui)
 		}
 	}
 }
