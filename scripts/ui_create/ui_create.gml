@@ -38,7 +38,7 @@ function ui_create(_type, _special = undefined, _replace = true) {
 		special = _special
 		
 		if create != undefined {
-			create(_ui)
+			catspeak_execute(create)
 		}
 		
 		if not exists {
