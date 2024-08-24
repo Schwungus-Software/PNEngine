@@ -585,8 +585,7 @@ switch load_state {
 					
 				if is_string(_track) {
 					_asset = global.music.fetch(_track)
-						
-					var _inst = new MusicInstance(_asset, i)
+					music_play(_asset, i)
 				} else {
 					if is_struct(_track) {
 						_asset = global.music.fetch(force_type(_track[$ "name"], "string"))
@@ -594,7 +593,8 @@ switch load_state {
 						var _priority = force_type_fallback(_track[$ "priority"], "number", i)
 						var _loop = force_type_fallback(_track[$ "loop"], "bool", true)
 						var _active = force_type_fallback(_track[$ "active"], "bool", true)
-						var _inst = new MusicInstance(_asset, _priority, _loop, 1, 0, _active)
+						
+						music_play(_asset, _priority, _loop, 1, 0, _active)
 					}
 				}
 					
@@ -603,7 +603,9 @@ switch load_state {
 			}
 			
 			if start != undefined {
-				start(_level)
+				with _level {
+					catspeak_execute(start)
+				}
 			}
 			
 			np_setpresence_timestamps(rp_time ? date_current_datetime() : 0, 0, false)

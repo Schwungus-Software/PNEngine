@@ -656,7 +656,7 @@
 				)
 				
 				addFunction(
-					"MusicInstance", MusicInstance,
+					"music_play", music_play,
 					
 					"music_get_instance", function (_priority) {
 						return global.music_instances[| _priority]
