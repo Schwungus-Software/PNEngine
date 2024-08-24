@@ -149,6 +149,14 @@
 #endregion
 
 #region Functions
+	get_name = function () {
+		if thing_script != undefined {
+			return thing_script.name
+		}
+		
+		return object_get_name(object_index)
+	}
+	
 	is_ancestor = function (_type) {
 		if is_string(_type) {
 			if thing_script != undefined and thing_script.is_ancestor(_type) {
