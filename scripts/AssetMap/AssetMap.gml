@@ -3,6 +3,14 @@ function AssetMap() constructor {
 	
 	static load = function (_name) {}
 	
+	static loads = function () {
+		var i = 0
+		
+		repeat argument_count {
+			load(argument[i++])
+		}
+	}
+	
 	static get = function (_name) {
 		gml_pragma("forceinline")
 		
