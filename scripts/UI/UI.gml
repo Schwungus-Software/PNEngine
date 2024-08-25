@@ -40,7 +40,7 @@ function UI(_ui_script) constructor {
 		}
 		
 		if clean_up != undefined {
-			clean_up(self)
+			catspeak_execute(clean_up)
 		}
 		
 		if global.ui == self {
