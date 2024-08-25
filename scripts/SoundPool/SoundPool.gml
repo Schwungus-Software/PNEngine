@@ -13,7 +13,7 @@ function SoundPool() constructor {
 	
 	ds_list_add(global.sound_pools, self)
 	
-	static play = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
+	static play = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
 		if _sound == undefined {
 			return undefined
 		}
@@ -36,12 +36,13 @@ function SoundPool() constructor {
 		fmod_channel_control_set_mode(_instance, _loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF)
 		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
 		fmod_channel_control_set_pitch(_instance, _pitch * _final_pitch)
+		fmod_channel_control_set_volume(_instance, _gain)
 		fmod_channel_control_set_paused(_instance, false)
 		
 		return _instance
 	}
 	
-	static play_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1) {
+	static play_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
 		static _dummy_vel = new FmodVector()
 		
 		if _sound == undefined {
@@ -66,6 +67,7 @@ function SoundPool() constructor {
 		fmod_channel_control_set_mode(_instance, FMOD_MODE.AS_3D | FMOD_MODE.AS_3D_WORLDRELATIVE | FMOD_MODE.AS_3D_LINEARROLLOFF | (_loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF))
 		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
 		fmod_channel_control_set_pitch(_instance, _pitch * _final_pitch)
+		fmod_channel_control_set_volume(_instance, _gain)
 		
 		var _pos = { x: _x, y: _y, z: _z }
 		
@@ -76,7 +78,7 @@ function SoundPool() constructor {
 		return _instance
 	}
 	
-	static play_on = function (_emitter, _sound, _loop = false, _offset = 0, _pitch = 1) {
+	static play_on = function (_emitter, _sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
 		if _sound == undefined {
 			return undefined
 		}
@@ -99,6 +101,7 @@ function SoundPool() constructor {
 		fmod_channel_control_set_mode(_instance, _loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF)
 		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
 		fmod_channel_control_set_pitch(_instance, _pitch * _final_pitch)
+		fmod_channel_control_set_volume(_instance, _gain)
 		fmod_channel_control_set_paused(_instance, false)
 		
 		return _instance

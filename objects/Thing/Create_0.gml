@@ -179,15 +179,15 @@
 		return true
 	}
 	
-	play_sound = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
-		return area.sounds.play(_sound, _loop, _offset, _pitch)
+	play_sound = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
+		return area.sounds.play(_sound, _loop, _offset, _pitch, _gain)
 	}
 	
-	play_sound_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1) {
-		return area.sounds.play_at(_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, _offset, _pitch)
+	play_sound_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
+		return area.sounds.play_at(_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, _offset, _pitch, _gain)
 	}
 	
-	play_sound_local = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
+	play_sound_local = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
 		var _pool = area.sounds
 		
 		if emitter == undefined {
@@ -200,11 +200,11 @@
 			fmod_channel_control_set_3d_min_max_distance(emitter, emitter_falloff, emitter_falloff_max)
 		}
 		
-		return _pool.play_on(emitter, _sound, _loop, _offset, _pitch)
+		return _pool.play_on(emitter, _sound, _loop, _offset, _pitch, _gain)
 	}
 	
-	play_sound_ui = function (_sound, _loop = false, _offset = 0, _pitch = 1) {
-		return global.ui_sounds.play(_sound, _loop, _offset, _pitch)
+	play_sound_ui = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
+		return global.ui_sounds.play(_sound, _loop, _offset, _pitch, _gain)
 	}
 	
 	play_voice = function (_sound) {
