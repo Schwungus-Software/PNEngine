@@ -837,17 +837,9 @@ if _tick >= 1 {
 			}
 			
 			keyboard_string = ""
-		}
-		
-		if input_check_pressed("pause") {
-			input_source_mode_set(global.input_mode)
-			input_verb_consume("pause")
-			global.console = false
+		} else if input_check_pressed("pause") {
 			global.console_input = keyboard_string
-			
-			if global.ui == undefined or not global.ui.f_blocking {
-				fmod_channel_control_set_paused(global.world_channel_group, false)
-			}
+			cmd_close("")
 		}
 		
 		_tick = 0

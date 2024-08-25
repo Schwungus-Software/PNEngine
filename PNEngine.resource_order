@@ -333,6 +333,7 @@
     {"name":"Canvas","order":3,"path":"scripts/Canvas/Canvas.yy",},
     {"name":"CanvasGetAppSurf","order":4,"path":"scripts/CanvasGetAppSurf/CanvasGetAppSurf.yy",},
     {"name":"CanvasIsCanvas","order":5,"path":"scripts/CanvasIsCanvas/CanvasIsCanvas.yy",},
+    {"name":"cmd_close","order":11,"path":"scripts/cmd_close/cmd_close.yy",},
     {"name":"cmd_cman","order":9,"path":"scripts/cmd_cman/cmd_cman.yy",},
     {"name":"cmd_dend","order":1,"path":"scripts/cmd_dend/cmd_dend.yy",},
     {"name":"cmd_drec","order":2,"path":"scripts/cmd_drec/cmd_drec.yy",},
