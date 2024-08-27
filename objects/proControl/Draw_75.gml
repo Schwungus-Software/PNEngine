@@ -168,6 +168,8 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 				p[ParticleData.WIDTH] = _width
 				p[ParticleData.HEIGHT] = _height
 				p[ParticleData.ANGLE] += p[ParticleData.ANGLE_SPEED] * d
+				p[ParticleData.PITCH] += p[ParticleData.PITCH_SPEED] * d
+				p[ParticleData.ROLL] += p[ParticleData.ROLL_SPEED] * d
 				
 				var _alpha = p[ParticleData.ALPHA] - p[ParticleData.ALPHA_SPEED] * d
 				

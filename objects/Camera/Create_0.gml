@@ -550,7 +550,23 @@ event_inherited()
 				var p = particles[| i++]
 				
 				batch_set_properties(p[ParticleData.ALPHA_TEST], p[ParticleData.BRIGHT], p[ParticleData.BLENDMODE], p[ParticleData.FILTER])
-				batch_billboard(p[ParticleData.IMAGE], p[ParticleData.FRAME], p[ParticleData.WIDTH], p[ParticleData.HEIGHT], p[ParticleData.X], p[ParticleData.Y], p[ParticleData.Z], p[ParticleData.ANGLE], p[ParticleData.COLOR], p[ParticleData.ALPHA])
+				
+				var _pimage = p[ParticleData.IMAGE]
+				var _pframe = p[ParticleData.FRAME]
+				var _pwidth = p[ParticleData.WIDTH]
+				var _pheight = p[ParticleData.HEIGHT]
+				var _px = p[ParticleData.X]
+				var _py = p[ParticleData.Y]
+				var _pz = p[ParticleData.Z]
+				var _pangle = p[ParticleData.ANGLE]
+				var _pcolor = p[ParticleData.COLOR]
+				var _palpha = p[ParticleData.ALPHA]
+				
+				if p[ParticleData.FLAT] {
+					batch_floor_angle(_pimage, _pframe, _pwidth, _pheight, _px, _py, _pz, _pangle, p[ParticleData.PITCH], p[ParticleData.ROLL], _pcolor, _palpha)
+				} else {
+					batch_billboard(_pimage, _pframe, _pwidth, _pheight, _px, _py, _pz, _pangle, _pcolor, _palpha)
+				}
 			}
 				
 			batch_submit()

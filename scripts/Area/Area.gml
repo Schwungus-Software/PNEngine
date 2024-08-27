@@ -292,8 +292,13 @@ function Area() constructor {
 		_particle[ParticleData.WIDTH_SPEED] = 0
 		_particle[ParticleData.HEIGHT] = 1
 		_particle[ParticleData.HEIGHT_SPEED] = 0
+		_particle[ParticleData.FLAT] = false
 		_particle[ParticleData.ANGLE] = 0
 		_particle[ParticleData.ANGLE_SPEED] = 0
+		_particle[ParticleData.PITCH] = 0
+		_particle[ParticleData.PITCH_SPEED] = 0
+		_particle[ParticleData.ROLL] = 0
+		_particle[ParticleData.ROLL_SPEED] = 0
 		_particle[ParticleData.COLOR] = c_white
 		_particle[ParticleData.ALPHA] = 1
 		_particle[ParticleData.ALPHA_SPEED] = 0

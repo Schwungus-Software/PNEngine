@@ -315,6 +315,7 @@
     {"name":"AreaThing","order":2,"path":"scripts/AreaThing/AreaThing.yy",},
     {"name":"Asset","order":5,"path":"scripts/Asset/Asset.yy",},
     {"name":"batch_billboard","order":5,"path":"scripts/batch_billboard/batch_billboard.yy",},
+    {"name":"batch_floor_angle","order":13,"path":"scripts/batch_floor_angle/batch_floor_angle.yy",},
     {"name":"batch_floor_ext","order":2,"path":"scripts/batch_floor_ext/batch_floor_ext.yy",},
     {"name":"batch_line","order":7,"path":"scripts/batch_line/batch_line.yy",},
     {"name":"batch_set_alpha_test","order":6,"path":"scripts/batch_set_alpha_test/batch_set_alpha_test.yy",},
