@@ -8,6 +8,8 @@ function cmd_demo(_args) {
 		exit
 	}
 	
+	CMD_NO_NETGAME
+	
 	var _filename = _parse_args[0] + ".pnd"
 	var _path = DEMOS_PATH + _filename
 	
@@ -36,6 +38,8 @@ function cmd_demo(_args) {
 	}
 	
 	buffer_read(_demo_buffer, buffer_string) // Version
+	
+	var _is_netgame = buffer_read(_demo_buffer, buffer_bool)
 	
 	// Mods
 	var _mods = global.mods
@@ -127,6 +131,11 @@ function cmd_demo(_args) {
 	global.demo_buffer = _demo_buffer
 	global.demo_next = buffer_read(_demo_buffer, buffer_u32)
 	global.game_status = GameStatus.DEMO
+	
+	if _is_netgame {
+		global.game_status |= GameStatus.NETGAME
+	}
+	
 	global.save_name = "Demo"
 	global.level.goto(_level, _area, _tag)
 }

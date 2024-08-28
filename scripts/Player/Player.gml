@@ -1,6 +1,7 @@
 function Player() constructor {
 	slot = -1
 	status = PlayerStatus.INACTIVE
+	net = undefined
 	
 	// Area
 	level = undefined

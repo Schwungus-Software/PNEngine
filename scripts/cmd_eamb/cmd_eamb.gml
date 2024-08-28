@@ -5,6 +5,8 @@ function cmd_eamb(_args) {
 		exit
 	}
 	
+	CMD_NO_NETGAME
+	
 	var _area = undefined
 	
 	// Get first active area

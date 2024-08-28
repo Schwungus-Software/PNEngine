@@ -5,6 +5,7 @@ function config_reset() {
 		data_path: "data/",
 		
 		// USER
+		name: "Player",
 		language: "English",
 		
 		// VIDEO

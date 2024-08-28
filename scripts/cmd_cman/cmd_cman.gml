@@ -1,4 +1,6 @@
 function cmd_cman(_args) {
+	CMD_NO_NETGAME
+	
 	var _camera_man = global.camera_man
 	
 	if instance_exists(_camera_man) {

@@ -1,10 +1,11 @@
 switch load_state {
-	case LoadStates.START:
+	case LoadStates.START: {
 		load_state = LoadStates.UNLOAD
-	exit
 		
-	case LoadStates.UNLOAD:
-#region Unload Previous Level
+		exit
+	}
+		
+	case LoadStates.UNLOAD: {
 		with proTransition {
 			if state == 3 {
 				instance_destroy()
@@ -66,10 +67,11 @@ switch load_state {
 		catspeak_collect()
 		gc_collect()
 		load_state = LoadStates.LOAD
-#endregion
-	exit
 		
-	case LoadStates.LOAD:
+		exit
+	}
+		
+	case LoadStates.LOAD: {
 #region Load New Level
 		print($"\n========== {load_level} ({lexicon_text("level." + load_level)}) ==========")
 		print($"(Entering area {load_area} from {load_tag})")
@@ -529,9 +531,11 @@ switch load_state {
 			
 		load_state = LoadStates.FINISH
 #endregion
-	exit
 		
-	case LoadStates.FINISH:
+		exit
+	}
+		
+	case LoadStates.FINISH: {
 #region Finish Loading
 		global.transition_canvas.Flush()
 		game_update_status()
@@ -617,6 +621,11 @@ switch load_state {
 			// Header
 			buffer_write(_demo_buffer, buffer_string, "PNEDEMO")
 			buffer_write(_demo_buffer, buffer_string, GM_version)
+			
+			/* Add a special boolean to check if this was recorded during a
+			   netgame.
+			   Some mods may have special behaviour on netgames. */
+			buffer_write(_demo_buffer, buffer_bool, global.game_status & GameStatus.NETGAME)
 				
 			// Mods
 			var _mods = global.mods
@@ -685,7 +694,15 @@ switch load_state {
 			print("proControl: Recording demo")
 		}
 #endregion
-	exit
+		
+		exit
+	}
+	
+	case LoadStates.CONNECT: {
+		// This is a dummy load state that blocks the entire game until the
+		// netgame connection returns a result.
+		exit
+	}
 }
 
 if global.freeze_step {
@@ -745,6 +762,8 @@ var _demo_input = global.demo_input
 var _has_demo = _demo_buffer != undefined
 var _playing_demo = not _demo_write and _has_demo
 var _recording_demo = _demo_write and _has_demo
+var _netgame = global.netgame
+var _in_netgame = _netgame != undefined and _netgame.active
 
 if _tick >= 1 {
 	__input_system_tick()
@@ -840,15 +859,39 @@ if _tick >= 1 {
 		} else if input_check_pressed("pause") {
 			global.console_input = keyboard_string
 			cmd_close("")
+			input_verb_consume("pause")
 		}
 		
-		_tick = 0
+		if _in_netgame {
+			input_verb_consume("up")
+			input_verb_consume("left")
+			input_verb_consume("down")
+			input_verb_consume("right")
+			input_verb_consume("walk")
+			input_verb_consume("jump")
+			input_verb_consume("interact")
+			input_verb_consume("attack")
+			input_verb_consume("inventory_up")
+			input_verb_consume("inventory_left")
+			input_verb_consume("inventory_down")
+			input_verb_consume("inventory_right")
+			input_verb_consume("aim")
+			input_verb_consume("aim_up")
+			input_verb_consume("aim_left")
+			input_verb_consume("aim_down")
+			input_verb_consume("aim_right")
+		} else {
+			_tick = 0
+		}
 	} else {
 		if input_check_pressed("debug_console") {
 			input_source_mode_set(INPUT_SOURCE_MODE.FIXED)
 			global.console = true
 			keyboard_string = global.console_input
-			fmod_channel_control_set_paused(global.world_channel_group, true)
+			
+			if not _in_netgame {
+				fmod_channel_control_set_paused(global.world_channel_group, true)
+			}
 		}
 	}
 #endregion

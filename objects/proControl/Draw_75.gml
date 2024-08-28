@@ -304,7 +304,7 @@ if global.debug_fps {
 	draw_text(0, 0, _fps)
 }
 
-if load_state != LoadStates.NONE and load_level != undefined {
+if load_state != LoadStates.NONE and (load_level != undefined or load_state == LoadStates.CONNECT) {
 	scribble($"[{ui_font_name}][wave][fa_center][fa_middle]{lexicon_text("loading")}", "__PNENGINE_LOADING__").draw(240, 135)
 }
 #endregion

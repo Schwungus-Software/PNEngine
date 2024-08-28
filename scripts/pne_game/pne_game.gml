@@ -15,6 +15,7 @@
 		UNLOAD,
 		LOAD,
 		FINISH,
+		CONNECT,
 	}
 	
 	enum InterpData {
