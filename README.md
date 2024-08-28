@@ -22,4 +22,4 @@ The curve shader is from **[Mors](https://mors-games.com/)**' [Super Mario 64 Pl
 - **[Juju Adams](http://www.jujuadams.com)** for [Scribble](https://github.com/JujuAdams/Scribble)
 - **[katsaii](https://www.katsaii.com)** for [Catspeak](https://www.katsaii.com/catspeak-lang)
 - **[Patrik Kraif](https://github.com/kraifpatrik)** for [BBMOD](https://blueburn.cz/bbmod)
-- **[TabularElf](https://tabularelf.com)** for beta testing and [Canvas](https://github.com/tabularelf/Canvas), [Collage](https://github.com/tabularelf/Collage) and [Lexicon](https://github.com/tabularelf/lexicon)
+- **[TabularElf](https://tabularelf.com)** for beta testing and [Canvas](https://github.com/tabularelf/Canvas), [Collage](https://github.com/tabularelf/Collage), [Lexicon](https://github.com/tabularelf/lexicon) and [MultiClient](https://github.com/tabularelf/MultiClient)
