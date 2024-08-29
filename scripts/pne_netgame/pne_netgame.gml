@@ -31,6 +31,11 @@ enum NetHeaders {
 	CHAT,
 	INPUT,
 	
+	// Game
+	HOST_LEVEL,
+	HOST_FLAG,
+	HOST_STATE,
+	
 	__SIZE,
 }
 

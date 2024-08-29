@@ -699,8 +699,54 @@ switch load_state {
 	}
 	
 	case LoadStates.CONNECT: {
-		// This is a dummy load state that blocks the entire game until the
-		// netgame connection returns a result.
+		// This is a dummy load state that waits until the netgame connection
+		// returns a result.
+		exit
+	}
+	
+	case LoadStates.HOST_WAIT: {
+		// During this state, the host will wait until every player has
+		// received a level change packet then change the level.
+		var _netgame = global.netgame
+		
+		if _netgame == undefined or not _netgame.active {
+			load_state = LoadStates.START
+			
+			break
+		}
+		
+		var _ready = true
+		
+		with _netgame {
+			var i = 0
+			
+			repeat ds_list_size(players) {
+				var _player = players[| i++]
+				
+				if _player == undefined {
+					continue
+				}
+				
+				if not _player.ready {
+					_ready = false
+					
+					break
+				}
+			}
+		}
+		
+		if _ready {
+			load_state = LoadStates.START
+		}
+		
+		exit
+	}
+	
+	case LoadStates.CLIENT_WAIT: {
+		/* This is a dummy load state that waits until an actual level
+		   transition happens from the host.
+		   If you get softlocked here, too bad! */
+		
 		exit
 	}
 }
@@ -769,7 +815,7 @@ if _tick >= 1 {
 	__input_system_tick()
 	
 #region New Players
-	if not _has_demo {
+	if not _has_demo and not _in_netgame {
 		with input_players_get_status() {
 			if __any_changed {
 				print($"proControl: Player input status updated ({__new_connections}, {__new_disconnections})")

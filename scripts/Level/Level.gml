@@ -39,9 +39,37 @@ function Level() constructor {
 	}
 	
 	static goto = function (_level, _area = 0, _tag = ThingTags.NONE, _transition = noone) {
-		if net_active() {
+		set_tick_scale(1)
+		
+		var _in_netgame = net_active()
+		
+		if _in_netgame {
 			with proTransition {
 				instance_destroy()
+			}
+			
+			with global.netgame {
+				if _level == undefined {
+					exit
+				}
+				
+				if not master {
+					proControl.load_state = LoadStates.CLIENT_WAIT
+					
+					exit
+				}
+				
+				var i = 0
+				
+				repeat ds_list_size(players) {
+					var _player = players[| i++]
+					
+					if _player != undefined and not _player.local {
+						_player.ready = false
+					}
+				}
+				
+				send(SEND_OTHERS, net_buffer_create(true, NetHeaders.HOST_LEVEL, buffer_string, _level, buffer_u32, _area, buffer_s32, _tag))
 			}
 		} else {
 			with proTransition {
@@ -72,8 +100,6 @@ function Level() constructor {
 				
 				_transition = _index
 			}
-		
-			set_tick_scale(1)
 			
 			if object_exists(_transition) and (_transition == proTransition or object_is_ancestor(_transition, proTransition)) {
 				with instance_create_depth(0, 0, 0, _transition) {
@@ -95,12 +121,12 @@ function Level() constructor {
 				exit
 			}
 		}
-			
+		
 		with proControl {
 			load_level = _level
 			load_area = _area
 			load_tag = _tag
-			load_state = LoadStates.START
+			load_state = _in_netgame ? LoadStates.HOST_WAIT : LoadStates.START
 		}
 	}
 	

@@ -6,8 +6,12 @@ if async_load[? "type"] != network_type_data {
 	exit
 }
 
-if not (load_state == LoadStates.NONE or load_state == LoadStates.CONNECT) {
-	exit
+switch load_state {
+	case LoadStates.NONE:
+	case LoadStates.CONNECT:
+	case LoadStates.HOST_WAIT:
+	case LoadStates.CLIENT_WAIT: break
+	default: exit
 }
 
 var _ip = async_load[? "ip"]
@@ -226,6 +230,7 @@ with global.netgame {
 			case NetHeaders.HOST_DISCONNECT:
 			case NetHeaders.HOST_PING:
 			case NetHeaders.PLAYER_LEFT:
+			case NetHeaders.HOST_LEVEL:
 				exit
 		}
 	}
@@ -283,6 +288,19 @@ with global.netgame {
 					var _compare = buffer_read(b, buffer_u32)
 						
 					if _compare == _index {
+						if proControl.load_state == LoadStates.HOST_WAIT {
+							// Skip from and to
+							buffer_read(b, buffer_u8)
+							buffer_read(b, buffer_u8)
+								
+							var _compare_header = buffer_read(b, buffer_u8)
+							
+							if _compare_header == NetHeaders.HOST_LEVEL {
+								print($"proControl: Got ready from player {-~_from}")
+								ready = true
+							}
+						}
+						
 						buffer_delete(b)
 						ds_list_delete(reliable, 0)
 						print($"proControl: Got ACK {_index} from player {-~_from}")
@@ -464,6 +482,23 @@ with global.netgame {
 			time_source_reset(timeout_time_source)
 			time_source_start(timeout_time_source)
 			send_direct(_ip, _port, net_buffer_create(false, NetHeaders.CLIENT_PONG))
+			
+			break
+		}
+		
+		case NetHeaders.HOST_LEVEL: {
+			CLIENT_CHECK_SENDER
+			
+			var _level = buffer_read(_buffer, buffer_string)
+			var _area = buffer_read(_buffer, buffer_u32)
+			var _tag = buffer_read(_buffer, buffer_s32)
+			
+			with proControl {
+				load_level = _level
+				load_area = _area
+				load_tag = _tag
+				load_state = LoadStates.START
+			}
 			
 			break
 		}
