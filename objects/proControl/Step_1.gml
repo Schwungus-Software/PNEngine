@@ -1275,77 +1275,91 @@ if _tick >= 1 {
 					
 					input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
 				} else {
-					// Main
-					var _move_range = input_check("walk", i) ? 64 : 127
-					var _input_up_down = floor((input_value("down", i) - input_value("up", i)) * _move_range)
-					var _input_left_right = floor((input_value("right", i) - input_value("left", i)) * _move_range)
-					var _input_jump = input_check("jump", i)
-					var _input_interact = input_check("interact", i)
-					var _input_attack = input_check("attack", i)
+					var _get_input = false
+					var _pind = i
 					
-					// Inventory
-					var _input_inventory_up = input_check("inventory_up", i)
-					var _input_inventory_left = input_check("inventory_left", i)
-					var _input_inventory_down = input_check("inventory_down", i)
-					var _input_inventory_right = input_check("inventory_right", i)
-					
-					// Camera
-					var _input_aim = input_check("aim", i)
-					
-					// Write to input array
-					input[PlayerInputs.UP_DOWN] = _input_up_down
-					input[PlayerInputs.LEFT_RIGHT] = _input_left_right
-					input[PlayerInputs.JUMP] = _input_jump
-					input[PlayerInputs.INTERACT] = _input_interact
-					input[PlayerInputs.ATTACK] = _input_attack
-					input[PlayerInputs.INVENTORY_UP] = _input_inventory_up
-					input[PlayerInputs.INVENTORY_LEFT] = _input_inventory_left
-					input[PlayerInputs.INVENTORY_DOWN] = _input_inventory_down
-					input[PlayerInputs.INVENTORY_RIGHT] = _input_inventory_right
-					input[PlayerInputs.AIM] = _input_aim
-					
-					// This one kinda sucks...
-					var _dx_factor = input_value("aim_right", i) - input_value("aim_left", i)
-					var _dy_factor = input_value("aim_down", i) - input_value("aim_up", i)
-					var _dx_angle, _dy_angle
-					
-					with _config {
-						_dx_angle = in_pan_x * (in_invert_x ? -1 : 1)
-						_dy_angle = in_pan_y * (in_invert_y ? -1 : 1)
-						
-						if i == 0 and _mouse_focused {
-							_dx_factor += _mouse_dx * in_mouse_x
-							_dy_factor += _mouse_dy * in_mouse_y
+					if _in_netgame {
+						if _netgame.local_slot == i {
+							_get_input = true
+							_pind = 0
 						}
-					}
-					
-					var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
-					var _input_aim_left_right
-					
-					if is_nan(_input_force_left_right) {
-						var _dx = round(((_dx_factor * _dx_angle) * 0.0027777777777778) * 32768)
-						
-						_input_aim_left_right = (input[PlayerInputs.AIM_LEFT_RIGHT] - _dx) % 32768
 					} else {
-						_input_aim_left_right = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
-						input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
+						_get_input = true
 					}
 					
-					input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
+					if _get_input {
+						// Main
+						var _move_range = input_check("walk", _pind) ? 64 : 127
+						var _input_up_down = floor((input_value("down", _pind) - input_value("up", _pind)) * _move_range)
+						var _input_left_right = floor((input_value("right", _pind) - input_value("left", _pind)) * _move_range)
+						var _input_jump = input_check("jump", _pind)
+						var _input_interact = input_check("interact", _pind)
+						var _input_attack = input_check("attack", _pind)
 					
-					var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
-					var _input_aim_up_down
+						// Inventory
+						var _input_inventory_up = input_check("inventory_up", _pind)
+						var _input_inventory_left = input_check("inventory_left", _pind)
+						var _input_inventory_down = input_check("inventory_down", _pind)
+						var _input_inventory_right = input_check("inventory_right", _pind)
 					
-					if is_nan(_input_force_up_down) {
-						var _dy = round(((_dy_factor * _dy_angle) * 0.0027777777777778) * 32768)
+						// Camera
+						var _input_aim = input_check("aim", _pind)
+					
+						// Write to input array
+						input[PlayerInputs.UP_DOWN] = _input_up_down
+						input[PlayerInputs.LEFT_RIGHT] = _input_left_right
+						input[PlayerInputs.JUMP] = _input_jump
+						input[PlayerInputs.INTERACT] = _input_interact
+						input[PlayerInputs.ATTACK] = _input_attack
+						input[PlayerInputs.INVENTORY_UP] = _input_inventory_up
+						input[PlayerInputs.INVENTORY_LEFT] = _input_inventory_left
+						input[PlayerInputs.INVENTORY_DOWN] = _input_inventory_down
+						input[PlayerInputs.INVENTORY_RIGHT] = _input_inventory_right
+						input[PlayerInputs.AIM] = _input_aim
+					
+						// This one kinda sucks...
+						var _dx_factor = input_value("aim_right", _pind) - input_value("aim_left", _pind)
+						var _dy_factor = input_value("aim_down", _pind) - input_value("aim_up", _pind)
+						var _dx_angle, _dy_angle
+					
+						with _config {
+							_dx_angle = in_pan_x * (in_invert_x ? -1 : 1)
+							_dy_angle = in_pan_y * (in_invert_y ? -1 : 1)
 						
-						_input_aim_up_down = (input[PlayerInputs.AIM_UP_DOWN] - _dy) % 32768
-					} else {
-						_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
-						input[PlayerInputs.FORCE_UP_DOWN] = NaN
-					}
+							if _pind == 0 and _mouse_focused {
+								_dx_factor += _mouse_dx * in_mouse_x
+								_dy_factor += _mouse_dy * in_mouse_y
+							}
+						}
 					
-					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
+						var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
+						var _input_aim_left_right
+					
+						if is_nan(_input_force_left_right) {
+							var _dx = round(((_dx_factor * _dx_angle) * 0.0027777777777778) * 32768)
+						
+							_input_aim_left_right = (input[PlayerInputs.AIM_LEFT_RIGHT] - _dx) % 32768
+						} else {
+							_input_aim_left_right = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
+							input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
+						}
+					
+						input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
+					
+						var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
+						var _input_aim_up_down
+					
+						if is_nan(_input_force_up_down) {
+							var _dy = round(((_dy_factor * _dy_angle) * 0.0027777777777778) * 32768)
+						
+							_input_aim_up_down = (input[PlayerInputs.AIM_UP_DOWN] - _dy) % 32768
+						} else {
+							_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
+							input[PlayerInputs.FORCE_UP_DOWN] = NaN
+						}
+						
+						input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
+					}
 					
 					if _recording_demo and not array_equals(input, input_previous) {
 						buffer_write(_demo_buffer, buffer_u8, DemoPackets.PLAYER_INPUT)
