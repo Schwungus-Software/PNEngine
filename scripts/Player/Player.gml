@@ -13,8 +13,8 @@ function Player() constructor {
 	states = ds_map_create()
 	
 	// Input
-	input = array_create(PlayerInputs.__SIZE)
-	input_previous = array_create(PlayerInputs.__SIZE)
+	input = array_create(PlayerInputs.__SIZE, 0)
+	input_previous = array_create(PlayerInputs.__SIZE, 0)
 	__show_reconnect_caption = true
 	
 	static activate = function () {

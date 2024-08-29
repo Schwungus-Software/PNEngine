@@ -27,10 +27,6 @@ enum NetHeaders {
 	HOST_PING,
 	CLIENT_PONG,
 	
-	// Interaction
-	CHAT,
-	INPUT,
-	
 	// Game
 	HOST_LEVEL,
 	HOST_FLAG,

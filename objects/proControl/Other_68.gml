@@ -1,5 +1,5 @@
 #macro CLIENT_CHECK_HOST if _ip != ip or _port != port or _from != 0 { break }
-#macro CLIENT_CHECK_HOST_DIRECT if _ip != ip or _port != port { break }
+#macro CLIENT_CHECK_DIRECT if _ip != ip or _port != port { break }
 #macro CLIENT_CHECK_SENDER if _ip != ip or _port != port or _from != 0 or _from == _to { break }
 
 if async_load[? "type"] != network_type_data {
