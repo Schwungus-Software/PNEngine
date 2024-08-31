@@ -50,10 +50,20 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 			if instance_exists(_camera_demo) {
 				_camera_demo.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 			} else {
-				switch global.players_active {
+				var _netgame = global.netgame
+				
+				if _netgame != undefined and _netgame.active {
+					with _players[_netgame.local_slot] {
+						if status == PlayerStatus.ACTIVE and instance_exists(camera) {
+							camera.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
+								
+							break
+						}
+					}
+				} else switch global.players_active {
 					case 1:
 						var i = 0
-				
+						
 						repeat INPUT_MAX_PLAYERS {
 							with _players[i++] {
 								if status == PlayerStatus.ACTIVE and instance_exists(camera) {
