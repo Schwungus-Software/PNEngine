@@ -313,8 +313,8 @@ function Netgame() constructor {
 					continue
 				}
 				
-				// Kick the client if they're inactive for over 60 seconds
-				if _player.ping >= 60 {
+				// Kick the client if they're inactive for over 30 seconds
+				if _player.ping >= 30 {
 					print($"! Netgame.ping_time_source: Player {-~i} timed out")
 					_player.destroy()
 					send(SEND_OTHERS, net_buffer_create(true, NetHeaders.PLAYER_LEFT, buffer_u8, _player.slot))

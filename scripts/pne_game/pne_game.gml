@@ -16,8 +16,9 @@
 		LOAD,
 		FINISH,
 		CONNECT,
-		HOST_WAIT,
 		CLIENT_WAIT,
+		HOST_READY,
+		CLIENT_READY,
 	}
 	
 	enum InterpData {

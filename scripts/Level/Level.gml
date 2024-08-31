@@ -41,9 +41,7 @@ function Level() constructor {
 	static goto = function (_level, _area = 0, _tag = ThingTags.NONE, _transition = noone) {
 		set_tick_scale(1)
 		
-		var _in_netgame = net_active()
-		
-		if _in_netgame {
+		if net_active() {
 			with proTransition {
 				instance_destroy()
 			}
@@ -126,7 +124,7 @@ function Level() constructor {
 			load_level = _level
 			load_area = _area
 			load_tag = _tag
-			load_state = _in_netgame ? LoadStates.HOST_WAIT : LoadStates.START
+			load_state = LoadStates.START
 		}
 	}
 	

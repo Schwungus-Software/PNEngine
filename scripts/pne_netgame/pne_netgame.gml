@@ -12,8 +12,8 @@ enum NetHeaders {
 	CLIENT_CONNECT,
 	HOST_CHECK_CLIENT,
 	CLIENT_VERIFY,
-	HOST_ALLOW_CLIENT,
 	HOST_BLOCK_CLIENT,
+	HOST_ALLOW_CLIENT,
 	CLIENT_SEND_INFO,
 	HOST_ADD_CLIENT,
 	
@@ -29,6 +29,8 @@ enum NetHeaders {
 	
 	// Game
 	HOST_LEVEL,
+	CLIENT_LEVEL_READY,
+	HOST_LEVEL_READY,
 	HOST_FLAG,
 	HOST_STATE,
 	
@@ -36,3 +38,4 @@ enum NetHeaders {
 }
 
 global.netgame = undefined
+global.net_tick_queue = ds_queue_create()
