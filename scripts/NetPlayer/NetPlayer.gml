@@ -26,7 +26,7 @@ function NetPlayer() constructor {
 		session.send(slot, reliable[| 0], undefined, false, false)
 	}
 	
-	reliable_time_source = time_source_create(time_source_global, 0.25, time_source_units_seconds, method(self, reliable_callback), [], -1)
+	reliable_time_source = time_source_create(time_source_global, 0.2, time_source_units_seconds, method(self, reliable_callback), [], -1)
 	
 	static destroy = function () {
 		if session != undefined {
