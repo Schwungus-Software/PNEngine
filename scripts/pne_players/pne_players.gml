@@ -26,6 +26,17 @@ enum PlayerInputs {
 	__SIZE,
 }
 
+enum PIFlags {
+	JUMP = 1 << 0,
+	INTERACT = 1 << 1,
+	ATTACK = 1 << 2,
+	INVENTORY_UP = 1 << 3,
+	INVENTORY_LEFT = 1 << 4,
+	INVENTORY_DOWN = 1 << 5,
+	INVENTORY_RIGHT = 1 << 6,
+	AIM = 1 << 7,
+}
+
 global.players_active = 0
 global.players_ready = 0
 global.default_states = ds_map_create()

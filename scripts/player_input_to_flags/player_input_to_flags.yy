@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"player_input_to_flags",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"player_input_to_flags",
+  "parent":{
+    "name":"Players",
+    "path":"folders/Scripts/PNEngine/Game/Players.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

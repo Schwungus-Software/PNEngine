@@ -695,6 +695,17 @@ switch load_state {
 		}
 #endregion
 		
+		var _netgame = global.netgame
+		
+		if _netgame != undefined and _netgame.active {
+			if _netgame.master {
+				load_state = LoadStates.HOST_READY
+			} else {
+				_netgame.send(SEND_HOST, net_buffer_create(true, NetHeaders.CLIENT_LEVEL_READY))
+				load_state = LoadStates.CLIENT_READY
+			}
+		}
+		
 		exit
 	}
 	
@@ -704,18 +715,17 @@ switch load_state {
 		exit
 	}
 	
-	case LoadStates.HOST_WAIT: {
-		// During this state, the host will wait until every player has
-		// received a level change packet then change the level.
-		var _netgame = global.netgame
-		
-		if _netgame == undefined or not _netgame.active {
-			load_state = LoadStates.START
-			
-			break
-		}
-		
+	case LoadStates.CLIENT_WAIT: {
+		/* This is a dummy load state that waits until an actual level
+		   transition happens from the host.
+		   If you get softlocked here, too bad! */
+		exit
+	}
+	
+	case LoadStates.HOST_READY: {
+		// Wait until clients have finished loading.
 		var _ready = true
+		var _netgame = global.netgame
 		
 		with _netgame {
 			var i = 0
@@ -736,16 +746,15 @@ switch load_state {
 		}
 		
 		if _ready {
-			load_state = LoadStates.START
+			_netgame.send(SEND_OTHERS, net_buffer_create(true, NetHeaders.HOST_LEVEL_READY))
+			load_state = LoadStates.NONE
 		}
 		
 		exit
 	}
 	
-	case LoadStates.CLIENT_WAIT: {
-		/* This is a dummy load state that waits until an actual level
-		   transition happens from the host.
-		   If you get softlocked here, too bad! */
+	case LoadStates.CLIENT_READY: {
+		// Wait until host has finished loading.
 		
 		exit
 	}
@@ -1239,14 +1248,17 @@ if _tick >= 1 {
 							
 							_input[PlayerInputs.UP_DOWN] = buffer_read(_demo_buffer, buffer_s8)
 							_input[PlayerInputs.LEFT_RIGHT] = buffer_read(_demo_buffer, buffer_s8)
-							_input[PlayerInputs.JUMP] = buffer_read(_demo_buffer, buffer_bool)
-							_input[PlayerInputs.INTERACT] = buffer_read(_demo_buffer, buffer_bool)
-							_input[PlayerInputs.ATTACK] = buffer_read(_demo_buffer, buffer_bool)
-							_input[PlayerInputs.INVENTORY_UP] = buffer_read(_demo_buffer, buffer_bool)
-							_input[PlayerInputs.INVENTORY_LEFT] = buffer_read(_demo_buffer, buffer_bool)
-							_input[PlayerInputs.INVENTORY_DOWN] = buffer_read(_demo_buffer, buffer_bool)
-							_input[PlayerInputs.INVENTORY_RIGHT] = buffer_read(_demo_buffer, buffer_bool)
-							_input[PlayerInputs.AIM] = buffer_read(_demo_buffer, buffer_bool)
+							
+							var _flags = buffer_read(_demo_buffer, buffer_u8)
+							
+							_input[PlayerInputs.JUMP] = _flags & PIFlags.JUMP
+							_input[PlayerInputs.INTERACT] = _flags & PIFlags.INTERACT
+							_input[PlayerInputs.ATTACK] = _flags & PIFlags.ATTACK
+							_input[PlayerInputs.INVENTORY_UP] = _flags & PIFlags.INVENTORY_UP
+							_input[PlayerInputs.INVENTORY_LEFT] = _flags & PIFlags.INVENTORY_LEFT
+							_input[PlayerInputs.INVENTORY_DOWN] = _flags & PIFlags.INVENTORY_DOWN
+							_input[PlayerInputs.INVENTORY_RIGHT] = _flags & PIFlags.INVENTORY_RIGHT
+							_input[PlayerInputs.AIM] = _flags & PIFlags.AIM
 							_input[PlayerInputs.AIM_UP_DOWN] = buffer_read(_demo_buffer, buffer_s16)
 							_input[PlayerInputs.AIM_LEFT_RIGHT] = buffer_read(_demo_buffer, buffer_s16)
 						break
@@ -1418,14 +1430,7 @@ if _tick >= 1 {
 						buffer_write(_demo_buffer, buffer_u8, i)
 						buffer_write(_demo_buffer, buffer_s8, _input_up_down)
 						buffer_write(_demo_buffer, buffer_s8, _input_left_right)
-						buffer_write(_demo_buffer, buffer_bool, _input_jump)
-						buffer_write(_demo_buffer, buffer_bool, _input_interact)
-						buffer_write(_demo_buffer, buffer_bool, _input_attack)
-						buffer_write(_demo_buffer, buffer_bool, _input_inventory_up)
-						buffer_write(_demo_buffer, buffer_bool, _input_inventory_left)
-						buffer_write(_demo_buffer, buffer_bool, _input_inventory_down)
-						buffer_write(_demo_buffer, buffer_bool, _input_inventory_right)
-						buffer_write(_demo_buffer, buffer_bool, _input_aim)
+						buffer_write(_demo_buffer, buffer_u8, player_input_to_flags(_input_jump, _input_interact, _input_attack, _input_inventory_up, _input_inventory_left, _input_inventory_down, _input_inventory_right, _input_aim))
 						buffer_write(_demo_buffer, buffer_s16, _input_aim_up_down)
 						buffer_write(_demo_buffer, buffer_s16, _input_aim_left_right)
 					}
