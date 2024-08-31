@@ -986,9 +986,9 @@ if _tick >= 1 {
 	
 #region Game Loop
 	while _tick >= 1 {
-#region Transition
 		var _skip_tick = false
 		
+#region Transition
 		with proTransition {
 			event_user(ThingEvents.TICK)
 			
@@ -1025,7 +1025,9 @@ if _tick >= 1 {
 				break
 			}
 		}
+#endregion
 		
+#region Cameraman
 		if not _skip_tick {
 			var _camera_man = global.camera_man
 		
@@ -1082,7 +1084,9 @@ if _tick >= 1 {
 				_skip_tick = true
 			}
 		}
+#endregion
 		
+#region UI
 		if not _skip_tick {
 			_ui = global.ui
 		
@@ -1154,6 +1158,7 @@ if _tick >= 1 {
 				}
 			}
 		}
+#endregion
 		
 		if _skip_tick {
 			mouse_dx = 0
@@ -1163,8 +1168,8 @@ if _tick >= 1 {
 			
 			continue
 		}
-#endregion
 		
+#region Demo Playback
 		if _playing_demo {
 			var _switch_camera = 0
 			
@@ -1271,6 +1276,7 @@ if _tick >= 1 {
 		if _recording_demo {
 			buffer_write(_demo_buffer, buffer_u32, global.demo_time)
 		}
+#endregion
 		
 #region Players
 		var _mouse_dx = mouse_dx

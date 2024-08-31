@@ -69,12 +69,13 @@ function ModelMap() : AssetMap() constructor {
 				   - Position
 				   - Normals
 				   - UVs
+				   - Secondary UVs
 				   - Colors
 				   - Bone Indices
 				   - Bone Weights
 				   
-				   TODO: Add support for secondary UVs and tangents?
-				         Baked shadows and normal maps would be nice... */
+				   TODO: Add support for tangents?
+				         Normal maps would be nice... */
 				var _position = buffer_read(_buffer, buffer_bool)
 				var _normals = buffer_read(_buffer, buffer_bool)
 				var _uvs = buffer_read(_buffer, buffer_bool)
