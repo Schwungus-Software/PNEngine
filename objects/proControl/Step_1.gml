@@ -917,6 +917,12 @@ if _tick >= 1 {
 				_in_netgame = false
 				_is_master = true
 			}
+			
+			if global.demo_buffer == undefined {
+				_has_demo = false
+				_playing_demo = false
+				_recording_demo = false
+			}
 		} else if input_check_pressed("pause") {
 			global.console_input = keyboard_string
 			cmd_close("")
