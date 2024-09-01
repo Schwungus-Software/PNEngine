@@ -33,9 +33,9 @@ enum NetHeaders {
 	HOST_LEVEL_READY,
 	HOST_FLAG,
 	HOST_STATE,
+	HOST_TICK,
 	
 	__SIZE,
 }
 
 global.netgame = undefined
-global.net_tick_queue = ds_queue_create()

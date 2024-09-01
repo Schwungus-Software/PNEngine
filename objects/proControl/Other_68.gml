@@ -232,7 +232,8 @@ with global.netgame {
 			case NetHeaders.HOST_PING:
 			case NetHeaders.PLAYER_LEFT:
 			case NetHeaders.HOST_LEVEL:
-			case NetHeaders.HOST_LEVEL_READY: exit
+			case NetHeaders.HOST_LEVEL_READY:
+			case NetHeaders.HOST_TICK: exit
 		}
 	}
 	
@@ -513,6 +514,53 @@ with global.netgame {
 					load_state = LoadStates.NONE
 				}
 			}
+			
+			break
+		}
+		
+		case NetHeaders.HOST_TICK: {
+			CLIENT_CHECK_SENDER
+			
+			var n = buffer_read(_buffer, buffer_u8)
+			
+			ds_queue_enqueue(tick_queue, n)
+			
+			repeat n {
+				var _slot = buffer_read(_buffer, buffer_u8)
+				var _input_up_down = buffer_read(_buffer, buffer_s8)
+				var _input_left_right = buffer_read(_buffer, buffer_s8)
+				
+				var _input_flags = buffer_read(_buffer, buffer_u8)
+				var _input_jump = _input_flags & PIFlags.JUMP
+				var _input_interact = _input_flags & PIFlags.INTERACT
+				var _input_attack = _input_flags & PIFlags.ATTACK
+				var _input_inventory_up = _input_flags & PIFlags.INVENTORY_UP
+				var _input_inventory_left = _input_flags & PIFlags.INVENTORY_LEFT
+				var _input_inventory_down = _input_flags & PIFlags.INVENTORY_DOWN
+				var _input_inventory_right = _input_flags & PIFlags.INVENTORY_RIGHT
+				var _input_aim = _input_flags & PIFlags.AIM
+				
+				var _input_aim_up_down = buffer_read(_buffer, buffer_s16)
+				var _input_aim_left_right = buffer_read(_buffer, buffer_s16)
+				
+				ds_queue_enqueue(tick_queue,
+					_slot,
+					_input_up_down,
+					_input_left_right,
+					_input_jump,
+					_input_interact,
+					_input_attack,
+					_input_inventory_up,
+					_input_inventory_left,
+					_input_inventory_down,
+					_input_inventory_right,
+					_input_aim,
+					_input_aim_up_down,
+					_input_aim_left_right
+				)
+			}
+			
+			++tick_count
 			
 			break
 		}

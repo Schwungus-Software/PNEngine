@@ -819,6 +819,7 @@ var _playing_demo = not _demo_write and _has_demo
 var _recording_demo = _demo_write and _has_demo
 var _netgame = global.netgame
 var _in_netgame = _netgame != undefined and _netgame.active
+var _is_master = not _in_netgame or _netgame.master
 
 if _tick >= 1 {
 	__input_system_tick()
@@ -911,6 +912,11 @@ if _tick >= 1 {
 			}
 			
 			keyboard_string = ""
+			
+			if global.netgame == undefined {
+				_in_netgame = false
+				_is_master = true
+			}
 		} else if input_check_pressed("pause") {
 			global.console_input = keyboard_string
 			cmd_close("")
@@ -994,6 +1000,13 @@ if _tick >= 1 {
 #endregion
 	
 #region Game Loop
+	var _ticks_queued = false
+	
+	if _in_netgame and not _is_master {
+		_tick = _netgame.tick_count
+		_ticks_queued = true
+	}
+	
 	while _tick >= 1 {
 		var _skip_tick = false
 		
@@ -1293,149 +1306,237 @@ if _tick >= 1 {
 #region Players
 		var _mouse_dx = mouse_dx
 		var _mouse_dy = mouse_dy
-		var i = 0
+		var i
 		
-		repeat INPUT_MAX_PLAYERS {
-			with _players[i] {
-				if status != PlayerStatus.ACTIVE {
-					break
-				}
 #region Input
-				array_copy(input_previous, 0, input, 0, PlayerInputs.__SIZE)
+		if _ticks_queued {
+			var _tick_queue
+			
+			with _netgame {
+				--tick_count
+				_tick_queue = tick_queue
+			}
+			
+			var n = ds_queue_dequeue(_tick_queue)
+			
+			repeat n {
+				var _slot = ds_queue_dequeue(_tick_queue)
 				
-				if _playing_demo {
-					var _input = _demo_input[i]
+				with _players[_slot] {
+					array_copy(input_previous, 0, input, 0, PlayerInputs.__SIZE)
 					
-					input[PlayerInputs.UP_DOWN] = _input[PlayerInputs.UP_DOWN]
-					input[PlayerInputs.LEFT_RIGHT] = _input[PlayerInputs.LEFT_RIGHT]
-					input[PlayerInputs.JUMP] = _input[PlayerInputs.JUMP]
-					input[PlayerInputs.INTERACT] = _input[PlayerInputs.INTERACT]
-					input[PlayerInputs.ATTACK] = _input[PlayerInputs.ATTACK]
-					input[PlayerInputs.INVENTORY_UP] = _input[PlayerInputs.INVENTORY_UP]
-					input[PlayerInputs.INVENTORY_LEFT] = _input[PlayerInputs.INVENTORY_LEFT]
-					input[PlayerInputs.INVENTORY_DOWN] = _input[PlayerInputs.INVENTORY_DOWN]
-					input[PlayerInputs.INVENTORY_RIGHT] = _input[PlayerInputs.INVENTORY_RIGHT]
-					input[PlayerInputs.AIM] = _input[PlayerInputs.AIM]
-					
-					var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
-					var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
-					var _input_aim_up_down, _input_aim_left_right
-					
-					if is_nan(_input_force_up_down) {
-						_input_aim_up_down = _input[PlayerInputs.AIM_UP_DOWN]
-					} else {
-						_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
-						input[PlayerInputs.FORCE_UP_DOWN] = NaN
+					input[PlayerInputs.UP_DOWN] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.LEFT_RIGHT] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.JUMP] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.INTERACT] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.ATTACK] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.INVENTORY_UP] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.INVENTORY_LEFT] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.INVENTORY_DOWN] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.INVENTORY_RIGHT] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.AIM] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.AIM_UP_DOWN] = ds_queue_dequeue(_tick_queue)
+					input[PlayerInputs.AIM_LEFT_RIGHT] = ds_queue_dequeue(_tick_queue)
+				}
+			}
+		} else {
+			i = 0
+			
+			repeat INPUT_MAX_PLAYERS {
+				with _players[i] {
+					if status != PlayerStatus.ACTIVE {
+						break
 					}
 					
-					input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
+					array_copy(input_previous, 0, input, 0, PlayerInputs.__SIZE)
+				
+					if _playing_demo {
+						var _input = _demo_input[i]
 					
-					if is_nan(_input_force_left_right) {
-						_input_aim_left_right = _input[PlayerInputs.AIM_LEFT_RIGHT]
-					} else {
-						_input_aim_left_right = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
-						input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
-					}
+						input[PlayerInputs.UP_DOWN] = _input[PlayerInputs.UP_DOWN]
+						input[PlayerInputs.LEFT_RIGHT] = _input[PlayerInputs.LEFT_RIGHT]
+						input[PlayerInputs.JUMP] = _input[PlayerInputs.JUMP]
+						input[PlayerInputs.INTERACT] = _input[PlayerInputs.INTERACT]
+						input[PlayerInputs.ATTACK] = _input[PlayerInputs.ATTACK]
+						input[PlayerInputs.INVENTORY_UP] = _input[PlayerInputs.INVENTORY_UP]
+						input[PlayerInputs.INVENTORY_LEFT] = _input[PlayerInputs.INVENTORY_LEFT]
+						input[PlayerInputs.INVENTORY_DOWN] = _input[PlayerInputs.INVENTORY_DOWN]
+						input[PlayerInputs.INVENTORY_RIGHT] = _input[PlayerInputs.INVENTORY_RIGHT]
+						input[PlayerInputs.AIM] = _input[PlayerInputs.AIM]
 					
-					input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
-				} else {
-					var _get_input = false
-					var _pind = i
-					
-					if _in_netgame {
-						if _netgame.local_slot == i {
-							_get_input = true
-							_pind = 0
-						}
-					} else {
-						_get_input = true
-					}
-					
-					if _get_input {
-						// Main
-						var _move_range = input_check("walk", _pind) ? 64 : 127
-						var _input_up_down = floor((input_value("down", _pind) - input_value("up", _pind)) * _move_range)
-						var _input_left_right = floor((input_value("right", _pind) - input_value("left", _pind)) * _move_range)
-						var _input_jump = input_check("jump", _pind)
-						var _input_interact = input_check("interact", _pind)
-						var _input_attack = input_check("attack", _pind)
-					
-						// Inventory
-						var _input_inventory_up = input_check("inventory_up", _pind)
-						var _input_inventory_left = input_check("inventory_left", _pind)
-						var _input_inventory_down = input_check("inventory_down", _pind)
-						var _input_inventory_right = input_check("inventory_right", _pind)
-					
-						// Camera
-						var _input_aim = input_check("aim", _pind)
-					
-						// Write to input array
-						input[PlayerInputs.UP_DOWN] = _input_up_down
-						input[PlayerInputs.LEFT_RIGHT] = _input_left_right
-						input[PlayerInputs.JUMP] = _input_jump
-						input[PlayerInputs.INTERACT] = _input_interact
-						input[PlayerInputs.ATTACK] = _input_attack
-						input[PlayerInputs.INVENTORY_UP] = _input_inventory_up
-						input[PlayerInputs.INVENTORY_LEFT] = _input_inventory_left
-						input[PlayerInputs.INVENTORY_DOWN] = _input_inventory_down
-						input[PlayerInputs.INVENTORY_RIGHT] = _input_inventory_right
-						input[PlayerInputs.AIM] = _input_aim
-					
-						// This one kinda sucks...
-						var _dx_factor = input_value("aim_right", _pind) - input_value("aim_left", _pind)
-						var _dy_factor = input_value("aim_down", _pind) - input_value("aim_up", _pind)
-						var _dx_angle, _dy_angle
-					
-						with _config {
-							_dx_angle = in_pan_x * (in_invert_x ? -1 : 1)
-							_dy_angle = in_pan_y * (in_invert_y ? -1 : 1)
-						
-							if _pind == 0 and _mouse_focused {
-								_dx_factor += _mouse_dx * in_mouse_x
-								_dy_factor += _mouse_dy * in_mouse_y
-							}
-						}
-					
+						var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
 						var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
-						var _input_aim_left_right
+						var _input_aim_up_down, _input_aim_left_right
+					
+						if is_nan(_input_force_up_down) {
+							_input_aim_up_down = _input[PlayerInputs.AIM_UP_DOWN]
+						} else {
+							_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
+							input[PlayerInputs.FORCE_UP_DOWN] = NaN
+						}
+					
+						input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
 					
 						if is_nan(_input_force_left_right) {
-							var _dx = round(((_dx_factor * _dx_angle) * 0.0027777777777778) * 32768)
-						
-							_input_aim_left_right = (input[PlayerInputs.AIM_LEFT_RIGHT] - _dx) % 32768
+							_input_aim_left_right = _input[PlayerInputs.AIM_LEFT_RIGHT]
 						} else {
 							_input_aim_left_right = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
 							input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
 						}
 					
 						input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
+					} else {
+						var _get_input = false
+						var _pind = i
 					
-						var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
-						var _input_aim_up_down
-					
-						if is_nan(_input_force_up_down) {
-							var _dy = round(((_dy_factor * _dy_angle) * 0.0027777777777778) * 32768)
-						
-							_input_aim_up_down = (input[PlayerInputs.AIM_UP_DOWN] - _dy) % 32768
+						if _in_netgame {
+							if _netgame.local_slot == i {
+								_get_input = true
+								_pind = 0
+							}
 						} else {
-							_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
-							input[PlayerInputs.FORCE_UP_DOWN] = NaN
+							_get_input = true
 						}
-						
-						input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
-					}
 					
-					if _recording_demo and not array_equals(input, input_previous) {
-						buffer_write(_demo_buffer, buffer_u8, DemoPackets.PLAYER_INPUT)
-						buffer_write(_demo_buffer, buffer_u8, i)
-						buffer_write(_demo_buffer, buffer_s8, _input_up_down)
-						buffer_write(_demo_buffer, buffer_s8, _input_left_right)
-						buffer_write(_demo_buffer, buffer_u8, player_input_to_flags(_input_jump, _input_interact, _input_attack, _input_inventory_up, _input_inventory_left, _input_inventory_down, _input_inventory_right, _input_aim))
-						buffer_write(_demo_buffer, buffer_s16, _input_aim_up_down)
-						buffer_write(_demo_buffer, buffer_s16, _input_aim_left_right)
+						if _get_input {
+							// Main
+							var _move_range = input_check("walk", _pind) ? 64 : 127
+							var _input_up_down = floor((input_value("down", _pind) - input_value("up", _pind)) * _move_range)
+							var _input_left_right = floor((input_value("right", _pind) - input_value("left", _pind)) * _move_range)
+							var _input_jump = input_check("jump", _pind)
+							var _input_interact = input_check("interact", _pind)
+							var _input_attack = input_check("attack", _pind)
+					
+							// Inventory
+							var _input_inventory_up = input_check("inventory_up", _pind)
+							var _input_inventory_left = input_check("inventory_left", _pind)
+							var _input_inventory_down = input_check("inventory_down", _pind)
+							var _input_inventory_right = input_check("inventory_right", _pind)
+					
+							// Camera
+							var _input_aim = input_check("aim", _pind)
+					
+							// Write to input array
+							input[PlayerInputs.UP_DOWN] = _input_up_down
+							input[PlayerInputs.LEFT_RIGHT] = _input_left_right
+							input[PlayerInputs.JUMP] = _input_jump
+							input[PlayerInputs.INTERACT] = _input_interact
+							input[PlayerInputs.ATTACK] = _input_attack
+							input[PlayerInputs.INVENTORY_UP] = _input_inventory_up
+							input[PlayerInputs.INVENTORY_LEFT] = _input_inventory_left
+							input[PlayerInputs.INVENTORY_DOWN] = _input_inventory_down
+							input[PlayerInputs.INVENTORY_RIGHT] = _input_inventory_right
+							input[PlayerInputs.AIM] = _input_aim
+					
+							// This one kinda sucks...
+							var _dx_factor = input_value("aim_right", _pind) - input_value("aim_left", _pind)
+							var _dy_factor = input_value("aim_down", _pind) - input_value("aim_up", _pind)
+							var _dx_angle, _dy_angle
+					
+							with _config {
+								_dx_angle = in_pan_x * (in_invert_x ? -1 : 1)
+								_dy_angle = in_pan_y * (in_invert_y ? -1 : 1)
+						
+								if _pind == 0 and _mouse_focused {
+									_dx_factor += _mouse_dx * in_mouse_x
+									_dy_factor += _mouse_dy * in_mouse_y
+								}
+							}
+					
+							var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
+							var _input_aim_left_right
+					
+							if is_nan(_input_force_left_right) {
+								var _dx = round(((_dx_factor * _dx_angle) * 0.0027777777777778) * 32768)
+						
+								_input_aim_left_right = (input[PlayerInputs.AIM_LEFT_RIGHT] - _dx) % 32768
+							} else {
+								_input_aim_left_right = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
+								input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
+							}
+					
+							input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
+					
+							var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
+							var _input_aim_up_down
+					
+							if is_nan(_input_force_up_down) {
+								var _dy = round(((_dy_factor * _dy_angle) * 0.0027777777777778) * 32768)
+						
+								_input_aim_up_down = (input[PlayerInputs.AIM_UP_DOWN] - _dy) % 32768
+							} else {
+								_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
+								input[PlayerInputs.FORCE_UP_DOWN] = NaN
+							}
+						
+							input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
+						}
+					
+						if _recording_demo and not array_equals(input, input_previous) {
+							buffer_write(_demo_buffer, buffer_u8, DemoPackets.PLAYER_INPUT)
+							buffer_write(_demo_buffer, buffer_u8, i)
+							buffer_write(_demo_buffer, buffer_s8, _input_up_down)
+							buffer_write(_demo_buffer, buffer_s8, _input_left_right)
+							buffer_write(_demo_buffer, buffer_u8, player_input_to_flags(_input_jump, _input_interact, _input_attack, _input_inventory_up, _input_inventory_left, _input_inventory_down, _input_inventory_right, _input_aim))
+							buffer_write(_demo_buffer, buffer_s16, _input_aim_up_down)
+							buffer_write(_demo_buffer, buffer_s16, _input_aim_left_right)
+						}
 					}
 				}
+				
+				++i
+			}
+			
+			if _in_netgame {
+				i = 0
+				
+				var b = net_buffer_create(true, NetHeaders.HOST_TICK)
+				
+				with _netgame {
+					buffer_write(b, buffer_u8, player_count)
+					
+					repeat ds_list_size(players) {
+						var _player = players[| i++]
+						
+						if _player != undefined {
+							with _player {
+								buffer_write(b, buffer_u8, slot)
+								
+								with player {
+									buffer_write(b, buffer_s8, input[PlayerInputs.UP_DOWN])
+									buffer_write(b, buffer_s8, input[PlayerInputs.LEFT_RIGHT])
+									
+									buffer_write(b, buffer_u8, player_input_to_flags(
+										input[PlayerInputs.JUMP],
+										input[PlayerInputs.INTERACT],
+										input[PlayerInputs.ATTACK],
+										input[PlayerInputs.INVENTORY_UP],
+										input[PlayerInputs.INVENTORY_LEFT],
+										input[PlayerInputs.INVENTORY_DOWN],
+										input[PlayerInputs.INVENTORY_RIGHT],
+										input[PlayerInputs.AIM]
+									))
+									
+									buffer_write(b, buffer_s16, input[PlayerInputs.AIM_UP_DOWN])
+									buffer_write(b, buffer_s16, input[PlayerInputs.AIM_LEFT_RIGHT])
+								}
+							}
+						}
+					}
+					
+					send(SEND_OTHERS, b)
+				}
+			}
+		}
 #endregion
+		
+		i = 0
+		
+		repeat INPUT_MAX_PLAYERS {
+			with _players[i] {
+				if status != PlayerStatus.ACTIVE {
+					break
+				}
 				
 #region Area
 				if area != undefined {

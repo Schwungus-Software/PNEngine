@@ -6,7 +6,7 @@
   "name":"Netgame",
   "parent":{
     "name":"Netgame",
-    "path":"folders/Scripts/PNEngine/Netgame.yy",
+    "path":"folders/Scripts/PNEngine/Game/Netgame.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
