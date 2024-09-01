@@ -266,13 +266,11 @@ function Netgame() constructor {
 							buffer_copy(_buffer, 0, _size, b, 0)
 							ds_list_add(reliable, b)
 							time_source_start(reliable_time_source)
-							print($"Sending ROM {reliable_index} to player {-~_to}")
 						}
 					}
 				}
 				
 				network_send_udp_raw(socket, _ip, _port, _buffer, _size)
-				//print($"Sent to player {-~_to} ({_player.key})")
 			break
 		}
 		

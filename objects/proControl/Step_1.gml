@@ -1310,11 +1310,12 @@ if _tick >= 1 {
 		
 #region Input
 		if _ticks_queued {
-			var _tick_queue
+			var _tick_queue, _local_slot
 			
 			with _netgame {
 				--tick_count
 				_tick_queue = tick_queue
+				_local_slot = local_slot
 			}
 			
 			var n = ds_queue_dequeue(_tick_queue)
@@ -1339,6 +1340,50 @@ if _tick >= 1 {
 					input[PlayerInputs.AIM_LEFT_RIGHT] = ds_queue_dequeue(_tick_queue)
 				}
 			}
+			
+			// Main
+			var _move_range = input_check("walk") ? 64 : 127
+			var _input_up_down = floor((input_value("down") - input_value("up")) * _move_range)
+			var _input_left_right = floor((input_value("right") - input_value("left")) * _move_range)
+			
+			// Main, Inventory, Camera
+			var _input_flags = player_input_to_flags(
+				input_check("jump"),
+				input_check("interact"),
+				input_check("attack"),
+				input_check("inventory_up"),
+				input_check("inventory_left"),
+				input_check("inventory_down"),
+				input_check("inventory_right"),
+				input_check("aim")
+			)
+			
+			// Ugly mouselook/aiming code
+			var _dx_factor = input_value("aim_right") - input_value("aim_left")
+			var _dy_factor = input_value("aim_down") - input_value("aim_up")
+			var _dx_angle, _dy_angle, _dx, _dy
+					
+			with _config {
+				_dx_angle = in_pan_x * (in_invert_x ? -1 : 1)
+				_dy_angle = in_pan_y * (in_invert_y ? -1 : 1)
+						
+				if _mouse_focused {
+					_dx_factor += _mouse_dx * in_mouse_x
+					_dy_factor += _mouse_dy * in_mouse_y
+				}
+			}
+			
+			var _input = _players[_local_slot].input
+			var _dx = round(((_dx_factor * _dx_angle) * 0.0027777777777778) * 32768)
+			var _dy = round(((_dy_factor * _dy_angle) * 0.0027777777777778) * 32768)
+			var b = net_buffer_create(false, NetHeaders.CLIENT_INPUT)
+			
+			buffer_write(b, buffer_s8, _input_up_down)
+			buffer_write(b, buffer_s8, _input_left_right)
+			buffer_write(b, buffer_u8, _input_flags)
+			buffer_write(b, buffer_s16, _dy)
+			buffer_write(b, buffer_s16, _dx)
+			_netgame.send(SEND_HOST, b)
 		} else {
 			i = 0
 			
@@ -1393,6 +1438,39 @@ if _tick >= 1 {
 							if _netgame.local_slot == i {
 								_get_input = true
 								_pind = 0
+							} else {
+								if net != undefined {
+									var _input_queue = net.input_queue
+									
+									while ds_queue_size(_input_queue) {
+										input[PlayerInputs.UP_DOWN] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.LEFT_RIGHT] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.JUMP] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.INTERACT] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.ATTACK] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.INVENTORY_UP] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.INVENTORY_LEFT] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.INVENTORY_DOWN] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.INVENTORY_RIGHT] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.AIM] = ds_queue_dequeue(_input_queue)
+										input[PlayerInputs.AIM_UP_DOWN] = (input[PlayerInputs.AIM_UP_DOWN] - ds_queue_dequeue(_input_queue)) % 32767
+										input[PlayerInputs.AIM_LEFT_RIGHT] = (input[PlayerInputs.AIM_LEFT_RIGHT] - ds_queue_dequeue(_input_queue)) % 32767
+									}
+									
+									var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
+									
+									if not is_nan(_input_force_up_down) {
+										input[PlayerInputs.AIM_UP_DOWN] = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
+										input[PlayerInputs.FORCE_UP_DOWN] = NaN
+									}
+									
+									var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
+									
+									if not is_nan(_input_force_left_right) {
+										input[PlayerInputs.AIM_LEFT_RIGHT] = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
+										input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
+									}
+								}
 							}
 						} else {
 							_get_input = true

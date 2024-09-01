@@ -243,16 +243,16 @@ with global.netgame {
 				
 			if _net == undefined {
 				print($"! proControl: Got invalid ROM from player {-~_from} (index {_reliable})")
+				
+				exit
 			} else {
 				var _skip = false
 				
 				with _net {
 					if _reliable <= reliable_received {
 						_skip = true
-						print($"! proControl: Got outdated ROM from player {-~_from} (index {_reliable})")
 					} else {
 						reliable_received = _reliable
-						print($"proControl: Got ROM {_reliable} from player {-~_from}")
 					}
 				}
 				
@@ -292,7 +292,6 @@ with global.netgame {
 					if _compare == _index {
 						buffer_delete(b)
 						ds_list_delete(reliable, 0)
-						print($"proControl: Got ACK {_index} from player {-~_from}")
 					}
 				}
 			}
@@ -516,6 +515,49 @@ with global.netgame {
 			}
 			
 			break
+		}
+		
+		case NetHeaders.CLIENT_INPUT: {
+			if not master {
+				break
+			}
+			
+			var _player = players[| _from]
+			
+			if _player != undefined {
+				with _player {
+					var _input_up_down = buffer_read(_buffer, buffer_s8)
+					var _input_left_right = buffer_read(_buffer, buffer_s8)
+					
+					var _input_flags = buffer_read(_buffer, buffer_u8)
+					var _input_jump = _input_flags & PIFlags.JUMP
+					var _input_interact = _input_flags & PIFlags.INTERACT
+					var _input_attack = _input_flags & PIFlags.ATTACK
+					var _input_inventory_up = _input_flags & PIFlags.INVENTORY_UP
+					var _input_inventory_left = _input_flags & PIFlags.INVENTORY_LEFT
+					var _input_inventory_down = _input_flags & PIFlags.INVENTORY_DOWN
+					var _input_inventory_right = _input_flags & PIFlags.INVENTORY_RIGHT
+					var _input_aim = _input_flags & PIFlags.AIM
+					
+					var _input_aim_up_down = buffer_read(_buffer, buffer_s16)
+					var _input_aim_left_right = buffer_read(_buffer, buffer_s16)
+					
+					ds_queue_enqueue(input_queue,
+						_input_up_down,
+						_input_left_right,
+						_input_jump,
+						_input_interact,
+						_input_attack,
+						_input_inventory_up,
+						_input_inventory_left,
+						_input_inventory_down,
+						_input_inventory_right,
+						_input_aim,
+						_input_aim_up_down,
+						_input_aim_left_right
+					)
+				}
+			}
 		}
 		
 		case NetHeaders.HOST_TICK: {

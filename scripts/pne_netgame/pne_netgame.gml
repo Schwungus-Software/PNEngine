@@ -33,6 +33,7 @@ enum NetHeaders {
 	HOST_LEVEL_READY,
 	HOST_FLAG,
 	HOST_STATE,
+	CLIENT_INPUT,
 	HOST_TICK,
 	
 	__SIZE,
