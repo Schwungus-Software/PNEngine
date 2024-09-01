@@ -25,14 +25,6 @@ function __input_class_gamepad(_index) constructor
     __custom_mapping      = false;
     __mac_cleared_mapping = false;
     
-    __mapping             = gamepad_get_mapping(_index);
-    __custom_mapping      = false;
-    __mac_cleared_mapping = false;
-    
-    __mapping             = gamepad_get_mapping(_index);
-    __custom_mapping      = false;
-    __mac_cleared_mapping = false;
-    
     __xinput_trigger_range = 1;
     __stadia_trigger_test  = false;
     __axis_calibrated      = false;
@@ -626,31 +618,8 @@ function __input_class_gamepad(_index) constructor
             return false;
         }
 
-        if (os_type == os_ps5) return _effect.__apply_ps5(__index, _trigger);
-
-        //Steam Input uses libScePad for DualSense trigger effects, Windows native only
-        if (__global.__using_steamworks && !__global.__on_wine && __INPUT_ON_WINDOWS)
-        {
-            var _command_array = [{ mode: steam_input_sce_pad_trigger_effect_mode_off, command_data: {} }, { mode: steam_input_sce_pad_trigger_effect_mode_off, command_data: {} }];
-            _command_array[_trigger_index].mode = __global.__steam_trigger_mode[$ _effect.__mode];
-            _command_array[_trigger_index].command_data[$ string(_effect.__mode_name) + "_param"] = _effect.__params;
-            
-            if (_effect.__params[$ "strength"] != undefined)
-            {
-                _effect.__params.strength *= _strength;
-            }
-            else if (_effect.__params[$ "amplitude"] != undefined)
-            {
-                _effect.__params.amplitude *= _strength;                
-            }
-            
-            var _steam_trigger_params = { command: _command_array, trigger_mask: steam_input_sce_pad_trigger_effect_trigger_mask_l2 };
-            if (_trigger_index) _steam_trigger_params.trigger_mask = steam_input_sce_pad_trigger_effect_trigger_mask_r2;
-            
-            if not (is_numeric(__steam_handle)) return false;
-            
-            return steam_input_set_dualsense_trigger_effect(__steam_handle, _steam_trigger_params);
-        }
+        if (os_type == os_ps5) return _effect.__apply_ps5(__index, _trigger, _strength);
+        if (__global.__using_steamworks) return __input_steam_apply_trigger_effect(__steam_handle, _effect, _trigger_index, _strength)
 
         return false;
     }
