@@ -57,7 +57,7 @@
 	
 	global.checkpoint = ["lvlTitle", 0, ThingTags.NONE]
 	global.level = new Level()
-	global.flags = [new Flags(0), new Flags(1), new Flags(2)]
+	global.flags = [new Flags(FlagGroups.GLOBAL), new Flags(FlagGroups.LOCAL), new Flags(FlagGroups.STATIC)]
 	global.default_flags = ds_map_create()
 #endregion
 

@@ -32,12 +32,39 @@ function Flags(_id) constructor {
 	}
 	
 	static clear = function () {
-		if slot == 0 {
+		if slot == FlagGroups.GLOBAL {
 			ds_map_copy(flags, global.default_flags)
 		} else {
 			ds_map_clear(flags)
 		}
 		
 		return true
+	}
+	
+	static write = function (_buffer) {
+		var n = ds_map_size(flags)
+		
+		buffer_write(_buffer, buffer_u32, n)
+		
+		var _key = ds_map_find_first(flags)
+		
+		repeat n {
+			buffer_write(_buffer, buffer_string, _key)
+			buffer_write_dynamic(_buffer, flags[? _key])
+			_key = ds_map_find_next(flags, _key)
+		}
+	}
+	
+	static read = function (_buffer) {
+		clear()
+		
+		var n = buffer_read(_buffer, buffer_u32)
+		
+		repeat n {
+			var _key = buffer_read(_buffer, buffer_string)
+			var _value = buffer_read_dynamic(_buffer)
+			
+			flags[? _key] = _value
+		}
 	}
 }

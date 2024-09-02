@@ -101,16 +101,7 @@ function cmd_demo(_args) {
 				activate()
 			}
 			
-			clear_states()
-			
-			var n = buffer_read(_demo_buffer, buffer_u32)
-			
-			repeat n {
-				var _key = buffer_read(_demo_buffer, buffer_string)
-				var _value = buffer_read_dynamic(_demo_buffer)
-				
-				states[? _key] = _value
-			}
+			read_states(_demo_buffer)
 		}
 	}
 	
@@ -120,18 +111,7 @@ function cmd_demo(_args) {
 	var _tag = buffer_read(_demo_buffer, buffer_s32)
 	
 	// Flags
-	var _global_flags = global.flags[FlagGroups.GLOBAL].flags
-	
-	ds_map_clear(_global_flags)
-	
-	var n = buffer_read(_demo_buffer, buffer_u32)
-	
-	repeat n {
-		var _key = buffer_read(_demo_buffer, buffer_string)
-		var _value = buffer_read_dynamic(_demo_buffer)
-		
-		_global_flags[? _key] = _value
-	}
+	global.flags[FlagGroups.GLOBAL].read(_demo_buffer)
 	
 	global.demo_buffer = _demo_buffer
 	global.demo_next = buffer_read(_demo_buffer, buffer_u32)

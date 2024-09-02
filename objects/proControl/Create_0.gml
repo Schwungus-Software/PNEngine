@@ -714,21 +714,7 @@
 						return global.game_status
 					},
 					
-					"game_master", function () {
-						var _netgame = global.netgame
-						
-						if _netgame == undefined {
-							return true
-						}
-						
-						with _netgame {
-							if active and master {
-								return true
-							}
-						}
-						
-						return false
-					},
+					"game_master", net_master,
 					
 					"delta_time", function () {
 						return global.delta

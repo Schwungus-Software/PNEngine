@@ -650,23 +650,10 @@ switch load_state {
 			repeat INPUT_MAX_PLAYERS {
 				buffer_write(_demo_buffer, buffer_u8, i)
 					
-				with _players[i] {
+				with _players[i++] {
 					buffer_write(_demo_buffer, buffer_u8, status)
-						
-					var n = ds_map_size(states)
-						
-					buffer_write(_demo_buffer, buffer_u32, n)
-						
-					var _key = ds_map_find_first(states)
-						
-					repeat n {
-						buffer_write(_demo_buffer, buffer_string, _key)
-						buffer_write_dynamic(_demo_buffer, states[? _key])
-						_key = ds_map_find_next(states, _key)
-					}
+					write_states(_demo_buffer)
 				}
-					
-				++i
 			}
 				
 			// Level
@@ -675,19 +662,8 @@ switch load_state {
 			buffer_write(_demo_buffer, buffer_s32, load_tag)
 				
 			// Flags
-			var _global_flags = global.flags[FlagGroups.GLOBAL].flags
-			var n = ds_map_size(_global_flags)
-				
-			buffer_write(_demo_buffer, buffer_u32, n)
-				
-			var _key = ds_map_find_first(_global_flags)
-				
-			repeat n {
-				buffer_write(_demo_buffer, buffer_string, _key)
-				buffer_write_dynamic(_demo_buffer, _global_flags[? _key])
-				_key = ds_map_find_next(_global_flags, _key)
-			}
-				
+			global.flags[FlagGroups.GLOBAL].write(_demo_buffer)
+			
 			global.demo_buffer = _demo_buffer
 			global.demo_time = 0
 			global.demo_next = 0

@@ -343,6 +343,33 @@ function Player() constructor {
 		return true
 	}
 	
+	static write_states = function (_buffer) {
+		var n = ds_map_size(states)
+		
+		buffer_write(_buffer, buffer_u32, n)
+		
+		var _key = ds_map_find_first(states)
+		
+		repeat n {
+			buffer_write(_buffer, buffer_string, _key)
+			buffer_write_dynamic(_buffer, states[? _key])
+			_key = ds_map_find_next(states, _key)
+		}
+	}
+	
+	static read_states = function (_buffer) {
+		clear_states()
+		
+		var n = buffer_read(_buffer, buffer_u32)
+		
+		repeat n {
+			var _key = buffer_read(_buffer, buffer_string)
+			var _value = buffer_read_dynamic(_buffer)
+			
+			states[? _key] = _value
+		}
+	}
+	
 	static is_local = function () {
 		gml_pragma("forceinline")
 		

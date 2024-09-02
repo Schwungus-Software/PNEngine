@@ -4790,6 +4790,7 @@
     {"id":{"name":"MusicMap","path":"scripts/MusicMap/MusicMap.yy",},},
     {"id":{"name":"net_active","path":"scripts/net_active/net_active.yy",},},
     {"id":{"name":"net_buffer_create","path":"scripts/net_buffer_create/net_buffer_create.yy",},},
+    {"id":{"name":"net_master","path":"scripts/net_master/net_master.yy",},},
     {"id":{"name":"net_typeof","path":"scripts/net_typeof/net_typeof.yy",},},
     {"id":{"name":"Netgame","path":"scripts/Netgame/Netgame.yy",},},
     {"id":{"name":"NetPlayer","path":"scripts/NetPlayer/NetPlayer.yy",},},

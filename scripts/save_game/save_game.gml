@@ -5,6 +5,12 @@ function save_game() {
 		return false
 	}
 	
+	if not net_master() {
+		print("! save_game: Cannot save as a netgame client")
+		
+		return false
+	}
+	
 	var _checkpoint = global.checkpoint
 	var _cp_level = _checkpoint[0]
 	
@@ -43,22 +49,7 @@ function save_game() {
 	
 	repeat INPUT_MAX_PLAYERS {
 		buffer_write(_buffer, buffer_u8, i)
-		
-		with _players[i] {
-			var n = ds_map_size(states)
-			
-			buffer_write(_buffer, buffer_u32, n)
-			
-			var _key = ds_map_find_first(states)
-			
-			repeat n {
-				buffer_write(_buffer, buffer_string, _key)
-				buffer_write_dynamic(_buffer, states[? _key])
-				_key = ds_map_find_next(states, _key)
-			}
-		}
-		
-		++i
+		_players[i++].write_states(_buffer)
 	}
 	
 	// Level
@@ -67,18 +58,7 @@ function save_game() {
 	buffer_write(_buffer, buffer_s32, _checkpoint[2])
 	
 	// Flags
-	var _global_flags = global.flags[FlagGroups.GLOBAL].flags
-	var n = ds_map_size(_global_flags)
-	
-	buffer_write(_buffer, buffer_u32, n)
-	
-	var _key = ds_map_find_first(_global_flags)
-	
-	repeat n {
-		buffer_write(_buffer, buffer_string, _key)
-		buffer_write_dynamic(_buffer, _global_flags[? _key])
-		_key = ds_map_find_next(_global_flags, _key)
-	}
+	global.flags[FlagGroups.GLOBAL].write(_buffer)
 	
 	// Output
 	var _filename = global.save_name + ".sav"
