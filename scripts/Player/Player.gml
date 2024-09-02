@@ -346,6 +346,6 @@ function Player() constructor {
 	static is_local = function () {
 		gml_pragma("forceinline")
 		
-		return true
+		return net == undefined or net.local
 	}
 }
