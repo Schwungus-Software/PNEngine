@@ -37,7 +37,12 @@ function cmd_demo(_args) {
 		exit
 	}
 	
-	buffer_read(_demo_buffer, buffer_string) // Version
+	// Version
+	var _gmver = buffer_read(_demo_buffer, buffer_string)
+	
+	if _gmver != GM_version {
+		print($"! cmd_demo: Demo version '{_gmver}' does not match game version '{GM_version}'. Expect desyncs to happen!")
+	}
 	
 	var _is_netgame = buffer_read(_demo_buffer, buffer_bool)
 	
