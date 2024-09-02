@@ -67,6 +67,24 @@ function Level() constructor {
 					}
 				}
 				
+				if global.level.name == "lvlTitle" {
+					var b = net_buffer_create(true, NetHeaders.HOST_STATES_FLAGS, buffer_u8, INPUT_MAX_PLAYERS)
+					
+					// States
+					var _players = global.players
+					var i = 0
+					
+					repeat INPUT_MAX_PLAYERS {
+						buffer_write(b, buffer_u8, i)
+						_players[i++].write_states(b)
+					}
+					
+					// Flags
+					global.flags[FlagGroups.GLOBAL].write(b)
+					
+					send(SEND_OTHERS, b)
+				}
+				
 				send(SEND_OTHERS, net_buffer_create(true, NetHeaders.HOST_LEVEL, buffer_string, _level, buffer_u32, _area, buffer_s32, _tag))
 			}
 		} else {

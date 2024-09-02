@@ -234,6 +234,7 @@ with _netgame {
 			case NetHeaders.PLAYER_LEFT:
 			case NetHeaders.HOST_LEVEL:
 			case NetHeaders.HOST_LEVEL_READY:
+			case NetHeaders.HOST_STATES_FLAGS:
 			case NetHeaders.HOST_TICK: exit
 		}
 	}
@@ -527,6 +528,23 @@ with _netgame {
 					load_state = LoadStates.NONE
 				}
 			}
+			
+			break
+		}
+		
+		case NetHeaders.HOST_STATES_FLAGS: {
+			CLIENT_CHECK_SENDER
+			
+			var _players = global.players
+			var n = buffer_read(_buffer, buffer_u8)
+			
+			repeat n {
+				var _slot = buffer_read(_buffer, buffer_u8)
+				
+				_players[_slot].read_states(_buffer)
+			}
+			
+			global.flags[FlagGroups.GLOBAL].read(_buffer)
 			
 			break
 		}
