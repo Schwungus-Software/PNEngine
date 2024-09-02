@@ -41,6 +41,11 @@ function cmd_connect(_args) {
 		}
 		
 		fmod_channel_control_set_paused(global.world_channel_group, false)
+		
+		with TitleBase {
+			f_frozen = true
+		}
+		
 		global.game_status = GameStatus.NETGAME
 		proControl.load_state = LoadStates.NONE
 		show_caption($"[c_lime]Connected")
