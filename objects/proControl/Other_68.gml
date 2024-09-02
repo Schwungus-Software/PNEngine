@@ -469,8 +469,8 @@ with _netgame {
 				
 			if _other != undefined {
 				with _other {
+					print($"proControl: Client '{name}' left")
 					destroy()
-					net_chat(lexicon_text("netgame.player_left", name), C_PN_YELLOW)
 				}
 			}
 				
