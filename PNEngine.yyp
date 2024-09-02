@@ -4391,6 +4391,7 @@
     {"id":{"name":"cmd_log","path":"scripts/cmd_log/cmd_log.yy",},},
     {"id":{"name":"cmd_print","path":"scripts/cmd_print/cmd_print.yy",},},
     {"id":{"name":"cmd_pseq","path":"scripts/cmd_pseq/cmd_pseq.yy",},},
+    {"id":{"name":"cmd_title","path":"scripts/cmd_title/cmd_title.yy",},},
     {"id":{"name":"Collage","path":"scripts/Collage/Collage.yy",},},
     {"id":{"name":"CollageConvertPowerTwo","path":"scripts/CollageConvertPowerTwo/CollageConvertPowerTwo.yy",},},
     {"id":{"name":"CollageDefineSpriteSheet","path":"scripts/CollageDefineSpriteSheet/CollageDefineSpriteSheet.yy",},},

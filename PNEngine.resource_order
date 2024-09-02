@@ -352,6 +352,7 @@
     {"name":"cmd_log","order":2,"path":"scripts/cmd_log/cmd_log.yy",},
     {"name":"cmd_print","order":3,"path":"scripts/cmd_print/cmd_print.yy",},
     {"name":"cmd_pseq","order":10,"path":"scripts/cmd_pseq/cmd_pseq.yy",},
+    {"name":"cmd_title","order":14,"path":"scripts/cmd_title/cmd_title.yy",},
     {"name":"CollageConvertPowerTwo","order":1,"path":"scripts/CollageConvertPowerTwo/CollageConvertPowerTwo.yy",},
     {"name":"CollageDefineSpriteSheet","order":2,"path":"scripts/CollageDefineSpriteSheet/CollageDefineSpriteSheet.yy",},
     {"name":"CollageDestroy","order":3,"path":"scripts/CollageDestroy/CollageDestroy.yy",},
