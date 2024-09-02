@@ -26,11 +26,6 @@ or `Select` on their gamepad.
 Deterministic lockstep is used in order to sync games, so you need low latency
 with other players in order to play with minimal input delay.
 
-Only player input and level changes are synced. Game flags and player states
-currently don't get synced, so you will be prone to desyncs if you rehost or
-reconnect from a previous session. In this case, all players should relaunch
-PNEngine instead.
-
 - Open the developer console by pressing `~` (`Ö` on Nordic keyboard layouts).
 - Host the game on `lvlTitle` with the console command `host [port]`. Other players can connect with `connect <ip> [port]`.
 
