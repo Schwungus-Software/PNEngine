@@ -9,10 +9,11 @@ function NetPlayer() constructor {
 	
 	ping = 0
 	ready = true
+	tick_acked = false
+	input_queue = ds_queue_create()
 	
 	name = ""
 	player = undefined
-	input_queue = ds_queue_create()
 	
 	reliable_index = 0
 	reliable_received = 0

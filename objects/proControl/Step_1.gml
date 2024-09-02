@@ -1008,9 +1008,53 @@ if _tick >= 1 {
 #region Game Loop
 	var _ticks_queued = false
 	
-	if _in_netgame and not _is_master {
-		_tick = _netgame.tick_count
-		_ticks_queued = true
+	if _in_netgame {
+		if _is_master {
+			with _netgame {
+				if ack_count >= player_count {
+					ack_count = 1
+					stall_time = 0
+					
+					var i = 0
+					
+					repeat ds_list_size(players) {
+						var _player = players[| i]
+						
+						if _player != undefined {
+							_player.tick_acked = (i == local_slot)
+						}
+						
+						++i
+					}
+				} else if ++stall_time >= STALL_RATE {
+					_tick = 0
+						
+					if stall_time >= (STALL_RATE * 2.5) {
+						var _text = "[c_yellow]Waiting for: "
+						var i = 0
+						
+						repeat ds_list_size(players) {
+							var _player = players[| i++]
+							
+							if _player == undefined {
+								continue
+							}
+							
+							with _player {
+								if not tick_acked {
+									_text += name + $" (P{i}) "
+								}
+							}
+						}
+						
+						show_caption(_text, 3 * (1 / max(_tick_inc, 0.01)))
+					}
+				}
+			}
+		} else {
+			_tick = _netgame.tick_count
+			_ticks_queued = true
+		}
 	}
 	
 	while _tick >= 1 {

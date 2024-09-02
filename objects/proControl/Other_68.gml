@@ -25,8 +25,9 @@ var _reliable = buffer_read(_buffer, buffer_u32)
 var _from = buffer_read(_buffer, buffer_u8)
 var _to = buffer_read(_buffer, buffer_u8)
 var _header = buffer_read(_buffer, buffer_u8)
+var _netgame = global.netgame
 
-with global.netgame {
+with _netgame {
 	if master {
 		switch _header {
 			case NetHeaders.CLIENT_CONNECT: {
@@ -290,6 +291,19 @@ with global.netgame {
 					var _compare = buffer_read(b, buffer_u32)
 						
 					if _compare == _index {
+						if _netgame.master {
+							// Skip from and to
+							buffer_read(b, buffer_u8)
+							buffer_read(b, buffer_u8)
+								
+							var _compare_header = buffer_read(b, buffer_u8)
+							
+							if _compare_header == NetHeaders.HOST_TICK and not tick_acked {
+								tick_acked = true
+								++_netgame.ack_count
+							}
+						}
+						
 						buffer_delete(b)
 						ds_list_delete(reliable, 0)
 					}

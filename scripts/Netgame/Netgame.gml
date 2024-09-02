@@ -10,8 +10,11 @@ function Netgame() constructor {
 	clients = ds_map_create()
 	player_count = 0
 	local_slot = 0
+	
 	tick_queue = ds_queue_create()
 	tick_count = 0
+	ack_count = 0
+	stall_time = 0
 	
 	code = "NET_UNKNOWN"
 	connect_success_callback = undefined
@@ -32,10 +35,12 @@ function Netgame() constructor {
 		master = true
 		active = true
 		local_slot = 0
+		ack_count = 1
 		
 		with add_player(0, "127.0.0.1", _port) {
 			name = global.config.name
 			local = true
+			tick_acked = true
 		}
 		
 		time_source_start(ping_time_source)
