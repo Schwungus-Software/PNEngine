@@ -9,6 +9,7 @@ function cmd_level(_args) {
 	}
 	
 	CMD_NO_DEMO
+	CMD_NO_CLIENT
 	
 	var _level = _parse_args[0]
 	
