@@ -40,7 +40,6 @@
 	global.camera_demo = noone
 	global.camera_man = noone
 	global.camera_layer = 0
-	global.camera_shadowmap = false
 #endregion
 
 #region Vertex Buffers

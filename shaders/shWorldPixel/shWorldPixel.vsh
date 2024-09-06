@@ -32,7 +32,6 @@ varying vec4 v_color;
 varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
 varying vec3 v_view_position;
-varying vec3 v_shadowmap;
 varying float v_rimlight;
 
 /* --------
@@ -48,10 +47,6 @@ uniform vec3 u_material_wind; // waviness, lock bottom, speed
 
 uniform int u_animated;
 uniform vec4 u_bone_dq[2 * MAX_BONES];
-
-uniform int u_shadowmap_enable_vertex;
-uniform mat4 u_shadowmap_view;
-uniform mat4 u_shadowmap_projection;
 
 //	Simplex 4D Noise 
 //	by Ian McEwan, Ashima Arts
@@ -252,13 +247,4 @@ void main() {
 	// Miscellaneous
 	v_texcoord = in_TextureCoord + (u_time * u_material_scroll);
 	v_texcoord2 = in_TextureCoord2;
-	
-	// Shadow mapping
-	if (bool(u_shadowmap_enable_vertex)) {
-		vec4 screen_space = u_shadowmap_projection * u_shadowmap_view * object_space_position_vec4;
-		
-		v_shadowmap = screen_space.xyz / screen_space.w;
-		v_shadowmap = v_shadowmap * 0.5 + 0.5;
-		v_shadowmap.y = 1. - v_shadowmap.y;
-	}
 }

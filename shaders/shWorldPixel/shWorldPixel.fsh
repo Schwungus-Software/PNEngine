@@ -22,7 +22,6 @@ varying vec4 v_color;
 varying vec3 v_object_space_position;
 varying vec3 v_world_normal;
 varying vec3 v_view_position;
-varying vec3 v_shadowmap;
 varying float v_rimlight;
 
 /* --------
@@ -53,10 +52,6 @@ uniform float u_light_data[MAX_LIGHT_DATA];
 uniform int u_lightmap_enable_pixel;
 uniform sampler2D u_lightmap;
 uniform vec4 u_lightmap_uvs;
-
-uniform int u_shadowmap_enable_pixel;
-uniform sampler2D u_shadowmap;
-uniform int u_shadowmap_caster;
 
 void main() {
 	// Lighting
@@ -89,16 +84,9 @@ void main() {
 				
 				vec3 light_normal = -normalize(vec3(u_light_data[i + 5], u_light_data[i + 6], u_light_data[i + 7]));
 				vec4 light_color = vec4(u_light_data[i + 11], u_light_data[i + 12], u_light_data[i + 13], u_light_data[i + 14]);
-				float factor;
 				
-				if (bool(u_shadowmap_enable_pixel) && u_shadowmap_caster == i) {
-					factor = float((texture2D(u_shadowmap, v_shadowmap.xy).r + 0.001) > v_shadowmap.z);
-				} else {
-					factor = 1.;
-				}
-				
-				total_light += (max(dot(v_world_normal, light_normal), 0.) * light_color) * factor;
-				total_specular += max(dot(reflection, light_normal), 0.) * factor;
+				total_light += max(dot(v_world_normal, light_normal), 0.) * light_color;
+				total_specular += max(dot(reflection, light_normal), 0.);
 			} else if (light_type == 2) { // Point
 				vec3 light_position = vec3(u_light_data[i + 2], u_light_data[i + 3], u_light_data[i + 4]);
 				float light_start = u_light_data[i + 5];

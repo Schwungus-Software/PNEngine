@@ -405,45 +405,6 @@ event_inherited()
 		
 		var _area = area
 		var _config = global.config
-		var _shadowmap_available = false
-		var _shadowmap_caster = noone
-		var _shadowmap_camera = noone
-		var _shadowmap_output = undefined
-		
-		if not global.camera_shadowmap and _config.vid_lighting and _config.vid_shadow {
-			_shadowmap_caster = _area.shadowmap_caster
-			
-			if instance_exists(_shadowmap_caster) {
-				global.camera_shadowmap = true
-				_shadowmap_camera = _shadowmap_caster.shadow_camera
-				
-				var _vid_shadow_size = _config.vid_shadow_size
-				
-				with _shadowmap_camera {
-					var _nx, _ny, _nz
-					
-					with _shadowmap_caster {
-						_nx = sarg0
-						_ny = sarg1
-						_nz = sarg2
-					}
-					
-					syaw = darctan2(-_ny, _nx)
-					spitch = point_pitch(0, 0, 0, _nx, _ny, _nz)
-					sroll = 0
-					
-					var _range = lengthdir_3d(64, syaw, spitch)
-					
-					sx = _x - _range[0]
-					sy = _y - _range[1]
-					sz = _z - _range[2]
-					_shadowmap_output = render(_vid_shadow_size, _vid_shadow_size, false, false, false, global.depth_shader)
-					_shadowmap_available = true
-				}
-				
-				global.camera_shadowmap = false
-			}
-		}
 		
 		output.Start()
 			
@@ -511,22 +472,6 @@ event_inherited()
 			global.u_wind.set(wind_strength, wind_direction[0], wind_direction[1], wind_direction[2])
 			global.u_light_data.set(light_data)
 			global.u_time.set(_time)
-			
-			if _shadowmap_available {
-				global.u_shadowmap_enable_vertex.set(1)
-				global.u_shadowmap_enable_pixel.set(1)
-				global.u_shadowmap.set(_shadowmap_output.GetTexture())
-				
-				with _shadowmap_camera {
-					global.u_shadowmap_view.set(view_matrix)
-					global.u_shadowmap_projection.set(projection_matrix)
-				}
-				
-				global.u_shadowmap_caster.set(_shadowmap_caster.handle * LightData.__SIZE)
-			} else {
-				global.u_shadowmap_enable_vertex.set(0)
-				global.u_shadowmap_enable_pixel.set(0)
-			}
 			
 			if model != undefined {
 				model.draw()

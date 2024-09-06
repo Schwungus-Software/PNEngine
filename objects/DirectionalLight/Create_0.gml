@@ -6,9 +6,6 @@ nx = 0
 ny = 0
 nz = -1
 
-shadow = false
-shadow_camera = noone
-
 // Virtual Functions
 update_args = function (_nx, _ny, _nz) {
 	nx = _nx
