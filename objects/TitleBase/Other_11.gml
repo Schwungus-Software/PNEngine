@@ -25,3 +25,5 @@ event_inherited()
 
 global.title_start = false
 global.save_name = "Debug"
+
+f_frozen = not net_master()
