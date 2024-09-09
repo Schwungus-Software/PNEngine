@@ -69,7 +69,7 @@
 #endregion
 
 #region Particles
-	#macro MAX_PARTICLES 128
+	#macro MAX_PARTICLES 160
 	
 	enum ParticleAnimations {
 		PLAY,
