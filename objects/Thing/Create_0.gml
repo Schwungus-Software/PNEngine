@@ -105,13 +105,7 @@
 	emitter_falloff_factor = 1
 	emitter_pos = undefined
 	emitter_vel = undefined
-	global_sounds = []
-	local_sounds = []
-	emitter_sounds = []
 	voice = undefined
-	
-	bullet_damage = 1
-	bullet_type = "Normal"
 	
 	f_created = false
 	f_new = false
@@ -136,6 +130,7 @@
 	f_bump_avoid = false
 	f_bump_intercept = false
 	f_bump_heavy = false
+	f_collider_active = true
 	f_collider_stick = true
 	f_bullet_hitscan = false
 	f_holdable = false
@@ -174,16 +169,20 @@
 	}
 	
 	destroy = function (_natural = true) {
-		instance_destroy(id, _natural)
+		gml_pragma("forceinline")
 		
-		return true
+		instance_destroy(id, _natural)
 	}
 	
 	play_sound = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
+		gml_pragma("forceinline")
+		
 		return area.sounds.play(_sound, _loop, _offset, _pitch, _gain)
 	}
 	
 	play_sound_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
+		gml_pragma("forceinline")
+		
 		return area.sounds.play_at(_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, _offset, _pitch, _gain)
 	}
 	
@@ -204,6 +203,8 @@
 	}
 	
 	play_sound_ui = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
+		gml_pragma("forceinline")
+		
 		return global.ui_sounds.play(_sound, _loop, _offset, _pitch, _gain)
 	}
 	
@@ -220,6 +221,8 @@
 	}
 	
 	jump = function (_spd) {
+		gml_pragma("forceinline")
+		
 		z_speed = _spd
 		floor_ray[RaycastData.HIT] = false
 		f_grounded = false
@@ -331,7 +334,7 @@
 		repeat i {
 			var _thing = _collidables[| --i]
 			
-			if _thing == id or _thing.f_culled or not _thing.f_prop_collision {
+			if _thing == id or _thing.f_culled or not _thing.f_collider_active {
 				continue
 			}
 			
@@ -505,6 +508,8 @@
 	}
 	
 	do_sequence = function (_sequence) {
+		gml_pragma("forceinline")
+		
 		catspeak_execute(thing_sequenced, _sequence)
 	}
 	
@@ -803,4 +808,6 @@
 	hitscan_intercept = function (_from, _x1, _y1, _z1, _x2, _y2, _z2, _flags) {
 		return true
 	}
+	
+	thing_on_prop = function (_from) {}
 #endregion

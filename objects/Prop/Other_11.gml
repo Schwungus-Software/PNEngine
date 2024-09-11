@@ -10,7 +10,7 @@ if is_struct(special) {
 	var _y_scale = special[$ "y_scale"] ?? 1
 	var _z_scale = special[$ "z_scale"] ?? 1
 	
-	f_prop_collision = special[$ "collision"] ?? f_prop_collision
+	f_collider_active = special[$ "collision"] ?? f_collider_active
 	yaw_speed = special[$ "yaw_speed"] ?? yaw_speed
 	pitch_speed = special[$ "pitch_speed"] ?? pitch_speed
 	roll_speed = special[$ "roll_speed"] ?? roll_speed
