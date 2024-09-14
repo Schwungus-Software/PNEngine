@@ -17,10 +17,8 @@ if mdlSky != undefined {
 	
 	var _color = color_to_vec5(special[$ "color"])
 	
-	with model {
-		color = _color[4]
-		alpha = _color[3]
-	}
+	model.color = _color[4]
+	model.alpha = _color[3]
 }
 
 area.sky = id

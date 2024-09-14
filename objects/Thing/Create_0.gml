@@ -310,12 +310,8 @@
 		
 		_out ??= result
 		
-		var _collider, _collidables
-		
-		with area {
-			_collider = collider
-			_collidables = collidables
-		}
+		var _collider = area.collider
+		var _collidables = area.collidables
 		
 		if _collider != undefined {
 			array_copy(_out, 0, _collider.raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers), 0, RaycastData.__SIZE)
@@ -359,13 +355,9 @@
 		_y2 = _result[RaycastData.Y]
 		_z2 = _result[RaycastData.Z]
 		
-		var _bump_lists, _bump_x1, _bump_y1
-		
-		with area {
-			_bump_lists = bump_lists
-			_bump_x1 = bump_x
-			_bump_y1 = bump_y
-		}
+		var _bump_lists = area.bump_lists
+		var _bump_x1 = area.bump_x
+		var _bump_y1 = area.bump_y
 		
 		var _width = ds_grid_width(_bump_lists)
 		var _height = ds_grid_height(_bump_lists)
@@ -528,14 +520,9 @@
 	}
 	
 	bump_avoid = function (_from, _amount = 1) {
-		var _px, _py, _pr
-		
-		with _from {
-			_px = x
-			_py = y
-			_pr = bump_radius
-		}
-		
+		var _px = _from.x
+		var _py = _from.y
+		var _pr = _from.bump_radius
 		var _len = ((bump_radius + _pr) - point_distance(_px, _py, x, y)) + math_get_epsilon()
 		var _dir = point_direction(_px, _py, x, y)
 		
@@ -691,9 +678,7 @@
 			return true
 		}
 		
-		with _thing {
-			holder = noone
-		}
+		_thing.holder = noone
 		
 		return false
 	}

@@ -250,12 +250,10 @@ with _netgame {
 			} else {
 				var _skip = false
 				
-				with _net {
-					if _reliable <= reliable_received {
-						_skip = true
-					} else {
-						reliable_received = _reliable
-					}
+				if _reliable <= _net.reliable_received {
+					_skip = true
+				} else {
+					_net.reliable_received = _reliable
 				}
 				
 				send(_from, net_buffer_create(false, NetHeaders.ACK, buffer_u32, _reliable))
@@ -300,7 +298,7 @@ with _netgame {
 							var _compare_header = buffer_read(b, buffer_u8)
 							
 							if _compare_header == NetHeaders.HOST_TICK and not tick_acked {
-								tick_acked = true
+								tick_acked = true;
 								++_netgame.ack_count
 							}
 						}
@@ -371,10 +369,8 @@ with _netgame {
 			
 			var _local = add_player(local_slot, "127.0.0.1", 0)
 			
-			with _local {
-				name = global.config.name
-				local = true
-			}
+			_local.name = global.config.name
+			_local.local = true
 			
 			repeat buffer_read(_buffer, buffer_u8) {
 				var _slot = buffer_read(_buffer, buffer_u8)
@@ -383,10 +379,8 @@ with _netgame {
 				
 				var _other = add_player(_slot, _slot ? "127.0.0.1" : _ip, _slot ? 0 : _port)
 				
-				with _other {
-					player.status = buffer_read(_buffer, buffer_u8)
-					name = buffer_read(_buffer, buffer_string)
-				}
+				_other.player.status = buffer_read(_buffer, buffer_u8)
+				_other.name = buffer_read(_buffer, buffer_string)
 			}
 			
 			// Iterate through all players for ready and active counts
@@ -469,10 +463,8 @@ with _netgame {
 			var _other = players[| _slot]
 				
 			if _other != undefined {
-				with _other {
-					print($"proControl: Client '{name}' left")
-					destroy()
-				}
+				print($"proControl: Client '{_other.name}' left")
+				_other.destroy()
 			}
 				
 			game_update_status()
@@ -523,10 +515,8 @@ with _netgame {
 		case NetHeaders.HOST_LEVEL_READY: {
 			CLIENT_CHECK_SENDER
 			
-			with proControl {
-				if load_state == LoadStates.CLIENT_READY {
-					load_state = LoadStates.NONE
-				}
+			if proControl.load_state == LoadStates.CLIENT_READY {
+				proControl.load_state = LoadStates.NONE
 			}
 			
 			break
@@ -557,38 +547,36 @@ with _netgame {
 			var _player = players[| _from]
 			
 			if _player != undefined {
-				with _player {
-					var _input_up_down = buffer_read(_buffer, buffer_s8)
-					var _input_left_right = buffer_read(_buffer, buffer_s8)
-					
-					var _input_flags = buffer_read(_buffer, buffer_u8)
-					var _input_jump = _input_flags & PIFlags.JUMP
-					var _input_interact = _input_flags & PIFlags.INTERACT
-					var _input_attack = _input_flags & PIFlags.ATTACK
-					var _input_inventory_up = _input_flags & PIFlags.INVENTORY_UP
-					var _input_inventory_left = _input_flags & PIFlags.INVENTORY_LEFT
-					var _input_inventory_down = _input_flags & PIFlags.INVENTORY_DOWN
-					var _input_inventory_right = _input_flags & PIFlags.INVENTORY_RIGHT
-					var _input_aim = _input_flags & PIFlags.AIM
-					
-					var _input_aim_up_down = buffer_read(_buffer, buffer_s16)
-					var _input_aim_left_right = buffer_read(_buffer, buffer_s16)
-					
-					ds_queue_enqueue(input_queue,
-						_input_up_down,
-						_input_left_right,
-						_input_jump,
-						_input_interact,
-						_input_attack,
-						_input_inventory_up,
-						_input_inventory_left,
-						_input_inventory_down,
-						_input_inventory_right,
-						_input_aim,
-						_input_aim_up_down,
-						_input_aim_left_right
-					)
-				}
+				var _input_up_down = buffer_read(_buffer, buffer_s8)
+				var _input_left_right = buffer_read(_buffer, buffer_s8)
+				
+				var _input_flags = buffer_read(_buffer, buffer_u8)
+				var _input_jump = _input_flags & PIFlags.JUMP
+				var _input_interact = _input_flags & PIFlags.INTERACT
+				var _input_attack = _input_flags & PIFlags.ATTACK
+				var _input_inventory_up = _input_flags & PIFlags.INVENTORY_UP
+				var _input_inventory_left = _input_flags & PIFlags.INVENTORY_LEFT
+				var _input_inventory_down = _input_flags & PIFlags.INVENTORY_DOWN
+				var _input_inventory_right = _input_flags & PIFlags.INVENTORY_RIGHT
+				var _input_aim = _input_flags & PIFlags.AIM
+				
+				var _input_aim_up_down = buffer_read(_buffer, buffer_s16)
+				var _input_aim_left_right = buffer_read(_buffer, buffer_s16)
+				
+				ds_queue_enqueue(_player.input_queue,
+					_input_up_down,
+					_input_left_right,
+					_input_jump,
+					_input_interact,
+					_input_attack,
+					_input_inventory_up,
+					_input_inventory_left,
+					_input_inventory_down,
+					_input_inventory_right,
+					_input_aim,
+					_input_aim_up_down,
+					_input_aim_left_right
+				)
 			}
 		}
 		

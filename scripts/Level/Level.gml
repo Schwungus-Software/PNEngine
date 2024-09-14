@@ -42,9 +42,7 @@ function Level() constructor {
 		set_tick_scale(1)
 		
 		if net_active() {
-			with proTransition {
-				instance_destroy()
-			}
+			instance_destroy(proTransition)
 			
 			with global.netgame {
 				if _level == undefined {

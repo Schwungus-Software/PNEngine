@@ -104,11 +104,8 @@ function Netgame() constructor {
 			key = _key
 		}
 		
-		with _player {
-			net = _net
-			activate()
-		}
-		
+		_player.net = _net
+		_player.activate()
 		players[| _index] = _net
 		
 		// Work around GameMaker quirk where in-between empty indices have a
@@ -238,12 +235,8 @@ function Netgame() constructor {
 					break
 				}
 				
-				var _ip, _port
-				
-				with _player {
-					_ip = ip
-					_port = port
-				}
+				var _ip = _player.ip
+				var _port = _player.port
 				
 				if _port <= 0 and not master {
 					_ip = ip

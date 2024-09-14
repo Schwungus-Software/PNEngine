@@ -48,10 +48,8 @@ function FontMap() : AssetMap() constructor {
 					font_sdf_spread(_font_id, _sdf_spread)
 				}
 				
-				with _font {
-					name = _name
-					font = _font_id
-				}
+				_font.name = _name
+				_font.font = _font_id
 			} else {
 				// Sprite Font
 				var _sprite
@@ -84,12 +82,9 @@ function FontMap() : AssetMap() constructor {
 				var _font_name = font_get_name(_font_id)
 				
 				scribble_font_rename(_font_name, _name)
-				
-				with _font {
-					name = _name
-					sprite = _sprite
-					font = _font_id
-				}
+				_font.name = _name
+				_font.sprite = _sprite
+				_font.font = _font_id
 			}
 		
 			ds_map_add(assets, _name, _font)

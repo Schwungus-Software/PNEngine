@@ -238,14 +238,18 @@ if _draw_target != undefined {
 	}
 }
 
-with proTransition {
+if instance_exists(proTransition) {
 	var _width = window_get_width()
 	var _height = window_get_height()
 	
 	display_set_gui_size(_width, _height)
-	screen_width = _width
-	screen_height = _height
-	event_user(ThingEvents.DRAW_SCREEN)
+	
+	with proTransition {
+		screen_width = _width
+		screen_height = _height
+		event_user(ThingEvents.DRAW_SCREEN)
+	}
+	
 	display_set_gui_size(480, 270)
 }
 
@@ -254,10 +258,10 @@ if caption_time > 0 {
 	
 	with caption {
 		draw_rectangle_color(get_left(240) - 1, get_top(240) - 1, get_right(240), get_bottom(240), c_black, c_black, c_black, c_black, false)
+		draw_set_alpha(1)
+		draw(240, 240)
 	}
 	
-	draw_set_alpha(1)
-	caption.draw(240, 240)
 	caption_time -= d
 }
 

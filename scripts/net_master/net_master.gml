@@ -7,11 +7,5 @@ function net_master() {
 		return true
 	}
 	
-	with _netgame {
-		if active and master {
-			return true
-		}
-	}
-	
-	return false
+	return _netgame == undefined or (_netgame.active and _netgame.master)
 }

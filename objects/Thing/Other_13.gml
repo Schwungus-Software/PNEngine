@@ -189,12 +189,7 @@ if _held {
 			}
 			
 			if instance_exists(last_prop) {
-				with last_prop {
-					_extra_z += max(0, z_speed)
-				}
-				
-				_extra_z += 1 + clamp(z_speed, -1, 0)
-				
+				_extra_z += max(0, last_prop.z_speed) + 1 + clamp(z_speed, -1, 0)
 				last_prop = noone
 			}
 			
@@ -218,7 +213,6 @@ if _held {
 								_z = z
 								_x_speed = x_speed
 								_y_speed = y_speed
-								//_z_speed = z_speed
 								_yaw = angle
 								_yaw_previous = angle_previous
 							}
@@ -229,7 +223,6 @@ if _held {
 							
 							x = _x + lengthdir_x(_len, _dir) + _x_speed
 							y = _y + lengthdir_y(_len, _dir) + _y_speed
-							//z += _z_speed
 							
 							if model != undefined {
 								model.yaw += _diff
@@ -276,11 +269,8 @@ if _is_holding {
 	holding.y = y
 	holding.z = z - height
 	holding.angle = angle
-	
-	with holding {
-		set_speed(0)
-		z_speed = 0
-	}
+	holding.set_speed(0)
+	holding.z_speed = 0
 }
 
 var _model = model

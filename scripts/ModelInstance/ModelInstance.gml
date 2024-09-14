@@ -103,10 +103,8 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			dq_lerp_array(_parent_frames[_frame], _parent_frames[_next_frame], frac(frame), _transframe)
 			
 			if not (splice == undefined or splice_branch == undefined) {
-				with splice {
-					_parent_frames = parent_frames
-					_duration = duration
-				}
+				_parent_frames = splice.parent_frames
+				_duration = splice.duration
 				
 				var _splice_data = _parent_frames[splice_loop ? (splice_frame % _duration) : min(splice_frame, _duration - 1)]
 				var i = 0
@@ -122,13 +120,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				dq_slerp_array(transition_frame, _transframe, transition / transition_duration, _transframe)
 			}
 			
-			var _bone_offsets, _node_count, _root_node
-			
-			with model {
-				_bone_offsets = bone_offsets
-				_node_count = nodes_amount
-				_root_node = root_node
-			}
+			var _bone_offsets = model.bone_offsets
+			var _node_count = model.nodes_amount
+			var _root_node = model.root_node
 			
 			static _node_stack = []
 			
@@ -246,12 +240,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				array_copy(transition_frame, 0, _transframe, 0, array_length(_transframe))
 				
 				if not (splice == undefined or splice_branch == undefined) {
-					var _parent_frames
+					var _parent_frames = splice.parent_frames
 					
-					with splice {
-						_parent_frames = parent_frames
-						_duration = duration
-					}
+					_duration = splice.duration
 				
 					var _splice_data = _parent_frames[splice_loop ? (splice_frame % _duration) : min(splice_frame, _duration - 1)]
 					var i = 0

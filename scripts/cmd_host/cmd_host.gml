@@ -30,13 +30,11 @@ function cmd_host(_args) {
 	var _parse_args = string_split(_args, " ", true)
 	var _port = array_length(_parse_args) ? real(_parse_args[0]) : DEFAULT_PORT
 	
-	with _netgame {
-		if not host(_port) {
-			show_caption($"[c_red]No connection")
-			destroy()
+	if not _netgame.host(_port) {
+		show_caption($"[c_red]No connection")
+		_netgame.destroy()
 		
-			return false
-		}
+		return false
 	}
 	
 	if global.input_mode == INPUT_SOURCE_MODE.JOIN {

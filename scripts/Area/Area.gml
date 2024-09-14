@@ -46,10 +46,8 @@ function Area() constructor {
 		repeat array_length(things) {
 			var _element = things[i++]
 			
-			with _element {
-				if disposed or instance_exists(thing) {
-					continue
-				}
+			if _element.disposed or instance_exists(_element.thing) {
+				continue
 			}
 			
 			var _level, _area, _type, _x, _y, _z, _angle, _tag, _special, _persistent, _disposable

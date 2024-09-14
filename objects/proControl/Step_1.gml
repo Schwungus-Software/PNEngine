@@ -114,11 +114,9 @@ switch load_state {
 			}
 			
 #region Discord Rich Presence
-			with _level {
-				rp_name = force_type_fallback(_json[$ "rp_name"], "string", "")
-				rp_icon = force_type_fallback(_json[$ "rp_icon"], "string", "")
-				rp_time = force_type_fallback(_json[$ "rp_time"], "bool", false)
-			}
+			_level.rp_name = force_type_fallback(_json[$ "rp_name"], "string", "")
+			_level.rp_icon = force_type_fallback(_json[$ "rp_icon"], "string", "")
+			_level.rp_time = force_type_fallback(_json[$ "rp_time"], "bool", false)
 #endregion
 				
 #region Default Properties
@@ -363,14 +361,12 @@ switch load_state {
 							var _model = _models.fetch(_model_name)
 								
 							if _model != undefined {
-								with _area {
-									model = new ModelInstance(_model)
-										
-									var _collider = _model.collider
-										
-									if _collider != undefined {
-										collider = new ColliderInstance(_collider)
-									}
+								_area.model = new ModelInstance(_model)
+								
+								var _collider = _model.collider
+								
+								if _collider != undefined {
+									_area.collider = new ColliderInstance(_collider)
 								}
 							}
 						}
@@ -607,9 +603,7 @@ switch load_state {
 			}
 			
 			if start != undefined {
-				with _level {
-					catspeak_execute(start)
-				}
+				catspeak_execute(start)
 			}
 			
 			np_setpresence_timestamps(rp_time ? date_current_datetime() : 0, 0, false)
@@ -1005,7 +999,7 @@ if _tick >= 1 {
 				} else if ++stall_time >= STALL_RATE {
 					_tick = 0
 						
-					if stall_time >= (STALL_RATE * 2.5) {
+					if stall_time >= STALL_RATE + TICKRATE {
 						var _text = "[c_yellow]Waiting for: "
 						var i = 0
 						
@@ -1016,10 +1010,8 @@ if _tick >= 1 {
 								continue
 							}
 							
-							with _player {
-								if not tick_acked {
-									_text += name + $" (P{i}) "
-								}
+							if not _player.tick_acked {
+								_text += _player.name + $" (P{i}) "
 							}
 						}
 						
@@ -1047,12 +1039,9 @@ if _tick >= 1 {
 					var _width = window_get_width()
 					var _height = window_get_height()
 					
-					with _transition_canvas {
-						Resize(_width, _height)
-						Start()
-						draw_clear(c_black)
-					}
-					
+					_transition_canvas.Resize(_width, _height)
+					_transition_canvas.Start()
+					draw_clear(c_black)
 					screen_width = _width
 					screen_height = _height
 					event_user(ThingEvents.DRAW_SCREEN)
@@ -1102,10 +1091,8 @@ if _tick >= 1 {
 				}
 				
 				if input_check_pressed("inventory_right") {
-					with _camera_man {
-						roll = 0
-						fov = 45
-					}
+					_camera_man.roll = 0
+					_camera_man.fov = 45
 				}
 				
 				var _move_f = input_value("up") - input_value("down")
@@ -1168,10 +1155,8 @@ if _tick >= 1 {
 					}
 				}
 			
-				with _tick_target {
-					if exists and f_blocking {
-						_skip_tick = true
-					}
+				if _tick_target.exists and _tick_target.f_blocking {
+					_skip_tick = true
 				}
 			} else {
 				var _paused = false
@@ -1186,7 +1171,7 @@ if _tick >= 1 {
 							if status != PlayerStatus.ACTIVE or get_state("hp") <= 0 {
 								break
 							}
-						
+							
 							if not instance_exists(thing) or get_state("frozen") {
 								_paused = false
 							
@@ -1246,9 +1231,7 @@ if _tick >= 1 {
 							var _attach
 							
 							if instance_exists(thing) {
-								with thing {
-									_attach = area.nearest(x, y, z, DemoCamera)
-								}
+								_attach = area.nearest(thing.x, thing.y, thing.z, DemoCamera)
 							} else {
 								_attach = area.find(DemoCamera)
 							}
@@ -1603,27 +1586,25 @@ if _tick >= 1 {
 						var _player = players[| i++]
 						
 						if _player != undefined {
-							with _player {
-								buffer_write(b, buffer_u8, slot)
-								
-								with player {
-									buffer_write(b, buffer_s8, input[PlayerInputs.UP_DOWN])
-									buffer_write(b, buffer_s8, input[PlayerInputs.LEFT_RIGHT])
+							buffer_write(b, buffer_u8, _player.slot)
+							
+							with _player.player {
+								buffer_write(b, buffer_s8, input[PlayerInputs.UP_DOWN])
+								buffer_write(b, buffer_s8, input[PlayerInputs.LEFT_RIGHT])
 									
-									buffer_write(b, buffer_u8, player_input_to_flags(
-										input[PlayerInputs.JUMP],
-										input[PlayerInputs.INTERACT],
-										input[PlayerInputs.ATTACK],
-										input[PlayerInputs.INVENTORY_UP],
-										input[PlayerInputs.INVENTORY_LEFT],
-										input[PlayerInputs.INVENTORY_DOWN],
-										input[PlayerInputs.INVENTORY_RIGHT],
-										input[PlayerInputs.AIM]
-									))
+								buffer_write(b, buffer_u8, player_input_to_flags(
+									input[PlayerInputs.JUMP],
+									input[PlayerInputs.INTERACT],
+									input[PlayerInputs.ATTACK],
+									input[PlayerInputs.INVENTORY_UP],
+									input[PlayerInputs.INVENTORY_LEFT],
+									input[PlayerInputs.INVENTORY_DOWN],
+									input[PlayerInputs.INVENTORY_RIGHT],
+									input[PlayerInputs.AIM]
+								))
 									
-									buffer_write(b, buffer_s16, input[PlayerInputs.AIM_UP_DOWN])
-									buffer_write(b, buffer_s16, input[PlayerInputs.AIM_LEFT_RIGHT])
-								}
+								buffer_write(b, buffer_s16, input[PlayerInputs.AIM_UP_DOWN])
+								buffer_write(b, buffer_s16, input[PlayerInputs.AIM_LEFT_RIGHT])
 							}
 						}
 					}
@@ -1721,15 +1702,9 @@ if _tick >= 1 {
 									
 									repeat k {
 										with _players_in_area[| --k] {
-											if instance_exists(thing) {
-												with thing {
-													if point_distance(x, y, _ox, _oy) < _od {
-														_can_tick = true
-													}
-												}
-											}
-											
-											if _can_tick {
+											if instance_exists(thing) and point_distance(thing.x, thing.y, _ox, _oy) < _od {
+												_can_tick = true
+												
 												break
 											}
 										}
@@ -1776,12 +1751,10 @@ if _tick >= 1 {
 									
 									repeat k {
 										with _players_in_area[| --k] {
-											if instance_exists(thing) {
-												with thing {
-													if point_distance(x, y, _ox, _oy) < _od {
-														_can_tick = true
-													}
-												}
+											if instance_exists(thing) and point_distance(thing.x, thing.y, _ox, _oy) < _od {
+												_can_tick = true
+												
+												break
 											}
 											
 											if _can_tick {

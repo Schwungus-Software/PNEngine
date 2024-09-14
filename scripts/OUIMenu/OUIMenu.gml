@@ -8,10 +8,8 @@ function OUIMenu(_name, _contents = [], _disabled = false) : OUIElement(_name, u
 		var _element = _contents[i++]
 		
 		if is_instanceof(_element, OUIElement) {
-			with _element {
-				menu = other
-				slot = i
-			}
+			_element.menu = other
+			_element.slot = i
 		}
 	}
 	

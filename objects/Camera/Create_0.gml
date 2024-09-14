@@ -340,16 +340,12 @@ event_inherited()
 		with _depth_canvas {
 			Resize(_width, _height)
 			Start()
-		}
-		
-		draw_primitive_begin_texture(pr_trianglestrip, surface_get_texture_depth(_surface))
-		draw_vertex_texture(0, _height, 0, 1)
-		draw_vertex_texture(_width, _height, 1, 1)
-		draw_vertex_texture(0, 0, 0, 0)
-		draw_vertex_texture(_width, 0, 1, 0)
-		draw_primitive_end()
-		
-		with _depth_canvas {
+			draw_primitive_begin_texture(pr_trianglestrip, surface_get_texture_depth(_surface))
+			draw_vertex_texture(0, _height, 0, 1)
+			draw_vertex_texture(_width, _height, 1, 1)
+			draw_vertex_texture(0, 0, 0, 0)
+			draw_vertex_texture(_width, 0, 1, 0)
+			draw_primitive_end()
 			Finish()
 			UpdateCache()
 		}
@@ -411,18 +407,13 @@ event_inherited()
 		var _canvases = global.canvases
 		var _render_canvas = _canvases[Canvases.RENDER]
 			
-		with _render_canvas {
-			Resize(_width, _height)
-			Start()
-		}
+		_render_canvas.Resize(_width, _height)
+		_render_canvas.Start()
 			
 		var _world_canvas = _canvases[Canvases.WORLD]
 			
-		with _world_canvas {
-			Resize(_width, _height)
-			Start()
-		}
-		
+		_world_canvas.Resize(_width, _height)
+		_world_canvas.Start()
 		update_matrices(_width, _height, _update_listener)
 		matrix_set(matrix_view, view_matrix)
 		matrix_set(matrix_projection, projection_matrix)
@@ -449,12 +440,9 @@ event_inherited()
 					global.u_time.set(_time)
 					
 					with sky {
-						with model {
-							sx = _x
-							sy = _y
-							sz = _z
-						}
-							
+						model.sx = _x
+						model.sy = _y
+						model.sz = _z
 						event_user(ThingEvents.DRAW)
 					}
 					

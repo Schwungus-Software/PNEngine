@@ -59,13 +59,8 @@ function proOptionsUI() : UI(undefined) constructor {
 			
 			new OUIOption("options.video.vid_resolution", OUIValues.RESOLUTION, 7, function () {
 				var _config = global.config
-				var _width, _height
-				
-				with _config {
-					_width = vid_width
-					_height = vid_height
-				}
-				
+				var _width = _config.vid_width
+				var _height = _config.vid_height
 				var _resolution = 0
 				var _aspect = (_width / _height) >= (16 / 9)
 				

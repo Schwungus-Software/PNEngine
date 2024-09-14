@@ -196,9 +196,7 @@ function Player() constructor {
 				input[PlayerInputs.FORCE_UP_DOWN] = -15
 				
 				if _respawned {
-					with _player_pawn {
-						catspeak_execute(player_respawned)
-					}
+					catspeak_execute_ext(_player_pawn.player_respawned, _player_pawn)
 				}
 				
 				return _player_pawn
@@ -236,23 +234,14 @@ function Player() constructor {
 			ds_list_delete(_players_in_area, ds_list_find_index(_players_in_area, self))
 			
 			if _current_area.master == self {
-				var _new_master = false
-				
 				i = 0
 				
 				repeat ds_list_size(_players_in_area) {
-					var _player = _players_in_area[| i]
+					var _player = _players_in_area[| i++]
 					
-					with _player {
-						if status == PlayerStatus.ACTIVE {
-							_current_area.master = _player
-							_new_master = true
-						}
-					}
-					
-					++i
-					
-					if _new_master {
+					if _player.status == PlayerStatus.ACTIVE {
+						_current_area.master = _player
+						
 						break
 					}
 				}

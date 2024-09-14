@@ -83,9 +83,7 @@ function MusicInstance(_music, _priority, _loop = true, _gain = 1, _offset = 0, 
 			
 			if ds_priority_find_max(_music_priority) == self {
 				if _last_top != undefined {
-					with _last_top {
-						set_gain_common(2, 0, music.fade_out)
-					}
+					_last_top.set_gain_common(2, 0, _last_top.music.fade_out)
 				}
 				
 				set_gain_common(2, 1, music.fade_in)
