@@ -442,7 +442,7 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			}
 			
 			if splice != undefined {
-				var _frame_step = splice_speed * animation.frame_speed
+				var _frame_step = splice_speed * splice.frame_speed
 				
 				splice_frame += _frame_step
 				splice_finished = false
