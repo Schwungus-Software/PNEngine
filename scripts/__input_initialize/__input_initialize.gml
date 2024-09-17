@@ -240,12 +240,7 @@ function __input_initialize()
     _global.__mouse_capture_blocked     = false;
     _global.__mouse_capture_sensitivity = 1;
     _global.__mouse_capture_frame       = 0;
-    
-    //Combos
-    _global.__combo_params = {};
-    input_combo_params_reset();
-    _global.__combo_verb_dict = {};
-    
+        
     //Identify mobile and desktop
     _global.__on_desktop = (__INPUT_ON_WINDOWS || __INPUT_ON_MACOS || __INPUT_ON_LINUX || __INPUT_ON_OPERAGX);
     _global.__on_mobile  = (__INPUT_ON_ANDROID || __INPUT_ON_IOS);
@@ -323,9 +318,6 @@ function __input_initialize()
     
     _global.__chord_verb_dict  = {};
     _global.__chord_verb_array = [];
-    
-    _global.__combo_verb_dict  = {};
-    _global.__combo_verb_array = [];
     
     //Struct to store keyboard key names
      _global.__key_name_dict = {};

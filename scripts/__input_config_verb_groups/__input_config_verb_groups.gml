@@ -14,6 +14,22 @@
 function __input_config_verb_groups()
 {
     return {
-        //Fill me up!
+        game: [
+			"up", "left", "down", "right", "walk",
+			"jump", "interact", "attack",
+			"inventory_up", "inventory_left", "inventory_down", "inventory_right",
+			"aim", "aim_up", "aim_left", "aim_down", "aim_right",
+		],
+		
+		ui: [
+			"ui_up", "ui_left", "ui_down", "ui_right",
+			"ui_enter",
+			"pause", "leave",
+		],
+		
+		debug: [
+			"debug_overlay", "debug_fps",
+			"debug_console", "debug_console_submit", "debug_console_previous",
+		],
     };
 }
