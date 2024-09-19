@@ -435,6 +435,9 @@
 					"M_SHADOW_BONE", MShadow.BONE,
 					"M_SHADOW_MODEL", MShadow.MODEL,
 					
+					"HSF_IGNORE_HOLDER", HitscanFlags.IGNORE_HOLDER,
+					"HSF_IGNORE_MASTER", HitscanFlags.IGNORE_MASTER,
+					
 					"DMG_NONE", DamageResults.NONE,
 					"DMG_MISSED", DamageResults.MISSED,
 					"DMG_BLOCKED", DamageResults.BLOCKED,

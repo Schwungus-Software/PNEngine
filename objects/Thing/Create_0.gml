@@ -19,6 +19,11 @@
 		BONE,
 		MODEL,
 	}
+	
+	enum HitscanFlags {
+		IGNORE_HOLDER = 1 << 0,
+		IGNORE_MASTER = 1 << 1,
+	}
 #endregion
 
 #region Variables
@@ -132,7 +137,6 @@
 	f_bump_heavy = false
 	f_collider_active = true
 	f_collider_stick = true
-	f_bullet_hitscan = false
 	f_holdable = false
 	f_holdable_in_hand = false
 	f_interactive = false
@@ -348,7 +352,7 @@
 		return _out
 	}
 	
-	hitscan = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _layers = CollisionLayers.ALL, _out = undefined) {
+	hitscan = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _layers = CollisionLayers.ALL, _out = undefined, _hflags = 0) {
 		var _result = raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers, _out)
 		
 		_x2 = _result[RaycastData.X]
@@ -411,7 +415,7 @@
 				// Check this region to see if we're intersecting any Things.
 				var _thing = _region[| --i]
 				
-				if _thing == id or _thing.holding == id or not _thing.f_bump_intercept or (f_bullet_hitscan and master == _thing) {
+				if _thing == _self or not _thing.f_bump_intercept or ((_hflags & HitscanFlags.IGNORE_HOLDER) and _thing.holding == _self) or ((_hflags & HitscanFlags.IGNORE_MASTER) and instance_exists(master) and _thing == master.id) {
 					continue
 				}
 				
