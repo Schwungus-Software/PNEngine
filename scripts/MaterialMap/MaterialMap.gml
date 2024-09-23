@@ -58,30 +58,7 @@ function MaterialMap() : AssetMap() constructor {
 			_wind = _json[$ "wind"] ?? 0
 			_wind_lock_bottom = _json[$ "wind_lock_bottom"] ?? 1
 			_wind_speed = _json[$ "wind_speed"] ?? 1
-			
-			var __color = _json[$ "color"]
-			
-			if is_array(__color) {
-				if array_length(__color) == 2 {
-					var _col = __color[0]
-					
-					_color[0] = color_get_red(_col) * COLOR_INVERSE
-					_color[1] = color_get_green(_col) * COLOR_INVERSE
-					_color[2] = color_get_blue(_col) * COLOR_INVERSE
-					_color[3] = _color[1]
-					_color[4] = _col
-				} else {
-					var _r = __color[0]
-					var _g = __color[1]
-					var _b = __color[2]
-					
-					_color[0] = __color[0]
-					_color[1] = __color[1]
-					_color[2] = __color[2]
-					_color[3] = __color[3]
-					_color[4] = make_color_rgb(_r * 255, _g * 255, _b * 255)
-				}
-			}
+			_color = color_to_vec5(_json[$ "color"])
 		} else {
 			if _strict {
 				print($"! MaterialMap.load: '{_name}' not found")
