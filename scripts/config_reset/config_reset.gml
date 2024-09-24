@@ -9,12 +9,12 @@ function config_reset() {
 		language: "English",
 		
 		// VIDEO
-		vid_fullscreen: false,
+		vid_fullscreen: true,
 		vid_width: 960,
 		vid_height: 540,
 		vid_max_fps: 60,
 		vid_vsync: false,
-		vid_texture_filter: true,
+		vid_texture_filter: 3,
 		vid_antialias: 0,
 		vid_bloom: true,
 		vid_lighting: 0,

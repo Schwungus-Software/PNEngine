@@ -50,7 +50,12 @@ _oui_values[OUIValues.FRAMERATE] = [
 	"value.framerate.f240",
 ]
 
-_oui_values[OUIValues.TEXTURE] = ["value.texture.none", "value.texture.linear"]
+_oui_values[OUIValues.TEXTURE] = [
+	"value.texture.none",
+	"value.texture.linear",
+	"value.texture.bilinear",
+	"value.texture.trilinear",
+]
 
 _oui_values[OUIValues.ANTIALIAS] = [
 	"value.antialias.none",

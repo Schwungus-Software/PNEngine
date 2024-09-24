@@ -249,7 +249,7 @@ function proOptionsUI() : UI(undefined) constructor {
 			
 			undefined,
 			
-			new OUIOption("options.video.vid_texture_filter", OUIValues.TEXTURE, 1, global.config.vid_texture_filter, function (_value) {
+			new OUIOption("options.video.vid_texture_filter", OUIValues.TEXTURE, 3, global.config.vid_texture_filter, function (_value) {
 				global.config.vid_texture_filter = _value
 			}),
 			

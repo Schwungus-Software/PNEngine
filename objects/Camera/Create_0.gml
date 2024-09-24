@@ -421,9 +421,8 @@ event_inherited()
 		var _time = current_time * 0.001
 		var _gpu_tex_filter = gpu_get_tex_filter()
 		var _config = global.config
-		var _vid_texture_filter = _config.vid_texture_filter
-			
-		gpu_set_tex_filter(_vid_texture_filter)
+		
+		gpu_set_tex_filter(_config.vid_texture_filter)
 		global.batch_camera = id
 			
 		var _active_things, _thing_count

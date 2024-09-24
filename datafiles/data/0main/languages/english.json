@@ -143,9 +143,6 @@
 				"linear": "Linear",
 				"bilinear": "Bilinear",
 				"trilinear": "Trilinear",
-				"aniso4": "Anisotropic x4",
-				"aniso8": "Anisotropic x8",
-				"aniso16": "Anisotropic x16",
 			},
 			
 			"antialias": {
