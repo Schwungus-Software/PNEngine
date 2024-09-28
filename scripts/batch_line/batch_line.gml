@@ -78,8 +78,8 @@ function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _colo
 		with _uvs {
 			_u1 = normLeft
 			_v1 = normTop
-			_u2 = _u1 + normRight
-			_v2 = _v1 + normBottom
+			_u2 = normRight
+			_v2 = normBottom
 		}
 	}
 	

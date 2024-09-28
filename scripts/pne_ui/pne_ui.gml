@@ -14,6 +14,7 @@ enum OUIValues {
 	RESOLUTION,
 	FRAMERATE,
 	TEXTURE,
+	MIPMAP,
 	ANTIALIAS,
 	SENSITIVITY,
 	VOLUME,
@@ -53,8 +54,11 @@ _oui_values[OUIValues.FRAMERATE] = [
 _oui_values[OUIValues.TEXTURE] = [
 	"value.texture.none",
 	"value.texture.linear",
-	"value.texture.bilinear",
-	"value.texture.trilinear",
+]
+
+_oui_values[OUIValues.MIPMAP] = [
+	"value.mipmap.sharp",
+	"value.mipmap.smooth",
 ]
 
 _oui_values[OUIValues.ANTIALIAS] = [

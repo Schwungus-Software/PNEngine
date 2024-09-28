@@ -29,6 +29,10 @@ varying float v_rimlight;
    -------- */
 
 uniform vec4 u_uvs;
+uniform vec2 u_texture_size;
+uniform float u_max_lod;
+uniform vec4 u_mipmaps[12];
+uniform int u_mipmap_filter;
 
 uniform vec4 u_color;
 uniform vec4 u_stencil;
@@ -53,6 +57,14 @@ uniform int u_lightmap_enable_pixel;
 uniform sampler2D u_lightmap;
 uniform vec4 u_lightmap_uvs;
 
+float mipmap_level(in vec2 texels) {
+    vec2 dx_vtc = dFdx(texels);
+    vec2 dy_vtc = dFdy(texels);
+    float delta_max_sqr = max(dot(dx_vtc, dx_vtc), dot(dy_vtc, dy_vtc));
+    
+	return 0.5 * log2(delta_max_sqr);
+}
+
 void main() {
 	// Lighting
 	vec3 reflection = normalize(reflect(v_view_position, v_world_normal));
@@ -62,7 +74,7 @@ void main() {
 	if (lightmap_enabled) {
 		float lu = fract(v_texcoord2.x);
 		float lv = fract(v_texcoord2.y);
-		vec2 lightmap_uv = vec2(u_lightmap_uvs.r + (u_lightmap_uvs.b * lu), u_lightmap_uvs.g + (u_lightmap_uvs.a * lv));
+		vec2 lightmap_uv = vec2(mix(u_lightmap_uvs.r, u_lightmap_uvs.b, lu), mix(u_lightmap_uvs.g, u_lightmap_uvs.a, lv));
 		
 		total_light = texture2D(u_lightmap, lightmap_uv);
 	} else {
@@ -132,12 +144,28 @@ void main() {
 	// Final changes
 	float u = fract(v_texcoord.x);
 	float v = fract(v_texcoord.y);
-	vec2 uv = vec2(u_uvs.r + (u_uvs.b * u), u_uvs.g + (u_uvs.a * v));
-	vec4 sample = texture2D(gm_BaseTexture, uv);
+	float lod = clamp(mipmap_level(v_texcoord * u_texture_size), 0., u_max_lod);
+	vec4 sample;
+	
+	if (u_mipmap_filter >= 1) {
+		vec4 mma = u_mipmaps[int(min(lod + 1., u_max_lod))];
+		vec4 mmb = u_mipmaps[int(lod)];
+		
+		vec2 uva = vec2(mix(mma.r, mma.b, u), mix(mma.g, mma.a, v));
+		vec2 uvb = vec2(mix(mmb.r, mmb.b, u), mix(mmb.g, mmb.a, v));
+		
+		sample = mix(texture2D(gm_BaseTexture, uvb), texture2D(gm_BaseTexture, uva), fract(lod));
+	} else {
+		vec4 mipmap = u_mipmaps[int(lod)];
+		vec2 uv = vec2(mix(mipmap.r, mipmap.b, u), mix(mipmap.g, mipmap.a, v));
+		
+		sample = texture2D(gm_BaseTexture, uv);
+	}
+	
 	float v_alpha;
 	
 	if (bool(u_material_can_blend)) {
-		vec2 blend_uv = vec2(u_material_blend_uvs.r + (u_material_blend_uvs.b * u), u_material_blend_uvs.g + (u_material_blend_uvs.a * v));
+		vec2 blend_uv = vec2(mix(u_material_blend_uvs.r, u_material_blend_uvs.b, u), mix(u_material_blend_uvs.g, u_material_blend_uvs.a, v));
 		
 		sample = mix(texture2D(u_material_blend, blend_uv), sample, v_color.a);
 		v_alpha = 1.;

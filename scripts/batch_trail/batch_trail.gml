@@ -28,8 +28,8 @@ function batch_trail(_points, _image = -1, _frame = 0, _color1 = c_white, _color
 		with _uvs {
 			_u1 = normLeft
 			_v1 = normTop
-			_u2 = _u1 + normRight
-			_v2 = _v1 + normBottom
+			_u2 = normRight
+			_v2 = normBottom
 		}
 	}
 	

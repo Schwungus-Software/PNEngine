@@ -58,6 +58,7 @@
 	global.batch_vbo = vertex_create_buffer()
 	global.batch_matrix = matrix_build_identity()
 	global.batch_camera = noone
+	global.blank_mipmap = [0, 0, 1, 1]
 	
 	global.batch_texture = undefined
 	global.batch_alpha_test = 0

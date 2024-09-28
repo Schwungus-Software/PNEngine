@@ -184,13 +184,13 @@ void main() {
 		}
 	
 		if (dot(real0, real2) < 0.) {
-			real2 *= -1.0;
-			dual2 *= -1.0;
+			real2 *= -1.;
+			dual2 *= -1.;
 		}
 	
 		if (dot(real0, real3) < 0.) {
-			real3 *= -1.0;
-			dual3 *= -1.0;
+			real3 *= -1.;
+			dual3 *= -1.;
 		}
 
 		vec4 blend_real = real0 * in_BoneWeight.x + real1 * in_BoneWeight.y + real2 * in_BoneWeight.z + real3 * in_BoneWeight.w;

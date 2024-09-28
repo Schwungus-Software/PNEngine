@@ -18,6 +18,9 @@ function batch_submit() {
 	global.u_material_wind.set(0, 1, 1)
 	global.u_material_can_blend.set(0)
 	global.u_uvs.set(0, 0, 1, 1)
+	global.u_texture_size.set(texture_get_width(_batch_texture), texture_get_height(_batch_texture))
+	global.u_max_lod.set(0)
+	global.u_mipmaps.set(global.blank_mipmap)
 	
 	var _matrix = matrix_get(matrix_world)
 	var _blend_mode = gpu_get_blendmode()

@@ -64,8 +64,8 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 		with _uvs {
 			_u1 = normLeft
 			_v1 = normTop
-			_u2 = _u1 + normRight
-			_v2 = _v1 + normBottom
+			_u2 = normRight
+			_v2 = normBottom
 		}
 	}
 	

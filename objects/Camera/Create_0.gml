@@ -459,6 +459,7 @@ event_inherited()
 			global.u_wind.set(wind_strength, wind_direction[0], wind_direction[1], wind_direction[2])
 			global.u_light_data.set(light_data)
 			global.u_time.set(_time)
+			global.u_mipmap_filter.set(_config.vid_mipmap_filter)
 			
 			if model != undefined {
 				model.draw()

@@ -64,6 +64,7 @@
 				"vid_max_fps": "Framerate",
 				"vid_vsync": "V-Sync",
 				"vid_texture_filter": "Texture Filter",
+				"vid_mipmap_filter": "Mipmapping",
 				"vid_antialias": "Antialiasing",
 				"vid_bloom": "Bloom",
 				"vid_lighting": "Lighting Quality",
@@ -141,8 +142,11 @@
 			"texture": {
 				"none": "None",
 				"linear": "Linear",
-				"bilinear": "Bilinear",
-				"trilinear": "Trilinear",
+			},
+			
+			"mipmap": {
+				"sharp": "Sharp",
+				"smooth": "Smooth",
 			},
 			
 			"antialias": {

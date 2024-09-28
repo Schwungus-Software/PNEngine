@@ -11,7 +11,7 @@ uniform vec2 u_bleed;
 
 void main() {
 	vec2 frac = fract(v_texcoord * u_light_repeat);
-	vec2 uv = vec2(u_light_uvs.r + (u_light_uvs.b * frac.x), u_light_uvs.g + (u_light_uvs.a * frac.y));
+	vec2 uv = vec2(mix(u_light_uvs.r, u_light_uvs.b, frac.x), mix(u_light_uvs.g, u_light_uvs.a, frac.y));
 	
 	vec4 dark = texture2D(gm_BaseTexture, v_texcoord);
 	vec4 light = texture2D(u_light_texture, uv);

@@ -613,6 +613,9 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 			var _u_material_blend = global.u_material_blend
 			var _u_material_blend_uvs = global.u_material_blend_uvs
 			var _u_uvs = global.u_uvs
+			var _u_texture_size = global.u_texture_size
+			var _u_max_lod = global.u_max_lod
+			var _u_mipmaps = global.u_mipmaps
 			var _lightmap = model.lightmap
 			
 			if _lightmap != undefined {
@@ -714,14 +717,25 @@ function ModelInstance(_model, _x = 0, _y = 0, _z = 0, _yaw = 0, _pitch = 0, _ro
 				}
 				
 				if CollageIsImage(_texture) {
-					with _texture.GetUVs(_idx) {
-						_u_uvs.set(normLeft, normTop, normRight, normBottom)
+					with _texture {
+						with GetUVs(_idx) {
+							_u_uvs.set(normLeft, normTop, normRight, normBottom)
+						}
+						
+						_u_texture_size.set(GetWidth(), GetHeight())
+						_u_max_lod.set(__maxLOD)
+						_u_mipmaps.set(__mipmaps[_idx % GetCount()])
+						_texture = GetTexture(_idx)
 					}
-					
-					_texture = _texture.GetTexture(_idx)
 				} else if CanvasIsCanvas(_texture) {
 					_u_uvs.set(0, 0, 1, 1)
-					_texture = _texture.GetTexture()
+					_u_max_lod.set(0)
+					
+					with _texture {
+						_u_texture_size.set(GetWidth(), GetHeight())
+						_u_mipmaps.set(global.blank_mipmap)
+						_texture = GetTexture()
+					}
 				}
 				
 				vertex_submit(_vbo, pr_trianglelist, _texture)

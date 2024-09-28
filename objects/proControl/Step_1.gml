@@ -4,7 +4,7 @@ switch load_state {
 		
 		exit
 	}
-		
+	
 	case LoadStates.UNLOAD: {
 		with proTransition {
 			if state == 3 {
@@ -524,7 +524,72 @@ switch load_state {
 			
 			_key = ds_map_find_next(_models_map, _key)
 		}
+		
+		var _mipmap_queue = global.mipmap_queue
+		
+		repeat ds_map_size(_mipmap_queue) {
+			var _key = ds_map_find_first(_mipmap_queue)
 			
+			if CollageImageExists(_key) {
+				var _base = CollageImageGetInfo(_key)
+				var _frames = _base.GetCount()
+				
+				var _mipmaps = []
+				var _queued = _mipmap_queue[? _key]
+				var _n_lods = array_length(_queued)
+				
+				// Make sure that all LODs have the same amount of subimages.
+				var i = 0
+				
+				repeat _n_lods {
+					var _lod_key = _queued[i++]
+					
+					if CollageImageGetInfo(_lod_key).GetCount() != _frames {
+						show_error($"!!! proControl: LOD image '{_lod_key}' does not have same frame count as base image '{_key}'", true)
+					}
+				}
+				
+				var _n_vecs = _n_lods * 4
+				
+				i = 0
+				
+				repeat _n_lods {
+					var _lod = CollageImageGetInfo(_queued[i])
+					var j = 0
+					
+					repeat _frames {
+						var _submips
+						
+						if array_length(_mipmaps) <= j {
+							_submips = array_create(_n_vecs, 0)
+							_mipmaps[j] = _submips
+						} else {
+							_submips = _mipmaps[j]
+						}
+						
+						var k = i * 4
+						
+						with _lod.GetUVs(j) {
+							_submips[k] = normLeft
+							_submips[-~k] = normTop
+							_submips[k + 2] = normRight
+							_submips[k + 3] = normBottom
+						}
+						
+						++j
+					}
+					
+					++i
+				}
+				
+				print($"{_key}, {_n_lods} LOD(s): {_mipmaps}")
+				_base.__mipmaps = _mipmaps
+				_base.__maxLOD = _n_lods - 1
+			}
+			
+			ds_map_delete(_mipmap_queue, _key)
+		}
+		
 		load_state = LoadStates.FINISH
 #endregion
 		
