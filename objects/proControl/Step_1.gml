@@ -582,7 +582,6 @@ switch load_state {
 					++i
 				}
 				
-				print($"{_key}, {_n_lods} LOD(s): {_mipmaps}")
 				_base.__mipmaps = _mipmaps
 				_base.__maxLOD = _n_lods - 1
 			}

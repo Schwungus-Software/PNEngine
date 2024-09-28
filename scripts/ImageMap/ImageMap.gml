@@ -71,7 +71,7 @@ function ImageMap() : AssetMap() constructor {
 						var _lod_data = load(_lod)
 						
 						if _lod_data == undefined {
-							show_error($"!!! ImageMap.load: Tried to assign invalid mipmap '{_lod}'", true)
+							show_error($"!!! ImageMap.load: Image '{_name}' has invalid LOD '{_lod}'", true)
 						}
 						
 						array_push(_lods, _lod)

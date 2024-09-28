@@ -28,7 +28,6 @@ varying float v_rimlight;
    UNIFORMS
    -------- */
 
-uniform vec4 u_uvs;
 uniform vec2 u_texture_size;
 uniform float u_max_lod;
 uniform vec4 u_mipmaps[12];
@@ -57,6 +56,7 @@ uniform int u_lightmap_enable_pixel;
 uniform sampler2D u_lightmap;
 uniform vec4 u_lightmap_uvs;
 
+// By genpfault
 float mipmap_level(in vec2 texels) {
     vec2 dx_vtc = dFdx(texels);
     vec2 dy_vtc = dFdy(texels);
