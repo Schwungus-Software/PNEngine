@@ -355,7 +355,6 @@ function proOptionsUI() : UI(undefined) constructor {
 				++i
 			}
 			
-			print($"Default: {_osl} -> {i} ({_found})")
 			return _found ? i : 0
 		}(), function () {
 			var _curl = lexicon_language_get()
@@ -373,7 +372,6 @@ function proOptionsUI() : UI(undefined) constructor {
 				++i
 			}
 			
-			print($"Current: {_curl} -> {i} ({_found})")
 			return _found ? i : 0
 		}(), function (_value) {
 			var _language = global.oui_values[OUIValues.LANGUAGE][_value]
