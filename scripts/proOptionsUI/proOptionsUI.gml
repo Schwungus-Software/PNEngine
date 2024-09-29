@@ -339,6 +339,51 @@ function proOptionsUI() : UI(undefined) constructor {
 		
 		undefined,
 		
+		new OUIOption("options.language", OUIValues.LANGUAGE, function () {
+			var _osl = lexicon_get_os_locale()
+			var _languages = global.oui_values[OUIValues.LANGUAGE]
+			var i = 0
+			var _found = false
+			
+			repeat array_length(_languages) {
+				if _languages[i] == _osl {
+					_found = true
+					
+					break
+				}
+				
+				++i
+			}
+			
+			print($"Default: {_osl} -> {i} ({_found})")
+			return _found ? i : 0
+		}(), function () {
+			var _curl = lexicon_language_get()
+			var _languages = global.oui_values[OUIValues.LANGUAGE]
+			var i = 0
+			var _found = false
+			
+			repeat array_length(_languages) {
+				if _languages[i] == _curl {
+					_found = true
+					
+					break
+				}
+				
+				++i
+			}
+			
+			print($"Current: {_curl} -> {i} ({_found})")
+			return _found ? i : 0
+		}(), function (_value) {
+			var _language = global.oui_values[OUIValues.LANGUAGE][_value]
+			
+			global.config.language = _language
+			lexicon_language_set(_language)
+		}),
+		
+		undefined,
+		
 		new OUIMenu("options.confirm.save", [
 			new OUIText("options.confirm.text"),
 			undefined,

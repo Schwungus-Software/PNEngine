@@ -1,6 +1,6 @@
 {
     "English": {
         "locale": "en-US",
-        "file": "data/0main/languages/english.json",
+        "file": "./english.json",
     },
 }

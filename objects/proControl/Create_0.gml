@@ -452,7 +452,12 @@
 					"CPOI_LERP", CameraPOIData.LERP,
 					"CPOI_X_OFFSET", CameraTargetData.X_OFFSET,
 					"CPOI_Y_OFFSET", CameraTargetData.Y_OFFSET,
-					"CPOI_Z_OFFSET", CameraTargetData.Z_OFFSET
+					"CPOI_Z_OFFSET", CameraTargetData.Z_OFFSET,
+					
+					"CLERP_LINEAR", CameraLerpTypes.LINEAR,
+					"CLERP_SMOOTH", CameraLerpTypes.SMOOTH,
+					"CLERP_EASE_IN", CameraLerpTypes.EASE_IN,
+					"CLERP_EASE_OUT", CameraLerpTypes.EASE_OUT
 				)
 				
 				addFunction("thing_exists", instance_exists)
@@ -759,167 +764,180 @@ var _custom_fail_sound = undefined
 var _custom_back_sound = undefined
 
 #region Mods
-	var _mods = global.mods
-	var _disabled_mods = force_type_fallback(json_load(DATA_PATH + "disabled.json"), "array", [])
-	var n = array_length(_disabled_mods)
-	var _load_mods = []
-	var _loaded = 0
-	var _mod = file_find_first(DATA_PATH + "*", fa_directory)
+var _mods = global.mods
+var _disabled_mods = force_type_fallback(json_load(DATA_PATH + "disabled.json"), "array", [])
+var n = array_length(_disabled_mods)
+var _load_mods = []
+var _loaded = 0
+var _mod = file_find_first(DATA_PATH + "*", fa_directory)
 	
-	while _mod != "" {
-		if directory_exists(DATA_PATH + _mod) {
-			var _enabled = true
-			var i = 0
+while _mod != "" {
+	if directory_exists(DATA_PATH + _mod) {
+		var _enabled = true
+		var i = 0
 			
-			repeat n {
-				if _disabled_mods[i++] == _mod {
-					print($"proControl: Mod '{_mod}' is disabled, skipping")
-					_enabled = false
+		repeat n {
+			if _disabled_mods[i++] == _mod {
+				print($"proControl: Mod '{_mod}' is disabled, skipping")
+				_enabled = false
 					
-					break
-				}
-			}
-			
-			if _enabled {
-				array_push(_load_mods, _mod);
-				++_loaded
+				break
 			}
 		}
+			
+		if _enabled {
+			array_push(_load_mods, _mod);
+			++_loaded
+		}
+	}
 		
-		_mod = file_find_next()
-	}
+	_mod = file_find_next()
+}
 	
-	file_find_close()
+file_find_close()
 	
-	var i = 0
+var i = 0
 	
-	repeat _loaded {
-		new Mod(_load_mods[i++])
-	}
+repeat _loaded {
+	new Mod(_load_mods[i++])
+}
 	
-	var _key = ds_map_find_first(_mods)
+var _key = ds_map_find_first(_mods)
 
-	repeat ds_map_size(_mods) {
-		var _mod = _mods[? _key]
+repeat ds_map_size(_mods) {
+	var _mod = _mods[? _key]
 		
-		// Failsafe for Linux
-		if _mod == undefined {
-			_key = ds_map_find_next(_mods, _key)
+	// Failsafe for Linux
+	if _mod == undefined {
+		_key = ds_map_find_next(_mods, _key)
 			
-			continue
+		continue
+	}
+		
+	print($"proControl: Initializing '{_mod.name}'")
+		
+	var _path = _mod.path
+	var _languages = _path + "languages/languages.json"
+		
+	if file_exists(_languages) {
+		print($"proControl: Loading languages from '{_languages}'")
+		lexicon_index_definitions(_languages)
+	}
+		
+	var _info = json_load(_path + "mod.json")
+		
+	if is_struct(_info) {
+		var _title = force_type_fallback(_info[$ "title"], "string")
+			
+		if is_string(_title) {
+			window_set_caption(_title)
 		}
-		
-		print($"proControl: Initializing '{_mod.name}'")
-		
-		var _path = _mod.path
-		var _languages = _path + "languages/languages.json"
-		
-		if file_exists(_languages) {
-			print($"proControl: Loading languages from '{_languages}'")
-			lexicon_index_definitions(_languages)
+			
+		var _version = force_type_fallback(_info[$ "version"], "string")
+			
+		if is_string(_version) {
+			_mod.version = _version
 		}
-		
-		var _info = json_load(_path + "mod.json")
-		
-		if is_struct(_info) {
-			var _title = force_type_fallback(_info[$ "title"], "string")
 			
-			if is_string(_title) {
-				window_set_caption(_title)
+		var _rpc_id = force_type_fallback(_info[$ "rpc"], "string")
+			
+		if is_string(_rpc_id) {
+			global.game_rpc_id = _rpc_id
+		}
+			
+		var _states = force_type_fallback(_info[$ "states"], "struct")
+			
+		if is_struct(_states) {
+			var _default_states = global.default_states
+			var _names = struct_get_names(_states)
+			var i = 0
+				
+			repeat struct_names_count(_states) {
+				var _key = _names[i]
+					
+				_default_states[? _key] = _states[$ _key];
+				++i
 			}
+		}
 			
-			var _version = force_type_fallback(_info[$ "version"], "string")
+		var _flags = force_type_fallback(_info[$ "flags"], "struct")
 			
-			if is_string(_version) {
-				_mod.version = _version
-			}
-			
-			var _rpc_id = force_type_fallback(_info[$ "rpc"], "string")
-			
-			if is_string(_rpc_id) {
-				global.game_rpc_id = _rpc_id
-			}
-			
-			var _states = force_type_fallback(_info[$ "states"], "struct")
-			
-			if is_struct(_states) {
-				var _default_states = global.default_states
-				var _names = struct_get_names(_states)
+		if is_struct(_flags) {
+			var _global = force_type_fallback(_flags[$ "global"], "struct")
+				
+			if is_struct(_global) {
+				var _default_flags = global.default_flags
+				var _names = struct_get_names(_global)
 				var i = 0
 				
-				repeat struct_names_count(_states) {
+				repeat struct_names_count(_global) {
 					var _key = _names[i]
 					
-					_default_states[? _key] = _states[$ _key];
+					_default_flags[? _key] = _global[$ _key];
 					++i
 				}
 			}
-			
-			var _flags = force_type_fallback(_info[$ "flags"], "struct")
-			
-			if is_struct(_flags) {
-				var _global = force_type_fallback(_flags[$ "global"], "struct")
 				
-				if is_struct(_global) {
-					var _default_flags = global.default_flags
-					var _names = struct_get_names(_global)
-					var i = 0
+			var _static = force_type_fallback(_flags[$ "static"], "struct")
 				
-					repeat struct_names_count(_global) {
-						var _key = _names[i]
-					
-						_default_flags[? _key] = _global[$ _key];
-						++i
-					}
-				}
-				
-				var _static = force_type_fallback(_flags[$ "static"], "struct")
-				
-				if is_struct(_static) {
-					global.flags[FlagGroups.STATIC].copy(_static)
-				}
-			}
-			
-			var _ui_font = _info[$ "ui_font"]
-			
-			if is_string(_ui_font) {
-				_custom_ui_font = _ui_font
-			}
-			
-			var _switch_sound = _info[$ "switch_sound"]
-			
-			if is_string(_switch_sound) {
-				_custom_switch_sound = _switch_sound
-			}
-			
-			var _select_sound = _info[$ "select_sound"]
-			
-			if is_string(_select_sound) {
-				_custom_select_sound = _select_sound
-			}
-			
-			var _fail_sound = _info[$ "fail_sound"]
-			
-			if is_string(_fail_sound) {
-				_custom_fail_sound = _fail_sound
-			}
-			
-			var _back_sound = _info[$ "back_sound"]
-			
-			if is_string(_back_sound) {
-				_custom_back_sound = _back_sound
+			if is_struct(_static) {
+				global.flags[FlagGroups.STATIC].copy(_static)
 			}
 		}
-		
-		_key = ds_map_find_next(_mods, _key)
+			
+		var _ui_font = _info[$ "ui_font"]
+			
+		if is_string(_ui_font) {
+			_custom_ui_font = _ui_font
+		}
+			
+		var _switch_sound = _info[$ "switch_sound"]
+			
+		if is_string(_switch_sound) {
+			_custom_switch_sound = _switch_sound
+		}
+			
+		var _select_sound = _info[$ "select_sound"]
+			
+		if is_string(_select_sound) {
+			_custom_select_sound = _select_sound
+		}
+			
+		var _fail_sound = _info[$ "fail_sound"]
+			
+		if is_string(_fail_sound) {
+			_custom_fail_sound = _fail_sound
+		}
+			
+		var _back_sound = _info[$ "back_sound"]
+			
+		if is_string(_back_sound) {
+			_custom_back_sound = _back_sound
+		}
 	}
+		
+	_key = ds_map_find_next(_mods, _key)
+}
 	
-	global.flags[FlagGroups.GLOBAL].clear()
+global.flags[FlagGroups.GLOBAL].clear()
 #endregion
 
 #region Language
-	lexicon_index_fallback_language_set("English")
-	lexicon_language_set("English")
+lexicon_index_fallback_language_set("English")
+lexicon_language_set("English")
+
+var _languages = lexicon_languages_get_array()
+var _languages2 = array_create(n)
+
+n = array_length(_languages)
+i = 0
+
+repeat n {
+	_languages2[i] = _languages[i][0];
+	++i
+}
+
+global.oui_values[OUIValues.LANGUAGE] = _languages2
 #endregion
 
 config_update()
