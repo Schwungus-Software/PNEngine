@@ -26,6 +26,13 @@ enum CameraPathData {
 	__SIZE,
 }
 
+enum CameraLerpTypes {
+	LINEAR,
+	SMOOTH,
+	EASE_IN,
+	EASE_OUT,
+}
+
 event_inherited()
 
 #region Variables
@@ -70,7 +77,7 @@ event_inherited()
 	lerp_fov = 0
 	lerp_time = 0
 	lerp_duration = 0
-	lerp_smoothly = false
+	lerp_type = false
 	
 	quake = 0
 	quake_x = 0
@@ -197,11 +204,11 @@ event_inherited()
 		path_active = false
 	}
 	
-	lerp_from_self = function (_time, _smooth = false) {
+	lerp_from_self = function (_time, _type = CameraLerpTypes.LINEAR) {
 		if lerp_time < lerp_duration {
 			var _factor = lerp_time / lerp_duration
 			
-			if lerp_smoothly {
+			if lerp_type {
 				_factor = lerp(sqr(_factor), 1 - sqr(1 - _factor), _factor)
 			}
 			
@@ -224,10 +231,10 @@ event_inherited()
 		
 		lerp_time = 0
 		lerp_duration = _time
-		lerp_smoothly = _smooth
+		lerp_type = _type
 	}
 	
-	lerp_from = function (_camera, _time, _smooth = false) {
+	lerp_from = function (_camera, _time, _type = CameraLerpTypes.LINEAR) {
 		lerp_x = _camera.x
 		lerp_y = _camera.y
 		lerp_z = _camera.z
@@ -237,7 +244,7 @@ event_inherited()
 		lerp_fov = _camera.fov
 		lerp_time = 0
 		lerp_duration = _time
-		lerp_smoothly = _smooth
+		lerp_type = _type
 	}
 	
 	set_child = function (_camera) {
@@ -377,8 +384,21 @@ event_inherited()
 		if lerp_time < lerp_duration {
 			var _factor = lerp_time / lerp_duration
 			
-			if lerp_smoothly {
-				_factor = lerp(sqr(_factor), 1 - sqr(1 - _factor), _factor)
+			switch lerp_type {
+				case CameraLerpTypes.SMOOTH:
+					_factor = lerp(sqr(_factor), 1 - sqr(1 - _factor), _factor)
+					
+					break
+				
+				case CameraLerpTypes.EASE_IN:
+					_factor = sqr(_factor)
+					
+					break
+				
+				case CameraLerpTypes.EASE_OUT:
+					_factor = 1 - sqr(1 - _factor)
+					
+					break
 			}
 			
 			sx = lerp(lerp_x, sx, _factor)
