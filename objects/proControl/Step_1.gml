@@ -640,12 +640,6 @@ switch load_state {
 				music[i] = _asset;
 				++i
 			}
-			
-			if start != undefined {
-				catspeak_execute(start)
-			}
-			
-			np_setpresence_timestamps(rp_time ? date_current_datetime() : 0, 0, false)
 		}
 		
 		var _players = global.players
@@ -655,9 +649,7 @@ switch load_state {
 		i = 0
 			
 		repeat INPUT_MAX_PLAYERS {
-			var _player = _players[i++]
-				
-			with _player {
+			with _players[i++] {
 				level = _level
 				set_state("frozen", false)
 				set_state("hud", true)
@@ -669,13 +661,9 @@ switch load_state {
 					++global.players_active;
 					--global.players_ready
 				}
-					
-				if status == PlayerStatus.ACTIVE {
-					set_area(_load_area, _load_tag)
-				}
 			}
 		}
-			
+		
 		if global.demo_write and global.demo_buffer == undefined {
 			var _demo_buffer = buffer_create(1, buffer_grow, 1)
 				
@@ -729,6 +717,24 @@ switch load_state {
 			global.demo_time = 0
 			global.demo_next = 0
 			print("proControl: Recording demo")
+		}
+		
+		with _level {
+			if start != undefined {
+				catspeak_execute(start)
+			}
+			
+			np_setpresence_timestamps(rp_time ? date_current_datetime() : 0, 0, false)
+		}
+		
+		i = 0
+		
+		repeat INPUT_MAX_PLAYERS {
+			with _players[i++] {
+				if status == PlayerStatus.ACTIVE {
+					set_area(_load_area, _load_tag)
+				}
+			}
 		}
 #endregion
 		
