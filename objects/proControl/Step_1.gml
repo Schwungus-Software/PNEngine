@@ -602,32 +602,6 @@ switch load_state {
 		global.tick_scale = 1
 			
 		var _level = global.level
-		var _players = global.players
-		var i = 0
-		var _load_area = load_area
-		var _load_tag = load_tag
-			
-		repeat INPUT_MAX_PLAYERS {
-			var _player = _players[i++]
-				
-			with _player {
-				level = _level
-				set_state("frozen", false)
-				set_state("hud", true)
-				set_state("invincible", false)
-					
-				// Bring new players in-game
-				if status == PlayerStatus.PENDING {
-					status = PlayerStatus.ACTIVE;
-					++global.players_active;
-					--global.players_ready
-				}
-					
-				if status == PlayerStatus.ACTIVE {
-					set_area(_load_area, _load_tag)
-				}
-			}
-		}
 			
 		with proTransition {
 			if state == 2 {
@@ -640,7 +614,8 @@ switch load_state {
 		}
 			
 		load_state = LoadStates.NONE
-		i = 0
+		
+		var i = 0
 			
 		with _level {
 			repeat array_length(music) {
@@ -671,6 +646,34 @@ switch load_state {
 			}
 			
 			np_setpresence_timestamps(rp_time ? date_current_datetime() : 0, 0, false)
+		}
+		
+		var _players = global.players
+		var _load_area = load_area
+		var _load_tag = load_tag
+		
+		i = 0
+			
+		repeat INPUT_MAX_PLAYERS {
+			var _player = _players[i++]
+				
+			with _player {
+				level = _level
+				set_state("frozen", false)
+				set_state("hud", true)
+				set_state("invincible", false)
+					
+				// Bring new players in-game
+				if status == PlayerStatus.PENDING {
+					status = PlayerStatus.ACTIVE;
+					++global.players_active;
+					--global.players_ready
+				}
+					
+				if status == PlayerStatus.ACTIVE {
+					set_area(_load_area, _load_tag)
+				}
+			}
 		}
 			
 		if global.demo_write and global.demo_buffer == undefined {
