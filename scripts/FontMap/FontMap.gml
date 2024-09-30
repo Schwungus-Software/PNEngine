@@ -81,6 +81,7 @@ function FontMap() : AssetMap() constructor {
 				var _font_id = _map != undefined ? font_add_sprite_ext(_sprite, _map, _proportional, _space) : font_add_sprite(_sprite, _first, _proportional, _space)
 				var _font_name = font_get_name(_font_id)
 				
+				scribble_glyph_set(_font_name, " ", SCRIBBLE_GLYPH.FONT_HEIGHT, 1, true)
 				scribble_font_rename(_font_name, _name)
 				_font.name = _name
 				_font.sprite = _sprite
