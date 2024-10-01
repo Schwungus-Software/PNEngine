@@ -75,18 +75,18 @@ function batch_trail(_points, _image = -1, _frame = 0, _color1 = c_white, _color
 		var _y4 = _p2_y + _ty2
 		var _z4 = _p2_z + _tz2
 		
-		vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, 1, _u2, _v1, _color1, _alpha1)
-		vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, 0, 0, 1, _u2, _v2, _color2, _alpha2)
-		vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, 1, _u1, _v2, _color2, _alpha2)
-		vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, 1, _u2, _v1, _color1, _alpha1)
-		vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, 1, _u1, _v2, _color2, _alpha2)
-		vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, 0, 0, 1, _u1, _v1, _color1, _alpha1)
-		vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, 1, _u1, _v2, _color2, _alpha2)
-		vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, 0, 0, 1, _u2, _v2, _color2, _alpha2)
-		vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, 1, _u2, _v1, _color1, _alpha1)
-		vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, 0, 0, 1, _u1, _v1, _color1, _alpha1)
-		vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, 1, _u1, _v2, _color2, _alpha2)
-		vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, 1, _u2, _v1, _color1, _alpha1)
+		vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, -1, _u2, _v1, _color1, _alpha1)
+		vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, 0, 0, -1, _u2, _v2, _color2, _alpha2)
+		vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, -1, _u1, _v2, _color2, _alpha2)
+		vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, -1, _u2, _v1, _color1, _alpha1)
+		vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, -1, _u1, _v2, _color2, _alpha2)
+		vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, 0, 0, -1, _u1, _v1, _color1, _alpha1)
+		vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, -1, _u1, _v2, _color2, _alpha2)
+		vbo_add_vertex(_batch_vbo, _x2, _y2, _z2, 0, 0, -1, _u2, _v2, _color2, _alpha2)
+		vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, -1, _u2, _v1, _color1, _alpha1)
+		vbo_add_vertex(_batch_vbo, _x4, _y4, _z4, 0, 0, -1, _u1, _v1, _color1, _alpha1)
+		vbo_add_vertex(_batch_vbo, _x3, _y3, _z3, 0, 0, -1, _u1, _v2, _color2, _alpha2)
+		vbo_add_vertex(_batch_vbo, _x1, _y1, _z1, 0, 0, -1, _u2, _v1, _color1, _alpha1)
 		i += 8
 	}
 }
