@@ -1239,7 +1239,7 @@ if _tick >= 1 {
 				
 					var i = INPUT_MAX_PLAYERS
 				
-					repeat i {
+					repeat INPUT_MAX_PLAYERS {
 						with _players[--i] {
 							if status != PlayerStatus.ACTIVE or get_state("hp") <= 0 {
 								break

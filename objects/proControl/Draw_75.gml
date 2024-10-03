@@ -13,16 +13,14 @@ draw_clear(c_black)
 
 var _draw_target = global.ui
 
-if _draw_target != undefined {
-	while true {
-		var _child = _draw_target.child
+while _draw_target != undefined {
+	var _child = _draw_target.child
 		
-		if _child == undefined {
-			break
-		}
-		
-		_draw_target = _child
+	if _child == undefined {
+		break
 	}
+		
+	_draw_target = _child
 }
 
 var _console = global.console
