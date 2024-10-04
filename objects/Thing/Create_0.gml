@@ -195,12 +195,22 @@
 		
 		if emitter == undefined {
 			emitter = fmod_system_create_channel_group(string(id))
-			emitter_pos = { x, y, z }
+			emitter_pos = new FmodVector()
+			emitter_pos.x = x
+			emitter_pos.y = y
+			emitter_pos.z = z
 			emitter_vel = new FmodVector()
 			fmod_channel_group_add_group(_pool.channel_group, emitter)
+			fmod_channel_control_set_paused(emitter, true)
 			fmod_channel_control_set_mode(emitter, FMOD_MODE.AS_3D | FMOD_MODE.AS_3D_WORLDRELATIVE | FMOD_MODE.AS_3D_LINEARROLLOFF)
 			fmod_channel_control_set_3d_attributes(emitter, emitter_pos, emitter_vel)
 			fmod_channel_control_set_3d_min_max_distance(emitter, emitter_falloff, emitter_falloff_max)
+			
+			var _result = _pool.play_on(emitter, _sound, _loop, _offset, _pitch, _gain)
+			
+			fmod_channel_control_set_paused(emitter, false)
+			
+			return _result
 		}
 		
 		return _pool.play_on(emitter, _sound, _loop, _offset, _pitch, _gain)
