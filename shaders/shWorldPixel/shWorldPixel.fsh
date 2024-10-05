@@ -65,6 +65,16 @@ float mipmap_level(in vec2 texels) {
 	return 0.5 * log2(delta_max_sqr);
 }
 
+// By FabriceNeyret2, ollj, Tech_
+float bayer2(vec2 a) {
+	a = floor(a);
+	
+	return fract(dot(a, vec2(0.5, a.y * 0.75)));
+}
+
+#define bayer4(a) (bayer2(0.5 * a) * 0.25 + bayer2(a))
+#define bayer8(a) (bayer4(0.5 * a) * 0.25 + bayer2(a))
+
 void main() {
 	// Lighting
 	vec3 reflection = normalize(reflect(v_view_position, v_world_normal));
@@ -187,15 +197,8 @@ void main() {
 	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, fog);
 	starting_color.a *= mix(1., u_fog_color.a, fog);
 	gl_FragColor = starting_color * u_color;
-	
-	const mat4 pattern = mat4(
-		vec4(0.0625, 0.5625, 0.1875, 0.6875),
-		vec4(0.8125, 0.3125, 0.9375, 0.4375),
-		vec4(0.25, 0.75, 0.125, 0.625),
-		vec4(1.0, 0.5, 0.875, 0.375)
-	);
     
-	if (gl_FragColor.a < pattern[int(mod(gl_FragCoord.x, 4.))][int(mod(gl_FragCoord.y, 4.))]) {
+	if (gl_FragColor.a <= (bayer8(gl_FragCoord.xy) + 0.003921568627451)) {
 		discard;
 	}
 	

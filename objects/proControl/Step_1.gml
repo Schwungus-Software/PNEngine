@@ -1777,8 +1777,6 @@ if _tick >= 1 {
 										with _players_in_area[| --k] {
 											if instance_exists(thing) and point_distance(thing.x, thing.y, _ox, _oy) < _od {
 												_can_tick = true
-												
-												break
 											}
 										}
 										
@@ -1826,12 +1824,6 @@ if _tick >= 1 {
 										with _players_in_area[| --k] {
 											if instance_exists(thing) and point_distance(thing.x, thing.y, _ox, _oy) < _od {
 												_can_tick = true
-												
-												break
-											}
-											
-											if _can_tick {
-												break
 											}
 										}
 										
