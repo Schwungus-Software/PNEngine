@@ -33,7 +33,7 @@ if menu != undefined and not locked {
 		}
 		
 		if _new_option {
-			catspeak_execute(change_option, _previous)
+			catspeak_execute_id(change_option, _previous)
 		}
 	}
 	
@@ -96,7 +96,7 @@ if menu != undefined and not locked {
 							}
 						}
 						
-						catspeak_execute(change_delete_state, _title_delete_state)
+						catspeak_execute_id(change_delete_state, _title_delete_state)
 						global.title_delete_state = _title_delete_state
 						
 						break
@@ -160,7 +160,7 @@ if menu != undefined and not locked {
 				break
 				
 				case TitleOptions.DELETE_FILE:
-					catspeak_execute(change_delete_state, 1)
+					catspeak_execute_id(change_delete_state, 1)
 					global.title_delete_state = 1
 				break
 				
@@ -171,11 +171,11 @@ if menu != undefined and not locked {
 			}
 			
 			if _exit {
-				catspeak_execute(exit_title, _function)
+				catspeak_execute_id(exit_title, _function)
 			}
 		} else {
 			if is_method(_function) {
-				catspeak_execute(_function)
+				catspeak_execute_id(_function)
 			}
 		}
 	}
@@ -183,7 +183,7 @@ if menu != undefined and not locked {
 	// Return to previous menu
 	if input_check_pressed("pause") {
 		if global.title_delete_state {
-			catspeak_execute(change_delete_state, -1)
+			catspeak_execute_id(change_delete_state, -1)
 			global.title_delete_state = -1
 		} else {
 			set_menu(menu.from, false)

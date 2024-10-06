@@ -472,7 +472,7 @@
 				var _exres
 				
 				with _thing {
-					_exres = catspeak_execute(hitscan_intercept, _self, _x1, _y1, _z1, _x2, _y2, _z2, _flags)
+					_exres = catspeak_execute_id(hitscan_intercept, _self, _x1, _y1, _z1, _x2, _y2, _z2, _flags)
 				}
 				
 				if not _exres {
@@ -516,17 +516,17 @@
 	do_sequence = function (_sequence) {
 		gml_pragma("forceinline")
 		
-		catspeak_execute(thing_sequenced, _sequence)
+		catspeak_execute_id(thing_sequenced, _sequence)
 	}
 	
 	receive_damage = function (_amount, _type = "Normal", _from = noone, _source = _from) {
-		var _result = catspeak_execute(damage_received, _from, _source, _amount, _type)
+		var _result = catspeak_execute_id(damage_received, _from, _source, _amount, _type)
 		
 		if instance_exists(_from) {
 			var _to = id
 			
 			with _from {
-				catspeak_execute(damage_dealt, _to, _source, _amount, _type, _result)
+				catspeak_execute_id(damage_dealt, _to, _source, _amount, _type, _result)
 			}
 		}
 		
@@ -679,14 +679,14 @@
 		var _me = id
 		
 		with _thing {
-			if not catspeak_execute(holdable_held, _me, _forced) and not _forced {
+			if not catspeak_execute_id(holdable_held, _me, _forced) and not _forced {
 				return false
 			}
 			
 			holder = _me
 		}
 		
-		if catspeak_execute(holder_held, _thing, _forced) {
+		if catspeak_execute_id(holder_held, _thing, _forced) {
 			holding = _thing
 			
 			return true
@@ -705,12 +705,12 @@
 		var _me = id
 		
 		with holding {
-			if not (catspeak_execute(holdable_unheld, _me, _tossed, _forced) or _forced) {
+			if not (catspeak_execute_id(holdable_unheld, _me, _tossed, _forced) or _forced) {
 				return false
 			}
 		}
 		
-		if not (catspeak_execute(holder_unheld, holding, _tossed, _forced) or _forced) {
+		if not (catspeak_execute_id(holder_unheld, holding, _tossed, _forced) or _forced) {
 			return false
 		}
 		
@@ -734,10 +734,10 @@
 		var _me = id
 		
 		with _thing {
-			_exres = catspeak_execute(interactive_triggered, _me)
+			_exres = catspeak_execute_id(interactive_triggered, _me)
 		}
 		
-		return _exres and catspeak_execute(interactor_triggered, _thing)
+		return _exres and catspeak_execute_id(interactor_triggered, _thing)
 	}
 	
 	enter_from = function (_thing) {
@@ -754,7 +754,7 @@
 		var _me = id
 		
 		with _thing {
-			catspeak_execute(thing_intro, _me)
+			catspeak_execute_id(thing_intro, _me)
 		}
 	}
 #endregion

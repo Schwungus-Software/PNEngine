@@ -37,7 +37,7 @@ if not instance_exists(holder) or not f_holdable_in_hand {
 					}
 					
 					if draw != undefined {
-						catspeak_execute(draw)
+						catspeak_execute_id(draw)
 					}
 				}
 			}
@@ -45,7 +45,7 @@ if not instance_exists(holder) or not f_holdable_in_hand {
 	}
 	
 	if draw != undefined {
-		catspeak_execute(draw)
+		catspeak_execute_id(draw)
 	}
 } else {
 	_draw_model = false

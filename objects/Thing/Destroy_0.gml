@@ -5,5 +5,5 @@ if area_thing != undefined {
 }
 
 if on_destroy != undefined {
-	catspeak_execute(on_destroy)
+	catspeak_execute_id(on_destroy)
 }

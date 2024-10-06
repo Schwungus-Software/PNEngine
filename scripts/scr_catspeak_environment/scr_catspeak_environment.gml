@@ -524,6 +524,14 @@ function catspeak_execute(callee) {
     return catspeak_execute_ext(callee, self, args, 0, argument_count - 1);
 }
 
+function catspeak_execute_id(callee) {
+    static args = [];
+    for (var i = argument_count; i >= 1; i -= 1) {
+        args[@ i - 1] = argument[i];
+    }
+    return catspeak_execute_ext(callee, id, args, 0, argument_count - 1);
+}
+
 #macro __CATSPEAK_BEGIN_SELF \
         var __selfPrev = global.__catspeakGmlSelf; \
         var __otherPrev = global.__catspeakGmlOther; \

@@ -75,7 +75,7 @@ set_menu = function (_menu, _allow_return = true) {
 		var _previous = menu
 		
 		menu = _menu
-		catspeak_execute(change_menu, _previous)
+		catspeak_execute_id(change_menu, _previous)
 		
 		return true
 	}

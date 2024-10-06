@@ -7,7 +7,7 @@ if instance_exists(holder) {
 }
 
 if clean_up != undefined {
-	catspeak_execute(clean_up)
+	catspeak_execute_id(clean_up)
 }
 
 if voice != undefined and fmod_channel_control_is_playing(voice) {

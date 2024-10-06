@@ -173,7 +173,7 @@ function Player() constructor {
 					player = _player
 					input = _player.input
 					input_previous = _player.input_previous
-					catspeak_execute(player_create)
+					catspeak_execute_id(player_create)
 				}
 			}
 			

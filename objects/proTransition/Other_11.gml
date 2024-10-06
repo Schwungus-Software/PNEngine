@@ -4,5 +4,5 @@ if reload != undefined {
 }
 
 if create != undefined {
-	catspeak_execute(create)
+	catspeak_execute_id(create)
 }
