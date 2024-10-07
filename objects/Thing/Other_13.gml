@@ -5,7 +5,7 @@ z_previous = z
 angle_previous = angle
 
 if tick_start != undefined {
-	catspeak_execute_id(tick_start)
+	catspeak_execute(tick_start)
 }
 
 // Source: https://github.com/YoYoGames/GameMaker-HTML5/blob/37ebef72db6b238b892bb0ccc60184d4c4ba5d12/scripts/yyInstance.js#L1157
@@ -38,7 +38,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 	repeat i {
 		var _thing = _list[| --i]
 		
-		if instance_exists(_thing) and _thing != id and _thing.m_bump != MBump.TO and not instance_exists(_thing.holder) {
+		if instance_exists(_thing) and _thing != self and _thing.m_bump != MBump.TO and not instance_exists(_thing.holder) {
 			var _tx, _ty, _tz, _th
 			
 			with _thing {
@@ -51,10 +51,9 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 			// Bounding box check
 			if z > (_tz - _th) and (z - height) < _tz
 			   and point_distance(x, y, _tx, _ty) < bump_radius + _thing.bump_radius {
-				var _me = id
-				var _result_me = catspeak_execute_id(bump_check, _thing)
+				var _result_me = catspeak_execute(bump_check, _thing)
 				
-				if not instance_exists(_me) {
+				if not instance_exists(self) {
 					exit
 				}
 				
@@ -65,10 +64,10 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 				var _result_from
 				
 				with _thing {
-					_result_from = catspeak_execute_id(bump_check, _me)
+					_result_from = catspeak_execute(bump_check, other)
 				}
 				
-				if not instance_exists(_me) {
+				if not instance_exists(self) {
 					exit
 				}
 				
@@ -81,7 +80,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 				
 				if _thing.f_bump_avoid
 				   and (f_bump_heavy or point_distance(0, 0, x_speed, y_speed) > point_distance(0, 0, _thing.x_speed, _thing.y_speed)) {
-					_pusher = id
+					_pusher = self
 					_pushed = _thing
 					_pusher_result = _result_me
 					_pushed_result = _result_from
@@ -92,7 +91,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 					}
 					
 					_pusher = _thing
-					_pushed = id
+					_pushed = self
 					_pusher_result = _result_from
 					_pushed_result = _result_me
 				}
@@ -232,10 +231,8 @@ if _held {
 							move_angle += _diff
 						}
 						
-						var _me = id
-						
 						with _thing {
-							catspeak_execute_id(thing_on_prop, _me)
+							catspeak_execute(thing_on_prop, other)
 						}
 					}
 					
@@ -259,7 +256,7 @@ if _held {
 }
 
 if tick != undefined {
-	catspeak_execute_id(tick)
+	catspeak_execute(tick)
 }
 
 var _is_holding = instance_exists(holding) 
@@ -328,7 +325,7 @@ if _model != undefined and not _held {
 				}
 			}
 		} else {
-			catspeak_execute_id(holder_attach_holdable, holding)
+			catspeak_execute(holder_attach_holdable, holding)
 			
 			with holding {
 				if model != undefined {
@@ -403,5 +400,5 @@ if _held {
 }
 
 if tick_end != undefined {
-	catspeak_execute_id(tick_end)
+	catspeak_execute(tick_end)
 }

@@ -19,7 +19,7 @@ function transition_load(_type) {
 	if object_exists(_type) {
 		with instance_create_depth(0, 0, 0, _type) {
 			event_user(ThingEvents.LOAD)
-			instance_destroy(id, false)
+			instance_destroy(self, false)
 		}
 		
 		return true

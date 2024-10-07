@@ -8,7 +8,7 @@ if is_struct(special) {
 	//f_sync = special[$ "sync"] ?? f_sync
 
 	if special[$ "active"] {
-		global.camera_active = id
+		global.camera_active = self
 	}
 } else {
 	yaw = angle

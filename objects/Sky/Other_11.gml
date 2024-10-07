@@ -3,7 +3,7 @@ event_inherited()
 
 if not is_struct(special) {
 	print("! Sky.create: Special properties invalid or not found")
-	instance_destroy(id, false)
+	instance_destroy(self, false)
 	
 	exit
 }
@@ -21,4 +21,4 @@ if mdlSky != undefined {
 	model.alpha = _color[3]
 }
 
-area.sky = id
+area.sky = self

@@ -7,7 +7,7 @@ if instance_exists(holder) {
 }
 
 if clean_up != undefined {
-	catspeak_execute_id(clean_up)
+	catspeak_execute(clean_up)
 }
 
 if voice != undefined and fmod_channel_control_is_playing(voice) {
@@ -26,12 +26,12 @@ if area_thing != undefined {
 if area != undefined {
 	var _active_things = area.active_things
 	
-	ds_list_delete(_active_things, ds_list_find_index(_active_things, id))
+	ds_list_delete(_active_things, ds_list_find_index(_active_things, self))
 	
 	if collider != undefined {
 		var _collidables = area.collidables
 		
-		ds_list_delete(_collidables, ds_list_find_index(_collidables, id))
+		ds_list_delete(_collidables, ds_list_find_index(_collidables, self))
 	}
 }
 

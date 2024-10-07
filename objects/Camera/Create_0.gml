@@ -115,7 +115,7 @@ event_inherited()
 			return child.resolve()
 		}
 		
-		return id
+		return self
 	}
 	
 	add_target = function (_target, _range = 100, _x_offset = 0, _y_offset = 0, _z_offset = 0) {
@@ -255,17 +255,17 @@ event_inherited()
 		child = _camera
 		
 		if instance_exists(_camera) {
-			_camera.parent = id
+			_camera.parent = self
 		}
 	}
 	
 	set_active = function (_bool) {
 		if _bool {
-			global.camera_active = id
+			global.camera_active = self
 			
 			return true
 		} else {
-			if global.camera_active == id {
+			if global.camera_active == self {
 				global.camera_active = noone
 				
 				return true
@@ -443,7 +443,7 @@ event_inherited()
 		var _config = global.config
 		
 		gpu_set_tex_filter(_config.vid_texture_filter)
-		global.batch_camera = id
+		global.batch_camera = self
 			
 		var _active_things, _thing_count
 		var _sky = noone
@@ -580,17 +580,15 @@ event_inherited()
 				
 			repeat i {
 				with _active_things[| --i] {
-					if f_visible or (_allow_sky and id == _sky) {
-						ds_priority_add(_gui_priority, id, screen_depth)
+					if f_visible or (_allow_sky and self == _sky) {
+						ds_priority_add(_gui_priority, self, screen_depth)
 					}
 				}
 			}
 			
-			var _self = id
-			
 			repeat ds_priority_size(_gui_priority) {
 				with ds_priority_delete_max(_gui_priority) {
-					screen_camera = _self
+					screen_camera = other
 					screen_width = _width
 					screen_height = _height
 					gpu_set_depth(screen_depth)

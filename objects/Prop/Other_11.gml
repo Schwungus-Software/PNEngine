@@ -30,7 +30,7 @@ if is_struct(special) {
 		
 		if not is_string(_model_name) {
 			print($"! Prop.create: Invalid model name '{_model}', expected string")
-			instance_destroy(id, false)
+			instance_destroy(self, false)
 			
 			exit
 		}
@@ -39,7 +39,7 @@ if is_struct(special) {
 		
 		if _model == undefined {
 			print($"! Prop.create: Model '{_model_name}' not found")
-			instance_destroy(id, false)
+			instance_destroy(self, false)
 			
 			exit
 		}
@@ -54,7 +54,7 @@ if is_struct(special) {
 			angle_previous = _yaw
 			collider = new ColliderInstance(_collider)
 			collider.set_matrix(matrix_build(x, y, z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale))
-			ds_list_add(area.collidables, id)
+			ds_list_add(area.collidables, self)
 		}
 	} else {
 		with model {
@@ -77,7 +77,7 @@ if is_struct(special) {
 } else {
 	if model == undefined {
 		print("! Prop.create: Special properties invalid or not found")
-		instance_destroy(id, false)
+		instance_destroy(self, false)
 		
 		exit
 	}

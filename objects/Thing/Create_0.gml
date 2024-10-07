@@ -175,7 +175,7 @@
 	destroy = function (_natural = true) {
 		gml_pragma("forceinline")
 		
-		instance_destroy(id, _natural)
+		instance_destroy(self, _natural)
 	}
 	
 	play_sound = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
@@ -344,7 +344,7 @@
 		repeat i {
 			var _thing = _collidables[| --i]
 			
-			if _thing == id or _thing.f_culled or not _thing.f_collider_active {
+			if _thing == self or _thing.f_culled or not _thing.f_collider_active {
 				continue
 			}
 			
@@ -394,7 +394,6 @@
 		
 		// Iteration
 		var _hit = false
-		var _self = id
 		
 		var _ray_yaw = point_direction(_x1, _y1, _x2, _y2)
 		var _ray_pitch = point_pitch(_x1, _y1, _z1, _x2, _y2, _z2)
@@ -425,7 +424,7 @@
 				// Check this region to see if we're intersecting any Things.
 				var _thing = _region[| --i]
 				
-				if _thing == _self or not _thing.f_bump_intercept or ((_hflags & HitscanFlags.IGNORE_HOLDER) and _thing.holding == _self) or ((_hflags & HitscanFlags.IGNORE_MASTER) and instance_exists(master) and _thing == master.id) {
+				if _thing == self or not _thing.f_bump_intercept or ((_hflags & HitscanFlags.IGNORE_HOLDER) and _thing.holding == self) or ((_hflags & HitscanFlags.IGNORE_MASTER) and instance_exists(master) and _thing == master) {
 					continue
 				}
 				
@@ -472,7 +471,7 @@
 				var _exres
 				
 				with _thing {
-					_exres = catspeak_execute_id(hitscan_intercept, _self, _x1, _y1, _z1, _x2, _y2, _z2, _flags)
+					_exres = catspeak_execute(hitscan_intercept, other, _x1, _y1, _z1, _x2, _y2, _z2, _flags)
 				}
 				
 				if not _exres {
@@ -516,17 +515,15 @@
 	do_sequence = function (_sequence) {
 		gml_pragma("forceinline")
 		
-		catspeak_execute_id(thing_sequenced, _sequence)
+		catspeak_execute(thing_sequenced, _sequence)
 	}
 	
 	receive_damage = function (_amount, _type = "Normal", _from = noone, _source = _from) {
-		var _result = catspeak_execute_id(damage_received, _from, _source, _amount, _type)
+		var _result = catspeak_execute(damage_received, _from, _source, _amount, _type)
 		
 		if instance_exists(_from) {
-			var _to = id
-			
 			with _from {
-				catspeak_execute_id(damage_dealt, _to, _source, _amount, _type, _result)
+				catspeak_execute(damage_dealt, other, _source, _amount, _type, _result)
 			}
 		}
 		
@@ -615,7 +612,7 @@
 				repeat ds_list_size(_list) {
 					var _thing = _list[| k]
 				
-					if instance_exists(_thing) and (_thing != id or _include_self) and _thing.is_ancestor(_type) {
+					if instance_exists(_thing) and (_thing != self or _include_self) and _thing.is_ancestor(_type) {
 						results[_found++] = _thing
 					}
 				
@@ -676,17 +673,15 @@
 			return false
 		}
 		
-		var _me = id
-		
 		with _thing {
-			if not catspeak_execute_id(holdable_held, _me, _forced) and not _forced {
+			if not catspeak_execute(holdable_held, other, _forced) and not _forced {
 				return false
 			}
 			
-			holder = _me
+			holder = other
 		}
 		
-		if catspeak_execute_id(holder_held, _thing, _forced) {
+		if catspeak_execute(holder_held, _thing, _forced) {
 			holding = _thing
 			
 			return true
@@ -702,15 +697,13 @@
 			return true
 		}
 		
-		var _me = id
-		
 		with holding {
-			if not (catspeak_execute_id(holdable_unheld, _me, _tossed, _forced) or _forced) {
+			if not (catspeak_execute(holdable_unheld, other, _tossed, _forced) or _forced) {
 				return false
 			}
 		}
 		
-		if not (catspeak_execute_id(holder_unheld, holding, _tossed, _forced) or _forced) {
+		if not (catspeak_execute(holder_unheld, holding, _tossed, _forced) or _forced) {
 			return false
 		}
 		
@@ -731,13 +724,12 @@
 		}
 		
 		var _exres
-		var _me = id
 		
 		with _thing {
-			_exres = catspeak_execute_id(interactive_triggered, _me)
+			_exres = catspeak_execute(interactive_triggered, other)
 		}
 		
-		return _exres and catspeak_execute_id(interactor_triggered, _thing)
+		return _exres and catspeak_execute(interactor_triggered, _thing)
 	}
 	
 	enter_from = function (_thing) {
@@ -751,10 +743,8 @@
 			model.rotate(angle, 0, 0)
 		}
 		
-		var _me = id
-		
 		with _thing {
-			catspeak_execute_id(thing_intro, _me)
+			catspeak_execute(thing_intro, other)
 		}
 	}
 #endregion

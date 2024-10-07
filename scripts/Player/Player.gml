@@ -104,14 +104,7 @@ function Player() constructor {
 		}
 		
 		var _flags = global.flags
-		var _type = _flags[FlagGroups.LOCAL].get("player_class") ?? (_flags[FlagGroups.GLOBAL].get("player_class") ?? get_state("player_class"))
-			
-		if not is_string(_type) {
-			show_error($"! Player.respawn: Got '{typeof(_type)}' as player class, expected string", true)
-			
-			return noone
-		}
-		
+		var _type = force_type(_flags[FlagGroups.LOCAL].get("player_class") ?? (_flags[FlagGroups.GLOBAL].get("player_class") ?? get_state("player_class")), "string")
 		var _spawn = noone
 		
 		// Pick a spawn furthest from all players.
@@ -152,8 +145,6 @@ function Player() constructor {
 		if instance_exists(_spawn) {
 			var _player_pawn = noone
 			
-			global.last_player = slot
-			
 			with _spawn {
 				_player_pawn = area.add(_type, x, y, z, angle, tag, special)
 				
@@ -173,7 +164,7 @@ function Player() constructor {
 					player = _player
 					input = _player.input
 					input_previous = _player.input_previous
-					catspeak_execute_id(player_create)
+					catspeak_execute(player_create)
 				}
 			}
 			

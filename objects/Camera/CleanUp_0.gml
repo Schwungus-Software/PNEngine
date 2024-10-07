@@ -1,6 +1,6 @@
 event_inherited()
 
-if global.camera_active == id {
+if global.camera_active == self {
 	global.camera_active = noone
 }
 

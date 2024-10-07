@@ -2,7 +2,7 @@
 move_angle = angle
 
 if create != undefined {
-	catspeak_execute_id(create)
+	catspeak_execute(create)
 }
 
 if f_unique {
@@ -13,7 +13,7 @@ if f_unique {
 	}
 	
 	if area.count(_type) > 1 {
-		instance_destroy(id, false)
+		instance_destroy(self, false)
 		
 		exit
 	}
@@ -39,7 +39,7 @@ if model != undefined {
 		angle_previous = _yaw
 		collider = new ColliderInstance(_collider)
 		collider.set_matrix(matrix_build(x, y, z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale))
-		ds_list_add(area.collidables, id)
+		ds_list_add(area.collidables, self)
 	}
 }
 

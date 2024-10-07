@@ -350,7 +350,7 @@ function Area() constructor {
 					var _newdist = point_distance_3d(_x, _y, _z, x, y, z)
 					
 					if _newdist < _distance {
-						_result = id
+						_result = self
 						_distance = _newdist
 					}
 				}
@@ -374,7 +374,7 @@ function Area() constructor {
 					var _newdist = point_distance_3d(_x, _y, _z, x, y, z)
 					
 					if _newdist > _distance {
-						_result = id
+						_result = self
 						_distance = _newdist
 					}
 				}
@@ -478,7 +478,7 @@ function Area() constructor {
 		repeat i {
 			with active_things[| --i] {
 				if is_ancestor(_type) {
-					return id
+					return self
 				}
 			}
 		}
@@ -496,7 +496,7 @@ function Area() constructor {
 			case ThingTags.ALL:
 				repeat ds_list_size(active_things) {
 					with active_things[| i++] {
-						things[j++] = id
+						things[j++] = self
 					}
 				}
 			break
@@ -505,7 +505,7 @@ function Area() constructor {
 				repeat ds_list_size(active_things) {
 					with active_things[| i++] {
 						if object_index == PlayerPawn or object_is_ancestor(object_index, PlayerPawn) {
-							things[j++] = id
+							things[j++] = self
 						}
 					}
 				}
@@ -515,7 +515,7 @@ function Area() constructor {
 				repeat ds_list_size(active_things) {
 					with active_things[| i++] {
 						if object_index == PlayerSpawn or object_is_ancestor(object_index, PlayerSpawn) {
-							things[j++] = id
+							things[j++] = self
 						}
 					}
 				}
@@ -525,7 +525,7 @@ function Area() constructor {
 				repeat ds_list_size(active_things) {
 					with active_things[| i++] {
 						if tag == _tag {
-							things[j++] = id
+							things[j++] = self
 						}
 					}
 				}

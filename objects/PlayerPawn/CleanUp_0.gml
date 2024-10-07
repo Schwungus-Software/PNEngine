@@ -1,7 +1,7 @@
 event_inherited()
 
 if player != undefined {
-	if player.thing == id {
+	if player.thing == self {
 		player.thing = noone
 	}
 	

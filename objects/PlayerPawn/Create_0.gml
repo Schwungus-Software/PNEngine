@@ -54,11 +54,11 @@ event_inherited()
 		f_grounded = false
 		coyote = 0
 		jumped = true
-		catspeak_execute_id(player_jumped)
+		catspeak_execute(player_jumped)
 	}
 	
 	do_maneuver = function () {
-		catspeak_execute_id(player_maneuvered)
+		catspeak_execute(player_maneuvered)
 	}
 	
 	do_attack = function () {
@@ -68,7 +68,7 @@ event_inherited()
 			exit
 		}
 		
-		catspeak_execute_id(player_attacked)
+		catspeak_execute(player_attacked)
 	}
 	
 	get_state = function (_key) {
@@ -143,7 +143,10 @@ event_inherited()
 	
 	player_attacked = function () {}
 	player_aimed = function (_target) {}
-	player_respawned = function () {}
+	
+	player_respawned = function () {
+		return "Default respawn behaviour"
+	}
 	
 	player_create = function () {}
 	player_update = function () {}

@@ -1,11 +1,7 @@
 /// @description Tick
-if player == undefined {
-	exit
-}
-
 event_inherited()
 
-if instance_exists(id) {
-	catspeak_execute_id(player_update)
-	catspeak_execute_id(player_update_camera)
+if instance_exists(self) and player != undefined {
+	catspeak_execute(player_update)
+	catspeak_execute(player_update_camera)
 }
