@@ -36,10 +36,10 @@ uniform vec4 u_material_blend_uvs;
 
 // By genpfault
 float mipmap_level(in vec2 texels) {
-    vec2 dx_vtc = dFdx(texels);
-    vec2 dy_vtc = dFdy(texels);
-    float delta_max_sqr = max(dot(dx_vtc, dx_vtc), dot(dy_vtc, dy_vtc));
-    
+	vec2 dx_vtc = dFdx(texels);
+	vec2 dy_vtc = dFdy(texels);
+	float delta_max_sqr = max(dot(dx_vtc, dx_vtc), dot(dy_vtc, dy_vtc));
+	
 	return 0.5 * log2(delta_max_sqr);
 }
 

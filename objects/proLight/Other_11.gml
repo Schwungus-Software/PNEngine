@@ -26,7 +26,8 @@ if _color != undefined {
 				if not is_real(color) or not is_real(alpha) {
 					show_error("!!! proLight: Invalid vec2 array, elements must be real", true)
 				}
-			break
+				
+				break
 			
 			case 3:
 				var _r = _color[0]
@@ -38,7 +39,8 @@ if _color != undefined {
 				}
 				
 				color = make_color_rgb(_r * 255, _g * 255, _b * 255)
-			break
+				
+				break
 				
 			case 4:
 				var _r = _color[0]
@@ -52,7 +54,8 @@ if _color != undefined {
 				}
 				
 				color = make_color_rgb(_r * 255, _g * 255, _b * 255)
-			break
+				
+				break
 		}
 	}
 }

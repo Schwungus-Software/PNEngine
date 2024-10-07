@@ -16,7 +16,8 @@ function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _colo
 		_cz = sz
 	}
 	
-	/*var _cross = cross_product_3d_normalized(lerp(_x1, _x2, 0.5), lerp(_y1, _y2, 0.5), lerp(_z1, _z2, 0.5), _cx, _cy, _cz)
+	/* In order to make the line always face the camera (DOESN'T WORK BTW):
+	var _cross = cross_product_3d_normalized(lerp(_x1, _x2, 0.5), lerp(_y1, _y2, 0.5), lerp(_z1, _z2, 0.5), _cx, _cy, _cz)
 	var _lx = _cross[0] * _radius
 	var _ly = _cross[1] * _radius
 	var _lz = _cross[2] * _radius
@@ -35,7 +36,8 @@ function batch_line(_image, _frame, _x1, _y1, _z1, _x2, _y2, _z2, _radius, _colo
 	
 	var __x4 = _x2 + _lx
 	var __y4 = _y2 + _ly
-	var __z4 = _z2 + _lz*/
+	var __z4 = _z2 + _lz */
+	
 	var _dir = point_direction(_x1, _y1, _x2, _y2)
 	var _left = _dir - 90
 	var _right = _dir + 90

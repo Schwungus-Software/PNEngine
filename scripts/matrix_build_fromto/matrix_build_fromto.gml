@@ -5,7 +5,7 @@ function matrix_build_fromto(_x, _y, _z, _to_x, _to_y, _to_z, _up_x, _up_y, _up_
 	_to_x *= l
 	_to_y *= l
 	_to_z *= l
-
+	
 	// Orthogonalize up-vector to to-vector
 	var _dot = _up_x * _to_x + _up_y * _to_y + _up_z * _to_z
 	

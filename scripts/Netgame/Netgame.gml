@@ -198,9 +198,7 @@ function Netgame() constructor {
 		_size ??= buffer_get_size(_buffer)
 		
 		switch _to {
-			case SEND_HOST:
-				send(0, _buffer, _size, false, _overwrite)
-			break
+			case SEND_HOST: send(0, _buffer, _size, false, _overwrite) break
 			
 			case SEND_ALL:
 				var i = 0
@@ -212,7 +210,8 @@ function Netgame() constructor {
 					
 					++i
 				}
-			break
+				
+				break
 			
 			case SEND_OTHERS:
 				var i = 0
@@ -226,7 +225,8 @@ function Netgame() constructor {
 					
 					++i
 				}
-			break
+				
+				break
 			
 			default:
 				var _player = players[| _to]
@@ -269,7 +269,8 @@ function Netgame() constructor {
 				}
 				
 				network_send_udp_raw(socket, _ip, _port, _buffer, _size)
-			break
+				
+				break
 		}
 		
 		if _dispose {

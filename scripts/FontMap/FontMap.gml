@@ -87,7 +87,7 @@ function FontMap() : AssetMap() constructor {
 				_font.sprite = _sprite
 				_font.font = _font_id
 			}
-		
+			
 			ds_map_add(assets, _name, _font)
 			print("FontMap.load: Added '{0}' ({1})", _name, _font)
 		}

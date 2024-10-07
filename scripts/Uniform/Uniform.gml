@@ -16,37 +16,14 @@ function Uniform(_name, _type) constructor {
 	func = undefined
 	
 	switch _type {
-		case UniformTypes.FLOAT:
-			func = shader_set_uniform_f
-		break
-		
-		case UniformTypes.FLOAT_ARRAY:
-			func = shader_set_uniform_f_array
-		break
-		
-		case UniformTypes.FLOAT_BUFFER:
-			func = shader_set_uniform_f_buffer
-		break
-		
-		case UniformTypes.INTEGER:
-			func = shader_set_uniform_i
-		break
-		
-		case UniformTypes.INTEGER_ARRAY:
-			func = shader_set_uniform_i_array
-		break
-		
-		case UniformTypes.MATRIX:
-			func = shader_set_uniform_matrix
-		break
-		
-		case UniformTypes.MATRIX_ARRAY:
-			func = shader_set_uniform_matrix_array
-		break
-		
-		case UniformTypes.TEXTURE:
-			func = texture_set_stage
-		break
+		case UniformTypes.FLOAT: func = shader_set_uniform_f break
+		case UniformTypes.FLOAT_ARRAY: func = shader_set_uniform_f_array break
+		case UniformTypes.FLOAT_BUFFER: func = shader_set_uniform_f_buffer break
+		case UniformTypes.INTEGER: func = shader_set_uniform_i break
+		case UniformTypes.INTEGER_ARRAY: func = shader_set_uniform_i_array break
+		case UniformTypes.MATRIX: func = shader_set_uniform_matrix break
+		case UniformTypes.MATRIX_ARRAY: func = shader_set_uniform_matrix_array break
+		case UniformTypes.TEXTURE: func = texture_set_stage break
 	}
 	
 	var _shaders = global.shaders
@@ -73,6 +50,7 @@ function Uniform(_name, _type) constructor {
 		}
 		
 		// GROSS HACK: Can't use "-~argument_count" on YYC...
+		//			   (then again, why would YOU use "-~"?)
 		script_execute_ext(func, _args, 0, argument_count + 1)
 	}
 }

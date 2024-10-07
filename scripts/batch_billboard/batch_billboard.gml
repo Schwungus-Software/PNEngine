@@ -60,7 +60,7 @@ function batch_billboard(_image, _frame, _width, _height, _x, _y, _z, _angle = 0
 		_v2 = 1
 	} else {
 		var _uvs = _image.GetUVs(_frame)
-	
+		
 		with _uvs {
 			_u1 = normLeft
 			_v1 = normTop

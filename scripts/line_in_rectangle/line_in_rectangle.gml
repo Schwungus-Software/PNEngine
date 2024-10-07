@@ -57,7 +57,7 @@ function line_in_rectangle(_lx1, _ly1, _lx2, _ly2, _x1, _y1, _x2, _y2) {
 		
 		/* Now find the intersection point;
 		   use formulas:
-		       slope = (_ly2 - _ly1) / (_lx2 - _lx1)
+			   slope = (_ly2 - _ly1) / (_lx2 - _lx1)
 			   x = _lx1 + (1 / slope) * (ym - _ly1), where ym is _y1 or _y2
 			   y = _ly1 + slope * (xm - _lx1), where xm is _x1 or _x2
 		   No need to worry about divide-by-zero because, in each case, the outcode

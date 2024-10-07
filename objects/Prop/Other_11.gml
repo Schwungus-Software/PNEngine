@@ -9,7 +9,6 @@ if is_struct(special) {
 	var _x_scale = force_type_fallback(special[$ "x_scale"], "number", 1)
 	var _y_scale = force_type_fallback(special[$ "y_scale"], "number", 1)
 	var _z_scale = force_type_fallback(special[$ "z_scale"], "number", 1)
-	
 	var _blendmode
 	
 	switch force_type_fallback(special[$ "blendmode"], "string", "BM_NORMAL") {

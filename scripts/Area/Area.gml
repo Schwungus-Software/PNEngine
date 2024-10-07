@@ -499,7 +499,8 @@ function Area() constructor {
 						things[j++] = self
 					}
 				}
-			break
+				
+				break
 			
 			case ThingTags.PLAYERS:
 				repeat ds_list_size(active_things) {
@@ -509,7 +510,8 @@ function Area() constructor {
 						}
 					}
 				}
-			break
+				
+				break
 			
 			case ThingTags.PLAYER_SPAWNS:
 				repeat ds_list_size(active_things) {
@@ -519,7 +521,8 @@ function Area() constructor {
 						}
 					}
 				}
-			break
+				
+				break
 			
 			default:
 				repeat ds_list_size(active_things) {

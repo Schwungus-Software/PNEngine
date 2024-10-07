@@ -52,7 +52,7 @@ function cmd_connect(_args) {
 	}, function () {
 		if global.input_mode == INPUT_SOURCE_MODE.JOIN {
 			input_join_params_set(1, INPUT_MAX_PLAYERS, "leave", undefined, false)
-		
+			
 			if not global.console {
 				input_source_mode_set(INPUT_SOURCE_MODE.JOIN)
 			}

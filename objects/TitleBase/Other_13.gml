@@ -70,7 +70,8 @@ if menu != undefined and not locked {
 					
 					global.save_name = $"File {i}"
 					_exit = true
-				break
+					
+					break
 				
 				case TitleOptions.LOAD_FILE:
 					if global.title_delete_state >= 1 {
@@ -157,17 +158,20 @@ if menu != undefined and not locked {
 					}
 					
 					_exit = true
-				break
+					
+					break
 				
 				case TitleOptions.DELETE_FILE:
 					catspeak_execute(change_delete_state, 1)
 					global.title_delete_state = 1
-				break
+					
+					break
 				
 				case TitleOptions.OPTIONS:
 					ui_create(proOptionsUI)
 					_exit = true
-				break
+					
+					break
 			}
 			
 			if _exit {

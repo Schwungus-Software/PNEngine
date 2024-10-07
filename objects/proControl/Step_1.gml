@@ -11,34 +11,34 @@ switch load_state {
 				instance_destroy()
 			}
 		}
-			
+		
 		var _ui = global.ui
-			
+		
 		if _ui != undefined {
 			_ui.destroy()
 		}
-			
+		
 		var _canvases = global.canvases
 		var i = 0
-			
+		
 		repeat array_length(_canvases) {
 			_canvases[i++].Flush()
 		}
-			
+		
 		global.ui_sounds.clear()
-			
+		
 		var _music_instances = global.music_instances
-			
+		
 		repeat ds_list_size(_music_instances) {
 			_music_instances[| 0].destroy()
 		}
-			
+		
 		global.level.destroy()
-			
+		
 		var _players = global.players
-			
+		
 		i = 0
-			
+		
 		repeat INPUT_MAX_PLAYERS {
 			with _players[i++] {
 				level = undefined
@@ -47,7 +47,7 @@ switch load_state {
 				camera = noone
 			}
 		}
-			
+		
 		global.images.clear()
 		global.materials.clear()
 		global.models.clear()
@@ -55,13 +55,13 @@ switch load_state {
 		//global.fonts.clear()
 		global.sounds.clear()
 		global.music.clear()
-			
+		
 		if load_level == undefined {
 			game_end()
-				
+			
 			exit
 		}
-			
+		
 		global.flags[FlagGroups.LOCAL].clear()
 		global.level = new Level()
 		catspeak_collect()
@@ -70,22 +70,21 @@ switch load_state {
 		
 		exit
 	}
-		
+	
 	case LoadStates.LOAD: {
-#region Load New Level
 		print($"\n========== {load_level} ({lexicon_text("level." + load_level)}) ==========")
 		print($"(Entering area {load_area} from {load_tag})")
-			
+		
 		var _images = global.images
-			
+		
 		_images.start_batch()
-			
+		
 		var _level = global.level
-			
+		
 		_level.name = load_level
 		
 		var _json = json_load(mod_find_file("levels/" + load_level + ".*"))
-			
+		
 		if not is_struct(_json) {
 			show_error($"!!! proControl: '{load_level}' not found", true)
 		} else {
@@ -93,7 +92,7 @@ switch load_state {
 				if global.demo_write {
 					if global.demo_buffer != undefined {
 						var _filename = "demo_" + string_replace_all(date_datetime_string(date_current_datetime()), "/", ".")
-							
+						
 						cmd_dend(_filename)
 						show_caption($"[c_red]Recording ended on a protected level.\nSaved as '{_filename}.pnd'.")
 					} else {
@@ -109,8 +108,8 @@ switch load_state {
 			}
 			
 			with global.rng_game {
-				left = 4
-				right = 29
+				left = DEFAULT_RNG_LEFT
+				right = DEFAULT_RNG_RIGHT
 			}
 			
 #region Discord Rich Presence
@@ -118,23 +117,23 @@ switch load_state {
 			_level.rp_icon = force_type_fallback(_json[$ "rp_icon"], "string", "")
 			_level.rp_time = force_type_fallback(_json[$ "rp_time"], "bool", false)
 #endregion
-				
+			
 #region Default Properties
 			if force_type_fallback(_json[$ "checkpoint"], "bool", false) {
 				var _checkpoint = global.checkpoint
-					
+				
 				_checkpoint[0] = load_level
 				_checkpoint[1] = load_area
 				_checkpoint[2] = load_tag
 				save_game()
 			}
-				
+			
 			var _script = _json[$ "script"]
-				
+			
 			if is_string(_script) {
 				with _level {
 					level_script = global.scripts.fetch(_script)
-						
+					
 					if level_script != undefined {
 						start = level_script.start
 						area_changed = level_script.area_changed
@@ -143,28 +142,28 @@ switch load_state {
 					}
 				}
 			}
-				
+			
 			var _music_tracks = _json[$ "music"]
-				
+			
 			if _music_tracks != undefined {
 				var _music = global.music
-					
+				
 				if is_string(_music_tracks) {
 					_level.music = [_music_tracks]
 				} else {
 					if is_array(_music_tracks) {
 						var i = 0
-							
+						
 						repeat array_length(_music_tracks) {
 							var _track = _music_tracks[i]
 							var _name
-								
+							
 							if is_string(_track) {
 								_name = _track
 							} else {
 								if is_struct(_track) {
 									_name = _track[$ "name"]
-										
+									
 									if not is_string(_name) {
 										show_error($"!!! proControl: Level has invalid info for music track {i}, struct must have a 'name' member with string", true)
 									}
@@ -175,7 +174,7 @@ switch load_state {
 							
 							++i
 						}
-							
+						
 						_level.music = _music_tracks
 					} else {
 						show_error($"!!! proControl: Level has invalid info for music, expected string or array", true)
@@ -184,36 +183,36 @@ switch load_state {
 			} else {
 				_level.music = []
 			}
-				
+			
 			with _level {
 				clear_color = color_to_vec5(_json[$ "clear_color"], c_black)
-					
+				
 				var _fog_distance = _json[$ "fog_distance"]
-					
+				
 				fog_distance = is_array(_fog_distance) ? [real(_fog_distance[0]), real(_fog_distance[1])] : [0, 65535]
 				fog_color = color_to_vec5(_json[$ "fog_color"])
 				ambient_color = color_to_vec5(_json[$ "ambient_color"])
 				wind_strength = force_type_fallback(_json[$ "wind_strength"], "number", 1)
-					
+				
 				var _wind_direction = _json[$ "wind_direction"]
-					
+				
 				wind_direction = is_array(_wind_direction) ? [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])] : [1, 1, 1]
 				gravity = force_type_fallback(_json[$ "gravity"], "number", 0.3)
 			}
 #endregion
 			
 			var _copy_flags = force_type_fallback(_json[$ "flags"], "struct")
-				
+			
 			if _copy_flags != undefined {
 				var _flags = global.flags
 				var _copy_global = force_type_fallback(_copy_flags[$ "global"], "struct")
-					
+				
 				if _copy_global != undefined {
 					_flags[FlagGroups.GLOBAL].copy(_copy_global)
 				}
-					
+				
 				var _copy_local = force_type_fallback(_copy_flags[$ "local"], "struct")
-					
+				
 				if _copy_local != undefined {
 					_flags[FlagGroups.LOCAL].copy(_copy_local)
 				}
@@ -221,87 +220,87 @@ switch load_state {
 			
 #region Assets
 			var _assets = force_type_fallback(_json[$ "assets"], "struct")
-				
+			
 			if _assets != undefined {
 				// Images
 				var __images = _assets[$ "images"]
-					
+				
 				if __images != undefined {
 					repeat array_length(__images) {
 						_images.load(array_pop(__images))
 					}
 				}
-					
+				
 				// Materials
 				var __materials = _assets[$ "materials"]
 					
 				if __materials != undefined {
 					var _materials = global.materials
-						
+					
 					repeat array_length(__materials) {
 						_materials.load(array_pop(__materials))
 					}
 				}
-					
+				
 				// Models
 				var __models = _assets[$ "models"]
-					
+				
 				if __models != undefined {
 					var _models = global.models
-						
+					
 					repeat array_length(__models) {
 						_models.load(array_pop(__models))
 					}
 				}
-					
+				
 				// Fonts
 				var __fonts = _assets[$ "fonts"]
-					
+				
 				if __fonts != undefined {
 					var _fonts = global.fonts
-						
+					
 					repeat array_length(__fonts) {
 						_fonts.load(array_pop(__fonts))
 					}
 				}
-					
+				
 				// Sounds
 				var __sounds = _assets[$ "sounds"]
-					
+				
 				if __sounds != undefined {
 					var _sounds = global.sounds
-						
+					
 					repeat array_length(__sounds) {
 						_sounds.load(array_pop(__sounds))
 					}
 				}
-					
+				
 				// Music
 				var __music = _assets[$ "music"]
-					
+				
 				if __music != undefined {
 					var _music = global.music
-						
+					
 					repeat array_length(__music) {
 						_music.load(array_pop(__music))
 					}
 				}
-					
+				
 				// Things
 				var _things = _assets[$ "things"]
-					
+				
 				if _things != undefined {
 					repeat array_length(_things) {
 						var _thing = array_pop(_things)
 						var _thing_index = asset_get_index(_thing)
-							
+						
 						if _thing_index != -1 {
 							if string_starts_with(_thing, "pro") {
 								print($"! proControl: Can't load protected Thing '{_thing}'!")
-									
+								
 								continue
 							}
-								
+							
 							thing_load(_thing_index)
 						} else {
 							thing_load(_thing)
@@ -310,41 +309,41 @@ switch load_state {
 				}
 			}
 #endregion
-				
+			
 #region Areas
 			var _add_areas = _json[$ "areas"]
-				
+			
 			if not is_array(_add_areas) {
 				show_error($"!!! proControl: Level '{load_level}' has no areas", true)
 			} else {
 				var _thing_slot = 0
-					
+				
 				var _areas = _level.areas
 				var _images = global.images
 				var _models = global.models
 				var _scripts = global.scripts
-					
+				
 				var _current_area_pos = 0
-					
+				
 				repeat array_length(_add_areas) {
 					var _area = new Area()
 					var _area_info = _add_areas[_current_area_pos++]
-						
+					
 					// Check for valid ID
 					var _id = _area_info[$ "id"] ?? undefined
-						
+					
 					if is_real(_id) {
 						with _area {
 							level = _level
 							slot = _id
 							ds_map_add(_areas, _id, _area)
-								
+							
 							var _clear_color = _area_info[$ "clear_color"]
 							var _ambient_color = _area_info[$ "ambient_color"]
 							var _fog_distance = _area_info[$ "fog_distance"]
 							var _fog_color = _area_info[$ "fog_color"]
 							var _wind_direction = _area_info[$ "wind_direction"]
-								
+							
 							clear_color = _clear_color == undefined ? _level.clear_color : color_to_vec5(_clear_color)
 							ambient_color = _ambient_color == undefined ? _level.ambient_color : color_to_vec5(_ambient_color)
 							fog_distance = is_array(_fog_distance) ? [real(_fog_distance[0]), real(_fog_distance[1])] : _level.fog_distance
@@ -353,13 +352,13 @@ switch load_state {
 							wind_direction = _wind_direction == undefined ? _level.wind_direction : [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])]
 							gravity = _area_info[$ "gravity"] ?? _level.gravity
 						}
-							
+						
 						// Check for model
 						var _model_name = _area_info[$ "model"]
-							
+						
 						if is_string(_model_name) {
 							var _model = _models.fetch(_model_name)
-								
+							
 							if _model != undefined {
 								_area.model = new ModelInstance(_model)
 								
@@ -370,7 +369,7 @@ switch load_state {
 								}
 							}
 						}
-							
+						
 						// Check for things
 						var _things = _area.things
 						var _add_things = _area_info[$ "things"]
@@ -378,47 +377,47 @@ switch load_state {
 						var _bump_y1 = infinity
 						var _bump_x2 = -infinity
 						var _bump_y2 = -infinity
-							
+						
 						if is_array(_add_things) {
 							_images.load("imgShadow")
-								
+							
 							var _area_things = _level.area_things
 							var i = 0
-								
+							
 							repeat array_length(_add_things) {
 								var _area_thing = new AreaThing()
 								var _thing_info = _add_things[i]
-									
+								
 								with _area_thing {
 									level = _level
 									area = _area
 									slot = _thing_slot
-										
+									
 									var _type_name = _thing_info[$ "type"]
-										
+									
 									type = asset_get_index(_type_name)
-										
+									
 									if type == -1 {
 										type = _type_name
 									}
-										
+									
 									if string_starts_with(_type_name, "pro") {
 										print($"! proControl: Can't load protected Thing '{_type_name}' in area {_id}!")
-											
+										
 										delete _area_thing
 									} else {
 										var _special = _thing_info[$ "special"]
-											
+										
 										if thing_load(type, _special) {
 											x = _thing_info[$ "x"] ?? 0
 											y = _thing_info[$ "y"] ?? 0
 											z = _thing_info[$ "z"] ?? 0
-												
+											
 											_bump_x1 = min(_bump_x1, x - COLLIDER_REGION_RADIUS)
 											_bump_y1 = min(_bump_y1, y - COLLIDER_REGION_RADIUS)
 											_bump_x2 = max(_bump_x2, x + COLLIDER_REGION_RADIUS)
 											_bump_y2 = max(_bump_y2, y + COLLIDER_REGION_RADIUS)
-												
+											
 											angle = _thing_info[$ "angle"] ?? 0
 											tag = _thing_info[$ "tag"] ?? 0
 											special = _special
@@ -427,19 +426,19 @@ switch load_state {
 											array_push(_things, _area_thing)
 										} else {
 											print($"! proControl: Unknown Thing '{_type_name}' in area {_id}")
-												
+											
 											delete _area_thing
 										}
 									}
-										
+									
 									++_thing_slot
 									ds_list_add(_area_things, _area_thing)
 								}
-									
+								
 								++i
 							}
 						}
-							
+						
 						with _area {
 							var n = array_length(_things)
 							
@@ -474,47 +473,47 @@ switch load_state {
 						}
 					} else {
 						print($"! proControl: Invalid area ID '{_id}', expected real")
-							
+						
 						delete _area
 					}
-						
+					
 					delete _area_info
 				}
 			}
 #endregion
-				
+			
 			delete _json
 		}
-			
+		
 		ui_load("Pause")
-			
+		
 		with proTransition {
 			transition_load(transition_script != undefined ? transition_script.name : object_index)
 		}
-			
+		
 		_images.end_batch()
-			
+		
 		var _materials_map = global.materials.assets
 		var _key = ds_map_find_first(_materials_map)
-			
+		
 		repeat ds_map_size(_materials_map) {
 			with _materials_map[? _key] {
 				if image != -1 {
 					image = CollageImageGetInfo(image)
 				}
-					
+				
 				if image2 != undefined and image2 != -1 {
 					image2 = CollageImageGetInfo(image2)
 				}
 			}
-				
+			
 			_key = ds_map_find_next(_materials_map, _key)
 		}
 		
 		var _models_map = global.models.assets
 		
 		_key = ds_map_find_first(_models_map)
-			
+		
 		repeat ds_map_size(_models_map) {
 			with _models_map[? _key] {
 				if lightmap != undefined {
@@ -590,45 +589,43 @@ switch load_state {
 		}
 		
 		load_state = LoadStates.FINISH
-#endregion
 		
 		exit
 	}
 		
 	case LoadStates.FINISH: {
-#region Finish Loading
 		global.transition_canvas.Flush()
 		game_update_status()
 		global.tick_scale = 1
-			
+		
 		var _level = global.level
-			
+		
 		with proTransition {
 			if state == 2 {
 				state = 3
-					
+				
 				if reload != undefined {
 					reload()
 				}
 			}
 		}
-			
+		
 		load_state = LoadStates.NONE
 		
 		var i = 0
-			
+		
 		with _level {
 			repeat array_length(music) {
 				var _track = music[i]
 				var _asset
-					
+				
 				if is_string(_track) {
 					_asset = global.music.fetch(_track)
 					music_play(_asset, i)
 				} else {
 					if is_struct(_track) {
 						_asset = global.music.fetch(force_type(_track[$ "name"], "string"))
-							
+						
 						var _priority = force_type_fallback(_track[$ "priority"], "number", i)
 						var _loop = force_type_fallback(_track[$ "loop"], "bool", true)
 						var _active = force_type_fallback(_track[$ "active"], "bool", true)
@@ -636,7 +633,7 @@ switch load_state {
 						music_play(_asset, _priority, _loop, 1, 0, _active)
 					}
 				}
-					
+				
 				music[i] = _asset;
 				++i
 			}
@@ -647,14 +644,14 @@ switch load_state {
 		var _load_tag = load_tag
 		
 		i = 0
-			
+		
 		repeat INPUT_MAX_PLAYERS {
 			with _players[i++] {
 				level = _level
 				set_state("frozen", false)
 				set_state("hud", true)
 				set_state("invincible", false)
-					
+				
 				// Bring new players in-game
 				if status == PlayerStatus.PENDING {
 					status = PlayerStatus.ACTIVE;
@@ -666,50 +663,51 @@ switch load_state {
 		
 		if global.demo_write and global.demo_buffer == undefined {
 			var _demo_buffer = buffer_create(1, buffer_grow, 1)
-				
+			
 			// Header
 			buffer_write(_demo_buffer, buffer_string, "PNEDEMO")
 			buffer_write(_demo_buffer, buffer_string, GM_version)
 			
 			/* Add a special boolean to check if this was recorded during a
 			   netgame.
-			   Some mods may have special behaviour on netgames. */
+			   Some mods may have special behaviour on netgames, so this is
+			   required. */
 			buffer_write(_demo_buffer, buffer_bool, global.game_status & GameStatus.NETGAME)
-				
+			
 			// Mods
 			var _mods = global.mods
 			var n = ds_map_size(_mods)
-				
+			
 			buffer_write(_demo_buffer, buffer_u32, n)
-				
+			
 			var _key = ds_map_find_first(_mods)
-				
+			
 			repeat n {
 				buffer_write(_demo_buffer, buffer_string, _key)
 				buffer_write(_demo_buffer, buffer_string, _mods[? _key].version)
 				_key = ds_map_find_next(_mods, _key)
 			}
-				
+			
 			// States
 			buffer_write(_demo_buffer, buffer_u8, INPUT_MAX_PLAYERS)
-				
+			
 			var _players = global.players
 			var i = 0
-				
+			
 			repeat INPUT_MAX_PLAYERS {
 				buffer_write(_demo_buffer, buffer_u8, i)
-					
+				
 				with _players[i++] {
 					buffer_write(_demo_buffer, buffer_u8, status)
 					write_states(_demo_buffer)
 				}
 			}
-				
+			
 			// Level
 			buffer_write(_demo_buffer, buffer_string, load_level)
 			buffer_write(_demo_buffer, buffer_u32, load_area)
 			buffer_write(_demo_buffer, buffer_s32, load_tag)
-				
+			
 			// Flags
 			global.flags[FlagGroups.GLOBAL].write(_demo_buffer)
 			
@@ -736,7 +734,6 @@ switch load_state {
 				}
 			}
 		}
-#endregion
 		
 		var _netgame = global.netgame
 		
@@ -798,7 +795,6 @@ switch load_state {
 	
 	case LoadStates.CLIENT_READY: {
 		// Wait until host has finished loading.
-		
 		exit
 	}
 }
@@ -826,14 +822,7 @@ if _mouse_focused {
 		mouse_dy = 0
 	}
 } else {
-	var _mouse_start = global.mouse_start
-	
-	if not _mouse_start and (mouse_check_button(mb_any) or window_get_fullscreen()) {
-		global.mouse_start = true
-		_mouse_start = true
-	}
-	
-	if not _console and not global.debug_overlay and window_has_focus() and _ui == undefined and _mouse_start {
+	if not _console and not global.debug_overlay and window_has_focus() and _ui == undefined {
 		window_mouse_set_locked(true)
 		global.mouse_focused = true
 		_mouse_focused = true
@@ -873,17 +862,17 @@ if _tick >= 1 {
 			if __any_changed {
 				print($"proControl: Player input status updated ({__new_connections}, {__new_disconnections})")
 				var i = 0
-		
+				
 				repeat array_length(__new_connections) {
 					with _players[__new_connections[i++]] {
 						if not activate() {
 							if __show_reconnect_caption {
 								var _device = input_player_get_gamepad_type(slot)
-						
+								
 								if _device == "unknown" {
 									_device = "no controller"
 								}
-						
+								
 								show_caption($"[c_lime]{lexicon_text("hud.caption.player.reconnect", -~slot)} ({_device})")
 							} else {
 								__show_reconnect_caption = true
@@ -891,9 +880,9 @@ if _tick >= 1 {
 						}
 					}
 				}
-			
+				
 				i = 0
-			
+				
 				repeat array_length(__new_disconnections) {
 					with _players[__new_disconnections[i++]] {
 						if not deactivate() {
@@ -905,7 +894,7 @@ if _tick >= 1 {
 		}
 	}
 #endregion
-		
+	
 #region Debug
 	if input_check_pressed("debug_overlay") {
 		global.debug_overlay = not global.debug_overlay
@@ -937,14 +926,14 @@ if _tick >= 1 {
 						var _cmd = _input
 						var _args = ""
 						var _args_pos = string_pos(" ", _cmd)
-					
+						
 						if _args_pos > 0 {
 							_cmd = string_copy(_cmd, 1, _args_pos - 1)
 							_args = string_delete(_input, 1, _args_pos)
 						}
-					
+						
 						var _cmd_function = variable_global_get($"cmd_{_cmd}")
-					
+						
 						if is_method(_cmd_function) {
 							_cmd_function(_args)
 						} else {
@@ -1071,7 +1060,7 @@ if _tick >= 1 {
 					}
 				} else if ++stall_time >= STALL_RATE {
 					_tick = 0
-						
+					
 					if stall_time >= STALL_RATE + TICKRATE {
 						var _text = "[c_yellow]Waiting for: "
 						var i = 0
@@ -1132,7 +1121,8 @@ if _tick >= 1 {
 				case 0:
 				case 2:
 					_skip_tick = true
-				break
+					
+					break
 			}
 		}
 #endregion
@@ -1140,17 +1130,17 @@ if _tick >= 1 {
 #region Cameraman
 		if not _skip_tick {
 			var _camera_man = global.camera_man
-		
+			
 			if instance_exists(_camera_man) {
 				var _turn_x, _turn_y
-			
+				
 				with _config {
 					_turn_x = in_pan_x * (in_invert_x ? -1 : 1)
 					_turn_y = in_pan_y * (in_invert_y ? -1 : 1)
 				}
 				
 				// GROSS HACK: Add analog turning controls to camera by adding
-				//             to mouse delta
+				//			   to mouse delta
 				mouse_dx = (mouse_dx * _config.in_mouse_x) + (input_value("aim_right") - input_value("aim_left"))
 				mouse_dy = (mouse_dy * _config.in_mouse_y) + (input_value("aim_down") - input_value("aim_up"))
 				
@@ -1197,48 +1187,48 @@ if _tick >= 1 {
 #region UI
 		if not _skip_tick {
 			_ui = global.ui
-		
+			
 			if _ui != undefined {
 				var _ui_input = global.ui_input
-			
+				
 				_ui_input[UIInputs.UP_DOWN] = input_check_opposing_pressed("ui_up", "ui_down", 0, true) + input_check_opposing_repeat("ui_up", "ui_down", 0, true, 2, 12)
 				_ui_input[UIInputs.LEFT_RIGHT] = input_check_opposing_pressed("ui_left", "ui_right", 0, true) + input_check_opposing_repeat("ui_left", "ui_right", 0, true, 2, 12)
 				_ui_input[UIInputs.CONFIRM] = input_check_pressed("ui_enter")
 				_ui_input[UIInputs.BACK] = input_check_pressed("pause")
-			
+				
 				var _tick_target = _ui
-			
+				
 				while true {
 					var _child = _tick_target.child
-				
+					
 					if _child == undefined {
 						break
 					}
-				
+					
 					_tick_target = _child
 				}
-			
+				
 				with _tick_target {
 					if tick != undefined {
 						catspeak_execute(tick)
 					}
-				
+					
 					if not exists and parent != undefined {
 						_tick_target = parent
 					}
 				}
-			
+				
 				if _tick_target.exists and _tick_target.f_blocking {
 					_skip_tick = true
 				}
 			} else {
 				var _paused = false
-			
+				
 				if input_check_pressed("pause") {
 					_paused = true
-				
+					
 					var i = INPUT_MAX_PLAYERS
-				
+					
 					repeat INPUT_MAX_PLAYERS {
 						with _players[--i] {
 							if status != PlayerStatus.ACTIVE or get_state("hp") <= 0 {
@@ -1251,13 +1241,13 @@ if _tick >= 1 {
 								break
 							}
 						}
-					
+						
 						if not _paused {
 							break
 						}
 					}
 				}
-			
+				
 				if _paused {
 					ui_create("Pause")
 					_skip_tick = true
@@ -1296,7 +1286,8 @@ if _tick >= 1 {
 				
 				case 5:
 					global.camera_demo = noone
-				break
+					
+					break
 				
 				default:
 					with _players[_switch_camera - 1] {
@@ -1323,19 +1314,22 @@ if _tick >= 1 {
 					switch buffer_read(_demo_buffer, buffer_u8) {
 						case DemoPackets.TERMINATE:
 							_break = true
-						break
+							
+							break
 						
 						case DemoPackets.PLAYER_ACTIVATE:
 							var _slot = buffer_read(_demo_buffer, buffer_u8)
 							
 							_players[_slot].activate()
-						break
+							
+							break
 						
 						case DemoPackets.PLAYER_DEACTIVATE:
 							var _slot = buffer_read(_demo_buffer, buffer_u8)
 							
 							_players[_slot].deactivate()
-						break
+							
+							break
 						
 						case DemoPackets.PLAYER_INPUT:
 							var _slot = buffer_read(_demo_buffer, buffer_u8)
@@ -1356,7 +1350,8 @@ if _tick >= 1 {
 							_input[PlayerInputs.AIM] = _flags & PIFlags.AIM
 							_input[PlayerInputs.AIM_UP_DOWN] = buffer_read(_demo_buffer, buffer_s16)
 							_input[PlayerInputs.AIM_LEFT_RIGHT] = buffer_read(_demo_buffer, buffer_s16)
-						break
+							
+							break
 						
 						case DemoPackets.END:
 							cmd_dend("")
@@ -1364,7 +1359,8 @@ if _tick >= 1 {
 							_has_demo = false
 							_playing_demo = false
 							_break = true
-						break
+							
+							break
 					}
 					
 					if _break {
@@ -1444,11 +1440,11 @@ if _tick >= 1 {
 			var _dx_factor = input_value("aim_right") - input_value("aim_left")
 			var _dy_factor = input_value("aim_down") - input_value("aim_up")
 			var _dx_angle, _dy_angle, _dx, _dy
-					
+			
 			with _config {
 				_dx_angle = in_pan_x * (in_invert_x ? -1 : 1)
 				_dy_angle = in_pan_y * (in_invert_y ? -1 : 1)
-						
+				
 				if _mouse_focused {
 					_dx_factor += _mouse_dx * in_mouse_x
 					_dy_factor += _mouse_dy * in_mouse_y
@@ -1476,10 +1472,10 @@ if _tick >= 1 {
 					}
 					
 					array_copy(input_previous, 0, input, 0, PlayerInputs.__SIZE)
-				
+					
 					if _playing_demo {
 						var _input = _demo_input[i]
-					
+						
 						input[PlayerInputs.UP_DOWN] = _input[PlayerInputs.UP_DOWN]
 						input[PlayerInputs.LEFT_RIGHT] = _input[PlayerInputs.LEFT_RIGHT]
 						input[PlayerInputs.JUMP] = _input[PlayerInputs.JUMP]
@@ -1490,32 +1486,32 @@ if _tick >= 1 {
 						input[PlayerInputs.INVENTORY_DOWN] = _input[PlayerInputs.INVENTORY_DOWN]
 						input[PlayerInputs.INVENTORY_RIGHT] = _input[PlayerInputs.INVENTORY_RIGHT]
 						input[PlayerInputs.AIM] = _input[PlayerInputs.AIM]
-					
+						
 						var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
 						var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
 						var _input_aim_up_down, _input_aim_left_right
-					
+						
 						if is_nan(_input_force_up_down) {
 							_input_aim_up_down = _input[PlayerInputs.AIM_UP_DOWN]
 						} else {
 							_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
 							input[PlayerInputs.FORCE_UP_DOWN] = NaN
 						}
-					
+						
 						input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
-					
+						
 						if is_nan(_input_force_left_right) {
 							_input_aim_left_right = _input[PlayerInputs.AIM_LEFT_RIGHT]
 						} else {
 							_input_aim_left_right = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
 							input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
 						}
-					
+						
 						input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
 					} else {
 						var _get_input = false
 						var _pind = i
-					
+						
 						if _in_netgame {
 							if _netgame.local_slot == i {
 								_get_input = true
@@ -1557,7 +1553,7 @@ if _tick >= 1 {
 						} else {
 							_get_input = true
 						}
-					
+						
 						if _get_input {
 							// Main
 							var _move_range = input_check("walk", _pind) ? 64 : 127
@@ -1566,16 +1562,16 @@ if _tick >= 1 {
 							var _input_jump = input_check("jump", _pind)
 							var _input_interact = input_check("interact", _pind)
 							var _input_attack = input_check("attack", _pind)
-					
+							
 							// Inventory
 							var _input_inventory_up = input_check("inventory_up", _pind)
 							var _input_inventory_left = input_check("inventory_left", _pind)
 							var _input_inventory_down = input_check("inventory_down", _pind)
 							var _input_inventory_right = input_check("inventory_right", _pind)
-					
+							
 							// Camera
 							var _input_aim = input_check("aim", _pind)
-					
+							
 							// Write to input array
 							input[PlayerInputs.UP_DOWN] = _input_up_down
 							input[PlayerInputs.LEFT_RIGHT] = _input_left_right
@@ -1587,51 +1583,51 @@ if _tick >= 1 {
 							input[PlayerInputs.INVENTORY_DOWN] = _input_inventory_down
 							input[PlayerInputs.INVENTORY_RIGHT] = _input_inventory_right
 							input[PlayerInputs.AIM] = _input_aim
-					
+							
 							// This one kinda sucks...
 							var _dx_factor = input_value("aim_right", _pind) - input_value("aim_left", _pind)
 							var _dy_factor = input_value("aim_down", _pind) - input_value("aim_up", _pind)
 							var _dx_angle, _dy_angle
-					
+							
 							with _config {
 								_dx_angle = in_pan_x * (in_invert_x ? -1 : 1)
 								_dy_angle = in_pan_y * (in_invert_y ? -1 : 1)
-						
+								
 								if _pind == 0 and _mouse_focused {
 									_dx_factor += _mouse_dx * in_mouse_x
 									_dy_factor += _mouse_dy * in_mouse_y
 								}
 							}
-					
+							
 							var _input_force_left_right = input[PlayerInputs.FORCE_LEFT_RIGHT]
 							var _input_aim_left_right
-					
+							
 							if is_nan(_input_force_left_right) {
 								var _dx = round(((_dx_factor * _dx_angle) * 0.0027777777777778) * 32768)
-						
+								
 								_input_aim_left_right = (input[PlayerInputs.AIM_LEFT_RIGHT] - _dx) % 32768
 							} else {
 								_input_aim_left_right = round(_input_force_left_right * PLAYER_AIM_DIRECT) % 32768
 								input[PlayerInputs.FORCE_LEFT_RIGHT] = NaN
 							}
-					
+							
 							input[PlayerInputs.AIM_LEFT_RIGHT] = _input_aim_left_right
-					
+							
 							var _input_force_up_down = input[PlayerInputs.FORCE_UP_DOWN]
 							var _input_aim_up_down
-					
+							
 							if is_nan(_input_force_up_down) {
 								var _dy = round(((_dy_factor * _dy_angle) * 0.0027777777777778) * 32768)
-						
+								
 								_input_aim_up_down = (input[PlayerInputs.AIM_UP_DOWN] - _dy) % 32768
 							} else {
 								_input_aim_up_down = round(_input_force_up_down * PLAYER_AIM_DIRECT) % 32768
 								input[PlayerInputs.FORCE_UP_DOWN] = NaN
 							}
-						
+							
 							input[PlayerInputs.AIM_UP_DOWN] = _input_aim_up_down
 						}
-					
+						
 						if _recording_demo and not array_equals(input, input_previous) {
 							buffer_write(_demo_buffer, buffer_u8, DemoPackets.PLAYER_INPUT)
 							buffer_write(_demo_buffer, buffer_u8, i)
@@ -1664,7 +1660,7 @@ if _tick >= 1 {
 							with _player.player {
 								buffer_write(b, buffer_s8, input[PlayerInputs.UP_DOWN])
 								buffer_write(b, buffer_s8, input[PlayerInputs.LEFT_RIGHT])
-									
+								
 								buffer_write(b, buffer_u8, player_input_to_flags(
 									input[PlayerInputs.JUMP],
 									input[PlayerInputs.INTERACT],
@@ -1675,7 +1671,7 @@ if _tick >= 1 {
 									input[PlayerInputs.INVENTORY_RIGHT],
 									input[PlayerInputs.AIM]
 								))
-									
+								
 								buffer_write(b, buffer_s16, input[PlayerInputs.AIM_UP_DOWN])
 								buffer_write(b, buffer_s16, input[PlayerInputs.AIM_LEFT_RIGHT])
 							}
@@ -1748,7 +1744,7 @@ if _tick >= 1 {
 											ds_list_clear(_list)
 										}
 										
-										ds_list_add(_list, id);
+										ds_list_add(_list, self);
 										++_gj
 									}
 									

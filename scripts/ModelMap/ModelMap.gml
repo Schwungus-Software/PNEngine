@@ -37,7 +37,7 @@ function ModelMap() : AssetMap() constructor {
 		
 		// Minor version
 		var _minor_version = 0
-
+		
 		if _has_minor_version {
 			_minor_version = buffer_read(_buffer, buffer_u8)
 			
@@ -75,7 +75,7 @@ function ModelMap() : AssetMap() constructor {
 				   - Bone Weights
 				   
 				   TODO: Add support for tangents?
-				         Normal maps would be nice... */
+						 Normal maps would be nice... */
 				var _position = buffer_read(_buffer, buffer_bool)
 				var _normals = buffer_read(_buffer, buffer_bool)
 				var _uvs = buffer_read(_buffer, buffer_bool)
@@ -236,7 +236,7 @@ function ModelMap() : AssetMap() constructor {
 			bones_amount = _bone_count
 		}
 #endregion
-
+		
 #region Load JSON File
 		var _json = json_load(mod_find_file("models/" + _name + ".json"))
 		
@@ -254,10 +254,10 @@ function ModelMap() : AssetMap() constructor {
 				var _ymin = infinity
 				var _xmax = -infinity
 				var _ymax = -infinity
-						
+				
 				if is_array(_get_triangles) {
 					var i = 0
-							
+					
 					repeat array_length(_get_triangles) {
 						var _batch = force_type(_get_triangles[i++], "struct")
 						var _batch_name = force_type(_batch[$ "batch"], "string")
@@ -266,7 +266,7 @@ function ModelMap() : AssetMap() constructor {
 						if _batch_filename == "" {
 							show_error($"!!! ModelMap.load: '{_name}' batch file '{_batch_name}' not found", true)
 						}
-									
+						
 						var _batch_surface = floor(force_type_fallback(_batch[$ "surface"], "number", 0))
 						var _batch_flags = CollisionFlags.ALL
 						
@@ -296,34 +296,30 @@ function ModelMap() : AssetMap() constructor {
 						
 						var _batch_layer = _batch[$ "layer"]
 						var _batch_mask = 0
-									
+						
 						switch typeof(_batch_layer) {
-							case "undefined":
-								_batch_mask = CollisionLayers.ALL
-							break
-										
-							case "real":
-								_batch_mask = 1 << _batch_layer
-							break
-										
+							case "undefined": _batch_mask = CollisionLayers.ALL break
+							case "real": _batch_mask = 1 << _batch_layer break
+							
 							case "array":
 								var j = 0
-											
+								
 								repeat array_length(_batch_layer) {
 									_batch_mask |= 1 << _batch_layer[j++]
 								}
-							break
-										
+								
+								break
+							
 							default:
 								show_error($"!!! ModelMap.load: '{_name}' batch '{_batch_name}' has invalid layer '{_batch_layer}', expected real or array", true)
 						}
-									
+						
 						var _buffer = buffer_load(_batch_filename)
 						
 						if buffer_read(_buffer, buffer_string) != "PNECOL" {
 							show_error($"!!! ModelMap.load: '{_name}' batch '{_batch_name}' has no PNECOL header", true)
 						}
-									
+						
 						repeat buffer_read(_buffer, buffer_u32) {
 							var _triangle = array_create(TriangleData.__SIZE)
 							var _x1 = buffer_read(_buffer, buffer_f32)
@@ -335,7 +331,7 @@ function ModelMap() : AssetMap() constructor {
 							var _x3 = buffer_read(_buffer, buffer_f32)
 							var _y3 = buffer_read(_buffer, buffer_f32)
 							var _z3 = buffer_read(_buffer, buffer_f32)
-											
+							
 							_xmin = min(_xmin, _x1, _x2, _x3)
 							_ymin = min(_ymin, _y1, _y2, _y3)
 							_xmax = max(_xmax, _x1, _x2, _x3)
@@ -357,7 +353,7 @@ function ModelMap() : AssetMap() constructor {
 							_triangle[TriangleData.LAYERS] = _batch_mask
 							ds_list_add(_triangles, _triangle)
 						}
-									
+						
 						buffer_delete(_buffer)
 					}
 				}
@@ -365,26 +361,23 @@ function ModelMap() : AssetMap() constructor {
 				
 #region Layers
 				var _active_layers = _collider_info[$ "active_layers"]
-						
+				
 				switch typeof(_active_layers) {
-					case "undefined":
-					break
-							
-					case "real":
-						_collider.layer_mask = 1 << _active_layers
-					break
-							
+					case "undefined": break
+					case "real": _collider.layer_mask = 1 << _active_layers break
+					
 					case "array":
 						var _mask = 0
 						var j = 0
-								
+						
 						repeat array_length(_active_layers) {
 							_mask |= 1 << _active_layers[j++]
 						}
-								
+						
 						_collider.layer_mask = _mask
-					break
-										
+						
+						break
+					
 					default:
 						show_error($"!!! ModelMap.load: '{_name}' collider has invalid active layers '{_active_layers}', expected real or array", true)
 				}
@@ -396,39 +389,39 @@ function ModelMap() : AssetMap() constructor {
 					y1 = _ymin
 					x2 = _xmax
 					y2 = _ymax
-								
+					
 					var _width = ceil((_xmax - _xmin) * COLLIDER_REGION_SIZE_INVERSE)
 					var _height = ceil((_ymax - _ymin) * COLLIDER_REGION_SIZE_INVERSE)
 					var _triangles_n = ds_list_size(triangles)
-								
+					
 					ds_grid_resize(grid, _width, _height)
-								
+					
 					var i = 0
-								
+					
 					repeat _width {
 						var j = 0
-									
+						
 						repeat _height {
 							/* Try to create a region for each new grid cell.
-								If there are no triangles in this region, the cell will redirect
-								to noone (empty). */
+							   If there are no triangles in this region, the cell will redirect
+							   to noone (empty). */
 							var _region = ds_list_create()
 							var _rx1 = _xmin + i * COLLIDER_REGION_SIZE
 							var _ry1 = _ymin + j * COLLIDER_REGION_SIZE
 							var _rx2 = _rx1 + COLLIDER_REGION_SIZE
 							var _ry2 = _ry1 + COLLIDER_REGION_SIZE
 							var k = 0
-										
+							
 							repeat _triangles_n {
 								var _triangle = triangles[| k++]
-				
+								
 								var _tx1 = _triangle[TriangleData.X1]
 								var _ty1 = _triangle[TriangleData.Y1]
 								var _tx2 = _triangle[TriangleData.X2]
 								var _ty2 = _triangle[TriangleData.Y2]
 								var _tx3 = _triangle[TriangleData.X3]
 								var _ty3 = _triangle[TriangleData.Y3]
-
+								
 								// Check if this triangle is within the region.
 								// (rectangle_in_triangle doesn't work)
 								if point_in_rectangle(_tx1, _ty1, _rx1, _ry1, _rx2, _ry2)
@@ -449,7 +442,7 @@ function ModelMap() : AssetMap() constructor {
 									ds_list_add(_region, _triangle)
 								}
 							}
-										
+							
 							if ds_list_empty(_region) {
 								ds_list_destroy(_region)
 								grid[# i, j] = -1
@@ -458,10 +451,10 @@ function ModelMap() : AssetMap() constructor {
 								ds_list_add(regions, _region)
 								ds_list_mark_as_list(regions, ds_list_size(regions) - 1)
 							}
-										
+							
 							++j
 						}
-									
+						
 						++i
 					}
 				}
@@ -470,7 +463,7 @@ function ModelMap() : AssetMap() constructor {
 				_model.collider = _collider
 			}
 #endregion
-		
+			
 #region Points
 			var _points = force_type_fallback(_json[$ "points"], "struct")
 			
@@ -487,7 +480,7 @@ function ModelMap() : AssetMap() constructor {
 				_model.points = _points
 			}
 #endregion
-
+			
 #region Lightmap
 			var _lightmap = force_type_fallback(_json[$ "lightmap"], "string")
 			

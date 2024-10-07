@@ -1,8 +1,8 @@
 function quat_to_matrix(_q, _matrix = matrix_build_identity()) {
 	var _x = _q[0]
-    var _y = _q[1]
-    var _z = _q[2]
-    var _w = _q[3]
+	var _y = _q[1]
+	var _z = _q[2]
+	var _w = _q[3]
 	
 	// Build matrix
 	_matrix[0] = 2 * (_w * _w + _x * _x) - 1

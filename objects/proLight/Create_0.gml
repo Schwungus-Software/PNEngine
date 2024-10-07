@@ -1,7 +1,5 @@
 event_inherited()
 
-//f_sync = false
-
 light_data = undefined
 
 handle = -1

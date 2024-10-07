@@ -90,92 +90,110 @@ function proOptionsUI() : UI(undefined) constructor {
 					case 0:
 						_width = 320
 						_height = 240
-					break
+						
+						break
 					
 					case 1:
 						_width = 426
 						_height = 240
-					break
+						
+						break
 					
 					case 2:
 						_width = 360
 						_height = 270
-					break
+						
+						break
 					
 					case 3:
 						_width = 480
 						_height = 270
-					break
+						
+						break
 					
 					case 4:
 						_width = 640
 						_height = 480
-					break
+						
+						break
 					
 					case 5:
 						_width = 854
 						_height = 480
-					break
+						
+						break
 					
 					case 6:
 						_width = 720
 						_height = 540
-					break
+						
+						break
 					
 					case 7:
 						_width = 960
 						_height = 540
-					break
+						
+						break
 					
 					case 8:
 						_width = 960
 						_height = 720
-					break
+						
+						break
 					
 					case 9:
 						_width = 1280
 						_height = 720
-					break
+						
+						break
 					
 					case 10:
 						_width = 1200
 						_height = 900
-					break
+						
+						break
 					
 					case 11:
 						_width = 1600
 						_height = 900
-					break
+						
+						break
 					
 					case 12:
 						_width = 1440
 						_height = 1080
-					break
+						
+						break
 					
 					case 13:
 						_width = 1920
 						_height = 1080
-					break
+						
+						break
 					
 					case 14:
 						_width = 1920
 						_height = 1440
-					break
+						
+						break
 					
 					case 15:
 						_width = 2560
 						_height = 1440
-					break
+						
+						break
 					
 					case 16:
 						_width = 2880
 						_height = 2160
-					break
+						
+						break
 					
 					case 17:
 						_width = 3840
 						_height = 2160
-					break
+						
+						break
 				}
 				
 				with global.config {
@@ -204,36 +222,16 @@ function proOptionsUI() : UI(undefined) constructor {
 				
 				return _preset
 			}(), function (_value) {
-				var _fps
+				var _fps = 60
 				
 				switch _value {
-					case 0:
-						_fps = 30
-					break
-					
-					case 1:
-						_fps = 60
-					break
-					
-					case 2:
-						_fps = 75
-					break
-					
-					case 3:
-						_fps = 120
-					break
-					
-					case 4:
-						_fps = 144
-					break
-					
-					case 5:
-						_fps = 165
-					break
-					
-					case 6:
-						_fps = 240
-					break
+					case 0: _fps = 30 break
+					case 1: _fps = 60 break
+					case 2: _fps = 75 break
+					case 3: _fps = 120 break
+					case 4: _fps = 144 break
+					case 5: _fps = 165 break
+					case 6: _fps = 240 break
 				}
 				
 				global.config.vid_max_fps = _fps
@@ -441,7 +439,7 @@ function proOptionsUI() : UI(undefined) constructor {
 			if input[UIInputs.BACK] {
 				if input_binding_scan_in_progress() {
 					input_binding_scan_abort()
-			    } else {
+				} else {
 					play_sound(back_sound)
 				}
 				
@@ -477,36 +475,36 @@ function proOptionsUI() : UI(undefined) constructor {
 			force_option = -1
 		} else {
 			var _up_down = input[UIInputs.UP_DOWN]
-		
+			
 			if _up_down != 0 {
 				var _changed = false
-			
+				
 				with menu {
 					var n = array_length(contents)
 				
 					if not n {
 						break
 					}
-				
+					
 					var _next = option
-				
+					
 					while true {
 						option = (option + _up_down) % n
-					
+						
 						while option < 0 {
 							option += n
 						}
-					
+						
 						var _option = contents[option]
-					
+						
 						if is_instanceof(_option, OUIElement) and not _option.disabled {
 							break
 						}
 					}
-				
+					
 					_changed = _next != option
 				}
-			
+				
 				if _changed {
 					play_sound(switch_sound)
 				}
@@ -559,11 +557,11 @@ function proOptionsUI() : UI(undefined) constructor {
 						input_binding_scan_params_set(_ignore)
 						
 						input_binding_scan_start(function (_binding) {
-			                input_binding_set_safe(focus.verb, _binding)
+							input_binding_set_safe(focus.verb, _binding)
 							play_sound(select_sound)
 							focus = undefined
 							input_verb_consume(all)
-			            }, function () {
+						}, function () {
 							play_sound(back_sound)
 							focus = undefined
 						})

@@ -3,10 +3,10 @@ function matrix_build_normal(_x, _y, _z, _nx, _ny, _nz, _scale, _matrix = matrix
 	var l = sqr(_nx) + sqr(_ny) + sqr(_nz)
 	
 	if l > 0 and l < 1 {
-	    l = 1 / sqrt(l)
-	    _nx *= l
-	    _ny *= l 
-	    _nz *= l
+		l = 1 / sqrt(l)
+		_nx *= l
+		_ny *= l 
+		_nz *= l
 	}
 	
 	// Orthogonalize x-axis to the normal
@@ -17,10 +17,10 @@ function matrix_build_normal(_x, _y, _z, _nx, _ny, _nz, _scale, _matrix = matrix
 	l = sqr(_xx) + sqr(_xy) + sqr(_xz)
 	
 	if l > 0 and l < 1 {
-	    l = 1 / sqrt(l)
-	    _xx *= l
-	    _xy *= l 
-	    _xz *= l
+		l = 1 / sqrt(l)
+		_xx *= l
+		_xy *= l 
+		_xz *= l
 	}
 	
 	// Orthogonalize y-axis to the normal
@@ -31,10 +31,10 @@ function matrix_build_normal(_x, _y, _z, _nx, _ny, _nz, _scale, _matrix = matrix
 	l = sqr(_yx) + sqr(_yy) + sqr(_yz)
 	
 	if l > 0 and l < 1 {
-	    l = 1 / sqrt(l)
-	    _yx *= l
-	    _yy *= l
-	    _yz *= l
+		l = 1 / sqrt(l)
+		_yx *= l
+		_yy *= l
+		_yz *= l
 	}
 	
 	// Construct matrix

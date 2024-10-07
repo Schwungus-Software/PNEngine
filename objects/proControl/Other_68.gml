@@ -88,13 +88,13 @@ with _netgame {
 				if n != _target_amount {
 					print($"! proControl: Client {_key} mod amount doesn't match ({n} =/= {_target_amount}), blocking")
 					send_direct(_ip, _port, net_buffer_create(false, NetHeaders.HOST_BLOCK_CLIENT, buffer_string, "NET_MODS"))
-						
+					
 					exit
 				}
 				
 				// 2. Mod hashes
 				var _mismatch = true
-					
+				
 				repeat n {
 					_mismatch = true
 					
@@ -117,7 +117,7 @@ with _netgame {
 						break
 					}
 				}
-					
+				
 				if _mismatch {
 					print($"! proControl: Client {_key} mod hashes don't match, blocking")
 					send_direct(_ip, _port, net_buffer_create(false, NetHeaders.HOST_BLOCK_CLIENT, buffer_string, "NET_MODS"))
@@ -130,7 +130,7 @@ with _netgame {
 				
 				exit
 			}
-				
+			
 			case NetHeaders.CLIENT_SEND_INFO: {
 				var _key = $"{_ip}:{_port}"
 				
@@ -180,10 +180,10 @@ with _netgame {
 				send(SEND_OTHERS, net_buffer_create(true, NetHeaders.PLAYER_JOINED, buffer_u8, _slot, buffer_string, _name))
 				game_update_status()
 				print($"proControl: Assigned client '{_name}' to player {-~_slot}")
-					
+				
 				exit
 			}
-					
+			
 			case NetHeaders.CLIENT_DISCONNECT: {
 				var _key = $"{_ip}:{_port}"
 				
@@ -199,21 +199,21 @@ with _netgame {
 						
 					exit
 				}
-					
+				
 				var b = net_buffer_create(true, NetHeaders.PLAYER_LEFT)
-					
+				
 				with _other {
 					buffer_write(b, buffer_u8, slot)
 					print($"proControl: Client '{name}' disconnected")
 					destroy()
 				}
-					
+				
 				send(SEND_OTHERS, b)
 				game_update_status()
 				
 				exit
 			}
-				
+			
 			case NetHeaders.CLIENT_PONG: {
 				var _client = clients[? $"{_ip}:{_port}"]
 				
@@ -242,7 +242,7 @@ with _netgame {
 	if _to == local_slot {
 		if _reliable > 0 {
 			var _net = players[| _from]
-				
+			
 			if _net == undefined {
 				print($"! proControl: Got invalid ROM from player {-~_from} (index {_reliable})")
 				
@@ -274,27 +274,27 @@ with _netgame {
 	switch _header {
 		case NetHeaders.ACK: {
 			var _net = players[| _from]
-				
+			
 			if _net == undefined {
 				break
 			}
-				
+			
 			var _index = buffer_read(_buffer, buffer_u32)
-				
+			
 			with _net {
 				if not ds_list_empty(reliable) {
 					var b = reliable[| 0]
-						
+					
 					buffer_seek(b, buffer_seek_start, 0)
-						
+					
 					var _compare = buffer_read(b, buffer_u32)
-						
+					
 					if _compare == _index {
 						if _netgame.master {
 							// Skip from and to
 							buffer_read(b, buffer_u8)
 							buffer_read(b, buffer_u8)
-								
+							
 							var _compare_header = buffer_read(b, buffer_u8)
 							
 							if _compare_header == NetHeaders.HOST_TICK and not tick_acked {
@@ -311,7 +311,7 @@ with _netgame {
 			
 			break
 		}
-			
+		
 		case NetHeaders.HOST_CHECK_CLIENT: {
 			CLIENT_CHECK_HOST
 			
@@ -333,7 +333,7 @@ with _netgame {
 			
 			break
 		}
-			
+		
 		case NetHeaders.HOST_BLOCK_CLIENT: {
 			CLIENT_CHECK_HOST
 			
@@ -358,7 +358,7 @@ with _netgame {
 			
 			break
 		}
-			
+		
 		case NetHeaders.HOST_ADD_CLIENT: {
 			CLIENT_CHECK_HOST
 			
@@ -401,13 +401,13 @@ with _netgame {
 					break
 				}
 			}
-				
+			
 			print($"Total players: {player_count} ({global.players_ready} ready, {global.players_active} active)")
-				
+			
 			if connect_success_callback != undefined {
 				connect_success_callback()
 			}
-				
+			
 			was_connected_before = true
 			
 			break
@@ -415,18 +415,18 @@ with _netgame {
 		
 		case NetHeaders.PLAYER_JOINED: {
 			CLIENT_CHECK_SENDER
-				
+			
 			var _slot = buffer_read(_buffer, buffer_u8)
-				
+			
 			if _slot == local_slot {
 				break
 			}
-				
+			
 			with add_player(_slot, "127.0.0.1", 0) {
 				name = buffer_read(_buffer, buffer_string)
 				print($"proControl: Client '{name}' joined")
 			}
-				
+			
 			game_update_status()
 			
 			break
@@ -439,39 +439,39 @@ with _netgame {
 			
 			break
 		}
-			
+		
 		case NetHeaders.PLAYER_LEFT: {
 			CLIENT_CHECK_SENDER
 			
 			var _slot = buffer_read(_buffer, buffer_u8)
-				
+			
 			if _slot == local_slot {
 				disconnect()
 				code = "NET_KICK"
 				was_connected_before = true
-					
+				
 				if connect_fail_callback != undefined {
 					connect_fail_callback()
 				}
-					
+				
 				was_connected_before = false
 				destroy()
-					
+				
 				break
 			}
-				
+			
 			var _other = players[| _slot]
-				
+			
 			if _other != undefined {
 				print($"proControl: Client '{_other.name}' left")
 				_other.destroy()
 			}
-				
+			
 			game_update_status()
 			
 			break
 		}
-			
+		
 		case NetHeaders.HOST_PING: {
 			CLIENT_CHECK_SENDER
 			time_source_reset(timeout_time_source)

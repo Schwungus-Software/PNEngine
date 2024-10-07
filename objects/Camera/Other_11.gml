@@ -5,8 +5,7 @@ if is_struct(special) {
 	roll = special[$ "roll"] ?? 0
 	fov = special[$ "fov"] ?? 45
 	f_ortho = special[$ "ortho"] ?? false
-	//f_sync = special[$ "sync"] ?? f_sync
-
+	
 	if special[$ "active"] {
 		global.camera_active = self
 	}

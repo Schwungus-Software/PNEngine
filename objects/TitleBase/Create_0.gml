@@ -8,7 +8,6 @@ enum TitleOptions {
 event_inherited()
 
 f_unique = true
-//f_sync = false
 
 title_start = global.title_start
 menu = undefined
@@ -86,10 +85,7 @@ set_menu = function (_menu, _allow_return = true) {
 
 #region Virtual Functions
 change_menu = function (_previous) {}
-
 change_option = function (_previous) {}
-
 change_delete_state = function (_state) {}
-
 exit_title = function (_option) {}
 #endregion

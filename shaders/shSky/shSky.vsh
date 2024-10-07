@@ -30,9 +30,9 @@ uniform float u_time;
 uniform vec2 u_material_scroll;
 
 void main() {
-    vec4 object_space_position = vec4(in_Position, 1.);
+	vec4 object_space_position = vec4(in_Position, 1.);
 
-    gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * object_space_position;
-    v_color = in_Colour;
-    v_texcoord = in_TextureCoord + (u_time * u_material_scroll);
+	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * object_space_position;
+	v_color = in_Colour;
+	v_texcoord = in_TextureCoord + (u_time * u_material_scroll);
 }

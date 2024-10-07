@@ -13,7 +13,7 @@ function Save(_filename) constructor {
 	area = 0
 	tag = ThingTags.NONE
 	
-#region Valid Check
+#region Validity Check
 	var _buffer = buffer_load(SAVES_PATH + filename)
 	
 	try {
@@ -22,12 +22,12 @@ function Save(_filename) constructor {
 			code = "SAVE_INVALID"
 			print($"! Save: '{name}' has invalid header")
 			buffer_delete(_buffer)
-		
+			
 			exit
 		}
-	
+		
 		var _version = buffer_read(_buffer, buffer_string)
-	
+		
 		/*if _version != GM_version {
 			code = "SAVE_VERSION"
 			print($"! Save: '{name}' has version mismatch ({_version} =/= {GM_version})")
@@ -35,10 +35,10 @@ function Save(_filename) constructor {
 		
 			exit
 		}*/
-	
+		
 		date = buffer_read(_buffer, buffer_u32)
 #endregion
-	
+		
 #region Mods
 		var _mods = global.mods
 		
@@ -65,7 +65,7 @@ function Save(_filename) constructor {
 			}*/
 		}
 #endregion
-	
+		
 #region States
 		var n = buffer_read(_buffer, buffer_u8)
 		
@@ -96,13 +96,13 @@ function Save(_filename) constructor {
 			}
 		}
 #endregion
-
+		
 #region Level
 		level = buffer_read(_buffer, buffer_string)
 		area = buffer_read(_buffer, buffer_u32)
 		tag = buffer_read(_buffer, buffer_s32)
 #endregion
-
+		
 #region Flags
 		n = buffer_read(_buffer, buffer_u32)
 		

@@ -120,7 +120,8 @@ if _held {
 			wall_ray[RaycastData.HIT] = false
 			ceiling_ray[RaycastData.HIT] = false
 			f_grounded = false
-		break
+			
+			break
 	
 		case MCollision.NORMAL: {
 			var _half_height = height * 0.5
@@ -309,7 +310,7 @@ if _model != undefined and not _held {
 	if _is_holding {
 		if holding.f_holdable_in_hand {
 			var _hold_bone = _model.hold_bone
-		
+			
 			if _hold_bone != -1 {
 				with holding {
 					if model != undefined {
@@ -351,15 +352,13 @@ if _held {
 } else {
 	switch m_shadow {
 		default:
-		case MShadow.NONE:
-			shadow_ray[RaycastData.HIT] = false
-		break
-	
+		case MShadow.NONE: shadow_ray[RaycastData.HIT] = false break
+		
 		case MShadow.NORMAL:
 		case MShadow.BONE:
 		case MShadow.MODEL:
 			var _x, _y, _z
-		
+			
 			if m_shadow == MShadow.BONE and model != undefined {
 				with model {
 					if torso_bone <= -1 {
@@ -371,7 +370,7 @@ if _held {
 					}
 					
 					var _bone_pos = get_node_pos(torso_bone)
-				
+					
 					_x = _bone_pos[0]
 					_y = _bone_pos[1]
 					_z = _bone_pos[2]
@@ -381,14 +380,14 @@ if _held {
 				_y = y
 				_z = z - height * 0.5
 			}
-		
+			
 			var _has_blob = shadow_ray[RaycastData.HIT]
-		
+			
 			if raycast(_x, _y, _z, _x, _y, _z + 2000, CollisionFlags.SHADOW, CollisionLayers.ALL, shadow_ray)[RaycastData.HIT] {
 				shadow_x = shadow_ray[RaycastData.X]
 				shadow_y = shadow_ray[RaycastData.Y]
 				shadow_z = shadow_ray[RaycastData.Z]
-			
+				
 				if not _has_blob {
 					interp_skip("sshadow_x")
 					interp_skip("sshadow_y")

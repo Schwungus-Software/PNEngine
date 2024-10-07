@@ -15,11 +15,11 @@ var _draw_target = global.ui
 
 while _draw_target != undefined {
 	var _child = _draw_target.child
-		
+	
 	if _child == undefined {
 		break
 	}
-		
+	
 	_draw_target = _child
 }
 
@@ -39,12 +39,12 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 		_camera_man.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 	} else {
 		var _camera_active = global.camera_active
-	
+		
 		if instance_exists(_camera_active) {
 			_camera_active.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 		} else {
 			var _camera_demo = global.camera_demo
-		
+			
 			if instance_exists(_camera_demo) {
 				_camera_demo.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
 			} else {
@@ -66,57 +66,60 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 							with _players[i++] {
 								if status == PlayerStatus.ACTIVE and instance_exists(camera) {
 									camera.render(_width, _height, true).DrawStretched(0, 0, 480, 270)
-								
+									
 									break
 								}
 							}
 						}
-					break
-			
+						
+						break
+					
 					case 2:
 						_height *= 0.5
-					
+						
 						var _y = 0
 						var i = 0
-					
+						
 						repeat INPUT_MAX_PLAYERS {
 							with _players[i] {
 								if status == PlayerStatus.ACTIVE and instance_exists(camera) {
 									camera.render(_width, _height, i == 0).DrawStretched(0, _y, 480, 135)
 								}
 							}
-						
+							
 							_y += 135;
 							++i
 						}
-					break
-			
+						
+						break
+					
 					case 3:
 					case 4:
 						_width *= 0.5
 						_height *= 0.5
-					
+						
 						var _x = 0
 						var _y = 0
 						var i = 0
-				
+						
 						repeat INPUT_MAX_PLAYERS {
 							with _players[i] {
 								if status == PlayerStatus.ACTIVE and instance_exists(camera) {
 									camera.render(_width, _height, i == 0).DrawStretched(_x, _y, 240, 135)
 								}
 							}
-						
+							
 							_x += 240
-						
+							
 							if _x > _width {
 								_x = 0
 								_y += 135
 							}
-						
+							
 							++i
 						}
-					break
+						
+						break
 				}
 			}
 		}
@@ -129,22 +132,22 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 	var _drawn_areas = 0
 	var _gui_priority = global.gui_priority
 	var i = 0
-
+	
 	repeat INPUT_MAX_PLAYERS {
 		var _player = _players[i++]
-	
+		
 		if _player.status != PlayerStatus.ACTIVE {
 			continue
 		}
-	
+		
 		var _area = _player.area
-	
+		
 		if _area == undefined {
 			continue
 		}
-	
+		
 		var _area_mask = 1 << _area.slot
-	
+		
 		if _drawn_areas & _area_mask {
 			continue
 		}
@@ -210,7 +213,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 		repeat ds_list_size(_things) {
 			with _things[| j++] {
 				if f_visible {
-					ds_priority_add(_gui_priority, id, gui_depth)
+					ds_priority_add(_gui_priority, self, gui_depth)
 				}
 			}
 		}
@@ -322,7 +325,6 @@ if load_state != LoadStates.NONE and (load_level != undefined or load_state == L
 #endregion
 
 #region Audio
-
 #region Play Sound When Focused
 if not global.config.snd_background {
 	if window_has_focus() {
@@ -338,7 +340,7 @@ if not global.config.snd_background {
 	}
 }
 #endregion
-	
+
 #region Update Sound Pools
 var _sound_pools = global.sound_pools
 var i = 0
@@ -377,24 +379,24 @@ repeat i {
 	with _music_instances[| --i] {
 		var _update_gain = false
 		var j = 0
-				
+		
 		repeat 3 {
 			var _gain_time = gain_time[j]
 			var _gain_duration = gain_duration[j]
-					
+			
 			if _gain_time < _gain_duration {
 				gain_time[j] = min(_gain_time + (AUDIO_TICKRATE_MILLISECONDS * d), _gain_duration)
 				gain[j] = lerp(gain_start[j], gain_end[j], gain_time[j] / _gain_duration)
 				_update_gain = true
 			}
-					
+			
 			++j
 		}
-				
+		
 		if _update_gain {
 			fmod_channel_control_set_volume(sound_instance, gain[0] * gain[1] * gain[2])
 		}
-				
+		
 		if (stopping and gain[2] <= 0) or not fmod_channel_control_is_playing(sound_instance) {
 			destroy()
 		}

@@ -18,7 +18,7 @@ if not instance_exists(holder) or not f_holdable_in_hand {
 	
 		if instance_exists(holding) and holding.f_holdable_in_hand {
 			var _hold_bone = _model.hold_bone
-		
+			
 			if _hold_bone != -1 {
 				with holding {
 					if model != undefined {
@@ -80,7 +80,7 @@ if m_shadow != MShadow.NONE and shadow_ray[RaycastData.HIT] {
 		}
 	} else {
 		var _radius = shadow_radius * 2.285714285714286 // 2 * (32 / 28)
-	
+		
 		batch_set_properties()
 		batch_floor_ext(imgShadow, 0, _radius, _radius, sshadow_x, sshadow_y, sshadow_z - 0.0625, shadow_ray[RaycastData.NX], shadow_ray[RaycastData.NY], shadow_ray[RaycastData.NZ], c_black, 0.5)
 	}

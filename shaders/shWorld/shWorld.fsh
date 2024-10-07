@@ -46,10 +46,10 @@ uniform vec4 u_lightmap_uvs;
 
 // By genpfault
 float mipmap_level(in vec2 texels) {
-    vec2 dx_vtc = dFdx(texels);
-    vec2 dy_vtc = dFdy(texels);
-    float delta_max_sqr = max(dot(dx_vtc, dx_vtc), dot(dy_vtc, dy_vtc));
-    
+	vec2 dx_vtc = dFdx(texels);
+	vec2 dy_vtc = dFdy(texels);
+	float delta_max_sqr = max(dot(dx_vtc, dx_vtc), dot(dy_vtc, dy_vtc));
+	
 	return 0.5 * log2(delta_max_sqr);
 }
 
@@ -119,7 +119,7 @@ void main() {
 	starting_color.rgb = mix(starting_color.rgb, u_fog_color.rgb, v_fog);
 	starting_color.a *= mix(1., u_fog_color.a, v_fog);
 	gl_FragColor = starting_color * u_color;
-    
+	
 	if (gl_FragColor.a <= (bayer8(gl_FragCoord.xy) + 0.003921568627451)) {
 		discard;
 	}

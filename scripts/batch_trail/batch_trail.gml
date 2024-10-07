@@ -24,7 +24,7 @@ function batch_trail(_points, _image = -1, _frame = 0, _color1 = c_white, _color
 		_v2 = 1
 	} else {
 		var _uvs = _image.GetUVs(_frame)
-	
+		
 		with _uvs {
 			_u1 = normLeft
 			_v1 = normTop

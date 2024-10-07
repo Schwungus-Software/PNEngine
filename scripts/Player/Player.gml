@@ -203,7 +203,7 @@ function Player() constructor {
 		   If this player was the master of the area, the smallest indexed
 		   player will become the next one. Otherwise the master will be
 		   undefined and the area will stop ticking. */
-	   
+		
 		var _current_area = area
 		
 		if _current_area != undefined {

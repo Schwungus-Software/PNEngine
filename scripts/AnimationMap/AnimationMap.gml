@@ -36,7 +36,7 @@ function AnimationMap() : AssetMap() constructor {
 		
 		// Minor version
 		var _minor_version = 0
-
+		
 		if _has_minor_version {
 			_minor_version = buffer_read(_buffer, buffer_u8)
 			

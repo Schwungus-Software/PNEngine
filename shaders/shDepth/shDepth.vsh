@@ -42,8 +42,8 @@ uniform vec3 u_material_wind; // waviness, lock bottom, speed
 uniform int u_animated;
 uniform vec4 u_bone_dq[2 * MAX_BONES];
 
-//	Simplex 4D Noise 
-//	by Ian McEwan, Ashima Arts
+// Simplex 4D Noise 
+// by Ian McEwan, Ashima Arts
 vec4 permute(vec4 x) {
 	return mod(((x * 34.) + 1.) * x, 289.);
 }
@@ -74,7 +74,7 @@ vec4 grad4(float j, vec4 ip) {
 
 float snoise(vec4 v) {
 	const vec2 C = vec2(0.138196601125010504,  // (5 - sqrt(5))/20  G4
-                        0.309016994374947451); // (sqrt(5) - 1)/4   F4
+						0.309016994374947451); // (sqrt(5) - 1)/4   F4
 	
 	// First corner
 	vec4 i  = floor(v + dot(v, C.yyyy));
@@ -86,10 +86,8 @@ float snoise(vec4 v) {
 	vec3 is_x = step(x0.yzw, x0.xxx);
 	vec3 is_yz = step(x0.zww, x0.yyz);
 	
-	//i0.x = dot(is_x, vec3(1.));
 	i0.x = is_x.x + is_x.y + is_x.z;
 	i0.yzw = 1. - is_x;
-	//i0.y += dot(is_yz.xy, vec2(1.));
 	i0.y += is_yz.x + is_yz.y;
 	i0.zw += 1. - is_yz.xy;
 	i0.z += is_yz.z;
@@ -99,8 +97,6 @@ float snoise(vec4 v) {
 	vec4 i3 = clamp(i0, 0., 1.);
 	vec4 i2 = clamp(i0 - 1., 0., 1.);
 	vec4 i1 = clamp(i0 - 2., 0., 1.);
-	
-	//x0 = x0 - 0.0 + 0.0 * C 
 	
 	vec4 x1 = x0 - i1 + 1. * C.xxxx;
 	vec4 x2 = x0 - i2 + 2. * C.xxxx;
@@ -112,10 +108,10 @@ float snoise(vec4 v) {
 	
 	float j0 = permute(permute(permute(permute(i.w) + i.z) + i.y) + i.x);
 	vec4 j1 = permute(permute(permute(permute(
-              i.w + vec4(i1.w, i2.w, i3.w, 1.))
-            + i.z + vec4(i1.z, i2.z, i3.z, 1.))
-            + i.y + vec4(i1.y, i2.y, i3.y, 1.))
-            + i.x + vec4(i1.x, i2.x, i3.x, 1.));
+			i.w + vec4(i1.w, i2.w, i3.w, 1.))
+			+ i.z + vec4(i1.z, i2.z, i3.z, 1.))
+			+ i.y + vec4(i1.y, i2.y, i3.y, 1.))
+			+ i.x + vec4(i1.x, i2.x, i3.x, 1.));
 	
 	// Gradients
 	// ( 7*7*6 points uniformly over a cube, mapped onto a 4-octahedron.)
@@ -144,7 +140,7 @@ float snoise(vec4 v) {
 	m1 = m1 * m1;
 	
 	return 49. * (dot(m0 * m0, vec3(dot(p0, x0), dot(p1, x1), dot(p2, x2)))
-               + dot(m1 * m1, vec2(dot(p3, x3), dot(p4, x4))));
+			   + dot(m1 * m1, vec2(dot(p3, x3), dot(p4, x4))));
 }
 
 vec3 quat_rotate(vec4 q, vec3 v) {
@@ -167,17 +163,17 @@ void main() {
 		// Skeletal animation
 		ivec4 i = ivec4(in_BoneIndex) * 2;
 		ivec4 j = i + 1;
-
+		
 		vec4 real0 = u_bone_dq[i.x];
 		vec4 real1 = u_bone_dq[i.y];
 		vec4 real2 = u_bone_dq[i.z];
 		vec4 real3 = u_bone_dq[i.w];
-
+		
 		vec4 dual0 = u_bone_dq[j.x];
 		vec4 dual1 = u_bone_dq[j.y];
 		vec4 dual2 = u_bone_dq[j.z];
 		vec4 dual3 = u_bone_dq[j.w];
-
+		
 		if (dot(real0, real1) < 0.) {
 			real1 *= -1.;
 			dual1 *= -1.;
@@ -187,16 +183,16 @@ void main() {
 			real2 *= -1.;
 			dual2 *= -1.;
 		}
-	
+		
 		if (dot(real0, real3) < 0.) {
 			real3 *= -1.;
 			dual3 *= -1.;
 		}
-
+		
 		vec4 blend_real = real0 * in_BoneWeight.x + real1 * in_BoneWeight.y + real2 * in_BoneWeight.z + real3 * in_BoneWeight.w;
 		vec4 blend_dual = dual0 * in_BoneWeight.x + dual1 * in_BoneWeight.y + dual2 * in_BoneWeight.z + dual3 * in_BoneWeight.w;
 		float inv = 1. / length(blend_real);
-	
+		
 		blend_real *= inv;
 		blend_dual *= inv;
 		calc_position = dq_transform(blend_real, blend_dual, calc_position);
@@ -214,7 +210,7 @@ void main() {
 		float vx = in_Position.x;
 		float vy = in_Position.y;
 		float vz = in_Position.z;
-	
+		
 		object_space_position_vec4.x += u_wind.y * snoise(vec4(vx, -vy, -vz, wind_time)) * wind_weight;
 		object_space_position_vec4.y += u_wind.z * snoise(vec4(-vx, vy, -vz, wind_time)) * wind_weight;
 		object_space_position_vec4.z += u_wind.w * snoise(vec4(-vx, -vy, vz, wind_time)) * wind_weight;

@@ -59,50 +59,49 @@ function ScriptMap() : AssetMap() constructor {
 					}
 					
 					var _index = asset_get_index(_name)
-						
+					
 					if object_exists(_index) and object_is_ancestor(_index, Thing) {
 						throw "Cannot override internal Thing of the same name"
 					}
-						
+					
 					_script = new ThingScript()
-						
+					
 					var _parents = string_split(_line, " ", true)
 					var _parents_n = array_length(_parents)
-						
+					
 					if _parents_n >= 2 {
 						if _parents_n > 2 {
 							throw "Cannot inherit more than one Thing"
 						}
-							
+						
 						var _parent = _parents[1]
-							
+						
 						load(_parent, _special)
-							
+						
 						with _script {
 							parent = other.get(_parent)
-								
+							
 							if parent == undefined {
 								_index = asset_get_index(_parent)
-									
+								
 								if not object_exists(_index) {
 									throw $"Unknown parent Thing '{_parent}'"
 								}
-									
+								
 								if not object_is_ancestor(_index, Thing) {
 									throw $"Cannot inherit non-Thing '{_parent}'"
 								}
-									
+								
 								if string_starts_with(_parent, "pro") {
 									throw $"Cannot inherit protected Thing '{_parent}'"
 								}
-									
+								
 								internal_parent = _index
 							}
-								
+							
 							if parent != undefined {
 								internal_parent = parent.internal_parent
 								main = parent.main
-									
 								load = parent.load
 								create = parent.create
 								on_destroy = parent.on_destroy
@@ -114,7 +113,7 @@ function ScriptMap() : AssetMap() constructor {
 								draw_screen = parent.draw_screen
 								draw_gui = parent.draw_gui
 							}
-								
+							
 							thing_load(internal_parent, _special)
 						}
 					}
@@ -215,7 +214,6 @@ function ScriptMap() : AssetMap() constructor {
 							if parent != undefined {
 								internal_parent = parent.internal_parent
 								main = parent.main
-								
 								load = parent.load
 								reload = parent.reload
 								create = parent.create
@@ -286,7 +284,7 @@ function ScriptMap() : AssetMap() constructor {
 					}
 					
 					var _index = variable_global_get(_name)
-						
+					
 					if _index != undefined and is_instanceof(_index, UI) {
 						throw "Cannot override internal UI of the same name"
 					}
@@ -329,7 +327,6 @@ function ScriptMap() : AssetMap() constructor {
 							if parent != undefined {
 								internal_parent = parent.internal_parent
 								main = parent.main
-								
 								load = parent.load
 								create = parent.create
 								clean_up = parent.clean_up
