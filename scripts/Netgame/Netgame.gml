@@ -15,6 +15,10 @@ function Netgame() constructor {
 	tick_count = 0
 	ack_count = 0
 	stall_time = 0
+	load_level = undefined
+	load_area = undefined
+	load_tag = undefined
+	load_queue = false
 	
 	code = "NET_UNKNOWN"
 	connect_success_callback = undefined
@@ -132,7 +136,10 @@ function Netgame() constructor {
 		time_source_stop(ping_time_source)
 		time_source_stop(connect_time_source)
 		time_source_stop(timeout_time_source)
-		ds_queue_clear(tick_queue)
+		
+		if ds_exists(tick_queue, ds_type_queue) {
+			ds_queue_clear(tick_queue)
+		}
 		
 		if not active {
 			if socket != undefined {
@@ -171,7 +178,10 @@ function Netgame() constructor {
 		disconnect()
 		ds_list_destroy(players)
 		ds_map_destroy(clients)
-		ds_queue_destroy(tick_queue)
+		
+		if ds_exists(tick_queue, ds_type_queue) {
+			ds_queue_destroy(tick_queue)
+		}
 		
 		if global.netgame == self {
 			global.netgame = undefined

@@ -213,7 +213,9 @@ function Player() constructor {
 			repeat i {
 				var _thing = _active_things[| --i]
 				
-				_thing.player_left(_thing, self)
+				if instance_exists(_thing) {
+					_thing.player_left(self)
+				}
 			}
 			
 			if instance_exists(thing) {
@@ -261,7 +263,7 @@ function Player() constructor {
 					repeat i {
 						var _thing = active_things[| --i]
 						
-						_thing.player_entered(_thing, _newcomer)
+						_thing.player_entered(_newcomer)
 					}
 					
 					with level {

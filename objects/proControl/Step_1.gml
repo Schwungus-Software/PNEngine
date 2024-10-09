@@ -759,7 +759,10 @@ switch load_state {
 		/* This is a dummy load state that waits until an actual level
 		   transition happens from the host.
 		   If you get softlocked here, too bad! */
-		exit
+		
+		if not global.netgame.load_queue {
+			exit
+		}
 	}
 	
 	case LoadStates.HOST_READY: {
@@ -838,22 +841,23 @@ var _tick_inc = delta_time * TICKRATE_DELTA
 global.delta = _tick_inc
 _tick += _tick_inc * global.tick_scale
 
-// Cache a lot of things into local variables
 var _interps = global.interps
-var _players = global.players
 var _config = global.config
-var _level = global.level
-var _demo_write = global.demo_write
-var _demo_buffer = global.demo_buffer
-var _demo_input = global.demo_input
-var _has_demo = _demo_buffer != undefined
-var _playing_demo = not _demo_write and _has_demo
-var _recording_demo = _demo_write and _has_demo
-var _netgame = global.netgame
-var _in_netgame = _netgame != undefined and _netgame.active
-var _is_master = not _in_netgame or _netgame.master
 
 if _tick >= 1 {
+	// Cache a lot of things into local variables
+	var _players = global.players
+	var _level = global.level
+	var _demo_write = global.demo_write
+	var _demo_buffer = global.demo_buffer
+	var _demo_input = global.demo_input
+	var _has_demo = _demo_buffer != undefined
+	var _playing_demo = not _demo_write and _has_demo
+	var _recording_demo = _demo_write and _has_demo
+	var _netgame = global.netgame
+	var _in_netgame = _netgame != undefined and _netgame.active
+	var _is_master = not _in_netgame or _netgame.master
+	
 	__input_system_tick()
 	
 #region New Players
@@ -1084,6 +1088,14 @@ if _tick >= 1 {
 		} else {
 			_tick = _netgame.tick_count
 			_ticks_queued = true
+			
+			if _tick <= 0 and _netgame.load_queue {
+				load_level = _netgame.load_level
+				load_area = _netgame.load_area
+				load_tag = _netgame.load_tag
+				load_state = LoadStates.START
+				_netgame.load_queue = false
+			}
 		}
 	}
 	

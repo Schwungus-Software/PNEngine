@@ -80,46 +80,11 @@ with _netgame {
 				}
 				
 				// Do all active mods match?
-				var _mods = global.mods
-				var n = buffer_read(_buffer, buffer_u32)
-				var _target_amount = ds_map_size(_mods)
+				var _md15 = buffer_read(_buffer, buffer_string)
+				var _target_md15 = cmd_md15("", false)
 				
-				// 1. Mod amount
-				if n != _target_amount {
-					print($"! proControl: Client {_key} mod amount doesn't match ({n} =/= {_target_amount}), blocking")
-					send_direct(_ip, _port, net_buffer_create(false, NetHeaders.HOST_BLOCK_CLIENT, buffer_string, "NET_MODS"))
-					
-					exit
-				}
-				
-				// 2. Mod hashes
-				var _mismatch = true
-				
-				repeat n {
-					_mismatch = true
-					
-					var _md5 = buffer_read(_buffer, buffer_string)
-					var _kk = ds_map_find_first(_mods)
-					
-					repeat _target_amount {
-						if _mods[? _kk].md5 == _md5 {
-							_mismatch = false
-							
-							break
-						}
-						
-						_kk = ds_map_find_next(_mods, _kk)
-					}
-					
-					if _mismatch {
-						print($"! proControl: Unknown mod detected! {_md5}")
-						
-						break
-					}
-				}
-				
-				if _mismatch {
-					print($"! proControl: Client {_key} mod hashes don't match, blocking")
+				if _md15 != _target_md15 {
+					print($"! proControl: Client {_key} game hash doesn't match ({_md15} =/= {_target_md15}), blocking")
 					send_direct(_ip, _port, net_buffer_create(false, NetHeaders.HOST_BLOCK_CLIENT, buffer_string, "NET_MODS"))
 					
 					exit
@@ -315,18 +280,7 @@ with _netgame {
 		case NetHeaders.HOST_CHECK_CLIENT: {
 			CLIENT_CHECK_HOST
 			
-			var b = net_buffer_create(false, NetHeaders.CLIENT_VERIFY, buffer_string, GM_version)
-			var _mods = global.mods
-			var n = ds_map_size(_mods)
-			
-			buffer_write(b, buffer_u32, n)
-			
-			var _key = ds_map_find_first(_mods)
-			
-			repeat n {
-				buffer_write(b, buffer_string, _mods[? _key].md5)
-				_key = ds_map_find_next(_mods, _key)
-			}
+			var b = net_buffer_create(false, NetHeaders.CLIENT_VERIFY, buffer_string, GM_version, buffer_string, cmd_md15("", false))
 			
 			send_direct(_ip, _port, b)
 			print("proControl: Found connection from server")
@@ -484,16 +438,10 @@ with _netgame {
 		case NetHeaders.HOST_LEVEL: {
 			CLIENT_CHECK_SENDER
 			
-			var _level = buffer_read(_buffer, buffer_string)
-			var _area = buffer_read(_buffer, buffer_u32)
-			var _tag = buffer_read(_buffer, buffer_s32)
-			
-			with proControl {
-				load_level = _level
-				load_area = _area
-				load_tag = _tag
-				load_state = LoadStates.START
-			}
+			load_level = buffer_read(_buffer, buffer_string)
+			load_area = buffer_read(_buffer, buffer_u32)
+			load_tag = buffer_read(_buffer, buffer_s32)
+			load_queue = true
 			
 			break
 		}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"cmd_md15",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cmd_md15",
+  "parent":{
+    "name":"Commands",
+    "path":"folders/Scripts/PNEngine/Debug/Commands.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
