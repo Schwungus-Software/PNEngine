@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"ColObject",
+  "%Name":"Collider",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"ColObject",
+  "name":"Collider",
   "parent":{
-    "name":"Collision",
-    "path":"folders/Scripts/PNEngine/Game/Collision.yy",
+    "name":"Model",
+    "path":"folders/Scripts/PNEngine/Assets/Asset Types/Model.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

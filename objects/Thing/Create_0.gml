@@ -321,11 +321,192 @@ raycast = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _
 	
 	_out ??= result
 	
+	var _collider = area.collider
+	var _collidables = area.collidables
+	
+	if _collider != undefined {
+		array_copy(_out, 0, _collider.raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers), 0, RaycastData.__SIZE)
+		_x2 = _out[RaycastData.X]
+		_y2 = _out[RaycastData.Y]
+		_z2 = _out[RaycastData.Z]
+	} else {
+		_out[RaycastData.HIT] = false
+		_out[RaycastData.X] = _x2
+		_out[RaycastData.Y] = _y2
+		_out[RaycastData.Z] = _z2
+	}
+	
+	var i = ds_list_size(_collidables)
+	
+	repeat i {
+		var _thing = _collidables[| --i]
+		
+		if _thing == self or _thing.f_culled or not _thing.f_collider_active {
+			continue
+		}
+		
+		var _ray = _thing.collider.raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers)
+		
+		if _ray[RaycastData.HIT] {
+			array_copy(_out, 0, _ray, 0, RaycastData.__SIZE)
+			_out[RaycastData.THING] = _thing
+			_x2 = _out[RaycastData.X]
+			_y2 = _out[RaycastData.Y]
+			_z2 = _out[RaycastData.Z]
+		}
+	}
+	
 	return _out
 }
 
 hitscan = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _layers = CollisionLayers.ALL, _out = undefined, _hflags = 0) {
-	return raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers, _out)
+	var _result = raycast(_x1, _y1, _z1, _x2, _y2, _z2, _flags, _layers, _out)
+	
+	_x2 = _result[RaycastData.X]
+	_y2 = _result[RaycastData.Y]
+	_z2 = _result[RaycastData.Z]
+	
+	var _bump_lists = area.bump_lists
+	var _bump_x1 = area.bump_x
+	var _bump_y1 = area.bump_y
+	
+	var _width = ds_grid_width(_bump_lists)
+	var _height = ds_grid_height(_bump_lists)
+	var _bump_x2 = _bump_x1 + (_width * COLLIDER_REGION_SIZE)
+	var _bump_y2 = _bump_y1 + (_height * COLLIDER_REGION_SIZE)
+	
+	// Line coordinates in grid
+	var _lx1 = floor((_x1 - _bump_x1) * COLLIDER_REGION_SIZE_INVERSE)
+	var _ly1 = floor((_y1 - _bump_y1) * COLLIDER_REGION_SIZE_INVERSE)
+	var _lx2 = floor((_x2 - _bump_x1) * COLLIDER_REGION_SIZE_INVERSE)
+	var _ly2 = floor((_y2 - _bump_y1) * COLLIDER_REGION_SIZE_INVERSE)
+	
+	// Distance between (lx1, ly1) and (lx2, ly2)
+	var _dx = abs(_lx2 - _lx1)
+	var _dy = abs(_ly2 - _ly1)
+	
+	// Current position
+	var _x = _lx1
+	var _y = _ly1
+	
+	// Iteration
+	var _hit = false
+	
+	var _ray_yaw = point_direction(_x1, _y1, _x2, _y2)
+	var _ray_pitch = point_pitch(_x1, _y1, _z1, _x2, _y2, _z2)
+	var _ray_length = point_distance_3d(_x1, _y1, _z1, _x2, _y2, _z2)
+	
+	var _pitch_factor = dcos(_ray_pitch)
+	var _nx = dcos(_ray_yaw) * _pitch_factor
+	var _ny = -dsin(_ray_yaw) * _pitch_factor
+	var _nz = -dsin(_ray_pitch)
+	var _x_inv = 1 / _nx
+	var _y_inv = 1 / _ny
+	var _z_inv = 1 / _nz
+	
+	var _x_step = _lx2 > _lx1 ? 1 : -1
+	var _y_step = _ly2 > _ly1 ? 1 : -1
+	var _error = _dx - _dy
+	var _max_x = _width - 1
+	var _max_y = _height - 1
+	
+	_dx *= 2
+	_dy *= 2
+	
+	repeat 1 + _dx + _dy {
+		var _region = _bump_lists[# clamp(_x, 0, _max_x), clamp(_y, 0, _max_y)]
+		var i = ds_list_size(_region)
+		
+		repeat i {
+			// Check this region to see if we're intersecting any Things.
+			var _thing = _region[| --i]
+			
+			if _thing == self or not _thing.f_bump_intercept or ((_hflags & HitscanFlags.IGNORE_HOLDER) and _thing.holding == self) or ((_hflags & HitscanFlags.IGNORE_MASTER) and instance_exists(master) and _thing == master) {
+				continue
+			}
+			
+			var _tx1, _ty1, _tz1, _tx2, _ty2, _tz2
+			
+			with _thing {
+				_tx1 = x - radius
+				_ty1 = y - radius
+				_tz1 = z
+				_tx2 = x + radius
+				_ty2 = y + radius
+				_tz2 = z - height
+			}
+			
+			var _t1 = (_tx1 - _x1) * _x_inv
+			var _t2 = (_tx2 - _x1) * _x_inv
+			var _t3 = (_ty1 - _y1) * _y_inv
+			var _t4 = (_ty2 - _y1) * _y_inv
+			var _t5 = (_tz1 - _z1) * _z_inv
+			var _t6 = (_tz2 - _z1) * _z_inv
+			
+			var _tmin = max(min(_t1, _t2), min(_t3, _t4), min(_t5, _t6))
+			var _tmax = min(max(_t1, _t2), max(_t3, _t4), max(_t5, _t6))
+			
+			if _tmax < 0 or _tmin > _tmax {
+				continue
+			}
+			
+			var t = _tmax
+			
+			if _tmin > 0 {
+				t = _tmin
+			}
+			
+			var _ix = _x1 + (_nx * t)
+			var _iy = _y1 + (_ny * t)
+			var _iz = _z1 + (_nz * t)
+			var _idist = point_distance_3d(_x1, _y1, _z1, _ix, _iy, _iz)
+			
+			if _idist >= _ray_length {
+				continue
+			}
+			
+			var _exres
+			
+			with _thing {
+				_exres = catspeak_execute(hitscan_intercept, other, _x1, _y1, _z1, _x2, _y2, _z2, _flags)
+			}
+			
+			if not _exres {
+				continue
+			}
+			
+			_x2 = _ix
+			_y2 = _iy
+			_z2 = _iz
+			_ray_length = _idist
+			_result[RaycastData.X] = _x2
+			_result[RaycastData.Y] = _y2
+			_result[RaycastData.Z] = _z2
+			_result[RaycastData.THING] = _thing
+			_hit = true
+		}
+		
+		if _hit {
+			_result[RaycastData.HIT] = true
+			_result[RaycastData.NX] = -_nx
+			_result[RaycastData.NY] = -_ny
+			_result[RaycastData.NZ] = -_nz
+			_result[RaycastData.SURFACE] = 0
+			_result[RaycastData.TRIANGLE] = undefined
+				
+			break
+		}
+		
+		if _error > 0 {
+			_x += _x_step
+			_error -= _dy
+		} else {
+			_y += _y_step
+			_error += _dx
+		}
+	}
+	
+	return _result
 }
 
 do_sequence = function (_sequence) {
@@ -391,6 +572,57 @@ bump_avoid = function (_from, _amount = 1) {
 
 grid_iterate = function (_type, _distance, _include_self = false) {
 	static results = []
+	
+	var _bump_grid, _bump_lists, _bump_x, _bump_y
+	
+	with area {
+		_bump_grid = bump_grid
+		_bump_lists = bump_lists
+		_bump_x = bump_x
+		_bump_y = bump_y
+	}
+	
+	var _grid_width = ds_grid_width(_bump_grid)
+	var _grid_height = ds_grid_height(_bump_grid)
+	var _grid_max_x = _grid_width - 1
+	var _grid_max_y = _grid_height - 1
+	
+	var _gx = (x - _bump_x) * COLLIDER_REGION_SIZE_INVERSE
+	var _gy = (y - _bump_y) * COLLIDER_REGION_SIZE_INVERSE
+	var _gr = _distance * COLLIDER_REGION_SIZE_INVERSE
+	
+	var _gx1 = clamp(floor(_gx - _gr), 0, _grid_max_x)
+	var _gy1 = clamp(floor(_gy - _gr), 0, _grid_max_y)
+	var _gx2 = clamp(ceil(_gx + _gr), 1, _grid_width)
+	var _gy2 = clamp(ceil(_gy + _gr), 1, _grid_height)
+	
+	var _found = 0
+	var i = _gx1
+	
+	repeat _gx2 - _gx1 {
+		var j = _gy1
+		
+		repeat _gy2 - _gy1 {
+			var _list = _bump_lists[# i, j]
+			var k = 0
+			
+			repeat ds_list_size(_list) {
+				var _thing = _list[| k]
+				
+				if instance_exists(_thing) and (_thing != self or _include_self) and _thing.is_ancestor(_type) {
+					results[_found++] = _thing
+				}
+				
+				++k
+			}
+			
+			++j
+		}
+		
+		++i
+	}
+	
+	array_resize(results, _found)
 	
 	return results
 }

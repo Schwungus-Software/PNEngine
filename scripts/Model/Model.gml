@@ -5,7 +5,7 @@ function Model() : Asset() constructor {
 	root_node = undefined
 	nodes_amount = 0
 	
-	colmesh = undefined
+	collider = undefined
 	
 	bone_offsets = undefined
 	head_bone = -1
@@ -79,5 +79,9 @@ function Model() : Asset() constructor {
 	
 	static destroy = function () {
 		destroy_array(submodels)
+		
+		if collider != undefined {
+			collider.destroy()
+		}
 	}
 }

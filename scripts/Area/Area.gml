@@ -7,10 +7,11 @@ function Area() constructor {
 	
 	sky = noone
 	model = undefined
-	collisions = undefined
+	collider = undefined
 	things = []
 	
 	active_things = ds_list_create()
+	collidables = ds_list_create()
 	particles = ds_list_create()
 	lights = ds_list_create()
 	
@@ -20,6 +21,11 @@ function Area() constructor {
 	
 	light_data = array_create(MAX_LIGHTS * LightData.__SIZE)
 	sounds = new WorldSoundPool()
+	
+	bump_x = 0
+	bump_y = 0
+	bump_grid = ds_grid_create(1, 1)
+	bump_lists = ds_grid_create(1, 1)
 	
 	clear_color = undefined
 	ambient_color = undefined
@@ -444,9 +450,25 @@ function Area() constructor {
 		}
 		
 		ds_list_destroy(active_things)
+		ds_list_destroy(collidables)
 		ds_list_destroy(particles)
 		ds_list_destroy(players)
 		sounds.destroy()
+		ds_grid_destroy(bump_grid)
+		
+		var i = 0
+		
+		repeat ds_grid_width(bump_lists) {
+			var j = 0
+			
+			repeat ds_grid_height(bump_lists) {
+				ds_list_destroy(bump_lists[# i, j++])
+			}
+			
+			++i
+		}
+		
+		ds_grid_destroy(bump_lists)
 		ds_list_destroy(lights)
 	}
 	
