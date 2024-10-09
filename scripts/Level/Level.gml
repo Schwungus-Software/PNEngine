@@ -15,6 +15,8 @@ function Level() constructor {
 	
 	time = 0
 	
+	area_things = ds_list_create()
+	
 	level_script = undefined
 	
 	start = undefined
@@ -24,6 +26,8 @@ function Level() constructor {
 	
 	/// @desc Destroys the contents of the level, allowing it to be removed.
 	static destroy = function () {
+		ds_list_destroy(area_things)
+		
 		repeat ds_map_size(areas) {
 			var _key = ds_map_find_first(areas)
 			

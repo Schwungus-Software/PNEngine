@@ -371,6 +371,7 @@ switch load_state {
 						if is_array(_add_things) {
 							_images.load("imgShadow")
 							
+							var _area_things = _level.area_things
 							var i = 0
 							
 							repeat array_length(_add_things) {
@@ -415,6 +416,7 @@ switch load_state {
 									}
 									
 									++_thing_slot
+									ds_list_add(_area_things, _area_thing)
 								}
 								
 								++i
