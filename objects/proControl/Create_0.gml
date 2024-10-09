@@ -216,6 +216,7 @@ with Catspeak {
 			"gpu_get_blendmode_dest", gpu_get_blendmode_dest,
 			"gpu_get_blendmode_srcalpha", gpu_get_blendmode_srcalpha,
 			"gpu_get_blendmode_destalpha", gpu_get_blendmode_destalpha,
+			"gpu_get_scissor", gpu_get_scissor,
 			
 			"gpu_set_depth", gpu_set_depth,
 			"gpu_set_tex_filter", gpu_set_tex_filter,
@@ -223,6 +224,7 @@ with Catspeak {
 			"gpu_set_blendmode", gpu_set_blendmode,
 			"gpu_set_blendmode_ext", gpu_set_blendmode_ext,
 			"gpu_set_blendmode_ext_sepalpha", gpu_set_blendmode_ext_sepalpha,
+			"gpu_set_scissor", gpu_set_scissor,
 			
 			"draw_clear", draw_clear,
 			"draw_clear_alpha", draw_clear_alpha,
@@ -485,6 +487,7 @@ with Catspeak {
 		"CFLAG_CAMERA", CollisionFlags.CAMERA,
 		"CFLAG_SHADOW", CollisionFlags.SHADOW,
 		"CFLAG_STICKY", CollisionFlags.STICKY,
+		"CFLAG_SLIPPERY", CollisionFlags.SLIPPERY,
 		"CFLAG_ALL", CollisionFlags.ALL,
 		
 		"CLAYER_0", CollisionLayers._0,

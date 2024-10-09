@@ -28,7 +28,9 @@ enum CollisionFlags {
 	CAMERA = 1 << 3,
 	SHADOW = 1 << 4,
 	STICKY = 1 << 5,
-	ALL = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5),
+	SLIPPERY = 1 << 6,
+	BUMP = 1 << 7,
+	ALL = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5) | (1 << 6) | (1 << 7),
 }
 
 enum CollisionLayers {

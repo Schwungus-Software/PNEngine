@@ -294,6 +294,10 @@ function ModelMap() : AssetMap() constructor {
 							_batch_flags &= ~CollisionFlags.STICKY
 						}
 						
+						if not force_type_fallback(_batch[$ "slippery"], "bool", false) {
+							_batch_flags &= ~CollisionFlags.SLIPPERY
+						}
+						
 						var _batch_layer = _batch[$ "layer"]
 						var _batch_mask = 0
 						
