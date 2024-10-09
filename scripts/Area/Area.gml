@@ -139,9 +139,6 @@ function Area() constructor {
 			ds_list_add(active_things, _thing)
 		}
 		
-		
-		var _thing_amount = ds_list_size(level.area_things)
-		
 		var i = ds_list_size(active_things)
 		
 		repeat i {
