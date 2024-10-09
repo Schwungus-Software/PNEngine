@@ -45,16 +45,6 @@ if is_struct(special) {
 		
 		model = new ModelInstance(_model, x, y, z, _yaw, _pitch, _roll, _scale, _x_scale, _y_scale, _z_scale)
 		model.blendmode = _blendmode
-		
-		var _collider = model.model.collider
-		
-		if _collider != undefined {
-			angle = _yaw
-			angle_previous = _yaw
-			collider = new ColliderInstance(_collider)
-			collider.set_matrix(matrix_build(x, y, z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale))
-			ds_list_add(area.collidables, self)
-		}
 	} else {
 		with model {
 			yaw = _yaw
@@ -65,12 +55,6 @@ if is_struct(special) {
 			y_scale = _y_scale
 			z_scale = _z_scale
 			blendmode = _blendmode
-		}
-		
-		if collider != undefined {
-			angle = _yaw
-			angle_previous = _yaw
-			collider.set_matrix(matrix_build(x, y, z, _roll, _pitch, _yaw, _scale * _x_scale, _scale * _y_scale, _scale * _z_scale))
 		}
 	}
 } else {

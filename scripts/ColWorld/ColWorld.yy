@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"ColliderInstance",
+  "%Name":"ColWorld",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"ColliderInstance",
+  "name":"ColWorld",
   "parent":{
     "name":"Collision",
     "path":"folders/Scripts/PNEngine/Game/Collision.yy",

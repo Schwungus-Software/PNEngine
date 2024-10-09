@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ColShape",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ColShape",
+  "parent":{
+    "name":"Shapes",
+    "path":"folders/Scripts/PNEngine/Game/Collision/Shapes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

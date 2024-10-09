@@ -1,0 +1,1 @@
+function ColShape() constructor {}

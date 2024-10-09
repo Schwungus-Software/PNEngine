@@ -28,7 +28,7 @@ if f_gravity and not f_grounded {
 var _held = instance_exists(holder)
 
 // Thing collision
-if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
+/*if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 	var _bump_lists = area.bump_lists
 	var _gx = clamp(floor((x - area.bump_x) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_width(_bump_lists) - 1)
 	var _gy = clamp(floor((y - area.bump_y) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_height(_bump_lists) - 1)
@@ -102,7 +102,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 			}
 		}
 	}
-}
+}*/
 
 // World collision
 if _held {
@@ -279,34 +279,12 @@ if _model != undefined and not _held {
 	var _x = x
 	var _y = y
 	var _z = z
-	var _update_collider = false
-	
-	if collider != undefined {
-		var _yaw, _pitch, _roll, _scale, _x_scale, _y_scale, _z_scale
-		
-		with _model {
-			_yaw = yaw
-			_pitch = pitch
-			_roll = roll
-			_scale = scale
-			_x_scale = x_scale
-			_y_scale = y_scale
-			_z_scale = z_scale
-		}
-		
-		angle = _yaw
-		_update_collider = true
-	}
 	
 	with _model {
 		x = _x
 		y = _y
 		z = _z
 		tick()
-	}
-	
-	if _update_collider {
-		collider.set_matrix(_model.tick_matrix)
 	}
 	
 	if _is_holding {
