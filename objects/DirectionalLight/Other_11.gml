@@ -1,8 +1,8 @@
 /// @description Create
 if is_struct(special) {
-	nx = special[$ "nx"] ?? 0
-	ny = special[$ "ny"] ?? 0
-	nz = special[$ "nz"] ?? -1
+	nx = force_type_fallback(special[$ "nx"], "number", 0)
+	ny = force_type_fallback(special[$ "ny"], "number", 0)
+	nz = force_type_fallback(special[$ "nz"], "number", 1)
 }
 
 arg0 = nx

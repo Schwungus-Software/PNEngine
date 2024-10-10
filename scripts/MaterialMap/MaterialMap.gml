@@ -40,9 +40,9 @@ function MaterialMap() : AssetMap() constructor {
 				_images.load(_image2)
 			}
 			
-			_alpha_test = _json[$ "alpha_test"] ?? 0.5
-			_speed = _json[$ "speed"] ?? 0
-			_bright = _json[$ "bright"] ?? 0
+			_alpha_test = force_type_fallback(_json[$ "alpha_test"], "number", 0.5)
+			_speed = force_type_fallback(_json[$ "speed"], "number", 0)
+			_bright = force_type_fallback(_json[$ "bright"], "number", 0)
 			
 			var _scroll = _json[$ "scroll"]
 			
@@ -51,13 +51,13 @@ function MaterialMap() : AssetMap() constructor {
 				_y_scroll = _scroll[1]
 			}
 			
-			_specular = _json[$ "specular"] ?? 0
-			_specular_exponent = _json[$ "specular_exponent"] ?? 1
-			_rimlight = _json[$ "rimlight"] ?? 0
-			_rimlight_exponent = _json[$ "rimlight_exponent"] ?? 1
-			_wind = _json[$ "wind"] ?? 0
-			_wind_lock_bottom = _json[$ "wind_lock_bottom"] ?? 1
-			_wind_speed = _json[$ "wind_speed"] ?? 1
+			_specular = force_type_fallback(_json[$ "specular"], "number", 0)
+			_specular_exponent = force_type_fallback(_json[$ "specular_exponent"], "number", 1)
+			_rimlight =force_type_fallback( _json[$ "rimlight"], "number", 0)
+			_rimlight_exponent = force_type_fallback(_json[$ "rimlight_exponent"], "number", 1)
+			_wind = force_type_fallback(_json[$ "wind"], "number", 0)
+			_wind_lock_bottom = force_type_fallback(_json[$ "wind_lock_bottom"], "number", 1)
+			_wind_speed = force_type_fallback(_json[$ "wind_speed"], "number", 1)
 			_color = color_to_vec5(_json[$ "color"])
 		} else {
 			if _strict {

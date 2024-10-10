@@ -330,9 +330,19 @@ switch load_state {
 					var _area_info = _add_areas[_current_area_pos++]
 					
 					// Check for valid ID
-					var _id = _area_info[$ "id"] ?? undefined
+					var _id = _area_info[$ "id"]
 					
 					if is_real(_id) {
+						if _id < 0 {
+							show_error($"!!! proControl: Invalid area ID '{_id}', must be 0 or greater", true)
+						}
+						
+						_id = floor(_id)
+						
+						if ds_map_exists(_areas, _id) {
+							show_error($"!!! proControl: Area ID '{_id}' is already defined", true)
+						}
+						
 						with _area {
 							level = _level
 							slot = _id
@@ -348,9 +358,9 @@ switch load_state {
 							ambient_color = _ambient_color == undefined ? _level.ambient_color : color_to_vec5(_ambient_color)
 							fog_distance = is_array(_fog_distance) ? [real(_fog_distance[0]), real(_fog_distance[1])] : _level.fog_distance
 							fog_color = _fog_color == undefined ? _level.fog_color : color_to_vec5(_fog_color)
-							wind_strength = _area_info[$ "wind_strength"] ?? _level.wind_strength
+							wind_strength = force_type_fallback(_area_info[$ "wind_strength"], "number", _level.wind_strength)
 							wind_direction = _wind_direction == undefined ? _level.wind_direction : [real(_wind_direction[0]), real(_wind_direction[1]), real(_wind_direction[2])]
-							gravity = _area_info[$ "gravity"] ?? _level.gravity
+							gravity = force_type_fallback(_area_info[$ "gravity"], "number", _level.gravity)
 						}
 						
 						// Check for model
@@ -408,20 +418,20 @@ switch load_state {
 										var _special = _thing_info[$ "special"]
 										
 										if thing_load(type, _special) {
-											x = _thing_info[$ "x"] ?? 0
-											y = _thing_info[$ "y"] ?? 0
-											z = _thing_info[$ "z"] ?? 0
+											x = force_type_fallback(_thing_info[$ "x"], "number", 0)
+											y = force_type_fallback(_thing_info[$ "y"], "number", 0)
+											z = force_type_fallback(_thing_info[$ "z"], "number", 0)
 											
 											_bump_x1 = min(_bump_x1, x - COLLIDER_REGION_RADIUS)
 											_bump_y1 = min(_bump_y1, y - COLLIDER_REGION_RADIUS)
 											_bump_x2 = max(_bump_x2, x + COLLIDER_REGION_RADIUS)
 											_bump_y2 = max(_bump_y2, y + COLLIDER_REGION_RADIUS)
 											
-											angle = _thing_info[$ "angle"] ?? 0
-											tag = _thing_info[$ "tag"] ?? 0
+											angle = force_type_fallback(_thing_info[$ "angle"], "number", 0)
+											tag = force_type_fallback(_thing_info[$ "tag"], "number", 0)
 											special = _special
-											persistent = _thing_info[$ "persistent"] ?? false
-											disposable = _thing_info[$ "disposable"] ?? false
+											persistent = force_type_fallback(_thing_info[$ "persistent"], "bool", false)
+											disposable = force_type_fallback(_thing_info[$ "disposable"], "bool", false)
 											array_push(_things, _area_thing)
 										} else {
 											print($"! proControl: Unknown Thing '{_type_name}' in area {_id}")
@@ -470,9 +480,7 @@ switch load_state {
 							}
 						}
 					} else {
-						print($"! proControl: Invalid area ID '{_id}', expected real")
-						
-						delete _area
+						show_error($"!!! proControl: Invalid area ID '{_id}', expected real", true)
 					}
 					
 					delete _area_info

@@ -7,7 +7,7 @@ var _color = undefined
 
 if is_struct(special) {
 	_color = special[$ "color"]
-	active = special[$ "active"] ?? active
+	active = force_type_fallback(special[$ "active"], "number", active)
 }
 
 if _color != undefined {

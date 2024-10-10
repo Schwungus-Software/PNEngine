@@ -19,10 +19,10 @@ if is_struct(special) {
 		case "BM_SUBTRACT": _blendmode = bm_subtract break
 	}
 	
-	f_collider_active = special[$ "collision"] ?? f_collider_active
-	yaw_speed = special[$ "yaw_speed"] ?? yaw_speed
-	pitch_speed = special[$ "pitch_speed"] ?? pitch_speed
-	roll_speed = special[$ "roll_speed"] ?? roll_speed
+	f_collider_active = force_type_fallback(special[$ "collision"], "bool", f_collider_active)
+	yaw_speed = force_type_fallback(special[$ "yaw_speed"], "number", yaw_speed)
+	pitch_speed = force_type_fallback(special[$ "pitch_speed"], "number", pitch_speed)
+	roll_speed = force_type_fallback(special[$ "roll_speed"], "number", roll_speed)
 	
 	if model == undefined {
 		var _model_name = special[$ "model"]

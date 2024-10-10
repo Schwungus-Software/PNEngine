@@ -1,11 +1,11 @@
 /// @description Create
 if is_struct(special) {
-	nx = special[$ "nx"] ?? 1
-	ny = special[$ "ny"] ?? 0
-	nz = special[$ "nz"] ?? 0
-	range = special[$ "range"] ?? 1
-	cutoff_inner = special[$ "cutoff_inner"] ?? 0
-	cutoff_outer = special[$ "cutoff_outer"] ?? 1
+	nx = force_type_fallback(special[$ "nx"], "number", 1)
+	ny = force_type_fallback(special[$ "ny"], "number", 0)
+	nz = force_type_fallback(special[$ "nz"], "number", 0)
+	range = force_type_fallback(special[$ "range"], "number", 1)
+	cutoff_inner = force_type_fallback(special[$ "cutoff_inner"], "number", 0)
+	cutoff_outer = force_type_fallback(special[$ "cutoff_outer"], "number", 1)
 }
 
 arg0 = nx

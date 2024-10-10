@@ -1,7 +1,7 @@
 /// @description Create
 if is_struct(special) {
-	near = special[$ "near"] ?? 0
-	far = special[$ "far"] ?? 1
+	near = force_type_fallback(special[$ "near"], "number", 0)
+	far = force_type_fallback(special[$ "far"], "number", 1)
 }
 
 arg0 = near

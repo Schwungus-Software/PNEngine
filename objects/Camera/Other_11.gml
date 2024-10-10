@@ -1,12 +1,12 @@
 /// @description Create
 if is_struct(special) {
-	yaw = special[$ "yaw"] ?? angle
-	pitch = special[$ "pitch"] ?? 0
-	roll = special[$ "roll"] ?? 0
-	fov = special[$ "fov"] ?? 45
-	f_ortho = special[$ "ortho"] ?? false
+	yaw = force_type_fallback(special[$ "yaw"], "number", angle)
+	pitch = force_type_fallback(special[$ "pitch"], "number", 0)
+	roll = force_type_fallback(special[$ "roll"], "number", 0)
+	fov = force_type_fallback(special[$ "fov"], "number", 45)
+	f_ortho = force_type_fallback(special[$ "ortho"], "bool", false)
 	
-	if special[$ "active"] {
+	if force_type_fallback(special[$ "active"], "bool", false) {
 		global.camera_active = self
 	}
 } else {

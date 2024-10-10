@@ -12,10 +12,10 @@ var _samb = special[$ "ambience"]
 var i = array_length(_samb)
 
 array_copy(ambience, 0, _samb, 0, i)
-local = special[$ "local"] ?? false
-emitter_falloff = special[$ "falloff"] ?? 0
-emitter_falloff_max = special[$ "falloff_max"] ?? 360
-emitter_falloff_factor = special[$ "falloff_factor"] ?? 1
+local = force_type_fallback(special[$ "local"], "bool", false)
+emitter_falloff = force_type_fallback(special[$ "falloff"], "number", 0)
+emitter_falloff_max = force_type_fallback(special[$ "falloff_max"], "number", 360)
+emitter_falloff_factor = force_type_fallback(special[$ "falloff_factor"], "number", 1)
 
 var _sounds = global.sounds
 
