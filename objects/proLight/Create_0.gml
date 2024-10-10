@@ -5,7 +5,7 @@ light_data = undefined
 handle = -1
 offset = 0
 type = LightTypes.NONE
-active = true
+active = 2
 
 arg0 = 0
 arg1 = 0

@@ -259,14 +259,10 @@ void main() {
 	for (int i = 0; i < MAX_LIGHT_DATA; i += LIGHT_SIZE) {
 		int light_active = int(u_light_data[i + 1]);
 		
-		if (light_active > 0) {
+		if (light_active >= 1 && (!lightmap_enabled || light_active >= 2)) {
 			int light_type = int(u_light_data[i]);
 			
 			if (light_type == 1) { // Directional
-				if (lightmap_enabled && light_active < 2) {
-					continue;
-				}
-				
 				vec3 light_normal = -normalize(vec3(u_light_data[i + 5], u_light_data[i + 6], u_light_data[i + 7]));
 				vec4 light_color = vec4(u_light_data[i + 11], u_light_data[i + 12], u_light_data[i + 13], u_light_data[i + 14]);
 				

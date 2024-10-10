@@ -1,6 +1,7 @@
 event_inherited()
 
 type = LightTypes.DIRECTIONAL
+active = 1
 
 nx = 0
 ny = 0
