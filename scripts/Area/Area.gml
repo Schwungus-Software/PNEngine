@@ -126,6 +126,7 @@ function Area() constructor {
 			}
 			
 			with _thing {
+				_thing = self
 				level = _level
 				area = _area
 				area_thing = _element
@@ -229,6 +230,7 @@ function Area() constructor {
 		}
 		
 		with _thing {
+			_thing = self
 			area = other
 			level = other.level
 			z = _z
