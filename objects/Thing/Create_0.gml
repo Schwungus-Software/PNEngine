@@ -6,13 +6,6 @@ enum MCollision {
 	BULLET,
 }
 
-enum MBump {
-	NONE,
-	ALL, // This and other Things can bump into each other
-	TO, // Only this Thing can bump into others
-	FROM, // Only other Things can bump into this
-}
-
 enum MShadow {
 	NONE,
 	NORMAL,
@@ -128,6 +121,7 @@ f_cull_destroy = false
 f_garbage = false
 f_frozen = false
 f_destroyed = false
+f_bump = false
 f_bump_passive = false
 f_bump_avoid = false
 f_bump_intercept = false
@@ -140,7 +134,6 @@ f_interactive = false
 f_grounded = true
 
 m_collision = MCollision.NONE
-m_bump = MBump.NONE
 m_shadow = MShadow.NONE
 #endregion
 
@@ -757,8 +750,8 @@ damage_received = function (_from, _source, _amount, _type) {
 	return DamageResults.NONE
 }
 
-bump_check = function (_from) {
-	return true
+bump_check = function (_from, _passive) {
+	return 1
 }
 
 holder_held = function (_to, _forced) {

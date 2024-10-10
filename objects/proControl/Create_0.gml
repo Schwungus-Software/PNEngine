@@ -425,11 +425,6 @@ with Catspeak {
 		"M_COLLISION_BOUNCE", MCollision.BOUNCE,
 		"M_COLLISION_BULLET", MCollision.BULLET,
 		
-		"M_BUMP_NONE", MBump.NONE,
-		"M_BUMP_ALL", MBump.ALL,
-		"M_BUMP_TO", MBump.TO,
-		"M_BUMP_FROM", MBump.FROM,
-		
 		"M_SHADOW_NONE", MShadow.NONE,
 		"M_SHADOW_NORMAL", MShadow.NORMAL,
 		"M_SHADOW_BONE", MShadow.BONE,

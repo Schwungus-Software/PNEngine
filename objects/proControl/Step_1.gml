@@ -1727,7 +1727,7 @@ if _tick >= 1 {
 						
 						repeat ds_list_size(active_things) {
 							with active_things[| j++] {
-								if m_bump == MBump.NONE or f_culled or f_frozen {
+								if not f_bump or f_culled or f_frozen {
 									continue
 								}
 								

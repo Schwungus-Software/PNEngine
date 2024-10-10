@@ -28,7 +28,7 @@ if f_gravity and not f_grounded {
 var _held = instance_exists(holder)
 
 // Thing collision
-if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
+if not _held and f_bump {
 	var _bump_lists = area.bump_lists
 	var _gx = clamp(floor((x - area.bump_x) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_width(_bump_lists) - 1)
 	var _gy = clamp(floor((y - area.bump_y) * COLLIDER_REGION_SIZE_INVERSE), 0, ds_grid_height(_bump_lists) - 1)
@@ -38,7 +38,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 	repeat i {
 		var _thing = _list[| --i]
 		
-		if instance_exists(_thing) and _thing != self and _thing.m_bump != MBump.TO and not instance_exists(_thing.holder) {
+		if instance_exists(_thing) and _thing != self and not instance_exists(_thing.holder) {
 			var _tx, _ty, _tz, _th
 			
 			with _thing {
@@ -51,7 +51,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 			// Bounding box check
 			if z > (_tz - _th) and (z - height) < _tz
 			   and point_distance(x, y, _tx, _ty) < bump_radius + _thing.bump_radius {
-				var _result_me = catspeak_execute(bump_check, _thing)
+				var _result_me = catspeak_execute(bump_check, _thing, false)
 				
 				if not instance_exists(self) {
 					exit
@@ -64,7 +64,7 @@ if not _held and m_bump != MBump.NONE and m_bump != MBump.FROM {
 				var _result_from
 				
 				with _thing {
-					_result_from = catspeak_execute(bump_check, other)
+					_result_from = catspeak_execute(bump_check, other, true)
 				}
 				
 				if not instance_exists(self) {
