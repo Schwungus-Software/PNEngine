@@ -11,7 +11,8 @@ function Area() constructor {
 	things = []
 	
 	active_things = ds_list_create()
-	collidables = ds_list_create()
+	tick_things = ds_list_create()
+	tick_colliders = ds_list_create()
 	particles = ds_list_create()
 	lights = ds_list_create()
 	
@@ -145,9 +146,6 @@ function Area() constructor {
 			ds_list_add(active_things, _thing)
 		}
 		
-		
-		var _thing_amount = ds_list_size(level.area_things)
-		
 		var i = ds_list_size(active_things)
 		
 		repeat i {
@@ -155,6 +153,7 @@ function Area() constructor {
 				if f_new and not f_created {
 					event_user(ThingEvents.CREATE)
 					f_created = true
+					ds_list_add(collider != undefined ? other.tick_colliders : other.tick_things, self)
 				}
 			}
 		}
@@ -251,6 +250,7 @@ function Area() constructor {
 		}
 		
 		ds_list_add(active_things, _thing)
+		ds_list_add(_thing.collider != undefined ? tick_colliders : tick_things, _thing)
 		
 		return _thing
 	}
@@ -450,7 +450,8 @@ function Area() constructor {
 		}
 		
 		ds_list_destroy(active_things)
-		ds_list_destroy(collidables)
+		ds_list_destroy(tick_things)
+		ds_list_destroy(tick_colliders)
 		ds_list_destroy(particles)
 		ds_list_destroy(players)
 		sounds.destroy()

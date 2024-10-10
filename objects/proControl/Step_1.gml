@@ -381,7 +381,6 @@ switch load_state {
 						if is_array(_add_things) {
 							_images.load("imgShadow")
 							
-							var _area_things = _level.area_things
 							var i = 0
 							
 							repeat array_length(_add_things) {
@@ -432,7 +431,6 @@ switch load_state {
 									}
 									
 									++_thing_slot
-									ds_list_add(_area_things, _area_thing)
 								}
 								
 								++i
@@ -1712,7 +1710,6 @@ if _tick >= 1 {
 						}
 						
 						var _players_in_area = players
-						var _nthings = ds_list_size(active_things)
 						
 						// Add actors to actor collision grid
 						var _bump_grid = bump_grid
@@ -1728,7 +1725,7 @@ if _tick >= 1 {
 						
 						var j = 0
 						
-						repeat _nthings {
+						repeat ds_list_size(active_things) {
 							with active_things[| j++] {
 								if m_bump == MBump.NONE or f_culled or f_frozen {
 									continue
@@ -1767,10 +1764,10 @@ if _tick >= 1 {
 						
 						// Tick Things with Colliders first so that other
 						// Things that stick to them don't lag behind.
-						j = ds_list_size(collidables)
+						j = ds_list_size(tick_colliders)
 						
 						repeat j {
-							with collidables[| --j] {
+							with tick_colliders[| --j] {
 								var _can_tick = true
 								
 								if cull_tick != infinity {
@@ -1810,14 +1807,10 @@ if _tick >= 1 {
 							}
 						}
 						
-						j = _nthings
+						j = ds_list_size(tick_things)
 						
 						repeat j {
-							with active_things[| --j] {
-								if collider != undefined {
-									break
-								}
-								
+							with tick_things[| --j] {
 								var _can_tick = true
 								
 								if cull_tick != infinity {

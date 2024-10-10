@@ -28,10 +28,19 @@ if area != undefined {
 	
 	ds_list_delete(_active_things, ds_list_find_index(_active_things, self))
 	
-	if collider != undefined {
-		var _collidables = area.collidables
-		
-		ds_list_delete(_collidables, ds_list_find_index(_collidables, self))
+	var _tick_things = area.tick_things
+	var _index = ds_list_find_index(_tick_things, self)
+	
+	if _index != -1 {
+		ds_list_delete(_tick_things, _index)
+	}
+	
+	var _tick_colliders = area.tick_colliders
+	
+	_index = ds_list_find_index(_tick_colliders, self)
+	
+	if _index != -1 {
+		ds_list_delete(_tick_colliders, _index)
 	}
 }
 
