@@ -24,17 +24,25 @@ function ColliderInstance(_collider) constructor {
 		var m8 = _matrix[8]
 		var m9 = _matrix[9]
 		var m10 = _matrix[10]
+		
+		var i0 = m5 * m10 - m9 * m6
+		var i4 = m8 * m6  - m4 * m10
+		var i8 = m4 * m9  - m8 * m5
+		
+		var d = dot_product_3d(m0, m1, m2, i0, i4, i8)
+		
+		if d == 0 {
+			return false
+		}
+		
 		var m12 = _matrix[12]
 		var m13 = _matrix[13]
 		var m14 = _matrix[14]
 		
-		var i0 = m5 * m10 - m9 * m6
 		var i1 = m9 * m2  - m1 * m10
 		var i2 = m1 * m6  - m5 * m2
-		var i4 = m8 * m6  - m4 * m10
 		var i5 = m0 * m10 - m8 * m2
 		var i6 = m4 * m2  - m0 * m6
-		var i8 = m4 * m9  - m8 * m5
 		var i9 = m8 * m1  - m0 * m9
 		var i10 = m0 * m5  - m4 * m1
 		
@@ -51,12 +59,6 @@ function ColliderInstance(_collider) constructor {
 		inverse_matrix[13] = -dot_product_3d(m12, m13, m14, i1, i5, i9)
 		inverse_matrix[14] = -dot_product_3d(m12, m13, m14, i2, i6, i10)
 		inverse_matrix[15] = m0 * m5 * m10 - m0 * m6 * m9 - m4 * m1 * m10 + m4 * m2 * m9 + m8 * m1 * m6 - m8 * m2 * m5
-		
-		var d = dot_product_3d(m0, m1, m2, i0, i4, i8)
-		
-		if d == 0 {
-			return false
-		}
 		
 		d = 1 / d
 		

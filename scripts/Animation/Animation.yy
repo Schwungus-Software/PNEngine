@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"Animation",
   "parent":{
-    "name":"Model",
-    "path":"folders/Scripts/PNEngine/Assets/Asset Types/Model.yy",
+    "name":"Asset Types",
+    "path":"folders/Scripts/PNEngine/Assets/Asset Types.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
