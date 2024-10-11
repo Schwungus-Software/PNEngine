@@ -422,10 +422,10 @@ switch load_state {
 											y = force_type_fallback(_thing_info[$ "y"], "number", 0)
 											z = force_type_fallback(_thing_info[$ "z"], "number", 0)
 											
-											_bump_x1 = min(_bump_x1, x - COLLIDER_REGION_RADIUS)
-											_bump_y1 = min(_bump_y1, y - COLLIDER_REGION_RADIUS)
-											_bump_x2 = max(_bump_x2, x + COLLIDER_REGION_RADIUS)
-											_bump_y2 = max(_bump_y2, y + COLLIDER_REGION_RADIUS)
+											_bump_x1 = min(_bump_x1, x)
+											_bump_y1 = min(_bump_y1, y)
+											_bump_x2 = max(_bump_x2, x + COLLIDER_REGION_SIZE)
+											_bump_y2 = max(_bump_y2, y + COLLIDER_REGION_SIZE)
 											
 											angle = force_type_fallback(_thing_info[$ "angle"], "number", 0)
 											tag = force_type_fallback(_thing_info[$ "tag"], "number", 0)
