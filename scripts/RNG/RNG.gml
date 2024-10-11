@@ -27,7 +27,7 @@ function RNG() constructor {
 		return round(lerp(_x, _y, next() / _32_MAX))
 	}
 	
-	static int_sign = function (_x) {
+	static int_sign = function (_x = 1) {
 		gml_pragma("forceinline")
 		
 		return int_range(-_x, _x)
@@ -45,7 +45,7 @@ function RNG() constructor {
 		return lerp(_x, _y, next() / _32_MAX)
 	}
 	
-	static float_sign = function (_x) {
+	static float_sign = function (_x = 1) {
 		gml_pragma("forceinline")
 		
 		return float_range(-_x, _x)
@@ -57,7 +57,7 @@ function RNG() constructor {
 		var _argc = argument_count
 		
 		if _argc != 0 {
-			return argument[int(_argc)]
+			return argument[int(_argc - 1)]
 		}
 		
 		return undefined
