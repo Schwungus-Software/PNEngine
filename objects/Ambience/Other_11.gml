@@ -19,7 +19,7 @@ emitter_falloff_factor = force_type_fallback(special[$ "falloff_factor"], "numbe
 
 var _sounds = global.sounds
 
-repeat i {
+while i {
 	var _ambient = ambience[--i]
 	
 	if is_string(_ambient) {

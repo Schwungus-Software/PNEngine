@@ -676,7 +676,7 @@ with Catspeak {
 			var _music_instances = global.music_instances
 			var i = ds_list_size(_music_instances)
 			
-			repeat i {
+			while i {
 				_music_instances[| --i].stop(_fade)
 			}
 		},

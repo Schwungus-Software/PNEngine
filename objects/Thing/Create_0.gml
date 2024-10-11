@@ -331,7 +331,7 @@ raycast = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _
 	
 	var i = ds_list_size(_collidables)
 	
-	repeat i {
+	while i {
 		var _thing = _collidables[| --i]
 		
 		if _thing == self or _thing.f_culled or not _thing.f_collider_active {
@@ -410,7 +410,7 @@ hitscan = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _
 		var _region = _bump_lists[# clamp(_x, 0, _max_x), clamp(_y, 0, _max_y)]
 		var i = ds_list_size(_region)
 		
-		repeat i {
+		while i {
 			// Check this region to see if we're intersecting any Things.
 			var _thing = _region[| --i]
 			

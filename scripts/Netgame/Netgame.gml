@@ -158,7 +158,7 @@ function Netgame() constructor {
 		
 		var i = ds_list_size(players)
 		
-		repeat i {
+		while i {
 			var _player = players[| --i]
 			
 			if _player != undefined {
@@ -317,7 +317,7 @@ function Netgame() constructor {
 		with global.netgame {
 			var i = ds_list_size(players)
 			
-			repeat i {
+			while i {
 				var _player = players[| --i]
 				
 				if _player == undefined or _player.local {

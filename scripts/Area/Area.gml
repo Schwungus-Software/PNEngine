@@ -149,7 +149,7 @@ function Area() constructor {
 		
 		var i = ds_list_size(active_things)
 		
-		repeat i {
+		while i {
 			with active_things[| --i] {
 				if f_new and not f_created {
 					event_user(ThingEvents.CREATE)
@@ -329,7 +329,7 @@ function Area() constructor {
 		var n = 0
 		var i = ds_list_size(active_things)
 		
-		repeat i {
+		while i {
 			if active_things[| --i].is_ancestor(_type) {
 				++n
 			}
@@ -346,7 +346,7 @@ function Area() constructor {
 		
 		var i = ds_list_size(active_things)
 		
-		repeat i {
+		while i {
 			with active_things[| --i] {
 				if is_ancestor(_type) {
 					var _newdist = point_distance_3d(_x, _y, _z, x, y, z)
@@ -370,7 +370,7 @@ function Area() constructor {
 		
 		var i = ds_list_size(active_things)
 		
-		repeat i {
+		while i {
 			with active_things[| --i] {
 				if is_ancestor(_type) {
 					var _newdist = point_distance_3d(_x, _y, _z, x, y, z)
@@ -401,7 +401,7 @@ function Area() constructor {
 		var _cant_deactivate = false
 		var i = ds_list_size(active_things)
 		
-		repeat i {
+		while i {
 			var _thing = active_things[| --i]
 			
 			if not instance_exists(_thing) {
@@ -441,7 +441,7 @@ function Area() constructor {
 	static destroy = function () {
 		var i = ds_list_size(active_things)
 		
-		repeat i {
+		while i {
 			var _thing = active_things[| --i]
 			
 			if instance_exists(_thing) {
@@ -478,7 +478,7 @@ function Area() constructor {
 	static find = function (_type) {
 		var i = ds_list_size(active_things)
 		
-		repeat i {
+		while i {
 			with active_things[| --i] {
 				if is_ancestor(_type) {
 					return self

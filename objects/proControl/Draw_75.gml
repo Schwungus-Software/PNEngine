@@ -158,7 +158,7 @@ if _draw_target == undefined or _draw_target.f_draw_screen {
 			var _particles = _area.particles
 			var j = ds_list_size(_particles)
 			
-			repeat j {
+			while j {
 				var p = _particles[| --j]
 				
 				p[ParticleData.TICKS] -= d
@@ -375,7 +375,7 @@ var _music_instances = global.music_instances
 
 i = ds_list_size(_music_instances)
 
-repeat i {
+while i {
 	with _music_instances[| --i] {
 		var _update_gain = false
 		var j = 0

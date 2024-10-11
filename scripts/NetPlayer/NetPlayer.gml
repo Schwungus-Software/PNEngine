@@ -39,7 +39,7 @@ function NetPlayer() constructor {
 			
 			var i = ds_list_size(_players)
 			
-			repeat i {
+			while i {
 				--i
 				
 				if _players[| i] != undefined {

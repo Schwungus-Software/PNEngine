@@ -476,7 +476,7 @@ render = function (_width, _height, _update_listener = false, _allow_sky = true,
 		
 		var i = ds_list_size(_active_things)
 		
-		repeat i {
+		while i {
 			with _active_things[| --i] {
 				if f_visible and point_distance(_x, _y, sx, sy) < cull_draw {
 					event_user(ThingEvents.DRAW)
@@ -565,7 +565,7 @@ render = function (_width, _height, _update_listener = false, _allow_sky = true,
 		var i = ds_list_size(_active_things)
 		var _gui_priority = global.gui_priority
 		
-		repeat i {
+		while i {
 			with _active_things[| --i] {
 				if f_visible or (_allow_sky and self == _sky) {
 					ds_priority_add(_gui_priority, self, screen_depth)

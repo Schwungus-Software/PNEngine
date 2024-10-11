@@ -3,7 +3,7 @@ function dq_lerp_array(_dq1, _dq2, _amount, _dq = dq_build_identity()) {
 	
 	var i = 0
 	
-	repeat array_length(_dq1) div 8 {
+	repeat array_length(_dq1) >> 3 {
 		var _i1 = -~i
 		var _i2 = i + 2
 		var _i3 = i + 3

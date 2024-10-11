@@ -16,7 +16,7 @@ if not is_array(_ambience) {
 var _sounds = global.sounds
 var i = array_length(_ambience)
 
-repeat i {
+while i {
 	var _ambient = _ambience[--i]
 	
 	if not is_struct(_ambient) {

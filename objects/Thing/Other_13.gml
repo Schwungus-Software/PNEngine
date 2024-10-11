@@ -35,7 +35,7 @@ if not _held and f_bump {
 	var _list = _bump_lists[# _gx, _gy]
 	var i = ds_list_size(_list)
 	
-	repeat i {
+	while i {
 		var _thing = _list[| --i]
 		
 		if instance_exists(_thing) and _thing != self and not instance_exists(_thing.holder) {

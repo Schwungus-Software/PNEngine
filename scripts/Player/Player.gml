@@ -210,7 +210,7 @@ function Player() constructor {
 			var _active_things = _current_area.active_things
 			var i = ds_list_size(_active_things)
 			
-			repeat i {
+			while i {
 				var _thing = _active_things[| --i]
 				
 				if instance_exists(_thing) {
@@ -260,7 +260,7 @@ function Player() constructor {
 					
 					var i = ds_list_size(active_things)
 					
-					repeat i {
+					while i {
 						var _thing = active_things[| --i]
 						
 						_thing.player_entered(_newcomer)

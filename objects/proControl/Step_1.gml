@@ -1008,7 +1008,7 @@ if _tick >= 1 {
 #region Start Interpolation
 	var i = ds_list_size(_interps)
 	
-	repeat i {
+	while i {
 		var _scope = _interps[| --i]
 		
 		if _scope == undefined {
@@ -1774,7 +1774,7 @@ if _tick >= 1 {
 						// Things that stick to them don't lag behind.
 						j = ds_list_size(tick_colliders)
 						
-						repeat j {
+						while j {
 							with tick_colliders[| --j] {
 								var _can_tick = true
 								
@@ -1786,7 +1786,7 @@ if _tick >= 1 {
 									var _od = cull_tick
 									var k = ds_list_size(_players_in_area)
 									
-									repeat k {
+									while k {
 										with _players_in_area[| --k] {
 											if instance_exists(thing) and point_distance(thing.x, thing.y, _ox, _oy) < _od {
 												_can_tick = true
@@ -1817,7 +1817,7 @@ if _tick >= 1 {
 						
 						j = ds_list_size(tick_things)
 						
-						repeat j {
+						while j {
 							with tick_things[| --j] {
 								var _can_tick = true
 								
@@ -1829,7 +1829,7 @@ if _tick >= 1 {
 									var _od = cull_tick
 									var k = ds_list_size(_players_in_area)
 									
-									repeat k {
+									while k {
 										with _players_in_area[| --k] {
 											if instance_exists(thing) and point_distance(thing.x, thing.y, _ox, _oy) < _od {
 												_can_tick = true
@@ -1894,7 +1894,7 @@ var i = ds_list_size(_interps)
 
 if _tick_inc >= 1 or _config.vid_max_fps <= TICKRATE {
 #region Interpolation OFF (FPS <= TICKRATE)
-	repeat i {
+	while i {
 		var _scope = _interps[| --i]
 		
 		if _scope == undefined {
@@ -1934,7 +1934,7 @@ if _tick_inc >= 1 or _config.vid_max_fps <= TICKRATE {
 #endregion
 } else {
 #region Interpolation ON (FPS > TICKRATE)
-	repeat i {
+	while i {
 		var _scope = _interps[| --i]
 		
 		if _scope == undefined {
