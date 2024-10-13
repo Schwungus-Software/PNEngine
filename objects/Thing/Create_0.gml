@@ -98,9 +98,6 @@ model = undefined
 collider = undefined
 
 emitter = undefined
-emitter_falloff = 0
-emitter_falloff_max = 360
-emitter_falloff_factor = 1
 emitter_pos = undefined
 emitter_vel = undefined
 voice = undefined
@@ -174,36 +171,29 @@ play_sound = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1
 	return area.sounds.play(_sound, _loop, _offset, _pitch, _gain)
 }
 
-play_sound_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
+play_sound_at = function (_sound, _x, _y, _z, _falloff_min = undefined, _falloff_max = undefined, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
 	gml_pragma("forceinline")
 	
-	return area.sounds.play_at(_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, _offset, _pitch, _gain)
+	return area.sounds.play_at(_sound, _x, _y, _z, _falloff_min, _falloff_max, _loop, _offset, _pitch, _gain)
 }
 
-play_sound_local = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
-	var _pool = area.sounds
-	
+play_sound_local = function (_sound, _falloff_min = undefined, _falloff_max = undefined, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
 	if emitter == undefined {
-		emitter = fmod_system_create_channel_group(string(id))
+		emitter = ds_list_create()
 		emitter_pos = new FmodVector()
 		emitter_pos.x = x
 		emitter_pos.y = y
 		emitter_pos.z = z
 		emitter_vel = new FmodVector()
-		fmod_channel_group_add_group(_pool.channel_group, emitter)
-		fmod_channel_control_set_paused(emitter, true)
-		fmod_channel_control_set_mode(emitter, FMOD_MODE.AS_3D | FMOD_MODE.AS_3D_WORLDRELATIVE | FMOD_MODE.AS_3D_LINEARROLLOFF)
-		fmod_channel_control_set_3d_attributes(emitter, emitter_pos, emitter_vel)
-		fmod_channel_control_set_3d_min_max_distance(emitter, emitter_falloff, emitter_falloff_max)
-		
-		var _result = _pool.play_on(emitter, _sound, _loop, _offset, _pitch, _gain)
-		
-		fmod_channel_control_set_paused(emitter, false)
-		
-		return _result
 	}
 	
-	return _pool.play_on(emitter, _sound, _loop, _offset, _pitch, _gain)
+	var _result = area.sounds.play_at(_sound, emitter_pos.x, emitter_pos.y, emitter_pos.z, _falloff_min, _falloff_max, _loop, _offset, _pitch, _gain)
+	
+	if _result != undefined {
+		ds_list_add(emitter, _result)
+	}
+	
+	return _result
 }
 
 play_sound_ui = function (_sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
@@ -616,6 +606,7 @@ grid_iterate = function (_type, _distance, _include_self = false) {
 	}
 	
 	array_resize(results, _found)
+	array_resize(results, array_unique_ext(results))
 	
 	return results
 }

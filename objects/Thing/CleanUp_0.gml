@@ -15,8 +15,10 @@ if voice != undefined and fmod_channel_control_is_playing(voice) {
 }
 
 if emitter != undefined {
-	fmod_channel_control_stop(emitter)
-	fmod_channel_group_release(emitter)
+	repeat ds_list_size(emitter) {
+		fmod_channel_control_stop(emitter)
+		ds_list_delete(emitter, 0)
+	}
 }
 
 if area_thing != undefined {

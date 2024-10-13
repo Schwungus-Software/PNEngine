@@ -342,6 +342,26 @@ if not global.config.snd_background {
 #endregion
 
 #region Update Sound Pools
+with Thing {
+	if emitter != undefined {
+		emitter_pos.x = sx
+		emitter_pos.y = sy
+		emitter_pos.z = sz
+		
+		var i = ds_list_size(emitter)
+		
+		while i {
+			var _sound = emitter[| --i]
+			
+			if fmod_channel_control_is_playing(_sound) {
+				fmod_channel_control_set_3d_attributes(_sound, emitter_pos, emitter_vel)
+			} else {
+				ds_list_delete(emitter, i)
+			}
+		}
+	}
+}
+
 var _sound_pools = global.sound_pools
 var i = 0
 

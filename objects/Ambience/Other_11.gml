@@ -15,7 +15,6 @@ array_copy(ambience, 0, _samb, 0, i)
 local = force_type_fallback(special[$ "local"], "bool", false)
 emitter_falloff = force_type_fallback(special[$ "falloff"], "number", 0)
 emitter_falloff_max = force_type_fallback(special[$ "falloff_max"], "number", 360)
-emitter_falloff_factor = force_type_fallback(special[$ "falloff_factor"], "number", 1)
 
 var _sounds = global.sounds
 
@@ -26,7 +25,7 @@ while i {
 		_ambient = _sounds.get(_ambient)
 		
 		if local {
-			play_sound_local(_ambient, true)
+			play_sound_local(_ambient, emitter_falloff, emitter_falloff_max, true)
 		} else {
 			play_sound(_ambient, true)
 		}

@@ -42,7 +42,7 @@ function SoundPool() constructor {
 		return _instance
 	}
 	
-	static play_at = function (_sound, _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
+	static play_at = function (_sound, _x, _y, _z, _falloff_min = undefined, _falloff_max = undefined, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
 		static _dummy_vel = new FmodVector()
 		
 		if _sound == undefined {
@@ -52,7 +52,7 @@ function SoundPool() constructor {
 		if is_array(_sound) {
 			var n = array_length(_sound)
 			
-			return n ? play_at(_sound[irandom(n - 1)],  _x, _y, _z, _falloff_ref_dist, _falloff_max_dist, _falloff_factor, _loop, _offset, _pitch) : undefined
+			return n ? play_at(_sound[irandom(n - 1)],  _x, _y, _z, _falloff_min, _falloff_max, _loop, _offset, _pitch) : undefined
 		}
 		
 		var _id, _final_pitch
@@ -72,36 +72,11 @@ function SoundPool() constructor {
 		var _pos = { x: _x, y: _y, z: _z }
 		
 		fmod_channel_control_set_3d_attributes(_instance, _pos, _dummy_vel)
-		fmod_channel_control_set_3d_min_max_distance(_instance, _falloff_ref_dist, _falloff_max_dist)
-		fmod_channel_control_set_paused(_instance, false)
 		
-		return _instance
-	}
-	
-	static play_on = function (_emitter, _sound, _loop = false, _offset = 0, _pitch = 1, _gain = 1) {
-		if _sound == undefined {
-			return undefined
+		if _falloff_min != undefined and _falloff_max != undefined {
+			fmod_channel_control_set_3d_min_max_distance(_instance, _falloff_min, _falloff_max)
 		}
 		
-		if is_array(_sound) {
-			var n = array_length(_sound)
-			
-			return n ? play_on(_emitter, _sound[irandom(n - 1)], _loop, _offset, _pitch) : undefined
-		}
-		
-		var _id, _final_pitch
-		
-		with _sound {
-			_id = asset
-			_final_pitch = pitch_low == pitch_high ? pitch_low : random_range(pitch_low, pitch_high)
-		}
-		
-		var _instance = fmod_system_play_sound(_id, true, _emitter)
-		
-		fmod_channel_control_set_mode(_instance, _loop ? FMOD_MODE.LOOP_NORMAL : FMOD_MODE.LOOP_OFF)
-		fmod_channel_set_position(_instance, _offset, FMOD_TIMEUNIT.MS)
-		fmod_channel_control_set_pitch(_instance, _pitch * _final_pitch)
-		fmod_channel_control_set_volume(_instance, _gain)
 		fmod_channel_control_set_paused(_instance, false)
 		
 		return _instance

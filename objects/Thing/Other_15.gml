@@ -1,12 +1,4 @@
 /// @description Draw
-if emitter != undefined {
-	emitter_pos.x = sx
-	emitter_pos.y = sy
-	emitter_pos.z = sz
-	fmod_channel_control_set_3d_attributes(emitter, emitter_pos, emitter_vel)
-	fmod_channel_control_set_3d_min_max_distance(emitter, emitter_falloff, emitter_falloff_max)
-}
-
 var _draw_model = false
 
 if not instance_exists(holder) or not f_holdable_in_hand {
