@@ -639,6 +639,29 @@ check_sight = function (_thing, _yaw, _pitch, _fov, _raycast = false) {
 	return false
 }
 
+check_sight_2d = function (_thing, _yaw, _fov, _raycast = false) {
+	var _tx, _ty
+	
+	with _thing {
+		_tx = x
+		_ty = y
+	}
+	
+	if abs(angle_difference(point_direction(x, y, _tx, _ty), _yaw)) < _fov {
+		if _raycast {
+			var _ray = raycast(x, y, z - (height * 0.5), _tx, _ty, _thing.z - (_thing.height * 0.5), CollisionFlags.VISION)
+			
+			if _ray[RaycastData.HIT] and _ray[RaycastData.THING] != _thing {
+				return false
+			}
+		}
+		
+		return true
+	}
+	
+	return false
+}
+
 do_hold = function (_thing, _forced = false) {
 	if not instance_exists(_thing) {
 		return false

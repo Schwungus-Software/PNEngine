@@ -36,6 +36,9 @@ enum CameraLerpTypes {
 event_inherited()
 
 #region Variables
+radius = 1
+height = 1
+
 yaw = 0
 roll = 0
 fov = 45
