@@ -422,10 +422,13 @@ switch load_state {
 											y = force_type_fallback(_thing_info[$ "y"], "number", 0)
 											z = force_type_fallback(_thing_info[$ "z"], "number", 0)
 											
-											_bump_x1 = min(_bump_x1, x)
-											_bump_y1 = min(_bump_y1, y)
-											_bump_x2 = max(_bump_x2, x + COLLIDER_REGION_SIZE)
-											_bump_y2 = max(_bump_y2, y + COLLIDER_REGION_SIZE)
+											var _bx = floor(x * COLLIDER_REGION_SIZE_INVERSE) * COLLIDER_REGION_SIZE
+											var _by = floor(y * COLLIDER_REGION_SIZE_INVERSE) * COLLIDER_REGION_SIZE
+											
+											_bump_x1 = min(_bump_x1, _bx)
+											_bump_y1 = min(_bump_y1, _by)
+											_bump_x2 = max(_bump_x2, _bx + COLLIDER_REGION_SIZE)
+											_bump_y2 = max(_bump_y2, _by + COLLIDER_REGION_SIZE)
 											
 											angle = force_type_fallback(_thing_info[$ "angle"], "number", 0)
 											tag = force_type_fallback(_thing_info[$ "tag"], "number", 0)
@@ -475,7 +478,7 @@ switch load_state {
 								bump_x = _bump_x1
 								bump_y = _bump_y1
 							} else {
-								// This level has no area actors, set defaults
+								// This level has no Things, set defaults
 								bump_lists[# 0, 0] = ds_list_create()
 							}
 						}
