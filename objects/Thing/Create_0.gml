@@ -384,7 +384,7 @@ hitscan = function (_x1, _y1, _z1, _x2, _y2, _z2, _flags = CollisionFlags.ALL, _
 	var _ray_pitch = point_pitch(_x1, _y1, _z1, _x2, _y2, _z2)
 	var _ray_length = point_distance_3d(_x1, _y1, _z1, _x2, _y2, _z2)
 	
-	var _normal = normal_vector_3d(_ray_yaw, _ray_pitch)
+	var _pitch_factor = dcos(_ray_pitch)
 	var _nx = dcos(_ray_yaw) * _pitch_factor
 	var _ny = -dsin(_ray_yaw) * _pitch_factor
 	var _nz = dsin(_ray_pitch)
