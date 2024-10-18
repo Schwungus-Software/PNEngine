@@ -328,7 +328,10 @@ with Catspeak {
 		"transition_load", transition_load,
 		
 		"mod_get_version", function (_name) {
-			var _mod = global.mods[? _name]
+			/* GROSS HACK: Mod names become lower case on Linux.
+						   Convert the given string to lower case for
+						   compatibility. */
+			var _mod = global.mods[? string_lower(_name)]
 			
 			if _mod == undefined {
 				return undefined
@@ -820,28 +823,31 @@ repeat ds_map_size(_mods) {
 		lexicon_index_definitions(_languages)
 	}
 	
-	var _info = json_load(_path + "mod.json")
+	var _defs = _path + "mod.json"
+	var _info = json_load(_defs)
 	
 	if is_struct(_info) {
-		var _title = force_type_fallback(_info[$ "title"], "string")
+		print($"proControl: Loading properties from '{_defs}'")
+		
+		var _title = _info[$ "title"]
 		
 		if is_string(_title) {
 			window_set_caption(_title)
 		}
 		
-		var _version = force_type_fallback(_info[$ "version"], "string")
+		var _version = _info[$ "version"]
 		
 		if is_string(_version) {
 			_mod.version = _version
 		}
 		
-		var _rpc_id = force_type_fallback(_info[$ "rpc"], "string")
+		var _rpc_id = _info[$ "rpc"]
 		
 		if is_string(_rpc_id) {
 			global.game_rpc_id = _rpc_id
 		}
 		
-		var _states = force_type_fallback(_info[$ "states"], "struct")
+		var _states = _info[$ "states"]
 		
 		if is_struct(_states) {
 			var _default_states = global.default_states
@@ -856,7 +862,7 @@ repeat ds_map_size(_mods) {
 			}
 		}
 		
-		var _flags = force_type_fallback(_info[$ "flags"], "struct")
+		var _flags = _info[$ "flags"]
 		
 		if is_struct(_flags) {
 			var _global = force_type_fallback(_flags[$ "global"], "struct")

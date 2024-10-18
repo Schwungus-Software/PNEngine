@@ -1,5 +1,5 @@
 function Mod(_name) constructor {
-	name = _name
+	name = string_lower(_name) // Linux compatibility
 	version = ""
 	path = DATA_PATH + _name + "/"
 	

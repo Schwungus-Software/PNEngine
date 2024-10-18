@@ -290,7 +290,7 @@ update_matrices = function (_width = window_get_width(), _height = window_get_he
 	var _uz = _up[14]
 	
 	view_matrix = matrix_build_lookat(sx, sy, sz, sx + _fx, sy + _fy, sz + _fz, _ux, _uy, _uz)
-	projection_matrix = f_ortho ? matrix_build_projection_ortho(_width * 0.5, _height * 0.5, 1, 32000) : matrix_build_projection_perspective_fov(sfov, _width / _height, 1, 32000)
+	projection_matrix = f_ortho ? matrix_build_projection_ortho(_width * 0.5, _height * 0.5, 1, 32000) : matrix_build_projection_perspective_fov(-sfov, -(_width / _height), 1, 32000)
 	
 	if _update_listener {
 		listener_pos.x = sx
@@ -328,7 +328,7 @@ world_to_screen = function (_x, _y, _z) {
 	var _cy = projection_matrix[9] + projection_matrix[5] * (view_matrix[1] * _x + view_matrix[5] * _y + view_matrix[9] * _z + view_matrix[13]) * _w_inv
 	
 	_pos[0] = 0.5 + 0.5 * _cx
-	_pos[1] = 0.5 - 0.5 * _cy
+	_pos[1] = 0.5 + 0.5 * _cy
 	
 	return _pos
 }
@@ -425,8 +425,12 @@ render = function (_width, _height, _update_listener = false, _allow_sky = true,
 	_world_canvas.Resize(_width, _height)
 	_world_canvas.Start()
 	update_matrices(_width, _height, _update_listener)
-	matrix_set(matrix_view, view_matrix)
-	matrix_set(matrix_projection, projection_matrix)
+	
+	var _camera = camera_get_active()
+	
+	camera_set_view_mat(_camera, view_matrix)
+	camera_set_proj_mat(_camera, projection_matrix)
+	camera_apply(_camera)
 	
 	var _time = current_time * 0.001
 	var _gpu_tex_filter = gpu_get_tex_filter()
